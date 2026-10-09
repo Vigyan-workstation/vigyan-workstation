@@ -26,6 +26,7 @@
       --text-subtle: #71717a;
       --emerald-subdued: #10b981;
       --danger: #ef4444;
+      --accent: #ffffff;
       --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -55,11 +56,11 @@
       flex-shrink: 0;
     }
 
-    /* MINIMAL CLEAN HEADER */
+    /* ULTRA-MINIMAL TOP HEADER */
     header {
       background: #040507;
       border-bottom: 1px solid var(--border);
-      height: 44px;
+      height: 42px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -108,31 +109,22 @@
       text-transform: uppercase;
       color: #ffffff;
     }
-
+    .domain-indicator {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: var(--text-subtle);
+      background: #090b11;
+      border: 1px solid var(--border-subtle);
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
     .header-right {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
     }
-    .status-badge {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 12px;
-      font-weight: 500;
-      color: var(--text-muted);
-      background: #090a0f;
-      border: 1px solid var(--border);
-      padding: 4px 10px;
-      border-radius: 6px;
-    }
-    .status-dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: var(--emerald-subdued);
-    }
-    .status-dot.disconnected { background: #ef4444; }
 
     /* VIEWPORT */
     main {
@@ -148,9 +140,9 @@
     }
     .tab-content.active { display: flex; }
 
-    /* SESSIONS SIDEBAR */
+    /* UNIFIED SIDEBAR (DOMAINS + SESSIONS) */
     .sidebar {
-      width: 220px;
+      width: 230px;
       background: var(--sidebar);
       border-right: 1px solid var(--border);
       display: flex;
@@ -164,46 +156,82 @@
       overflow: hidden;
       border-right: none;
     }
-    .sidebar-header {
-      padding: 12px 14px;
+
+    /* DOMAINS SECTION */
+    .sidebar-section-header {
+      padding: 12px 14px 6px 14px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: var(--text-subtle);
+    }
+    .domain-list {
+      padding: 0 8px 8px 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
       border-bottom: 1px solid var(--border-subtle);
+    }
+    .domain-item {
+      padding: 8px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 12.5px;
+      color: var(--text-muted);
+      border: 1px solid transparent;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      transition: all 0.15s;
+    }
+    .domain-item:hover {
+      background: #111319;
+      color: var(--text);
+    }
+    .domain-item.active {
+      background: #161821;
+      color: #ffffff;
+      border-color: var(--border-active);
+      font-weight: 600;
+    }
+
+    /* SESSIONS SECTION */
+    .sessions-header {
+      padding: 10px 14px 6px 14px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-    }
-    .sidebar-title {
-      font-size: 12px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      color: var(--text-subtle);
     }
     .btn-new-chat {
       background: #ffffff;
       color: #000000;
       border: none;
-      font-size: 12px;
+      font-size: 11.5px;
       font-weight: 600;
-      padding: 5px 10px;
+      padding: 4px 8px;
       border-radius: 5px;
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 5px;
+      gap: 4px;
+      transition: opacity 0.15s;
     }
+    .btn-new-chat:hover { opacity: 0.9; }
+
     .session-list {
       flex: 1;
       overflow-y: auto;
-      padding: 8px;
+      padding: 4px 8px;
       display: flex;
       flex-direction: column;
       gap: 3px;
     }
     .session-item {
-      padding: 8px 10px;
+      padding: 7px 10px;
       border-radius: 6px;
       cursor: pointer;
-      font-size: 13px;
+      font-size: 12.5px;
       color: var(--text-muted);
       border: 1px solid transparent;
       display: flex;
@@ -235,10 +263,27 @@
       cursor: pointer;
       padding: 2px 4px;
       border-radius: 3px;
-      font-size: 12px;
     }
     .session-item:hover .btn-session-del { opacity: 1; }
     .btn-session-del:hover { color: #ef4444; }
+
+    .sidebar-footer {
+      padding: 8px 12px;
+      border-top: 1px solid var(--border-subtle);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      color: var(--text-subtle);
+    }
+    .btn-clear-all {
+      background: transparent;
+      border: none;
+      color: var(--text-subtle);
+      cursor: pointer;
+      font-size: 11px;
+    }
+    .btn-clear-all:hover { color: #ffffff; }
 
     /* CHAT WORKSPACE */
     .chat-section {
@@ -346,7 +391,7 @@
       border-color: var(--border-active);
     }
 
-    /* CHAT STREAM (SCALED UP TYPOGRAPHY: 14.5px) */
+    /* CHAT STREAM */
     .chat-scroll-wrapper {
       flex: 1;
       overflow-y: auto;
@@ -427,7 +472,7 @@
       gap: 5px;
     }
 
-    /* COMPACT INPUT CAPSULE & CANCEL BUTTON */
+    /* INPUT CAPSULE WITH INTEGRATED / BUTTON */
     .chat-input-area {
       position: absolute;
       bottom: 56px;
@@ -441,7 +486,7 @@
     }
     .input-inner-wrapper { width: 100%; max-width: 780px; position: relative; }
     
-    /* FLOATING SLASH COMMAND MENU */
+    /* ENHANCED FLOATING SLASH COMMAND MENU */
     .slash-menu {
       display: none;
       position: absolute;
@@ -450,18 +495,30 @@
       background: #0d0f17;
       border: 1px solid var(--border-active);
       border-radius: 10px;
-      min-width: 320px;
+      width: 360px;
       z-index: 95;
       padding: 6px;
-      box-shadow: 0 16px 36px rgba(0,0,0,0.9);
+      box-shadow: 0 16px 36px rgba(0,0,0,0.95);
       animation: fadeIn 0.12s var(--ease-spring);
     }
     .slash-menu.show { display: block; }
+    .slash-menu-header {
+      font-size: 10.5px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: var(--text-subtle);
+      padding: 4px 8px 6px;
+      border-bottom: 1px solid var(--border-subtle);
+      margin-bottom: 4px;
+      display: flex;
+      justify-content: space-between;
+    }
     .slash-item {
       display: flex;
       align-items: center;
       gap: 10px;
-      padding: 8px 12px;
+      padding: 7px 10px;
       border-radius: 6px;
       cursor: pointer;
       transition: background 0.12s;
@@ -469,14 +526,15 @@
     .slash-item:hover, .slash-item.active { background: #1a1d29; }
     .slash-cmd {
       font-family: ui-monospace, monospace;
-      font-size: 12.5px;
+      font-size: 12px;
       font-weight: 700;
       color: #ffffff;
-      min-width: 80px;
+      min-width: 88px;
     }
     .slash-desc {
-      font-size: 12px;
+      font-size: 11.5px;
       color: var(--text-muted);
+      flex: 1;
     }
 
     .input-capsule {
@@ -486,13 +544,38 @@
       background: #090a0f;
       border: 1px solid rgba(255, 255, 255, 0.14);
       border-radius: 12px;
-      padding: 8px 12px;
+      padding: 8px 10px;
       transition: border-color 0.15s;
     }
     .input-capsule:focus-within {
       border-color: rgba(255, 255, 255, 0.3);
       background: #0c0e14;
     }
+    
+    .btn-slash-trigger {
+      background: #151720;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      font-family: ui-monospace, monospace;
+      font-size: 13px;
+      font-weight: 700;
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-bottom: 2px;
+      transition: all 0.15s;
+    }
+    .btn-slash-trigger:hover, .btn-slash-trigger.active {
+      background: #ffffff;
+      color: #000000;
+      border-color: #ffffff;
+    }
+
     .input-capsule textarea {
       flex: 1;
       background: transparent;
@@ -502,7 +585,7 @@
       line-height: 1.5;
       resize: none;
       outline: none;
-      height: 38px;
+      height: 34px;
       max-height: 160px;
       padding: 6px 0;
       font-family: inherit;
@@ -513,14 +596,15 @@
       background: #ffffff;
       color: #000000;
       border: none;
-      width: 30px;
-      height: 30px;
-      border-radius: 8px;
+      width: 28px;
+      height: 28px;
+      border-radius: 7px;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
+      margin-bottom: 2px;
       transition: all 0.15s;
     }
     .btn-send:hover { opacity: 0.9; }
@@ -529,16 +613,16 @@
       color: #ffffff;
     }
 
-    /* DUAL-ENGINE STEM WORKBENCH (2D, 3D CAD, PHYSICS SIM) */
+    /* INDUSTRY-BEST STEM WORKBENCH AS A TOOL */
     .stem-section {
-      width: 530px;
+      width: 540px;
       background: #030406;
       display: flex;
       flex-direction: column;
       flex-shrink: 0;
     }
     .stem-header {
-      padding: 8px 14px;
+      padding: 7px 12px;
       border-bottom: 1px solid var(--border);
       display: flex;
       align-items: center;
@@ -547,7 +631,7 @@
     }
     .workbench-tabs {
       display: flex;
-      gap: 4px;
+      gap: 3px;
       background: #090a0f;
       padding: 3px;
       border-radius: 7px;
@@ -559,7 +643,7 @@
       color: var(--text-muted);
       font-size: 11.5px;
       font-weight: 500;
-      padding: 4px 10px;
+      padding: 4px 9px;
       border-radius: 5px;
       cursor: pointer;
       transition: all 0.15s;
@@ -569,15 +653,15 @@
       color: #000000;
       font-weight: 600;
     }
-    .stem-actions { display: flex; gap: 5px; }
+    .stem-actions { display: flex; gap: 4px; }
 
     .stem-body {
       flex: 1;
       overflow-y: auto;
-      padding: 14px;
+      padding: 12px;
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 10px;
     }
     .stem-card {
       background: #07080c;
@@ -589,10 +673,10 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
     }
     .stem-card-title {
-      font-size: 12px;
+      font-size: 11.5px;
       font-weight: 600;
       color: var(--text-muted);
       text-transform: uppercase;
@@ -606,7 +690,7 @@
     .formula-bar {
       display: flex;
       gap: 6px;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
     }
     .plot-input {
       flex: 1;
@@ -636,12 +720,12 @@
     .slider-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-bottom: 10px;
+      gap: 8px;
+      margin-bottom: 8px;
       background: #040508;
       border: 1px solid var(--border-subtle);
       border-radius: 6px;
-      padding: 8px 12px;
+      padding: 6px 10px;
     }
     .slider-item {
       display: flex;
@@ -652,7 +736,7 @@
       font-size: 12px;
       font-family: ui-monospace, monospace;
       color: var(--text-muted);
-      min-width: 32px;
+      min-width: 28px;
     }
     .stem-slider {
       flex: 1;
@@ -664,7 +748,7 @@
       font-size: 12px;
       font-family: ui-monospace, monospace;
       color: #ffffff;
-      min-width: 32px;
+      min-width: 28px;
       text-align: right;
     }
 
@@ -685,13 +769,13 @@
       display: none;
     }
 
-    .plot-chips {
+    .tool-presets-row {
       display: flex;
       gap: 6px;
       flex-wrap: wrap;
-      margin-top: 10px;
+      margin-top: 8px;
     }
-    .plot-chip {
+    .tool-btn {
       background: #0c0e14;
       border: 1px solid var(--border);
       color: var(--text-muted);
@@ -701,7 +785,7 @@
       cursor: pointer;
       transition: all 0.12s;
     }
-    .plot-chip:hover {
+    .tool-btn:hover {
       background: #151822;
       color: #ffffff;
       border-color: var(--border-active);
@@ -746,21 +830,17 @@
     }
     .hero-meta {
       display: flex;
-      gap: 10px;
-      margin-top: 5px;
+      gap: 12px;
+      margin-top: 4px;
       font-size: 11.5px;
-      color: var(--text-subtle);
+      color: var(--text-muted);
     }
-    .hero-spec {
-      background: #050608;
-      border: 1px solid var(--border);
-      padding: 2px 6px;
-      border-radius: 4px;
-    }
+    .hero-spec { font-family: ui-monospace, monospace; }
+
     .hub-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
-      gap: 12px;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 14px;
     }
     .hub-card {
       background: #08090d;
@@ -771,55 +851,45 @@
       flex-direction: column;
       justify-content: space-between;
       gap: 12px;
-      transition: border-color 0.15s;
+      transition: border-color 0.15s, background 0.15s;
     }
     .hub-card:hover {
-      border-color: var(--border-active);
       background: #0c0e14;
+      border-color: var(--border-active);
+    }
+    .hub-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
     }
     .hub-card-name { font-size: 13px; font-weight: 600; color: #ffffff; }
-    .hub-card-size {
-      font-size: 11px;
-      color: var(--text-subtle);
-      background: #040507;
-      border: 1px solid var(--border);
-      padding: 2px 6px;
-      border-radius: 4px;
-    }
+    .hub-card-size { font-size: 11px; font-family: ui-monospace, monospace; color: var(--text-subtle); }
     .author-badge {
-      font-size: 10px;
-      font-weight: 600;
+      display: inline-block;
+      font-size: 10.5px;
+      font-family: ui-monospace, monospace;
       padding: 2px 6px;
       border-radius: 4px;
-      display: inline-block;
       margin-top: 4px;
     }
-    .author-shreyansh {
-      background: #111420;
-      color: #93c5fd;
-      border: 1px solid rgba(147, 197, 253, 0.2);
-    }
-    .author-allenai {
-      background: #181422;
-      color: #d8b4fe;
-      border: 1px solid rgba(216, 180, 254, 0.2);
-    }
+    .author-shreyansh { background: #121018; color: #d4b5ff; border: 1px solid rgba(168,85,247,0.25); }
+    .author-allenai { background: #0c161d; color: #93c5fd; border: 1px solid rgba(59,130,246,0.25); }
     .hub-card-specs {
-      font-size: 11px;
-      color: var(--text-subtle);
+      font-size: 11.5px;
+      color: var(--text-muted);
+      margin-top: 6px;
       display: flex;
       gap: 8px;
-      margin-top: 5px;
     }
     .hub-card-footer {
       display: flex;
       align-items: center;
       justify-content: space-between;
+      padding-top: 8px;
       border-top: 1px solid var(--border-subtle);
-      padding-top: 10px;
     }
     .badge-ready {
-      font-size: 11px;
+      font-size: 10.5px;
       font-weight: 600;
       color: var(--emerald-subdued);
       display: flex;
@@ -828,23 +898,18 @@
     }
     .btn-delete-model {
       background: transparent;
-      border: 1px solid transparent;
+      border: 1px solid var(--border);
       color: var(--text-subtle);
-      padding: 3px 6px;
-      border-radius: 4px;
+      padding: 4px 6px;
+      border-radius: 5px;
       cursor: pointer;
-      font-size: 11px;
-      display: flex;
-      align-items: center;
-      gap: 3px;
-      transition: all 0.15s;
     }
-    .btn-delete-model:hover {
-      background: rgba(239, 68, 68, 0.1);
-      border-color: rgba(239, 68, 68, 0.3);
-      color: #ef4444;
+    .btn-delete-model:hover { color: #ef4444; border-color: #ef4444; }
+
+    .download-progress-container {
+      margin-top: 8px;
+      display: none;
     }
-    .download-progress-container { display: none; margin-top: 6px; }
     .download-progress-track {
       background: #151720;
       height: 4px;
@@ -964,7 +1029,7 @@
     }
     .setting-input:focus { border-color: var(--border-active); }
 
-    /* FLOATING BOTTOM DOCK (SCALED UP TO 13px) */
+    /* FLOATING BOTTOM DOCK */
     .floating-dock {
       position: fixed;
       bottom: 14px;
@@ -1029,7 +1094,7 @@
 </head>
 <body>
 
-  <!-- MINIMAL CLEAN HEADER -->
+  <!-- ULTRA-MINIMAL TOP HEADER -->
   <header>
     <div class="header-left">
       <button class="btn-toggle-sidebar" onclick="toggleSidebar()" title="Toggle Sidebar">
@@ -1038,16 +1103,11 @@
       <div class="brand">
         <img src="assets/micro_logo_v.png" class="brand-micro-img" alt="V">
         <div class="brand-title">Vigyan Pro</div>
+        <div class="domain-indicator" id="header-domain-badge">Lab Studio</div>
       </div>
     </div>
     <div class="header-right">
-      <div class="status-badge" id="daemon-status-badge">
-        <span class="status-dot" id="status-dot"></span>
-        <span id="daemon-status-text">Connected</span>
-      </div>
-      <div class="status-badge" style="font-family:ui-monospace,monospace;">
-        RAM: 3.3 GB
-      </div>
+      <!-- Clean & clutter-free right header -->
     </div>
   </header>
 
@@ -1055,17 +1115,39 @@
     <!-- 1. STUDIO TAB -->
     <div class="tab-content active" id="tab-studio">
       <aside class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-          <span class="sidebar-title">Sessions</span>
+        <!-- DOMAINS SELECTOR -->
+        <div class="sidebar-section-header">Workspaces</div>
+        <div class="domain-list">
+          <div class="domain-item active" id="domain-lab" onclick="selectDomain('lab')">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M10 2v7.31L4.1 19a2 2 0 0 0 1.66 3h12.48a2 2 0 0 0 1.66-3L14 9.31V2"/></svg>
+            <span>Lab Studio</span>
+          </div>
+          <div class="domain-item" id="domain-astronomy" onclick="selectDomain('astronomy')">
+            <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="6"/><ellipse cx="12" cy="12" rx="10" ry="3.5" transform="rotate(-25 12 12)"/></svg>
+            <span>Astronomy</span>
+          </div>
+          <div class="domain-item" id="domain-biomed" onclick="selectDomain('biomed')">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4.5c1.45-1.47 4.5-2 4.5-2"/></svg>
+            <span>Biomed</span>
+          </div>
+          <div class="domain-item" id="domain-chem" onclick="selectDomain('chem')">
+            <svg class="icon" viewBox="0 0 24 24"><polygon points="12 2 19 6 19 14 12 18 5 14 5 6 12 2"/><line x1="12" y1="2" x2="12" y2="18"/></svg>
+            <span>Chemistry</span>
+          </div>
+        </div>
+
+        <!-- SESSIONS -->
+        <div class="sessions-header">
+          <span class="sidebar-section-header" style="padding:0;">Sessions</span>
           <button class="btn-new-chat" onclick="createNewSession()">
-            <svg class="icon" viewBox="0 0 24 24" style="stroke:#000000; width:12px; height:12px;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            <svg class="icon" viewBox="0 0 24 24" style="stroke:#000000; width:11px; height:11px;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
             New
           </button>
         </div>
         <div class="session-list" id="session-list"></div>
-        <div style="padding:10px 12px; border-top:1px solid var(--border-subtle); display:flex; justify-content:space-between; font-size:11px; color:var(--text-subtle);">
-          <span>Local Storage</span>
-          <button style="background:transparent; border:none; color:var(--text-subtle); cursor:pointer; font-size:11px;" onclick="clearAllSessions()">Clear All</button>
+        <div class="sidebar-footer">
+          <span>Local Engine</span>
+          <button class="btn-clear-all" onclick="clearAllSessions()">Reset All</button>
         </div>
       </aside>
 
@@ -1080,11 +1162,7 @@
             <div class="model-dropdown-menu" id="model-dropdown"></div>
           </div>
           <div class="toolbar-actions">
-            <button class="btn-action" onclick="exportCurrentChatMD()">
-              <svg class="icon" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-              Export
-            </button>
-            <button class="btn-action" onclick="clearCurrentChat()">
+            <button class="btn-action" onclick="clearCurrentChat()" title="Clear chat history">
               <svg class="icon" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
               Clear
             </button>
@@ -1098,46 +1176,61 @@
                 <img src="assets/micro_logo_v.png" class="msg-avatar-v" alt="V">
                 <span id="welcome-companion-label">olmoe:1b-7b</span>
               </div>
-              <div class="msg-content">
-                Sovereign STEM Engine active. Ask for calculus proofs, differential equations, 3D CAD modeling, or physics simulations. All calculations execute locally. Type <strong>/</strong> for agentic tools.
+              <div class="msg-content" id="welcome-msg-text">
+                Sovereign STEM Lab active. Ready for rigorous proofs, 3D CAD meshes, astronomy orbits, chemical kinetics, and physical simulations. Click <strong>[/]</strong> or type <strong>/</strong> for agentic tools.
               </div>
             </div>
           </div>
         </div>
 
-        <!-- INPUT AREA WITH FLOATING SLASH COMMAND MENU & CANCEL BUTTON -->
+        <!-- INPUT AREA WITH INTEGRATED / BUTTON -->
         <div class="chat-input-area">
           <div class="input-inner-wrapper">
-            <!-- FLOATING SLASH MENU -->
+            <!-- ENHANCED FLOATING SLASH MENU -->
             <div class="slash-menu" id="slash-menu">
-              <div class="slash-item active" onclick="applySlashCommand('/simulate ')">
+              <div class="slash-menu-header">
+                <span>Agentic Commands</span>
+                <span>ESC to close</span>
+              </div>
+              <div class="slash-item active" data-cmd="/simulate " onclick="applySlashCommand('/simulate ')">
                 <span class="slash-cmd">/simulate</span>
-                <span class="slash-desc">Run 60 FPS dynamic physics simulation</span>
+                <span class="slash-desc">Run 60 FPS physics &amp; celestial simulation</span>
               </div>
-              <div class="slash-item" onclick="applySlashCommand('/cad3d ')">
+              <div class="slash-item" data-cmd="/cad3d " onclick="applySlashCommand('/cad3d ')">
                 <span class="slash-cmd">/cad3d</span>
-                <span class="slash-desc">Generate interactive 3D CAD parametric mesh</span>
+                <span class="slash-desc">Generate 3D CAD mesh &amp; molecule</span>
               </div>
-              <div class="slash-item" onclick="applySlashCommand('/derive ')">
+              <div class="slash-item" data-cmd="/astronomy " onclick="applySlashCommand('/astronomy ')">
+                <span class="slash-cmd">/astronomy</span>
+                <span class="slash-desc">Keplerian orbits &amp; astrophysics state</span>
+              </div>
+              <div class="slash-item" data-cmd="/biomed " onclick="applySlashCommand('/biomed ')">
+                <span class="slash-cmd">/biomed</span>
+                <span class="slash-desc">Pharmacokinetics &amp; enzyme kinetics</span>
+              </div>
+              <div class="slash-item" data-cmd="/chem " onclick="applySlashCommand('/chem ')">
+                <span class="slash-cmd">/chem</span>
+                <span class="slash-desc">Reaction rates &amp; 3D chemical compounds</span>
+              </div>
+              <div class="slash-item" data-cmd="/derive " onclick="applySlashCommand('/derive ')">
                 <span class="slash-cmd">/derive</span>
-                <span class="slash-desc">Generate rigorous step-by-step LaTeX proof</span>
+                <span class="slash-desc">Step-by-step mathematical LaTeX proof</span>
               </div>
-              <div class="slash-item" onclick="applySlashCommand('/mcp ')">
+              <div class="slash-item" data-cmd="/mcp " onclick="applySlashCommand('/mcp ')">
                 <span class="slash-cmd">/mcp</span>
-                <span class="slash-desc">Call Python CAS symbolic algebra engine</span>
+                <span class="slash-desc">Symbolic CAS algebraic execution</span>
               </div>
-              <div class="slash-item" onclick="applySlashCommand('/skill ')">
-                <span class="slash-cmd">/skill</span>
-                <span class="slash-desc">Load specialized sovereign domain skill</span>
-              </div>
-              <div class="slash-item" onclick="applySlashCommand('/clear')">
+              <div class="slash-item" data-cmd="/clear" onclick="applySlashCommand('/clear')">
                 <span class="slash-cmd">/clear</span>
                 <span class="slash-desc">Clear current discussion session</span>
               </div>
             </div>
 
             <div class="input-capsule">
-              <textarea id="prompt-input" placeholder="Solve, derive, or plot... (Type / for agentic tools, Enter to send)" onkeydown="handleKey(event)" oninput="handleInput(event)"></textarea>
+              <button class="btn-slash-trigger" id="btn-slash" onclick="toggleSlashMenu()" title="Slash Commands (/)">
+                /
+              </button>
+              <textarea id="prompt-input" placeholder="Solve, derive, simulate, or plot... (Type / for agentic tools, Enter to send)" onkeydown="handleKey(event)" oninput="handleInput(event)"></textarea>
               <button class="btn-send" id="btn-send" onclick="handleSendOrCancel()" title="Send">
                 <svg id="send-icon" viewBox="0 0 24 24" style="width:14px; height:14px; stroke:#000000; stroke-width:2.2; fill:none; stroke-linecap:round; stroke-linejoin:round;"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
               </button>
@@ -1146,17 +1239,17 @@
         </div>
       </section>
 
-      <!-- DUAL-ENGINE STEM WORKBENCH -->
+      <!-- UPGRADED STEM WORKBENCH AS A REAL TOOL -->
       <section class="stem-section">
         <div class="stem-header">
           <div class="workbench-tabs">
-            <button class="wb-tab active" id="tab-btn-2d" onclick="switchWorkbenchMode('2d')">2D Function</button>
-            <button class="wb-tab" id="tab-btn-3d" onclick="switchWorkbenchMode('3d')">3D CAD Mesh</button>
-            <button class="wb-tab" id="tab-btn-sim" onclick="switchWorkbenchMode('sim')">Physics Sim</button>
+            <button class="wb-tab active" id="tab-btn-plot" onclick="switchWorkbenchMode('plot')">Plotter</button>
+            <button class="wb-tab" id="tab-btn-3d" onclick="switchWorkbenchMode('3d')">3D CAD &amp; Mol</button>
+            <button class="wb-tab" id="tab-btn-sim" onclick="switchWorkbenchMode('sim')">Simulation</button>
           </div>
           <div class="stem-actions">
-            <button class="btn-action" onclick="exportWorkbenchView()">PNG</button>
-            <button class="btn-action" onclick="resetActiveWorkbench()">Reset</button>
+            <button class="btn-action" onclick="exportWorkbenchView()" title="Export view PNG">PNG</button>
+            <button class="btn-action" onclick="resetActiveWorkbench()" title="Reset current view">Reset</button>
           </div>
         </div>
 
@@ -1171,7 +1264,7 @@
             </div>
             
             <div class="formula-bar" id="formula-bar-container">
-              <input type="text" id="plot-expr" class="plot-input" value="Math.exp(-k*x) * Math.cos(w*x)" placeholder="f(x, k, w)">
+              <input type="text" id="plot-expr" class="plot-input" value="Math.exp(-k*x) * Math.cos(w*x)" placeholder="f(x, k, w, a)">
               <button class="btn-plot" onclick="evaluateAndPlot()">Plot</button>
             </div>
 
@@ -1189,17 +1282,17 @@
               </div>
             </div>
 
+            <!-- CANVAS / PLOTLY VIEWPORTS -->
             <div id="plot-container"></div>
-            <canvas id="sim-canvas" width="480" height="250"></canvas>
+            <canvas id="sim-canvas" width="516" height="250"></canvas>
 
-            <div class="plot-chips" id="plot-chips-container">
-              <span class="plot-chip" onclick="loadPreset('damped')">Damped Oscillator</span>
-              <span class="plot-chip" onclick="loadPreset('gaussian')">Gaussian Bell</span>
-              <span class="plot-chip" onclick="loadPreset('sigmoid')">Sigmoid / Logistic</span>
-              <span class="plot-chip" onclick="loadPreset('fourier')">Fourier Square</span>
+            <!-- DOMAIN & TOOL PRESETS -->
+            <div class="tool-presets-row" id="tool-presets-container">
+              <!-- Dynamically populated per mode -->
             </div>
           </div>
 
+          <!-- DERIVATION & PROOF DRAWER -->
           <div class="stem-card">
             <div class="stem-card-header">
               <span class="stem-card-title">
@@ -1212,7 +1305,7 @@
               </button>
             </div>
             <div class="proof-box" id="proof-container">
-              <div style="font-size:11px; color:var(--text-subtle); margin-bottom:4px;" id="proof-title">Harmonic Oscillator Differential Equation:</div>
+              <div style="font-size:11px; color:var(--text-subtle); margin-bottom:4px;" id="proof-title">Analytical Differential Formulation:</div>
               <div id="math-proof">
                 $$\frac{d^2 x}{dt^2} + 2\gamma \frac{dx}{dt} + \omega_0^2 x = 0$$
               </div>
@@ -1228,7 +1321,6 @@
         <div class="hub-hero">
           <div>
             <div class="hero-title">
-              <span class="status-dot"></span>
               Active Companion: OLMoE 1B-7B 64-Expert MoE
             </div>
             <div class="hero-meta">
@@ -1403,7 +1495,7 @@
             <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
             STEM Runtime &amp; Context Configuration
           </div>
-          <div class="status-badge"><span class="status-dot"></span>Ollama Daemon Linked</div>
+          <div class="domain-indicator">Ollama Local</div>
         </div>
 
         <div>
@@ -1424,7 +1516,6 @@
           </div>
         </div>
 
-        <!-- INDUSTRY-BEST CONTEXT & ADVANCED SETTINGS -->
         <div>
           <div class="accordion-header" onclick="toggleAccordion()">
             <span style="display:flex; align-items:center; gap:8px;">
@@ -1460,7 +1551,7 @@
             </div>
             <div class="setting-item">
               <div class="setting-label">STEM System Prompt</div>
-              <textarea id="setting-persona" class="setting-input" style="height:65px; resize:none;">You are Vigyan Pro, a sovereign STEM AI engine specializing in mathematics, physics, and algorithmic reasoning. Provide concise, step-by-step mathematical proofs with LaTeX formatted inside $$...$$.</textarea>
+              <textarea id="setting-persona" class="setting-input" style="height:65px; resize:none;">You are Vigyan Pro, a sovereign STEM AI engine. When providing calculations or proofs, use LaTeX inside $$...$$. To render visualizations on the user's workbench, you can emit tool blocks like ```workbench:plot [expr]``` or ```workbench:3d [torus|benzene|water|methane|spring]``` or ```workbench:sim [orbit|pendulum|enzyme|reaction]```.</textarea>
             </div>
             <div style="display:flex; gap:8px; margin-top:4px;">
               <button class="btn-action" onclick="checkOllamaConnection()">Ping Daemon</button>
@@ -1495,6 +1586,7 @@
     let currentModel = 'olmoe:1b-7b';
     let isGenerating = false;
     let currentAbortController = null;
+    let activeDomain = 'lab';
 
     let availableModels = [
       { tag: 'olmoe:1b-7b', name: 'OLMoE 1B-7B MoE', spec: '64-Experts (Default)' },
@@ -1505,11 +1597,12 @@
       { tag: 'olmo3:7b', name: 'Olmo 3 7B Instruct', spec: 'Open Scientific 7B' }
     ];
 
-    let currentWbMode = '2d';
+    let currentWbMode = 'plot';
     let paramK = 0.15;
     let paramW = 2.0;
 
     let simAnimationId = null;
+    let currentSimType = 'pendulum';
     let simAngle1 = Math.PI / 2;
     let simAngle2 = Math.PI / 2;
     let simA1_v = 0.0;
@@ -1520,10 +1613,10 @@
 
     window.addEventListener('DOMContentLoaded', () => {
       loadSettings();
-      renderPlotlySample();
       initSessions();
       renderModelDropdown();
       checkOllamaConnection();
+      switchWorkbenchMode('plot');
       renderLatex();
       setInterval(checkOllamaConnection, 10000);
 
@@ -1539,8 +1632,12 @@
         const wrapper = document.querySelector('.companion-selector-wrapper');
         if (wrapper && !wrapper.contains(e.target)) closeModelDropdown();
         const slash = document.getElementById('slash-menu');
+        const slashBtn = document.getElementById('btn-slash');
         const inputArea = document.querySelector('.chat-input-area');
-        if (slash && !inputArea.contains(e.target)) slash.classList.remove('show');
+        if (slash && !inputArea.contains(e.target)) {
+          slash.classList.remove('show');
+          if (slashBtn) slashBtn.classList.remove('active');
+        }
       });
     });
 
@@ -1560,7 +1657,43 @@
 
     function toggleSidebar() {
       document.getElementById('sidebar').classList.toggle('collapsed');
-      setTimeout(() => Plotly.Plots.resize('plot-container'), 220);
+      setTimeout(() => {
+        if (currentWbMode !== 'sim') Plotly.Plots.resize('plot-container');
+      }, 220);
+    }
+
+    /* DOMAIN SELECTION (UNIFIED LAB, ASTRONOMY, BIOMED, CHEM) */
+    function selectDomain(domainId) {
+      activeDomain = domainId;
+      document.querySelectorAll('.domain-item').forEach(el => el.classList.remove('active'));
+      const activeEl = document.getElementById('domain-' + domainId);
+      if (activeEl) activeEl.classList.add('active');
+
+      const badge = document.getElementById('header-domain-badge');
+      const personaInput = document.getElementById('setting-persona');
+      const welcome = document.getElementById('welcome-msg-text');
+
+      if (domainId === 'lab') {
+        badge.innerText = 'Lab Studio';
+        if (welcome) welcome.innerText = 'Unified STEM Lab active. Ready for calculus, physics, chemistry, and astronomical derivations. Click [/] or type / for agentic tools.';
+        switchWorkbenchMode('plot');
+      } else if (domainId === 'astronomy') {
+        badge.innerText = 'Astronomy';
+        if (welcome) welcome.innerText = 'Astrophysics & Celestial Mechanics Workspace active. Keplerian 2-body orbit solver, gravitational N-body simulations, and stellar kinematics initialized.';
+        switchWorkbenchMode('sim');
+        initSimulation('orbit');
+      } else if (domainId === 'biomed') {
+        badge.innerText = 'Biomed';
+        if (welcome) welcome.innerText = 'Biomedical & Biochemical Workspace active. Enzyme kinetics, two-compartment pharmacokinetic clearance models, and metabolic decay dynamics initialized.';
+        switchWorkbenchMode('sim');
+        initSimulation('enzyme');
+      } else if (domainId === 'chem') {
+        badge.innerText = 'Chemistry';
+        if (welcome) welcome.innerText = 'Computational Chemistry & Molecular Workspace active. 3D molecular conformation models (Benzene, Caffeine, Water, Methane) and reaction rate dynamics initialized.';
+        switchWorkbenchMode('3d');
+        renderCAD3D('benzene');
+      }
+      showToast(`Workspace: ${badge.innerText}`);
     }
 
     function selectIntent(type, temp, ctx, label) {
@@ -1601,7 +1734,9 @@
       const content = document.getElementById('tab-' + tabId);
       if (content) content.classList.add('active');
 
-      if (tabId === 'studio') setTimeout(() => Plotly.Plots.resize('plot-container'), 100);
+      if (tabId === 'studio' && currentWbMode !== 'sim') {
+        setTimeout(() => Plotly.Plots.resize('plot-container'), 100);
+      }
     }
 
     /* COMPANION SELECTOR */
@@ -1644,21 +1779,61 @@
       showToast(`Active: ${m}`);
     }
 
-    /* FLOATING SLASH COMMAND MENU */
+    /* ENHANCED / BUTTON & FLOATING SLASH COMMAND MENU */
+    function toggleSlashMenu() {
+      const menu = document.getElementById('slash-menu');
+      const btn = document.getElementById('btn-slash');
+      const isOpen = menu.classList.toggle('show');
+      if (btn) btn.classList.toggle('active', isOpen);
+      if (isOpen) {
+        filterSlashItems('');
+        const tx = document.getElementById('prompt-input');
+        if (tx && !tx.value.startsWith('/')) {
+          tx.value = '/';
+          tx.focus();
+        }
+      }
+    }
+
     function handleInput(e) {
       const val = e.target.value;
       const menu = document.getElementById('slash-menu');
+      const btn = document.getElementById('btn-slash');
       if (val.startsWith('/')) {
         menu.classList.add('show');
+        if (btn) btn.classList.add('active');
+        filterSlashItems(val.slice(1));
       } else {
         menu.classList.remove('show');
+        if (btn) btn.classList.remove('active');
       }
+    }
+
+    function filterSlashItems(query) {
+      const q = query.toLowerCase().trim();
+      const items = document.querySelectorAll('.slash-item');
+      let firstVisible = null;
+      items.forEach(it => {
+        const cmd = it.getAttribute('data-cmd') || '';
+        const desc = it.querySelector('.slash-desc').innerText;
+        if (!q || cmd.includes(q) || desc.toLowerCase().includes(q)) {
+          it.style.display = 'flex';
+          if (!firstVisible) firstVisible = it;
+        } else {
+          it.style.display = 'none';
+        }
+        it.classList.remove('active');
+      });
+      if (firstVisible) firstVisible.classList.add('active');
     }
 
     function applySlashCommand(cmd) {
       const tx = document.getElementById('prompt-input');
       const menu = document.getElementById('slash-menu');
+      const btn = document.getElementById('btn-slash');
       menu.classList.remove('show');
+      if (btn) btn.classList.remove('active');
+
       if (cmd === '/clear') {
         clearCurrentChat();
         tx.value = '';
@@ -1666,8 +1841,18 @@
       }
       tx.value = cmd;
       tx.focus();
-      if (cmd.startsWith('/simulate')) switchWorkbenchMode('sim');
-      else if (cmd.startsWith('/cad3d')) switchWorkbenchMode('3d');
+
+      if (cmd.startsWith('/simulate')) {
+        switchWorkbenchMode('sim');
+      } else if (cmd.startsWith('/cad3d')) {
+        switchWorkbenchMode('3d');
+      } else if (cmd.startsWith('/astronomy')) {
+        selectDomain('astronomy');
+      } else if (cmd.startsWith('/biomed')) {
+        selectDomain('biomed');
+      } else if (cmd.startsWith('/chem')) {
+        selectDomain('chem');
+      }
     }
 
     /* CANCELLATION / INFERENCE CONTROLLER */
@@ -1705,15 +1890,18 @@
       btn.innerHTML = `<svg viewBox="0 0 24 24" style="width:14px; height:14px; stroke:#000000; stroke-width:2.2; fill:none; stroke-linecap:round; stroke-linejoin:round;"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>`;
     }
 
-    /* INFERENCE WITH ABORT CONTROLLER */
+    /* INFERENCE WITH AGENT-WORKBENCH BRIDGE */
     async function sendPrompt() {
       const input = document.getElementById('prompt-input');
       const text = input.value.trim();
       if (!text) return;
 
       document.getElementById('slash-menu').classList.remove('show');
+      const slashBtn = document.getElementById('btn-slash');
+      if (slashBtn) slashBtn.classList.remove('active');
+
       input.value = '';
-      input.style.height = '38px';
+      input.style.height = '34px';
 
       const chatBox = document.getElementById('chat-box');
       const userDiv = document.createElement('div');
@@ -1735,10 +1923,8 @@
       const scrollWrapper = document.querySelector('.chat-scroll-wrapper');
       scrollWrapper.scrollTop = scrollWrapper.scrollHeight;
 
-      // Auto-switch STEM workbench
-      if (text.startsWith('/simulate') || text.includes('simulation') || text.includes('pendulum')) switchWorkbenchMode('sim');
-      else if (text.startsWith('/cad3d') || text.includes('3d') || text.includes('cad') || text.includes('mesh')) switchWorkbenchMode('3d');
-      else autoExtractSTEMFromPrompt(text);
+      // Handle direct command triggers
+      handleDirectPromptDirectives(text);
 
       const tempVal = parseFloat(document.getElementById('setting-temp').value) || 0.05;
       const ctxVal = parseInt(document.getElementById('setting-ctx').value) || 8192;
@@ -1794,7 +1980,7 @@
 
         contentEl.innerHTML = formatMarkdown(rawAccumulated);
         renderLatex();
-        autoExtractSTEMFromResponse(text, rawAccumulated);
+        autoAgentWorkbenchBridge(text, rawAccumulated);
         saveCurrentSessionMessages();
       } catch (err) {
         if (err.name === 'AbortError') {
@@ -1816,7 +2002,65 @@
         .replace(/\*\*(.*?)\*\*/g, '<strong style="color:#ffffff;">$1</strong>');
     }
 
-    /* DUAL-ENGINE STEM WORKBENCH (2D, 3D CAD, PHYSICS SIM) */
+    /* DIRECT PROMPT DIRECTIVES & AGENT BRIDGE */
+    function handleDirectPromptDirectives(text) {
+      const lower = text.toLowerCase();
+      if (lower.startsWith('/astronomy') || lower.includes('astronomy') || lower.includes('kepler') || lower.includes('orbit')) {
+        selectDomain('astronomy');
+        switchWorkbenchMode('sim');
+        initSimulation('orbit');
+      } else if (lower.startsWith('/biomed') || lower.includes('biomed') || lower.includes('enzyme') || lower.includes('pharmacokinetics')) {
+        selectDomain('biomed');
+        switchWorkbenchMode('sim');
+        initSimulation('enzyme');
+      } else if (lower.startsWith('/chem') || lower.includes('molecule') || lower.includes('benzene') || lower.includes('water molecule')) {
+        selectDomain('chem');
+        switchWorkbenchMode('3d');
+        if (lower.includes('water')) renderCAD3D('water');
+        else if (lower.includes('methane')) renderCAD3D('methane');
+        else renderCAD3D('benzene');
+      } else if (lower.startsWith('/simulate') || lower.includes('pendulum')) {
+        switchWorkbenchMode('sim');
+        initSimulation('pendulum');
+      } else if (lower.startsWith('/cad3d') || lower.includes('torus')) {
+        switchWorkbenchMode('3d');
+        renderCAD3D('torus');
+      }
+    }
+
+    function autoAgentWorkbenchBridge(promptText, responseText) {
+      // 1. Check for explicit workbench code directives
+      const plotMatch = responseText.match(/```workbench:plot\s+([\s\S]*?)```/);
+      if (plotMatch) {
+        document.getElementById('plot-expr').value = plotMatch[1].trim();
+        switchWorkbenchMode('plot');
+        evaluateAndPlot();
+      }
+
+      const cadMatch = responseText.match(/```workbench:3d\s+([\s\S]*?)```/);
+      if (cadMatch) {
+        const item = cadMatch[1].trim().toLowerCase();
+        switchWorkbenchMode('3d');
+        renderCAD3D(item);
+      }
+
+      const simMatch = responseText.match(/```workbench:sim\s+([\s\S]*?)```/);
+      if (simMatch) {
+        const simType = simMatch[1].trim().toLowerCase();
+        switchWorkbenchMode('sim');
+        initSimulation(simType);
+      }
+
+      // 2. Extract mathematical proofs for drawer
+      const mathMatch = responseText.match(/\$\$([\s\S]*?)\$\$/);
+      if (mathMatch) {
+        document.getElementById('proof-title').innerText = 'Extracted Mathematical Proof:';
+        document.getElementById('math-proof').innerHTML = `$$${mathMatch[1].trim()}$$`;
+        renderLatex();
+      }
+    }
+
+    /* STEM WORKBENCH IMPLEMENTATION (PLOTTER, 3D CAD/MOL, SIMULATION) */
     function switchWorkbenchMode(mode) {
       currentWbMode = mode;
       document.querySelectorAll('.wb-tab').forEach(b => b.classList.remove('active'));
@@ -1827,7 +2071,7 @@
       const canvasEl = document.getElementById('sim-canvas');
       const formulaBar = document.getElementById('formula-bar-container');
       const sliderGrid = document.getElementById('slider-grid-container');
-      const chips = document.getElementById('plot-chips-container');
+      const presets = document.getElementById('tool-presets-container');
       const title = document.getElementById('wb-view-title');
       const badge = document.getElementById('wb-engine-badge');
 
@@ -1836,19 +2080,18 @@
         simAnimationId = null;
       }
 
-      if (mode === '2d') {
+      if (mode === 'plot') {
         plotEl.style.display = 'block';
         canvasEl.style.display = 'none';
         formulaBar.style.display = 'flex';
         sliderGrid.style.display = 'grid';
-        chips.style.display = 'flex';
         title.innerHTML = `<svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 12h8"/><path d="M12 8v8"/></svg> Dynamic Function Plotter`;
-        badge.innerText = 'WebGL Engine';
-        chips.innerHTML = `
-          <span class="plot-chip" onclick="loadPreset('damped')">Damped Oscillator</span>
-          <span class="plot-chip" onclick="loadPreset('gaussian')">Gaussian Bell</span>
-          <span class="plot-chip" onclick="loadPreset('sigmoid')">Sigmoid / Logistic</span>
-          <span class="plot-chip" onclick="loadPreset('fourier')">Fourier Square</span>
+        badge.innerText = 'WebGL 2D';
+        presets.innerHTML = `
+          <span class="tool-btn" onclick="loadPlotPreset('damped')">Damped Oscillator</span>
+          <span class="tool-btn" onclick="loadPlotPreset('gaussian')">Gaussian Normal</span>
+          <span class="tool-btn" onclick="loadPlotPreset('sigmoid')">Sigmoid / Logistic</span>
+          <span class="tool-btn" onclick="loadPlotPreset('fourier')">Fourier Square</span>
         `;
         evaluateAndPlot();
       } else if (mode === '3d') {
@@ -1856,36 +2099,90 @@
         canvasEl.style.display = 'none';
         formulaBar.style.display = 'none';
         sliderGrid.style.display = 'none';
-        chips.style.display = 'flex';
-        title.innerHTML = `<svg class="icon" viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg> 3D CAD Parametric Mesh`;
-        badge.innerText = 'Plotly 3D WebGL';
-        chips.innerHTML = `
-          <span class="plot-chip" onclick="renderCAD3D('torus')">CAD Torus</span>
-          <span class="plot-chip" onclick="renderCAD3D('spring')">Helical Spring</span>
-          <span class="plot-chip" onclick="renderCAD3D('paraboloid')">Paraboloid</span>
-          <span class="plot-chip" onclick="renderCAD3D('sinc3d')">3D Sinc Ripple</span>
+        title.innerHTML = `<svg class="icon" viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg> 3D CAD &amp; Molecular Conformations`;
+        badge.innerText = 'Plotly WebGL 3D';
+        presets.innerHTML = `
+          <span class="tool-btn" onclick="renderCAD3D('benzene')">Benzene (C6H6)</span>
+          <span class="tool-btn" onclick="renderCAD3D('water')">Water (H2O)</span>
+          <span class="tool-btn" onclick="renderCAD3D('methane')">Methane (CH4)</span>
+          <span class="tool-btn" onclick="renderCAD3D('torus')">CAD Torus</span>
+          <span class="tool-btn" onclick="renderCAD3D('spring')">Helical Spring</span>
+          <span class="tool-btn" onclick="renderCAD3D('paraboloid')">Paraboloid</span>
+          <span class="tool-btn" onclick="renderCAD3D('sinc3d')">3D Sinc Ripple</span>
         `;
-        renderCAD3D('torus');
+        renderCAD3D('benzene');
       } else if (mode === 'sim') {
         plotEl.style.display = 'none';
         canvasEl.style.display = 'block';
         formulaBar.style.display = 'none';
         sliderGrid.style.display = 'none';
-        chips.style.display = 'flex';
-        title.innerHTML = `<svg class="icon" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg> 60 FPS Physics Simulation`;
-        badge.innerText = 'Canvas Physics Engine';
-        chips.innerHTML = `
-          <span class="plot-chip" onclick="initSimulation('pendulum')">Double Pendulum</span>
-          <span class="plot-chip" onclick="initSimulation('orbit')">Planetary Orbits</span>
-          <span class="plot-chip" onclick="initSimulation('oscillator')">Harmonic Spring</span>
+        title.innerHTML = `<svg class="icon" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg> 60 FPS Dynamic Simulation Engine`;
+        badge.innerText = 'Dynamic Canvas';
+        presets.innerHTML = `
+          <span class="tool-btn" onclick="initSimulation('pendulum')">Double Pendulum</span>
+          <span class="tool-btn" onclick="initSimulation('orbit')">Kepler Orbit (Astronomy)</span>
+          <span class="tool-btn" onclick="initSimulation('enzyme')">Enzyme Kinetics (Biomed)</span>
+          <span class="tool-btn" onclick="initSimulation('reaction')">Equilibrium (Chem)</span>
         `;
         initSimulation('pendulum');
       }
     }
 
+    /* 3D CAD & MOLECULE RENDERING */
     function renderCAD3D(type) {
       let data = [];
-      if (type === 'torus') {
+      const proofTitle = document.getElementById('proof-title');
+      const mathProof = document.getElementById('math-proof');
+
+      if (type === 'benzene') {
+        proofTitle.innerText = 'Benzene (C6H6) Planar Aromatic Ring:';
+        mathProof.innerHTML = '$$\\text{Delocalized } \\pi\text{-system: } D_{6h} \\text{ symmetry, } r_{C-C} = 1.40\\text{ \\AA}, r_{C-H} = 1.08\\text{ \\AA}$$';
+        const R_c = 1.4, R_h = 2.4;
+        const cx = [], cy = [], cz = [];
+        const hx = [], hy = [], hz = [];
+        for (let i = 0; i < 6; i++) {
+          const a = (i * Math.PI) / 3;
+          cx.push(R_c * Math.cos(a)); cy.push(R_c * Math.sin(a)); cz.push(0);
+          hx.push(R_h * Math.cos(a)); hy.push(R_h * Math.sin(a)); hz.push(0);
+        }
+        // Bond lines for carbon ring
+        const bx = [], by = [], bz = [];
+        for (let i = 0; i <= 6; i++) {
+          const a = ((i % 6) * Math.PI) / 3;
+          bx.push(R_c * Math.cos(a)); by.push(R_c * Math.sin(a)); bz.push(0);
+        }
+        data = [
+          { type: 'scatter3d', mode: 'lines', x: bx, y: by, z: bz, line: { color: '#ffffff', width: 5 }, showlegend: false },
+          { type: 'scatter3d', mode: 'markers', x: cx, y: cy, z: cz, marker: { size: 9, color: '#e5e7eb' }, name: 'Carbon (C)' },
+          { type: 'scatter3d', mode: 'markers', x: hx, y: hy, z: hz, marker: { size: 5, color: '#93c5fd' }, name: 'Hydrogen (H)' }
+        ];
+      } else if (type === 'water') {
+        proofTitle.innerText = 'Water (H2O) Bent Molecular Geometry:';
+        mathProof.innerHTML = '$$\\angle H-O-H = 104.5^\\circ, \\quad r_{O-H} = 0.958\\text{ \\AA}, \\quad \\mu = 1.85\\text{ D}$$';
+        const angle = (104.5 * Math.PI) / 360; // half angle
+        const r = 1.2;
+        data = [
+          { type: 'scatter3d', mode: 'lines', x: [r * Math.sin(angle), 0, -r * Math.sin(angle)], y: [r * Math.cos(angle), 0, r * Math.cos(angle)], z: [0, 0, 0], line: { color: '#ffffff', width: 6 }, showlegend: false },
+          { type: 'scatter3d', mode: 'markers', x: [0], y: [0], z: [0], marker: { size: 14, color: '#ef4444' }, name: 'Oxygen (O)' },
+          { type: 'scatter3d', mode: 'markers', x: [r * Math.sin(angle), -r * Math.sin(angle)], y: [r * Math.cos(angle), r * Math.cos(angle)], z: [0, 0], marker: { size: 7, color: '#93c5fd' }, name: 'Hydrogen (H)' }
+        ];
+      } else if (type === 'methane') {
+        proofTitle.innerText = 'Methane (CH4) Tetrahedral Geometry:';
+        mathProof.innerHTML = '$$T_d \\text{ Symmetry: } \\angle H-C-H = 109.5^\\circ, \\quad r_{C-H} = 1.09\\text{ \\AA}$$';
+        const s = 1.2 / Math.sqrt(3);
+        const h_coords = [[s, s, s], [s, -s, -s], [-s, s, -s], [-s, -s, s]];
+        const bx = [], by = [], bz = [];
+        h_coords.forEach(h => {
+          bx.push(0, h[0], null); by.push(0, h[1], null); bz.push(0, h[2], null);
+        });
+        data = [
+          { type: 'scatter3d', mode: 'lines', x: bx, y: by, z: bz, line: { color: '#ffffff', width: 4 }, showlegend: false },
+          { type: 'scatter3d', mode: 'markers', x: [0], y: [0], z: [0], marker: { size: 12, color: '#e5e7eb' }, name: 'Carbon (C)' },
+          { type: 'scatter3d', mode: 'markers', x: h_coords.map(c => c[0]), y: h_coords.map(c => c[1]), z: h_coords.map(c => c[2]), marker: { size: 6, color: '#93c5fd' }, name: 'Hydrogen (H)' }
+        ];
+      } else if (type === 'torus') {
+        proofTitle.innerText = 'Parametric CAD Torus Mesh:';
+        mathProof.innerHTML = '$$x = (R + r\\cos v)\\cos u, \\quad y = (R + r\\cos v)\\sin u, \\quad z = r\\sin v$$';
         const u = [], v = [], x = [], y = [], z = [];
         const R = 4, r = 1.5;
         for (let i = 0; i <= 30; i++) {
@@ -1897,44 +2194,29 @@
             z.push(r * Math.sin(vj));
           }
         }
-        data = [{
-          type: 'mesh3d',
-          x: x, y: y, z: z,
-          alphahull: 0,
-          color: '#ffffff',
-          opacity: 0.85
-        }];
-        document.getElementById('proof-title').innerText = 'Parametric CAD Torus Specification:';
-        document.getElementById('math-proof').innerHTML = '$$x = (R + r\\cos v)\\cos u, \\quad y = (R + r\\cos v)\\sin u, \\quad z = r\\sin v$$';
+        data = [{ type: 'mesh3d', x: x, y: y, z: z, alphahull: 0, color: '#ffffff', opacity: 0.85 }];
       } else if (type === 'spring') {
+        proofTitle.innerText = 'Helical Spring Parametric Curve:';
+        mathProof.innerHTML = '$$\\mathbf{r}(t) = \\langle R\\cos(t), R\\sin(t), c t \\rangle$$';
         const x = [], y = [], z = [];
         for (let t = 0; t <= 40; t += 0.2) {
-          x.push(3 * Math.cos(t));
-          y.push(3 * Math.sin(t));
-          z.push(t * 0.4 - 8);
+          x.push(3 * Math.cos(t)); y.push(3 * Math.sin(t)); z.push(t * 0.4 - 8);
         }
-        data = [{
-          type: 'scatter3d',
-          mode: 'lines',
-          x: x, y: y, z: z,
-          line: { color: '#ffffff', width: 4 }
-        }];
-        document.getElementById('proof-title').innerText = 'Helical Spring Parametric Curve:';
-        document.getElementById('math-proof').innerHTML = '$$\\mathbf{r}(t) = \\langle R\\cos(t), R\\sin(t), c t \\rangle$$';
+        data = [{ type: 'scatter3d', mode: 'lines', x: x, y: y, z: z, line: { color: '#ffffff', width: 4 } }];
       } else if (type === 'paraboloid') {
+        proofTitle.innerText = 'Elliptic Paraboloid Surface:';
+        mathProof.innerHTML = '$$z = \\frac{x^2}{a^2} + \\frac{y^2}{b^2}$$';
         const z = [], x = [], y = [];
         for (let i = -10; i <= 10; i += 1) { x.push(i); y.push(i); }
         for (let i = 0; i < y.length; i++) {
           const row = [];
-          for (let j = 0; j < x.length; j++) {
-            row.push((x[j] * x[j] + y[i] * y[i]) * 0.05);
-          }
+          for (let j = 0; j < x.length; j++) row.push((x[j] * x[j] + y[i] * y[i]) * 0.05);
           z.push(row);
         }
         data = [{ z: z, x: x, y: y, type: 'surface', colorscale: 'Greys', showscale: false }];
-        document.getElementById('proof-title').innerText = 'Elliptic Paraboloid Surface:';
-        document.getElementById('math-proof').innerHTML = '$$z = \\frac{x^2}{a^2} + \\frac{y^2}{b^2}$$';
       } else if (type === 'sinc3d') {
+        proofTitle.innerText = '3D Sinc Radial Distribution:';
+        mathProof.innerHTML = '$$z(x, y) = \\frac{\\sin(\\sqrt{x^2 + y^2})}{\\sqrt{x^2 + y^2}}$$';
         const z = [], x = [], y = [];
         for (let i = -10; i <= 10; i += 0.8) { x.push(i); y.push(i); }
         for (let i = 0; i < y.length; i++) {
@@ -1946,9 +2228,8 @@
           z.push(row);
         }
         data = [{ z: z, x: x, y: y, type: 'surface', colorscale: 'Greys', showscale: false }];
-        document.getElementById('proof-title').innerText = '3D Sinc Radial Distribution:';
-        document.getElementById('math-proof').innerHTML = '$$z(x, y) = \\frac{\\sin(\\sqrt{x^2 + y^2})}{\\sqrt{x^2 + y^2}}$$';
       }
+
       const layout = {
         paper_bgcolor: '#040507',
         margin: { l: 0, r: 0, t: 0, b: 0 },
@@ -1962,27 +2243,26 @@
       renderLatex();
     }
 
-    /* 60 FPS HTML5 CANVAS SIMULATION */
+    /* 60 FPS HTML5 CANVAS SIMULATION ENGINE */
     function initSimulation(type) {
+      currentSimType = type;
       const canvas = document.getElementById('sim-canvas');
       const ctx = canvas.getContext('2d');
-      const W = canvas.width = canvas.clientWidth || 480;
+      const W = canvas.width = canvas.clientWidth || 516;
       const H = canvas.height = canvas.clientHeight || 250;
 
       if (simAnimationId) cancelAnimationFrame(simAnimationId);
 
-      let t = 0;
-      document.getElementById('proof-title').innerText = 'Dynamic Simulation Equations:';
+      const proofTitle = document.getElementById('proof-title');
+      const mathProof = document.getElementById('math-proof');
 
       if (type === 'pendulum') {
-        document.getElementById('math-proof').innerHTML = '$$\\ddot{\\theta}_1, \\ddot{\\theta}_2 \\implies \\text{Coupled Euler-Lagrange Equations}$$';
+        proofTitle.innerText = 'Coupled Double Pendulum Dynamics:';
+        mathProof.innerHTML = '$$\\frac{d}{dt} \\left( \\frac{\\partial L}{\\partial \\dot{\\theta}_i} \\right) - \\frac{\\partial L}{\\partial \\theta_i} = 0 \\quad (i = 1, 2)$$';
         simAngle1 = Math.PI / 2;
         simAngle2 = Math.PI / 2;
-        simA1_v = 0;
-        simA2_v = 0;
-        const g = 1.0;
-        const r1 = 60, r2 = 60;
-        const m1 = 10, m2 = 10;
+        simA1_v = 0; simA2_v = 0;
+        const g = 1.0, r1 = 58, r2 = 58, m1 = 10, m2 = 10;
         const trail = [];
 
         function drawPendulum() {
@@ -2002,7 +2282,7 @@
           simAngle1 += simA1_v * 0.15;
           simAngle2 += simA2_v * 0.15;
 
-          const ox = W / 2, oy = 50;
+          const ox = W / 2, oy = 48;
           const x1 = ox + r1 * Math.sin(simAngle1);
           const y1 = oy + r1 * Math.cos(simAngle1);
           const x2 = x1 + r2 * Math.sin(simAngle2);
@@ -2019,9 +2299,7 @@
           ctx.strokeStyle = '#ffffff';
           ctx.lineWidth = 2;
           ctx.beginPath();
-          ctx.moveTo(ox, oy);
-          ctx.lineTo(x1, y1);
-          ctx.lineTo(x2, y2);
+          ctx.moveTo(ox, oy); ctx.lineTo(x1, y1); ctx.lineTo(x2, y2);
           ctx.stroke();
 
           ctx.fillStyle = '#ffffff';
@@ -2032,38 +2310,138 @@
         }
         drawPendulum();
       } else if (type === 'orbit') {
-        document.getElementById('math-proof').innerHTML = '$$\\mathbf{F} = G\\frac{M m}{r^2}\\hat{\\mathbf{r}}, \\quad \\ddot{\\mathbf{r}} = -\\frac{\\mu}{r^3}\\mathbf{r}$$';
+        proofTitle.innerText = 'Keplerian Two-Body Celestial Gravity:';
+        mathProof.innerHTML = '$$\\ddot{\\mathbf{r}} = -\\frac{G M}{r^3} \\mathbf{r}, \\quad E = \\frac{1}{2} v^2 - \\frac{\\mu}{r} = \\text{const}$$';
         let ox = W / 2, oy = H / 2;
-        let px = ox + 80, py = oy, vx = 0, vy = 2.4;
+        let px = ox + 85, py = oy, vx = 0, vy = 2.35;
         const trail = [];
 
         function drawOrbit() {
-          ctx.fillStyle = 'rgba(4,5,7,0.2)';
+          ctx.fillStyle = 'rgba(4,5,7,0.18)';
           ctx.fillRect(0, 0, W, H);
 
           const dx = ox - px, dy = oy - py;
           const dist = Math.sqrt(dx * dx + dy * dy);
-          const f = 400 / (dist * dist + 10);
+          const f = 460 / (dist * dist + 10);
           vx += (dx / dist) * f * 0.05;
           vy += (dy / dist) * f * 0.05;
-          px += vx;
-          py += vy;
+          px += vx; py += vy;
 
+          trail.push({ x: px, y: py });
+          if (trail.length > 120) trail.shift();
+
+          ctx.strokeStyle = 'rgba(255,255,255,0.25)';
+          ctx.beginPath();
+          trail.forEach((p, i) => { if (i === 0) ctx.moveTo(p.x, p.y); else ctx.lineTo(p.x, p.y); });
+          ctx.stroke();
+
+          // Central Sun
           ctx.fillStyle = '#ffffff';
-          ctx.beginPath(); ctx.arc(ox, oy, 10, 0, Math.PI * 2); ctx.fill();
+          ctx.beginPath(); ctx.arc(ox, oy, 9, 0, Math.PI * 2); ctx.fill();
+
+          // Orbiting Planet
+          ctx.fillStyle = '#93c5fd';
           ctx.beginPath(); ctx.arc(px, py, 4, 0, Math.PI * 2); ctx.fill();
 
           simAnimationId = requestAnimationFrame(drawOrbit);
         }
         drawOrbit();
+      } else if (type === 'enzyme') {
+        proofTitle.innerText = 'Michaelis-Menten Biochemical Kinetics:';
+        mathProof.innerHTML = '$$v = \\frac{d[P]}{dt} = \\frac{V_{\\max} [S]}{K_m + [S]}, \\quad -\\frac{d[S]}{dt} = v$$';
+        let S = 100.0, P = 0.0;
+        const Vmax = 1.2, Km = 25.0;
+        const historyS = [], historyP = [];
+        let t = 0;
+
+        function drawEnzyme() {
+          ctx.fillStyle = '#040507';
+          ctx.fillRect(0, 0, W, H);
+
+          const rate = (Vmax * S) / (Km + S);
+          S = Math.max(0, S - rate * 0.35);
+          P += rate * 0.35;
+
+          historyS.push(S);
+          historyP.push(P);
+          if (historyS.length > W - 60) { historyS.shift(); historyP.shift(); }
+
+          // Grid
+          ctx.strokeStyle = '#12141c';
+          ctx.beginPath();
+          for (let y = 30; y < H - 30; y += 40) { ctx.moveTo(40, y); ctx.lineTo(W - 20, y); }
+          ctx.stroke();
+
+          // Substrate curve S
+          ctx.strokeStyle = '#ef4444';
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          historyS.forEach((val, i) => {
+            const x = 40 + i;
+            const y = (H - 40) - (val / 100) * (H - 80);
+            if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+          });
+          ctx.stroke();
+
+          // Product curve P
+          ctx.strokeStyle = '#10b981';
+          ctx.beginPath();
+          historyP.forEach((val, i) => {
+            const x = 40 + i;
+            const y = (H - 40) - (val / 100) * (H - 80);
+            if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+          });
+          ctx.stroke();
+
+          ctx.fillStyle = '#ef4444'; ctx.fillText(`[S] Substrate: ${S.toFixed(1)} mM`, 50, 30);
+          ctx.fillStyle = '#10b981'; ctx.fillText(`[P] Product: ${P.toFixed(1)} mM`, 220, 30);
+
+          if (S > 0.1) simAnimationId = requestAnimationFrame(drawEnzyme);
+        }
+        drawEnzyme();
+      } else if (type === 'reaction') {
+        proofTitle.innerText = 'Reversible Chemical Equilibrium Kinetics:';
+        mathProof.innerHTML = '$$A + B \\underset{k_r}{\\overset{k_f}{\\rightleftharpoons}} C, \\quad K_{eq} = \\frac{[C]}{[A][B]} = \\frac{k_f}{k_r}$$';
+        let A = 80.0, B = 80.0, C = 0.0;
+        const kf = 0.002, kr = 0.01;
+        const histC = [];
+
+        function drawReaction() {
+          ctx.fillStyle = '#040507';
+          ctx.fillRect(0, 0, W, H);
+
+          const forward = kf * A * B;
+          const reverse = kr * C;
+          const net = forward - reverse;
+          A -= net; B -= net; C += net;
+
+          histC.push(C);
+          if (histC.length > W - 60) histC.shift();
+
+          ctx.strokeStyle = '#ffffff';
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          histC.forEach((val, i) => {
+            const x = 40 + i;
+            const y = (H - 40) - (val / 80) * (H - 80);
+            if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+          });
+          ctx.stroke();
+
+          ctx.fillStyle = '#ffffff';
+          ctx.fillText(`Equilibrium [C]: ${C.toFixed(1)} M (Net Rate: ${net.toFixed(3)})`, 50, 30);
+
+          simAnimationId = requestAnimationFrame(drawReaction);
+        }
+        drawReaction();
       }
       renderLatex();
     }
 
     function resetActiveWorkbench() {
-      if (currentWbMode === '2d') renderPlotlySample();
-      else if (currentWbMode === '3d') renderCAD3D('torus');
-      else if (currentWbMode === 'sim') initSimulation('pendulum');
+      if (currentWbMode === 'plot') evaluateAndPlot();
+      else if (currentWbMode === '3d') renderCAD3D('benzene');
+      else if (currentWbMode === 'sim') initSimulation(currentSimType);
     }
 
     function exportWorkbenchView() {
@@ -2071,16 +2449,16 @@
         const c = document.getElementById('sim-canvas');
         const a = document.createElement('a');
         a.href = c.toDataURL('image/png');
-        a.download = 'sim_frame_' + Date.now() + '.png';
+        a.download = `simulation_${Date.now()}.png`;
         a.click();
         showToast('Exported Simulation PNG');
       } else {
-        Plotly.downloadImage('plot-container', { format: 'png', width: 900, height: 500, filename: 'stem_view_' + Date.now() });
+        Plotly.downloadImage('plot-container', { format: 'png', width: 900, height: 500, filename: `stem_${Date.now()}` });
         showToast('Exported Plot PNG');
       }
     }
 
-    /* 2D PLOTTER */
+    /* 2D PLOTTER EVALUATION */
     function updateParam(p, val) {
       if (p === 'k') { paramK = parseFloat(val); document.getElementById('val-k').innerText = val; }
       else if (p === 'w') { paramW = parseFloat(val); document.getElementById('val-w').innerText = val; }
@@ -2108,45 +2486,28 @@
       } catch (e) {}
     }
 
-    function renderPlotlySample() { evaluateAndPlot(); }
-
-    function loadPreset(type) {
+    function loadPlotPreset(type) {
+      const title = document.getElementById('proof-title');
+      const math = document.getElementById('math-proof');
       if (type === 'damped') {
         document.getElementById('plot-expr').value = 'Math.exp(-k*x) * Math.cos(w*x)';
-        document.getElementById('proof-title').innerText = 'Damped Harmonic Oscillator:';
-        document.getElementById('math-proof').innerHTML = '$$\\frac{d^2 x}{dt^2} + 2\\gamma \\frac{dx}{dt} + \\omega_0^2 x = 0$$';
+        title.innerText = 'Damped Harmonic Oscillator:';
+        math.innerHTML = '$$\\frac{d^2 x}{dt^2} + 2\\gamma \\frac{dx}{dt} + \\omega_0^2 x = 0$$';
       } else if (type === 'gaussian') {
         document.getElementById('plot-expr').value = '(1 / Math.sqrt(2 * Math.PI)) * Math.exp(-0.5 * Math.pow(x - 5, 2))';
-        document.getElementById('proof-title').innerText = 'Gaussian Normal Distribution:';
-        document.getElementById('math-proof').innerHTML = '$$f(x) = \\frac{1}{\\sigma\\sqrt{2\\pi}} e^{-\\frac{(x-\\mu)^2}{2\\sigma^2}}$$';
+        title.innerText = 'Gaussian Normal Distribution:';
+        math.innerHTML = '$$f(x) = \\frac{1}{\\sigma\\sqrt{2\\pi}} e^{-\\frac{(x-\\mu)^2}{2\\sigma^2}}$$';
       } else if (type === 'sigmoid') {
         document.getElementById('plot-expr').value = '1 / (1 + Math.exp(-k * (x - 5)))';
-        document.getElementById('proof-title').innerText = 'Sigmoid / Logistic Activation:';
-        document.getElementById('math-proof').innerHTML = '$$\\sigma(x) = \\frac{1}{1 + e^{-x}}$$';
+        title.innerText = 'Sigmoid / Logistic Activation:';
+        math.innerHTML = '$$\\sigma(x) = \\frac{1}{1 + e^{-x}}$$';
       } else if (type === 'fourier') {
         document.getElementById('plot-expr').value = '(4 / Math.PI) * (Math.sin(w*x) + (1/3)*Math.sin(3*w*x) + (1/5)*Math.sin(5*w*x))';
-        document.getElementById('proof-title').innerText = 'Fourier Series Square Wave:';
-        document.getElementById('math-proof').innerHTML = '$$f(x) = \\frac{4}{\\pi} \\sum_{n=1,3,5...} \\frac{1}{n}\\sin(n\\omega x)$$';
+        title.innerText = 'Fourier Series Square Wave:';
+        math.innerHTML = '$$f(x) = \\frac{4}{\\pi} \\sum_{n=1,3,5...} \\frac{1}{n}\\sin(n\\omega x)$$';
       }
       evaluateAndPlot();
       renderLatex();
-    }
-
-    function autoExtractSTEMFromPrompt(query) {
-      const lower = query.toLowerCase();
-      if (lower.includes('gaussian')) loadPreset('gaussian');
-      else if (lower.includes('sigmoid')) loadPreset('sigmoid');
-      else if (lower.includes('fourier')) loadPreset('fourier');
-      else if (lower.includes('oscillator')) loadPreset('damped');
-    }
-
-    function autoExtractSTEMFromResponse(promptText, responseText) {
-      const mathMatch = responseText.match(/\$\$([\s\S]*?)\$\$/);
-      if (mathMatch) {
-        document.getElementById('proof-title').innerText = 'Extracted Mathematical Proof:';
-        document.getElementById('math-proof').innerHTML = `$$${mathMatch[1].trim()}$$`;
-        renderLatex();
-      }
     }
 
     function renderLatex() {
@@ -2171,7 +2532,50 @@
       }
     }
 
-    /* MODEL LIFECYCLE MANAGEMENT */
+    /* KEYBOARD HANDLING & ARROWS IN SLASH MENU */
+    function handleKey(e) {
+      const slash = document.getElementById('slash-menu');
+      if (slash.classList.contains('show')) {
+        const visibleItems = Array.from(document.querySelectorAll('.slash-item')).filter(el => el.style.display !== 'none');
+        let activeIdx = visibleItems.findIndex(el => el.classList.contains('active'));
+
+        if (e.key === 'ArrowDown') {
+          e.preventDefault();
+          if (activeIdx >= 0) visibleItems[activeIdx].classList.remove('active');
+          activeIdx = (activeIdx + 1) % visibleItems.length;
+          visibleItems[activeIdx].classList.add('active');
+          visibleItems[activeIdx].scrollIntoView({ block: 'nearest' });
+          return;
+        } else if (e.key === 'ArrowUp') {
+          e.preventDefault();
+          if (activeIdx >= 0) visibleItems[activeIdx].classList.remove('active');
+          activeIdx = (activeIdx - 1 + visibleItems.length) % visibleItems.length;
+          visibleItems[activeIdx].classList.add('active');
+          visibleItems[activeIdx].scrollIntoView({ block: 'nearest' });
+          return;
+        } else if (e.key === 'Enter' || e.key === 'Tab') {
+          e.preventDefault();
+          if (activeIdx >= 0) {
+            const cmd = visibleItems[activeIdx].getAttribute('data-cmd');
+            applySlashCommand(cmd);
+          }
+          return;
+        } else if (e.key === 'Escape') {
+          e.preventDefault();
+          slash.classList.remove('show');
+          const btn = document.getElementById('btn-slash');
+          if (btn) btn.classList.remove('active');
+          return;
+        }
+      }
+
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        handleSendOrCancel();
+      }
+    }
+
+    /* MODEL DOWNLOADS & LIFECYCLE */
     async function downloadAndRunModel(cardId, modelTag, displayName) {
       const progContainer = document.getElementById('prog-' + cardId);
       if (!progContainer) return;
@@ -2251,13 +2655,9 @@
     }
 
     async function checkOllamaConnection() {
-      const dot = document.getElementById('status-dot');
-      const text = document.getElementById('daemon-status-text');
       try {
         const res = await fetch(`${OLLAMA_HOST}/api/tags`);
         if (res.ok) {
-          dot.classList.remove('disconnected');
-          text.innerText = 'Connected';
           const data = await res.json();
           if (data.models) {
             const tags = data.models.map(m => m.name);
@@ -2268,19 +2668,13 @@
             });
             renderModelDropdown();
           }
-        } else {
-          dot.classList.add('disconnected');
-          text.innerText = 'Offline';
         }
-      } catch (e) {
-        dot.classList.add('disconnected');
-        text.innerText = 'Reconnecting';
-      }
+      } catch (e) {}
     }
 
-    /* SESSION PERSISTENCE */
+    /* SESSIONS PERSISTENCE */
     function initSessions() {
-      const saved = localStorage.getItem('vigyan_v22_sessions');
+      const saved = localStorage.getItem('vigyan_v23_sessions');
       if (saved) {
         try { sessions = JSON.parse(saved); } catch (e) { sessions = []; }
       }
@@ -2359,7 +2753,7 @@
     }
 
     function saveSessions() {
-      localStorage.setItem('vigyan_v22_sessions', JSON.stringify(sessions));
+      localStorage.setItem('vigyan_v23_sessions', JSON.stringify(sessions));
     }
 
     function saveCurrentSessionMessages() {
@@ -2392,8 +2786,8 @@
             <img src="assets/micro_logo_v.png" class="msg-avatar-v" alt="V">
             <span>${currentModel}</span>
           </div>
-          <div class="msg-content">
-            Sovereign STEM Engine active. Ask for calculus proofs, differential equations, 3D CAD modeling, or physics simulations. All calculations execute locally. Type <strong>/</strong> for agentic tools.
+          <div class="msg-content" id="welcome-msg-text">
+            Sovereign STEM Lab active. Ready for rigorous proofs, 3D CAD meshes, astronomy orbits, chemical kinetics, and physical simulations. Click <strong>[/]</strong> or type <strong>/</strong> for agentic tools.
           </div>
         </div>
       `;
@@ -2406,40 +2800,8 @@
       showToast('Chat cleared');
     }
 
-    function exportCurrentChatMD() {
-      let md = `# Vigyan Pro STEM Session Export\n\n`;
-      document.querySelectorAll('#chat-box .msg').forEach(el => {
-        if (el.classList.contains('user')) md += `### User\n${el.innerText}\n\n`;
-        else {
-          const c = el.querySelector('.msg-content');
-          md += `### Vigyan Pro (${currentModel})\n${c ? c.innerText : ''}\n\n---\n\n`;
-        }
-      });
-      const blob = new Blob([md], { type: 'text/markdown' });
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = `vigyan_stem_${Date.now()}.md`;
-      a.click();
-      showToast('Exported Markdown');
-    }
-
-    function handleKey(e) {
-      const slash = document.getElementById('slash-menu');
-      if (slash.classList.contains('show')) {
-        if (e.key === 'Escape') {
-          e.preventDefault();
-          slash.classList.remove('show');
-          return;
-        }
-      }
-      if (e.key === 'Enter' && !e.shiftKey) {
-        e.preventDefault();
-        handleSendOrCancel();
-      }
-    }
-
     function loadSettings() {
-      const s = localStorage.getItem('vigyan_v22_settings');
+      const s = localStorage.getItem('vigyan_v23_settings');
       if (s) {
         try {
           const cfg = JSON.parse(s);
@@ -2471,7 +2833,7 @@
       const url = document.getElementById('setting-ollama-url').value;
       const persona = document.getElementById('setting-persona').value;
       OLLAMA_HOST = url;
-      localStorage.setItem('vigyan_v22_settings', JSON.stringify({ temp, ctx, topp, url, persona }));
+      localStorage.setItem('vigyan_v23_settings', JSON.stringify({ temp, ctx, topp, url, persona }));
       showToast('Settings saved');
     }
   </script>

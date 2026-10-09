@@ -8,18 +8,45 @@ Zero Browser Chrome. 100% Native Desktop Window.
 import sys
 import os
 import signal
+import subprocess
 import gi
 
 gi.require_version('Gtk', '3.0')
 gi.require_version('WebKit2', '4.1')
 from gi.repository import Gtk, WebKit2, Gdk, GdkPixbuf, GLib
 
+def ensure_ollama_daemon():
+    """Verify local Ollama daemon is active; if not, attempt quiet background startup."""
+    try:
+        import urllib.request
+        req = urllib.request.Request("http://127.0.0.1:11434/api/tags", method="GET")
+        with urllib.request.urlopen(req, timeout=1.0) as resp:
+            if resp.status == 200:
+                return
+    except Exception:
+        pass
+
+    # Try starting ollama serve in background if available
+    try:
+        subprocess.Popen(
+            ["ollama", "serve"],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            start_new_session=True
+        )
+    except Exception:
+        pass
+
 def main():
     signal.signal(signal.SIGINT, signal.SIG_DFL)
+    signal.signal(signal.SIGTERM, signal.SIG_DFL)
 
     # Wayland / XDG application identity mapping
     GLib.set_prgname("vigyan-pro")
     GLib.set_application_name("Vigyan Pro")
+
+    # Proactively check / ensure Ollama background service
+    ensure_ollama_daemon()
 
     win = Gtk.Window(type=Gtk.WindowType.TOPLEVEL)
     win.set_title("Vigyan Pro")
@@ -28,7 +55,7 @@ def main():
     win.set_default_size(1340, 740)
     win.set_position(Gtk.WindowPosition.CENTER)
 
-    # Dark background
+    # Pitch-black obsidian background
     win.override_background_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(0, 0, 0, 1))
 
     # Icon resolution
@@ -51,13 +78,19 @@ def main():
         except Exception:
             pass
 
-    # WebKit Settings
+    # WebKit Settings & GPU Acceleration
     settings = WebKit2.Settings()
     settings.set_enable_javascript(True)
     settings.set_enable_webgl(True)
     settings.set_enable_write_console_messages_to_stdout(True)
     settings.set_allow_file_access_from_file_urls(True)
     settings.set_allow_universal_access_from_file_urls(True)
+    settings.set_enable_smooth_scrolling(True)
+    try:
+        settings.set_hardware_acceleration_policy(WebKit2.HardwareAccelerationPolicy.ALWAYS)
+        settings.set_enable_accelerated_2d_canvas(True)
+    except Exception:
+        pass
 
     # WebKit View
     webview = WebKit2.WebView.new_with_settings(settings)
@@ -72,6 +105,22 @@ def main():
     index_path = next((p for p in index_candidates if os.path.exists(p)), index_candidates[0])
     webview.load_uri(f"file://{os.path.abspath(index_path)}")
 
+    # Keyboard shortcuts: F11 Fullscreen, Ctrl+R Reload
+    def on_key_press(widget, event):
+        keyval = event.keyval
+        state = event.state
+        if keyval == Gdk.KEY_F11:
+            if win.get_window().get_state() & Gdk.WindowState.FULLSCREEN:
+                win.unfullscreen()
+            else:
+                win.fullscreen()
+            return True
+        elif keyval in (Gdk.KEY_r, Gdk.KEY_R) and (state & Gdk.ModifierType.CONTROL_MASK):
+            webview.reload()
+            return True
+        return False
+
+    win.connect("key-press-event", on_key_press)
     win.add(webview)
     win.connect("destroy", Gtk.main_quit)
 
