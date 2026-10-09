@@ -1,0 +1,7 @@
+dist/
+.build_deb/
+.build_tar/
+.deb_tmp/
+__pycache__/
+*.pyc
+.DS_Store
