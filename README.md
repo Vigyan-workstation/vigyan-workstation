@@ -1,4 +1,4 @@
-# Vigyan Pro — Sovereign Desktop Workstation (v2.5.0)
+# Vigyan Pro — Sovereign Desktop Workstation (v2.6.0)
 
 > **Enterprise Obsidian-Grade Sovereign STEM & Semiconductor AI Desktop Workstation**  
 > *Zero browser chrome. 100% Native cross-platform desktop runtime for Linux, Windows, and macOS.*  
@@ -13,7 +13,7 @@
 ```
 ┌──────────────────────────────────────────────────────────────┐
 │  Vigyan Pro Shell (WebKitGTK Linux / WebView2 Win / Mac)     │
-│  • Obsidian Pitch-Black Monochrome Design (#000000)          │
+│  • High-Contrast Obsidian Pitch-Black Monochrome Design      │
 │  • Brushed Titanium Faceted "V" Micro-Glyph Branding         │
 ├──────────────────────────────────────────────────────────────┤
 │  Triple Sovereign Workspace                                  │
@@ -35,10 +35,14 @@
 ## Features
 
 - **Multi-OS Native Workstation:** Linux (WebKitGTK 4.1), Windows (Microsoft Edge WebView2), macOS (Apple Cocoa WKWebView).
-- **Semiconductor & Microelectronics Physics:**
-  - 3D Silicon Diamond Cubic crystal lattice with covalent tetrahedral bonds.
-  - 60 FPS PN junction band bending simulator ($E_c, E_v, E_F$, dynamic bias oscillation, space-charge depletion width $W_{dep}$).
-  - MOSFET saturation curves and Shockley diode $I\text{-}V$ characteristic presets.
+- **High-Contrast Dark Theme Engine:**
+  - Pitch-black obsidian containers (`#08090d` / `#121520`) with pure white typography (`#ffffff` / `#e2e8f0`).
+  - Zero native WebKit white-box artifacts with custom hairline SVG chevron selectors.
+  - Generous bottom scroll padding preventing any occlusion by the floating navigation dock.
+- **Advanced STEM Workbench:**
+  - **2D Dynamic Function Plotter:** Dual trace plotting ($f_1(x)$ and $f_2(x)$), live real-time numerical derivative ($f'(x)$) and numerical cumulative integral ($\int f(x)dx$), interactive coordinate readout, dynamic frequency/damping/offset sliders, and scientific presets (MOSFET, Shockley diode, Damped oscillator, Soliton wave, Gaussian normal, Sigmoid, Bessel $J_0$).
+  - **3D CAD & Molecular Structure Suite:** WebGL interactive rendering for Graphene Monolayer ($sp^2$ hexagonal carbon lattice), Caffeine ($C_8H_{10}N_4O_2$), Silicon Diamond Lattice ($Fd\bar{3}m$), Benzene ($C_6H_6$), Water ($H_2O$), Methane ($CH_4$), Torus, Spring, and Paraboloid with camera angle controls and wireframe mode.
+  - **60 FPS Dynamic Simulation Engine:** Quantum tunneling wavepacket dispersion across variable potential barrier $V_0$ with real-time transmission $T$ and reflection $R$ coefficients, PN junction band bending with interactive voltage bias, coupled double pendulum, Keplerian celestial orbits, Michaelis-Menten enzyme kinetics, and reversible chemical equilibrium.
 - **Uncluttered Sovereign Vault:**
   - `OLMoE 1B-7B MoE` (`@allenai / OLMoE-1B-7B-0924`) — 64 Sparse Experts, 1B Active/token.
   - `Vigyan 1.5B 4x-MoE` (`@shreyansh12183 / Vigyan-1.5B-4x-MoE`) — Calculus & physics solver.
@@ -51,7 +55,7 @@
   - Segmented reasoning profiles (Deterministic Proof, Balanced Analysis, Exploratory Synthesis).
   - Dynamic context buffer slider with live VRAM allocation progress meter.
   - Precision sampling controls and system persona directives.
-- **Zero-Emoji Monochrome Iconography:** Feather/Linear vector line icons across all tabs, actions, and intent cards.
+- **Zero-Emoji Monochrome Iconography:** Hairline vector line icons across all tabs, actions, and intent cards.
 - **Multi-Turn Context Ingestion:** Rolling message buffer retaining formulas and derivation steps across conversational turns.
 
 ---
@@ -60,21 +64,21 @@
 
 Download the latest release assets from the [GitHub Releases](https://github.com/shreyansh001boy-tech/vigyan-pro-desktop/releases):
 
-### Linux (`.deb` or Portable)
+### Linux (`.deb` or Standalone Archive)
 ```bash
 # Debian / Ubuntu
-sudo apt install ./vigyan-pro_2.5.0_amd64.deb
+sudo apt install ./vigyan-pro_2.6.0_amd64.deb
 
 # Portable Archive
-tar -xzf vigyan-pro_2.5.0_linux_x86_64.tar.gz
-cd vigyan-pro-2.5.0 && ./vigyan-pro
+tar -xzf vigyan-pro_2.6.0_linux_x86_64.tar.gz
+cd vigyan-pro-2.6.0 && ./vigyan-pro
 ```
 
 ### Windows
-Extract `vigyan-pro_2.5.0_windows_x86_64.zip` and double-click `Vigyan-Pro.bat`.
+Extract `vigyan-pro_2.6.0_windows_x86_64.zip` and double-click `Vigyan-Pro.bat`.
 
 ### macOS
-Extract `vigyan-pro_2.5.0_macos_universal.tar.gz` and execute `./Vigyan-Pro.command`.
+Extract `vigyan-pro_2.6.0_macos_universal.tar.gz` and execute `./Vigyan-Pro.command`.
 
 Run directly from your application launcher or terminal:
 ```bash
