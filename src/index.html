@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Vigyan Pro — Sovereign STEM Workstation</title>
+  <title>Vigyan Pro</title>
   <!-- Offline KaTeX -->
   <link rel="stylesheet" href="vendor/katex.min.css">
   <script src="vendor/katex.min.js"></script>
@@ -25,6 +25,7 @@
       --text-muted: #a1a1aa;
       --text-subtle: #71717a;
       --emerald-subdued: #10b981;
+      --danger: #ef4444;
       --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -42,8 +43,8 @@
     }
 
     .icon {
-      width: 14px;
-      height: 14px;
+      width: 15px;
+      height: 15px;
       stroke: currentColor;
       stroke-width: 1.6;
       fill: none;
@@ -54,7 +55,7 @@
       flex-shrink: 0;
     }
 
-    /* TOP HEADER */
+    /* MINIMAL CLEAN HEADER */
     header {
       background: #040507;
       border-bottom: 1px solid var(--border);
@@ -75,8 +76,8 @@
       background: transparent;
       border: 1px solid var(--border);
       color: var(--text-muted);
-      width: 26px;
-      height: 26px;
+      width: 28px;
+      height: 28px;
       border-radius: 6px;
       cursor: pointer;
       display: flex;
@@ -92,48 +93,37 @@
     .brand {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 9px;
     }
     .brand-micro-img {
-      width: 20px;
-      height: 20px;
+      width: 22px;
+      height: 22px;
       border-radius: 4px;
       object-fit: cover;
     }
     .brand-title {
-      font-size: 13px;
+      font-size: 14px;
       font-weight: 700;
-      letter-spacing: 0.6px;
+      letter-spacing: 0.5px;
       text-transform: uppercase;
       color: #ffffff;
-    }
-    .brand-badge {
-      font-size: 9px;
-      font-weight: 600;
-      letter-spacing: 0.5px;
-      background: #111218;
-      color: var(--text-subtle);
-      padding: 1px 6px;
-      border-radius: 4px;
-      border: 1px solid var(--border);
-      text-transform: uppercase;
     }
 
     .header-right {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
     }
     .status-badge {
       display: flex;
       align-items: center;
       gap: 6px;
-      font-size: 11px;
+      font-size: 12px;
       font-weight: 500;
       color: var(--text-muted);
       background: #090a0f;
       border: 1px solid var(--border);
-      padding: 3px 9px;
+      padding: 4px 10px;
       border-radius: 6px;
     }
     .status-dot {
@@ -160,7 +150,7 @@
 
     /* SESSIONS SIDEBAR */
     .sidebar {
-      width: 210px;
+      width: 220px;
       background: var(--sidebar);
       border-right: 1px solid var(--border);
       display: flex;
@@ -175,14 +165,14 @@
       border-right: none;
     }
     .sidebar-header {
-      padding: 10px 12px;
+      padding: 12px 14px;
       border-bottom: 1px solid var(--border-subtle);
       display: flex;
       align-items: center;
       justify-content: space-between;
     }
     .sidebar-title {
-      font-size: 11px;
+      font-size: 12px;
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.5px;
@@ -192,28 +182,28 @@
       background: #ffffff;
       color: #000000;
       border: none;
-      font-size: 11px;
+      font-size: 12px;
       font-weight: 600;
-      padding: 4px 9px;
+      padding: 5px 10px;
       border-radius: 5px;
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 4px;
+      gap: 5px;
     }
     .session-list {
       flex: 1;
       overflow-y: auto;
-      padding: 6px;
+      padding: 8px;
       display: flex;
       flex-direction: column;
-      gap: 2px;
+      gap: 3px;
     }
     .session-item {
-      padding: 6px 8px;
-      border-radius: 5px;
+      padding: 8px 10px;
+      border-radius: 6px;
       cursor: pointer;
-      font-size: 11.5px;
+      font-size: 13px;
       color: var(--text-muted);
       border: 1px solid transparent;
       display: flex;
@@ -245,7 +235,7 @@
       cursor: pointer;
       padding: 2px 4px;
       border-radius: 3px;
-      font-size: 11px;
+      font-size: 12px;
     }
     .session-item:hover .btn-session-del { opacity: 1; }
     .btn-session-del:hover { color: #ef4444; }
@@ -261,7 +251,7 @@
       border-right: 1px solid var(--border);
     }
     .chat-toolbar {
-      padding: 8px 14px;
+      padding: 8px 16px;
       border-bottom: 1px solid var(--border);
       display: flex;
       align-items: center;
@@ -273,10 +263,10 @@
     .companion-pill {
       display: flex;
       align-items: center;
-      gap: 7px;
+      gap: 8px;
       background: #0d0f15;
       border: 1px solid var(--border);
-      padding: 4px 11px;
+      padding: 5px 12px;
       border-radius: 20px;
       cursor: pointer;
       transition: all 0.15s;
@@ -286,19 +276,19 @@
       border-color: var(--border-active);
     }
     .companion-micro-v {
-      width: 14px;
-      height: 14px;
+      width: 16px;
+      height: 16px;
       border-radius: 3px;
       object-fit: cover;
     }
     .companion-model-name {
-      font-size: 12px;
+      font-size: 13px;
       color: #ffffff;
       font-weight: 600;
     }
     .chevron-icon {
-      width: 10px;
-      height: 10px;
+      width: 11px;
+      height: 11px;
       stroke: var(--text-subtle);
       stroke-width: 2;
       fill: none;
@@ -314,14 +304,14 @@
       background: #0c0e14;
       border: 1px solid var(--border-active);
       border-radius: 8px;
-      min-width: 260px;
+      min-width: 280px;
       z-index: 100;
-      padding: 4px;
+      padding: 5px;
       box-shadow: 0 12px 32px rgba(0,0,0,0.85);
     }
     .model-dropdown-menu.show { display: block; animation: fadeIn 0.12s var(--ease-spring); }
     .dropdown-model-item {
-      padding: 7px 10px;
+      padding: 8px 12px;
       border-radius: 5px;
       cursor: pointer;
       display: flex;
@@ -332,22 +322,22 @@
     }
     .dropdown-model-item:hover { background: #181a24; }
     .dropdown-model-item.active { background: #1f2230; }
-    .dropdown-model-tag { font-size: 11.5px; font-weight: 600; color: #ffffff; }
-    .dropdown-model-spec { font-size: 10px; color: var(--text-subtle); }
+    .dropdown-model-tag { font-size: 12.5px; font-weight: 600; color: #ffffff; }
+    .dropdown-model-spec { font-size: 11px; color: var(--text-subtle); }
 
-    .toolbar-actions { display: flex; gap: 5px; }
+    .toolbar-actions { display: flex; gap: 6px; }
     .btn-action {
       background: #0f1118;
       border: 1px solid var(--border);
       color: var(--text-muted);
-      font-size: 11px;
+      font-size: 12px;
       font-weight: 500;
-      padding: 4px 9px;
-      border-radius: 5px;
+      padding: 5px 11px;
+      border-radius: 6px;
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 4px;
+      gap: 5px;
       transition: all 0.15s;
     }
     .btn-action:hover {
@@ -356,21 +346,21 @@
       border-color: var(--border-active);
     }
 
-    /* CHAT STREAM */
+    /* CHAT STREAM (SCALED UP TYPOGRAPHY: 14.5px) */
     .chat-scroll-wrapper {
       flex: 1;
       overflow-y: auto;
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 20px 20px 130px 20px;
+      padding: 24px 24px 140px 24px;
     }
     .chat-container {
       width: 100%;
-      max-width: 760px;
+      max-width: 780px;
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      gap: 16px;
     }
     .msg {
       display: flex;
@@ -383,94 +373,124 @@
       align-self: flex-end;
       background: #12141c;
       border: 1px solid var(--border);
-      padding: 9px 13px;
-      border-radius: 10px 10px 2px 10px;
+      padding: 11px 16px;
+      border-radius: 12px 12px 3px 12px;
       color: #ffffff;
-      font-size: 12.5px;
-      line-height: 1.5;
+      font-size: 14.5px;
+      line-height: 1.6;
     }
     .msg.assistant {
       align-self: flex-start;
       background: #08090d;
       border: 1px solid var(--border);
-      padding: 11px 14px;
-      border-radius: 10px 10px 10px 2px;
+      padding: 13px 18px;
+      border-radius: 12px 12px 12px 3px;
       color: #e5e7eb;
-      font-size: 12.5px;
-      line-height: 1.6;
+      font-size: 14.5px;
+      line-height: 1.65;
       width: 100%;
     }
     .msg-header {
-      font-size: 11px;
+      font-size: 12px;
       font-weight: 600;
       color: var(--text-muted);
-      margin-bottom: 6px;
+      margin-bottom: 8px;
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 7px;
     }
     .msg-avatar-v {
-      width: 15px;
-      height: 15px;
+      width: 17px;
+      height: 17px;
       border-radius: 3px;
       object-fit: cover;
-    }
-    .msg-badge-local {
-      font-size: 9px;
-      font-weight: 600;
-      color: var(--text-subtle);
-      background: #111319;
-      border: 1px solid var(--border);
-      padding: 1px 4px;
-      border-radius: 3px;
     }
     .msg-content { word-break: break-word; }
     .reasoning-box {
       background: #040507;
       border-left: 2px solid #3f3f46;
-      padding: 6px 10px;
-      margin: 6px 0;
-      font-size: 11.5px;
+      padding: 8px 12px;
+      margin: 8px 0;
+      font-size: 13px;
       color: #a1a1aa;
       border-radius: 0 4px 4px 0;
     }
     .reasoning-header {
-      font-size: 10px;
+      font-size: 11px;
       font-weight: 600;
       color: #71717a;
       text-transform: uppercase;
       letter-spacing: 0.5px;
-      margin-bottom: 3px;
+      margin-bottom: 4px;
       display: flex;
       align-items: center;
-      gap: 4px;
+      gap: 5px;
     }
 
-    /* COMPACT INPUT CAPSULE */
+    /* COMPACT INPUT CAPSULE & CANCEL BUTTON */
     .chat-input-area {
       position: absolute;
       bottom: 56px;
       left: 0;
       right: 0;
       background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.85) 40%, #000000 100%);
-      padding: 6px 20px 8px 20px;
+      padding: 8px 24px 10px 24px;
       display: flex;
       justify-content: center;
       z-index: 20;
     }
-    .input-inner-wrapper { width: 100%; max-width: 760px; }
+    .input-inner-wrapper { width: 100%; max-width: 780px; position: relative; }
+    
+    /* FLOATING SLASH COMMAND MENU */
+    .slash-menu {
+      display: none;
+      position: absolute;
+      bottom: calc(100% + 8px);
+      left: 0;
+      background: #0d0f17;
+      border: 1px solid var(--border-active);
+      border-radius: 10px;
+      min-width: 320px;
+      z-index: 95;
+      padding: 6px;
+      box-shadow: 0 16px 36px rgba(0,0,0,0.9);
+      animation: fadeIn 0.12s var(--ease-spring);
+    }
+    .slash-menu.show { display: block; }
+    .slash-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.12s;
+    }
+    .slash-item:hover, .slash-item.active { background: #1a1d29; }
+    .slash-cmd {
+      font-family: ui-monospace, monospace;
+      font-size: 12.5px;
+      font-weight: 700;
+      color: #ffffff;
+      min-width: 80px;
+    }
+    .slash-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
     .input-capsule {
       display: flex;
       align-items: flex-end;
       gap: 8px;
       background: #090a0f;
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: 10px;
-      padding: 6px 10px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 12px;
+      padding: 8px 12px;
       transition: border-color 0.15s;
     }
     .input-capsule:focus-within {
-      border-color: rgba(255, 255, 255, 0.28);
+      border-color: rgba(255, 255, 255, 0.3);
       background: #0c0e14;
     }
     .input-capsule textarea {
@@ -478,35 +498,40 @@
       background: transparent;
       border: none;
       color: #ffffff;
-      font-size: 12.5px;
-      line-height: 1.45;
+      font-size: 14px;
+      line-height: 1.5;
       resize: none;
       outline: none;
-      height: 34px;
-      max-height: 140px;
+      height: 38px;
+      max-height: 160px;
       padding: 6px 0;
       font-family: inherit;
     }
     .input-capsule textarea::placeholder { color: var(--text-subtle); }
+    
     .btn-send {
       background: #ffffff;
       color: #000000;
       border: none;
-      width: 28px;
-      height: 28px;
-      border-radius: 7px;
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
-      transition: opacity 0.15s;
+      transition: all 0.15s;
     }
     .btn-send:hover { opacity: 0.9; }
+    .btn-send.stopping {
+      background: var(--danger);
+      color: #ffffff;
+    }
 
-    /* UPGRADED STEM WORKBENCH (DESMOS + WOLFRAM GRADE) */
+    /* DUAL-ENGINE STEM WORKBENCH (2D, 3D CAD, PHYSICS SIM) */
     .stem-section {
-      width: 510px;
+      width: 530px;
       background: #030406;
       display: flex;
       flex-direction: column;
@@ -520,61 +545,78 @@
       justify-content: space-between;
       background: #050608;
     }
-    .stem-title {
-      font-size: 11.5px;
-      font-weight: 600;
-      color: #ffffff;
+    .workbench-tabs {
       display: flex;
-      align-items: center;
-      gap: 6px;
+      gap: 4px;
+      background: #090a0f;
+      padding: 3px;
+      border-radius: 7px;
+      border: 1px solid var(--border);
+    }
+    .wb-tab {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 11.5px;
+      font-weight: 500;
+      padding: 4px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .wb-tab.active {
+      background: #ffffff;
+      color: #000000;
+      font-weight: 600;
     }
     .stem-actions { display: flex; gap: 5px; }
+
     .stem-body {
       flex: 1;
       overflow-y: auto;
-      padding: 12px;
+      padding: 14px;
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 12px;
     }
     .stem-card {
       background: #07080c;
       border: 1px solid var(--border);
-      border-radius: 7px;
-      padding: 10px;
+      border-radius: 8px;
+      padding: 12px;
     }
     .stem-card-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 8px;
+      margin-bottom: 10px;
     }
     .stem-card-title {
-      font-size: 11px;
+      font-size: 12px;
       font-weight: 600;
       color: var(--text-muted);
       text-transform: uppercase;
       letter-spacing: 0.5px;
       display: flex;
       align-items: center;
-      gap: 5px;
+      gap: 6px;
     }
-    .stem-card-badge { font-size: 10px; color: var(--text-subtle); }
+    .stem-card-badge { font-size: 11px; color: var(--text-subtle); }
     
     .formula-bar {
       display: flex;
       gap: 6px;
-      margin-bottom: 8px;
+      margin-bottom: 10px;
     }
     .plot-input {
       flex: 1;
       background: #0b0d13;
       border: 1px solid var(--border);
-      border-radius: 5px;
+      border-radius: 6px;
       color: #ffffff;
       font-family: ui-monospace, SFMono-Regular, monospace;
-      font-size: 11px;
-      padding: 5px 8px;
+      font-size: 12.5px;
+      padding: 6px 10px;
       outline: none;
     }
     .plot-input:focus { border-color: var(--border-active); }
@@ -582,10 +624,10 @@
       background: #181a24;
       border: 1px solid var(--border);
       color: #ffffff;
-      font-size: 11px;
+      font-size: 12px;
       font-weight: 600;
-      padding: 5px 11px;
-      border-radius: 5px;
+      padding: 6px 12px;
+      border-radius: 6px;
       cursor: pointer;
     }
     .btn-plot:hover { background: #222533; }
@@ -594,12 +636,12 @@
     .slider-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 8px;
-      margin-bottom: 8px;
+      gap: 10px;
+      margin-bottom: 10px;
       background: #040508;
       border: 1px solid var(--border-subtle);
       border-radius: 6px;
-      padding: 6px 10px;
+      padding: 8px 12px;
     }
     .slider-item {
       display: flex;
@@ -607,7 +649,7 @@
       gap: 8px;
     }
     .slider-label {
-      font-size: 10.5px;
+      font-size: 12px;
       font-family: ui-monospace, monospace;
       color: var(--text-muted);
       min-width: 32px;
@@ -619,33 +661,42 @@
       height: 4px;
     }
     .slider-val {
-      font-size: 10.5px;
+      font-size: 12px;
       font-family: ui-monospace, monospace;
       color: #ffffff;
-      min-width: 28px;
+      min-width: 32px;
       text-align: right;
     }
 
     #plot-container {
       width: 100%;
-      height: 230px;
+      height: 250px;
       background: #040507;
-      border-radius: 5px;
+      border-radius: 6px;
       overflow: hidden;
       border: 1px solid var(--border-subtle);
     }
+    #sim-canvas {
+      width: 100%;
+      height: 250px;
+      background: #040507;
+      border-radius: 6px;
+      border: 1px solid var(--border-subtle);
+      display: none;
+    }
+
     .plot-chips {
       display: flex;
-      gap: 5px;
+      gap: 6px;
       flex-wrap: wrap;
-      margin-top: 8px;
+      margin-top: 10px;
     }
     .plot-chip {
       background: #0c0e14;
       border: 1px solid var(--border);
       color: var(--text-muted);
-      font-size: 10px;
-      padding: 3px 7px;
+      font-size: 11px;
+      padding: 4px 8px;
       border-radius: 4px;
       cursor: pointer;
       transition: all 0.12s;
@@ -655,112 +706,93 @@
       color: #ffffff;
       border-color: var(--border-active);
     }
+    
     .proof-box {
-      font-size: 12px;
+      font-size: 14.5px;
       color: #e5e7eb;
-      line-height: 1.5;
-      padding: 8px 10px;
+      line-height: 1.6;
+      padding: 10px 12px;
       background: #040507;
-      border-radius: 5px;
+      border-radius: 6px;
       border: 1px solid var(--border-subtle);
       overflow-x: auto;
     }
 
-    /* SOVEREIGN VAULT (COMPACT & 2 PROFILES ONLY) */
+    /* SOVEREIGN VAULT */
     .hub-container {
       flex: 1;
       overflow-y: auto;
-      padding: 20px 28px 80px 28px;
+      padding: 24px 32px 90px 32px;
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      gap: 16px;
     }
     .hub-hero {
       background: #090b10;
       border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 12px 16px;
+      border-radius: 10px;
+      padding: 16px 20px;
       display: flex;
       align-items: center;
       justify-content: space-between;
     }
     .hero-title {
-      font-size: 12.5px;
+      font-size: 13.5px;
       font-weight: 600;
       color: #ffffff;
       display: flex;
       align-items: center;
-      gap: 7px;
+      gap: 8px;
     }
     .hero-meta {
       display: flex;
-      gap: 8px;
-      margin-top: 4px;
-      font-size: 10.5px;
+      gap: 10px;
+      margin-top: 5px;
+      font-size: 11.5px;
       color: var(--text-subtle);
     }
     .hero-spec {
       background: #050608;
       border: 1px solid var(--border);
-      padding: 1px 5px;
-      border-radius: 3px;
-    }
-    .hub-header-bar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .hub-curated-badge {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 11px;
-      font-weight: 500;
-      color: var(--text-muted);
+      padding: 2px 6px;
+      border-radius: 4px;
     }
     .hub-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
-      gap: 10px;
+      grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+      gap: 12px;
     }
     .hub-card {
       background: #08090d;
       border: 1px solid var(--border);
-      border-radius: 7px;
-      padding: 12px;
+      border-radius: 8px;
+      padding: 14px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      gap: 10px;
-      transition: border-color 0.15s, background 0.15s;
+      gap: 12px;
+      transition: border-color 0.15s;
     }
     .hub-card:hover {
       border-color: var(--border-active);
       background: #0c0e14;
     }
-    .hub-card-header {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 6px;
-    }
-    .hub-card-name { font-size: 12px; font-weight: 600; color: #ffffff; }
+    .hub-card-name { font-size: 13px; font-weight: 600; color: #ffffff; }
     .hub-card-size {
-      font-size: 10.5px;
+      font-size: 11px;
       color: var(--text-subtle);
       background: #040507;
       border: 1px solid var(--border);
-      padding: 1px 5px;
-      border-radius: 3px;
-      white-space: nowrap;
+      padding: 2px 6px;
+      border-radius: 4px;
     }
     .author-badge {
-      font-size: 9.5px;
+      font-size: 10px;
       font-weight: 600;
-      padding: 1px 5px;
-      border-radius: 3px;
+      padding: 2px 6px;
+      border-radius: 4px;
       display: inline-block;
-      margin-top: 3px;
+      margin-top: 4px;
     }
     .author-shreyansh {
       background: #111420;
@@ -773,21 +805,21 @@
       border: 1px solid rgba(216, 180, 254, 0.2);
     }
     .hub-card-specs {
-      font-size: 10.5px;
+      font-size: 11px;
       color: var(--text-subtle);
       display: flex;
-      gap: 6px;
-      margin-top: 4px;
+      gap: 8px;
+      margin-top: 5px;
     }
     .hub-card-footer {
       display: flex;
       align-items: center;
       justify-content: space-between;
       border-top: 1px solid var(--border-subtle);
-      padding-top: 8px;
+      padding-top: 10px;
     }
     .badge-ready {
-      font-size: 10.5px;
+      font-size: 11px;
       font-weight: 600;
       color: var(--emerald-subdued);
       display: flex;
@@ -801,7 +833,7 @@
       padding: 3px 6px;
       border-radius: 4px;
       cursor: pointer;
-      font-size: 10.5px;
+      font-size: 11px;
       display: flex;
       align-items: center;
       gap: 3px;
@@ -815,7 +847,7 @@
     .download-progress-container { display: none; margin-top: 6px; }
     .download-progress-track {
       background: #151720;
-      height: 3px;
+      height: 4px;
       border-radius: 2px;
       overflow: hidden;
     }
@@ -826,22 +858,22 @@
       transition: width 0.15s ease;
     }
     .download-progress-text {
-      font-size: 10px;
+      font-size: 10.5px;
       color: var(--text-muted);
-      margin-top: 3px;
+      margin-top: 4px;
       display: flex;
       justify-content: space-between;
     }
 
-    /* SETTINGS / COMMAND DECK */
+    /* SETTINGS */
     .settings-container {
       flex: 1;
       overflow-y: auto;
-      padding: 20px 28px 80px 28px;
+      padding: 24px 32px 90px 32px;
       display: flex;
       flex-direction: column;
-      gap: 14px;
-      max-width: 820px;
+      gap: 16px;
+      max-width: 840px;
       margin: 0 auto;
       width: 100%;
     }
@@ -849,33 +881,33 @@
       background: #090a0f;
       border: 1px solid var(--border);
       border-radius: 8px;
-      padding: 12px 16px;
+      padding: 14px 18px;
       display: flex;
       align-items: center;
       justify-content: space-between;
     }
     .settings-title {
-      font-size: 12.5px;
+      font-size: 13.5px;
       font-weight: 600;
       color: #ffffff;
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 7px;
     }
     .intent-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
+      gap: 12px;
     }
     .intent-card {
       background: #08090d;
       border: 1px solid var(--border);
-      border-radius: 7px;
-      padding: 12px;
+      border-radius: 8px;
+      padding: 14px;
       cursor: pointer;
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: 5px;
       transition: all 0.15s;
     }
     .intent-card:hover {
@@ -886,24 +918,19 @@
       background: #11131c;
       border-color: #ffffff;
     }
-    .intent-card-header {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .intent-card-title { font-size: 11.5px; font-weight: 600; color: #ffffff; }
-    .intent-card-desc { font-size: 10.5px; color: var(--text-muted); line-height: 1.4; }
+    .intent-card-title { font-size: 12px; font-weight: 600; color: #ffffff; }
+    .intent-card-desc { font-size: 11px; color: var(--text-muted); line-height: 1.45; }
 
     .accordion-header {
       background: #090a0f;
       border: 1px solid var(--border);
-      border-radius: 7px;
-      padding: 10px 14px;
+      border-radius: 8px;
+      padding: 12px 16px;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      font-size: 11.5px;
+      font-size: 12px;
       font-weight: 600;
       color: #ffffff;
     }
@@ -912,15 +939,15 @@
       background: #06070a;
       border: 1px solid var(--border);
       border-top: none;
-      border-radius: 0 0 7px 7px;
-      padding: 14px;
+      border-radius: 0 0 8px 8px;
+      padding: 16px;
       flex-direction: column;
-      gap: 12px;
+      gap: 14px;
     }
     .accordion-body.open { display: flex; }
-    .setting-item { display: flex; flex-direction: column; gap: 4px; }
+    .setting-item { display: flex; flex-direction: column; gap: 5px; }
     .setting-label {
-      font-size: 10.5px;
+      font-size: 11px;
       font-weight: 500;
       color: var(--text-muted);
       display: flex;
@@ -929,15 +956,15 @@
     .setting-input {
       background: #0b0d13;
       border: 1px solid var(--border);
-      border-radius: 5px;
+      border-radius: 6px;
       color: #ffffff;
-      padding: 6px 9px;
-      font-size: 11.5px;
+      padding: 7px 10px;
+      font-size: 12px;
       outline: none;
     }
     .setting-input:focus { border-color: var(--border-active); }
 
-    /* FLOATING BOTTOM DOCK */
+    /* FLOATING BOTTOM DOCK (SCALED UP TO 13px) */
     .floating-dock {
       position: fixed;
       bottom: 14px;
@@ -947,10 +974,10 @@
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: 24px;
-      padding: 3px;
+      border-radius: 26px;
+      padding: 4px;
       display: flex;
-      gap: 3px;
+      gap: 4px;
       box-shadow: 0 16px 36px rgba(0, 0, 0, 0.85);
       z-index: 90;
     }
@@ -958,13 +985,13 @@
       background: transparent;
       border: none;
       color: var(--text-muted);
-      padding: 5px 12px;
-      border-radius: 18px;
+      padding: 6px 14px;
+      border-radius: 20px;
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 6px;
-      font-size: 11.5px;
+      gap: 7px;
+      font-size: 13px;
       font-weight: 500;
       transition: all 0.15s;
     }
@@ -979,7 +1006,6 @@
     }
     .dock-tab.active .icon { stroke: #000000; }
 
-    /* TOAST */
     #toast {
       position: fixed;
       bottom: 64px;
@@ -988,9 +1014,9 @@
       background: #161822;
       border: 1px solid var(--border-active);
       color: #ffffff;
-      font-size: 11.5px;
+      font-size: 12px;
       font-weight: 500;
-      padding: 6px 14px;
+      padding: 7px 16px;
       border-radius: 20px;
       opacity: 0;
       pointer-events: none;
@@ -1003,7 +1029,7 @@
 </head>
 <body>
 
-  <!-- TOP HEADER -->
+  <!-- MINIMAL CLEAN HEADER -->
   <header>
     <div class="header-left">
       <button class="btn-toggle-sidebar" onclick="toggleSidebar()" title="Toggle Sidebar">
@@ -1012,15 +1038,14 @@
       <div class="brand">
         <img src="assets/micro_logo_v.png" class="brand-micro-img" alt="V">
         <div class="brand-title">Vigyan Pro</div>
-        <div class="brand-badge">Titanium 2.0</div>
       </div>
     </div>
     <div class="header-right">
       <div class="status-badge" id="daemon-status-badge">
         <span class="status-dot" id="status-dot"></span>
-        <span id="daemon-status-text">Engine: Connected</span>
+        <span id="daemon-status-text">Connected</span>
       </div>
-      <div class="status-badge" id="ram-badge" style="font-family:ui-monospace,monospace;">
+      <div class="status-badge" style="font-family:ui-monospace,monospace;">
         RAM: 3.3 GB
       </div>
     </div>
@@ -1033,14 +1058,14 @@
         <div class="sidebar-header">
           <span class="sidebar-title">Sessions</span>
           <button class="btn-new-chat" onclick="createNewSession()">
-            <svg class="icon" viewBox="0 0 24 24" style="stroke:#000000; width:11px; height:11px;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            <svg class="icon" viewBox="0 0 24 24" style="stroke:#000000; width:12px; height:12px;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
             New
           </button>
         </div>
         <div class="session-list" id="session-list"></div>
-        <div style="padding:8px 10px; border-top:1px solid var(--border-subtle); display:flex; justify-content:space-between; font-size:10.5px; color:var(--text-subtle);">
+        <div style="padding:10px 12px; border-top:1px solid var(--border-subtle); display:flex; justify-content:space-between; font-size:11px; color:var(--text-subtle);">
           <span>Local Storage</span>
-          <button style="background:transparent; border:none; color:var(--text-subtle); cursor:pointer; font-size:10.5px;" onclick="clearAllSessions()">Clear All</button>
+          <button style="background:transparent; border:none; color:var(--text-subtle); cursor:pointer; font-size:11px;" onclick="clearAllSessions()">Clear All</button>
         </div>
       </aside>
 
@@ -1072,57 +1097,86 @@
               <div class="msg-header">
                 <img src="assets/micro_logo_v.png" class="msg-avatar-v" alt="V">
                 <span id="welcome-companion-label">olmoe:1b-7b</span>
-                <span class="msg-badge-local">STEM Sovereign</span>
               </div>
               <div class="msg-content">
-                Sovereign STEM Engine active. Ask for calculus derivations, differential equations, physics modeling, or function plots. All computation executes 100% air-gapped on this machine.
+                Sovereign STEM Engine active. Ask for calculus proofs, differential equations, 3D CAD modeling, or physics simulations. All calculations execute locally. Type <strong>/</strong> for agentic tools.
               </div>
             </div>
           </div>
         </div>
 
+        <!-- INPUT AREA WITH FLOATING SLASH COMMAND MENU & CANCEL BUTTON -->
         <div class="chat-input-area">
           <div class="input-inner-wrapper">
+            <!-- FLOATING SLASH MENU -->
+            <div class="slash-menu" id="slash-menu">
+              <div class="slash-item active" onclick="applySlashCommand('/simulate ')">
+                <span class="slash-cmd">/simulate</span>
+                <span class="slash-desc">Run 60 FPS dynamic physics simulation</span>
+              </div>
+              <div class="slash-item" onclick="applySlashCommand('/cad3d ')">
+                <span class="slash-cmd">/cad3d</span>
+                <span class="slash-desc">Generate interactive 3D CAD parametric mesh</span>
+              </div>
+              <div class="slash-item" onclick="applySlashCommand('/derive ')">
+                <span class="slash-cmd">/derive</span>
+                <span class="slash-desc">Generate rigorous step-by-step LaTeX proof</span>
+              </div>
+              <div class="slash-item" onclick="applySlashCommand('/mcp ')">
+                <span class="slash-cmd">/mcp</span>
+                <span class="slash-desc">Call Python CAS symbolic algebra engine</span>
+              </div>
+              <div class="slash-item" onclick="applySlashCommand('/skill ')">
+                <span class="slash-cmd">/skill</span>
+                <span class="slash-desc">Load specialized sovereign domain skill</span>
+              </div>
+              <div class="slash-item" onclick="applySlashCommand('/clear')">
+                <span class="slash-cmd">/clear</span>
+                <span class="slash-desc">Clear current discussion session</span>
+              </div>
+            </div>
+
             <div class="input-capsule">
-              <textarea id="prompt-input" placeholder="Solve, derive, or plot a formula... (Enter to send, Shift+Enter for newline)" onkeydown="handleKey(event)"></textarea>
-              <button class="btn-send" onclick="sendPrompt()" title="Send">
-                <svg viewBox="0 0 24 24" style="width:13px; height:13px; stroke:#000000; stroke-width:2.2; fill:none; stroke-linecap:round; stroke-linejoin:round;"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+              <textarea id="prompt-input" placeholder="Solve, derive, or plot... (Type / for agentic tools, Enter to send)" onkeydown="handleKey(event)" oninput="handleInput(event)"></textarea>
+              <button class="btn-send" id="btn-send" onclick="handleSendOrCancel()" title="Send">
+                <svg id="send-icon" viewBox="0 0 24 24" style="width:14px; height:14px; stroke:#000000; stroke-width:2.2; fill:none; stroke-linecap:round; stroke-linejoin:round;"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
               </button>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- RIGHT STEM WORKBENCH -->
+      <!-- DUAL-ENGINE STEM WORKBENCH -->
       <section class="stem-section">
         <div class="stem-header">
-          <div class="stem-title">
-            <svg class="icon" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-            STEM Workbench
+          <div class="workbench-tabs">
+            <button class="wb-tab active" id="tab-btn-2d" onclick="switchWorkbenchMode('2d')">2D Function</button>
+            <button class="wb-tab" id="tab-btn-3d" onclick="switchWorkbenchMode('3d')">3D CAD Mesh</button>
+            <button class="wb-tab" id="tab-btn-sim" onclick="switchWorkbenchMode('sim')">Physics Sim</button>
           </div>
           <div class="stem-actions">
-            <button class="btn-action" onclick="exportPlotPNG()">PNG</button>
-            <button class="btn-action" onclick="renderPlotlySample()">Reset</button>
+            <button class="btn-action" onclick="exportWorkbenchView()">PNG</button>
+            <button class="btn-action" onclick="resetActiveWorkbench()">Reset</button>
           </div>
         </div>
 
         <div class="stem-body">
           <div class="stem-card">
             <div class="stem-card-header">
-              <span class="stem-card-title">
+              <span class="stem-card-title" id="wb-view-title">
                 <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 12h8"/><path d="M12 8v8"/></svg>
                 Dynamic Function Plotter
               </span>
-              <span class="stem-card-badge">WebGL Engine</span>
+              <span class="stem-card-badge" id="wb-engine-badge">WebGL Engine</span>
             </div>
             
-            <div class="formula-bar">
+            <div class="formula-bar" id="formula-bar-container">
               <input type="text" id="plot-expr" class="plot-input" value="Math.exp(-k*x) * Math.cos(w*x)" placeholder="f(x, k, w)">
               <button class="btn-plot" onclick="evaluateAndPlot()">Plot</button>
             </div>
 
-            <!-- INTERACTIVE REAL-TIME PARAMETER SLIDERS -->
-            <div class="slider-grid">
+            <!-- PARAMETER SLIDERS -->
+            <div class="slider-grid" id="slider-grid-container">
               <div class="slider-item">
                 <span class="slider-label">k:</span>
                 <input type="range" class="stem-slider" id="param-k" min="0.01" max="1.5" step="0.02" value="0.15" oninput="updateParam('k', this.value)">
@@ -1136,13 +1190,13 @@
             </div>
 
             <div id="plot-container"></div>
+            <canvas id="sim-canvas" width="480" height="250"></canvas>
 
-            <div class="plot-chips">
+            <div class="plot-chips" id="plot-chips-container">
               <span class="plot-chip" onclick="loadPreset('damped')">Damped Oscillator</span>
               <span class="plot-chip" onclick="loadPreset('gaussian')">Gaussian Bell</span>
               <span class="plot-chip" onclick="loadPreset('sigmoid')">Sigmoid / Logistic</span>
               <span class="plot-chip" onclick="loadPreset('fourier')">Fourier Square</span>
-              <span class="plot-chip" onclick="loadPreset('sinc3d')">3D Sinc Ripple</span>
             </div>
           </div>
 
@@ -1152,13 +1206,13 @@
                 <svg class="icon" viewBox="0 0 24 24"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
                 Derivation &amp; Proof Drawer
               </span>
-              <button class="btn-action" style="padding:2px 7px; font-size:10px;" onclick="copyLatexProof()">
-                <svg class="icon" viewBox="0 0 24 24" style="width:10px; height:10px;"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              <button class="btn-action" style="padding:2px 8px; font-size:11px;" onclick="copyLatexProof()">
+                <svg class="icon" viewBox="0 0 24 24" style="width:11px; height:11px;"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
                 Copy LaTeX
               </button>
             </div>
             <div class="proof-box" id="proof-container">
-              <div style="font-size:10.5px; color:var(--text-subtle); margin-bottom:3px;" id="proof-title">Harmonic Oscillator Differential Equation:</div>
+              <div style="font-size:11px; color:var(--text-subtle); margin-bottom:4px;" id="proof-title">Harmonic Oscillator Differential Equation:</div>
               <div id="math-proof">
                 $$\frac{d^2 x}{dt^2} + 2\gamma \frac{dx}{dt} + \omega_0^2 x = 0$$
               </div>
@@ -1183,22 +1237,22 @@
               <span class="hero-spec">Author: @allenai</span>
             </div>
           </div>
-          <button class="btn-action" style="background:#ffffff; color:#000000; font-weight:600; padding:5px 12px;" onclick="switchTab('studio')">
+          <button class="btn-action" style="background:#ffffff; color:#000000; font-weight:600; padding:6px 14px;" onclick="switchTab('studio')">
             Open Studio
-            <svg class="icon" viewBox="0 0 24 24" style="stroke:#000000; width:11px; height:11px;"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            <svg class="icon" viewBox="0 0 24 24" style="stroke:#000000; width:12px; height:12px;"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
           </button>
         </div>
 
-        <div class="hub-header-bar">
-          <div class="hub-curated-badge">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <div style="font-size:12px; font-weight:600; color:var(--text-muted); display:flex; align-items:center; gap:6px;">
             <svg class="icon" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
             Sovereign Catalog: @shreyansh12183 &amp; @allenai
           </div>
-          <span style="font-size:10.5px; color:var(--text-subtle);">6 Verified Sovereign STEM Models</span>
+          <span style="font-size:11px; color:var(--text-subtle);">6 Verified Sovereign STEM Models</span>
         </div>
 
         <div class="hub-grid">
-          <!-- 1. OLMOE 1B-7B MOE (ALLENAI) -->
+          <!-- 1. OLMOE 1B-7B MOE -->
           <div class="hub-card" id="card-olmoe">
             <div>
               <div class="hub-card-header">
@@ -1206,27 +1260,24 @@
                 <div class="hub-card-size">3.3 GB</div>
               </div>
               <span class="author-badge author-allenai">@allenai / OLMoE-1B-7B-0924</span>
-              <div class="hub-card-specs"><span>64 Sparse Experts</span><span>·</span><span>1B Active</span><span>·</span><span>Default</span></div>
+              <div class="hub-card-specs"><span>64 Sparse Experts</span><span>·</span><span>1B Active</span></div>
               <div class="download-progress-container" id="prog-olmoe">
                 <div class="download-progress-track"><div class="download-progress-bar"></div></div>
                 <div class="download-progress-text"><span>Pulling...</span><span class="prog-pct">0%</span></div>
               </div>
             </div>
             <div class="hub-card-footer">
-              <span class="badge-ready">
-                <svg class="icon" viewBox="0 0 24 24" style="width:11px; height:11px; stroke:var(--emerald-subdued);"><polyline points="20 6 9 17 4 12"/></svg>
-                ACTIVE
-              </span>
+              <span class="badge-ready"><svg class="icon" viewBox="0 0 24 24" style="width:11px; height:11px; stroke:var(--emerald-subdued);"><polyline points="20 6 9 17 4 12"/></svg>ACTIVE</span>
               <div style="display:flex; gap:6px;">
                 <button class="btn-action" onclick="switchTab('studio'); changeModel('olmoe:1b-7b')">Chat</button>
-                <button class="btn-delete-model" onclick="deleteInstalledModel('olmoe:1b-7b', 'card-olmoe')" title="Delete model to reclaim space">
+                <button class="btn-delete-model" onclick="deleteInstalledModel('olmoe:1b-7b', 'card-olmoe')" title="Delete model">
                   <svg class="icon" viewBox="0 0 24 24" style="width:11px; height:11px;"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg>
                 </button>
               </div>
             </div>
           </div>
 
-          <!-- 2. VIGYAN 1.5B 4x-MoE (SHREYANSH) -->
+          <!-- 2. VIGYAN 1.5B 4x-MoE -->
           <div class="hub-card" id="card-moe">
             <div>
               <div class="hub-card-header">
@@ -1241,7 +1292,7 @@
               </div>
             </div>
             <div class="hub-card-footer">
-              <span style="font-size:10.5px; color:var(--text-subtle);">Q4_K_M GGUF</span>
+              <span style="font-size:11px; color:var(--text-subtle);">Q4_K_M GGUF</span>
               <button class="btn-action" onclick="downloadAndRunModel('moe', 'vigyan-1.5b-moe', 'Vigyan 1.5B 4x-MoE')">
                 <svg class="icon" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                 Download
@@ -1249,7 +1300,7 @@
             </div>
           </div>
 
-          <!-- 3. OLMo2 7B PhD Pure Math (SHREYANSH) -->
+          <!-- 3. OLMo2 7B PhD Pure Math -->
           <div class="hub-card" id="card-math">
             <div>
               <div class="hub-card-header">
@@ -1264,7 +1315,7 @@
               </div>
             </div>
             <div class="hub-card-footer">
-              <span style="font-size:10.5px; color:var(--text-subtle);">Q4_K_M GGUF</span>
+              <span style="font-size:11px; color:var(--text-subtle);">Q4_K_M GGUF</span>
               <button class="btn-action" onclick="downloadAndRunModel('math', 'olmo2-7b-pure-math', 'OLMo2 7B Pure Math')">
                 <svg class="icon" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                 Download
@@ -1272,7 +1323,7 @@
             </div>
           </div>
 
-          <!-- 4. OLMo2 7B Silicon RTL & EDA (SHREYANSH) -->
+          <!-- 4. OLMo2 7B Silicon RTL & EDA -->
           <div class="hub-card" id="card-rtl">
             <div>
               <div class="hub-card-header">
@@ -1287,7 +1338,7 @@
               </div>
             </div>
             <div class="hub-card-footer">
-              <span style="font-size:10.5px; color:var(--text-subtle);">Q4_K_M GGUF</span>
+              <span style="font-size:11px; color:var(--text-subtle);">Q4_K_M GGUF</span>
               <button class="btn-action" onclick="downloadAndRunModel('rtl', 'olmo2-7b-silicon-eda', 'OLMo2 7B Silicon EDA')">
                 <svg class="icon" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                 Download
@@ -1295,7 +1346,7 @@
             </div>
           </div>
 
-          <!-- 5. OLMo 2 1B Instruct (ALLENAI) -->
+          <!-- 5. OLMo 2 1B Instruct -->
           <div class="hub-card" id="card-olmo2-1b">
             <div>
               <div class="hub-card-header">
@@ -1310,7 +1361,7 @@
               </div>
             </div>
             <div class="hub-card-footer">
-              <span style="font-size:10.5px; color:var(--text-subtle);">Q4_K_M GGUF</span>
+              <span style="font-size:11px; color:var(--text-subtle);">Q4_K_M GGUF</span>
               <button class="btn-action" onclick="downloadAndRunModel('olmo2-1b', 'olmo2:1b', 'OLMo 2 1B Instruct')">
                 <svg class="icon" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                 Download
@@ -1318,7 +1369,7 @@
             </div>
           </div>
 
-          <!-- 6. Olmo 3 7B Instruct (ALLENAI) -->
+          <!-- 6. Olmo 3 7B Instruct -->
           <div class="hub-card" id="card-olmo3">
             <div>
               <div class="hub-card-header">
@@ -1333,7 +1384,7 @@
               </div>
             </div>
             <div class="hub-card-footer">
-              <span style="font-size:10.5px; color:var(--text-subtle);">Q4_K_M GGUF</span>
+              <span style="font-size:11px; color:var(--text-subtle);">Q4_K_M GGUF</span>
               <button class="btn-action" onclick="downloadAndRunModel('olmo3', 'olmo3:7b', 'Olmo 3 7B Instruct')">
                 <svg class="icon" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                 Download
@@ -1348,72 +1399,70 @@
     <div class="tab-content" id="tab-settings">
       <div class="settings-container">
         <div class="settings-header-card">
-          <div>
-            <div class="settings-title">
-              <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-              STEM Neural Configuration
-            </div>
+          <div class="settings-title">
+            <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+            STEM Runtime &amp; Context Configuration
           </div>
-          <div class="status-badge"><span class="status-dot"></span>Ollama Daemon</div>
+          <div class="status-badge"><span class="status-dot"></span>Ollama Daemon Linked</div>
         </div>
 
         <div>
-          <div style="font-size:11px; font-weight:600; color:#e5e7eb; margin-bottom:6px;">Reasoning Intent Preset:</div>
+          <div style="font-size:12px; font-weight:600; color:#e5e7eb; margin-bottom:8px;">Reasoning Intent Preset:</div>
           <div class="intent-grid">
             <div class="intent-card active" id="intent-precise" onclick="selectIntent('precise', 0.05, 8192, 'Deterministic Proof')">
-              <div class="intent-card-header">
-                <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
-                <div class="intent-card-title">Deterministic Proof</div>
-              </div>
+              <div class="intent-card-title">Deterministic Proof</div>
               <div class="intent-card-desc">Temp 0.05 · Strict symbolic proofs, exact KaTeX equations, zero hallucination.</div>
             </div>
             <div class="intent-card" id="intent-balanced" onclick="selectIntent('balanced', 0.3, 4096, 'Balanced Analysis')">
-              <div class="intent-card-header">
-                <svg class="icon" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-                <div class="intent-card-title">Balanced Analysis</div>
-              </div>
+              <div class="intent-card-title">Balanced Analysis</div>
               <div class="intent-card-desc">Temp 0.3 · Structured physics explanations, engineering trade-offs.</div>
             </div>
             <div class="intent-card" id="intent-creative" onclick="selectIntent('creative', 0.7, 4096, 'Exploratory Synthesis')">
-              <div class="intent-card-header">
-                <svg class="icon" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                <div class="intent-card-title">Exploratory Synthesis</div>
-              </div>
+              <div class="intent-card-title">Exploratory Synthesis</div>
               <div class="intent-card-desc">Temp 0.7 · Open-ended mathematical hypotheses and algorithm design.</div>
             </div>
           </div>
         </div>
 
+        <!-- INDUSTRY-BEST CONTEXT & ADVANCED SETTINGS -->
         <div>
           <div class="accordion-header" onclick="toggleAccordion()">
-            <span style="display:flex; align-items:center; gap:6px;">
-              <svg class="icon" viewBox="0 0 24 24"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/></svg>
-              Advanced Inference Parameters
+            <span style="display:flex; align-items:center; gap:8px;">
+              <svg class="icon" viewBox="0 0 24 24"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
+              Advanced Inference &amp; Context Buffer
             </span>
             <svg class="chevron-icon" id="accordion-arrow" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
           </div>
           <div class="accordion-body" id="accordion-content">
             <div class="setting-item">
-              <div class="setting-label"><span>Temperature</span><span id="temp-val" style="color:#ffffff;">0.05</span></div>
-              <input id="setting-temp" type="range" min="0" max="1" step="0.05" value="0.05" oninput="document.getElementById('temp-val').innerText = this.value; deselectIntents();">
-            </div>
-            <div class="setting-item">
-              <div class="setting-label">Context Window</div>
-              <select id="setting-ctx" class="setting-input">
-                <option value="4096">4096 tokens</option>
-                <option value="8192" selected>8192 tokens</option>
-                <option value="16384">16384 tokens</option>
+              <div class="setting-label"><span>Context Window Buffer (Tokens)</span><span id="ctx-label" style="color:#ffffff;">8,192 tokens (~2.4 GB VRAM)</span></div>
+              <select id="setting-ctx" class="setting-input" onchange="updateCtxLabel(this.value)">
+                <option value="4096">4,096 tokens (Fast / Low RAM)</option>
+                <option value="8192" selected>8,192 tokens (Standard STEM Proofs)</option>
+                <option value="16384">16,384 tokens (Extended Derivations)</option>
+                <option value="32768">32,768 tokens (Full Context Window)</option>
+                <option value="65536">65,536 tokens (Massive Scientific Documents)</option>
               </select>
             </div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+              <div class="setting-item">
+                <div class="setting-label"><span>Temperature</span><span id="temp-val" style="color:#ffffff;">0.05</span></div>
+                <input id="setting-temp" type="range" min="0" max="1" step="0.05" value="0.05" oninput="document.getElementById('temp-val').innerText = this.value; deselectIntents();">
+              </div>
+              <div class="setting-item">
+                <div class="setting-label"><span>Top-P Nucleus</span><span id="topp-val" style="color:#ffffff;">0.95</span></div>
+                <input id="setting-topp" type="range" min="0.1" max="1" step="0.05" value="0.95" oninput="document.getElementById('topp-val').innerText = this.value;">
+              </div>
+            </div>
             <div class="setting-item">
-              <div class="setting-label">Daemon Endpoint</div>
+              <div class="setting-label">Ollama Daemon Endpoint</div>
               <input id="setting-ollama-url" type="text" class="setting-input" value="http://127.0.0.1:11434">
             </div>
             <div class="setting-item">
               <div class="setting-label">STEM System Prompt</div>
-              <textarea id="setting-persona" class="setting-input" style="height:60px; resize:none;">You are Vigyan Pro, a sovereign STEM AI engine specializing in mathematics, physics, and algorithmic reasoning. Provide concise, step-by-step mathematical proofs with LaTeX formatted inside $$...$$.</textarea>
+              <textarea id="setting-persona" class="setting-input" style="height:65px; resize:none;">You are Vigyan Pro, a sovereign STEM AI engine specializing in mathematics, physics, and algorithmic reasoning. Provide concise, step-by-step mathematical proofs with LaTeX formatted inside $$...$$.</textarea>
             </div>
-            <div style="display:flex; gap:6px; margin-top:4px;">
+            <div style="display:flex; gap:8px; margin-top:4px;">
               <button class="btn-action" onclick="checkOllamaConnection()">Ping Daemon</button>
               <button class="btn-action" style="background:#ffffff; color:#000000; font-weight:600;" onclick="saveSettings()">Save Preferences</button>
             </div>
@@ -1444,7 +1493,8 @@
   <script>
     let OLLAMA_HOST = 'http://127.0.0.1:11434';
     let currentModel = 'olmoe:1b-7b';
-    let installedModels = ['olmoe:1b-7b'];
+    let isGenerating = false;
+    let currentAbortController = null;
 
     let availableModels = [
       { tag: 'olmoe:1b-7b', name: 'OLMoE 1B-7B MoE', spec: '64-Experts (Default)' },
@@ -1455,8 +1505,15 @@
       { tag: 'olmo3:7b', name: 'Olmo 3 7B Instruct', spec: 'Open Scientific 7B' }
     ];
 
+    let currentWbMode = '2d';
     let paramK = 0.15;
     let paramW = 2.0;
+
+    let simAnimationId = null;
+    let simAngle1 = Math.PI / 2;
+    let simAngle2 = Math.PI / 2;
+    let simA1_v = 0.0;
+    let simA2_v = 0.0;
 
     let sessions = [];
     let activeSessionId = null;
@@ -1474,13 +1531,16 @@
       if (tx) {
         tx.addEventListener('input', () => {
           tx.style.height = 'auto';
-          tx.style.height = Math.min(tx.scrollHeight, 140) + 'px';
+          tx.style.height = Math.min(tx.scrollHeight, 160) + 'px';
         });
       }
 
       document.addEventListener('click', (e) => {
         const wrapper = document.querySelector('.companion-selector-wrapper');
         if (wrapper && !wrapper.contains(e.target)) closeModelDropdown();
+        const slash = document.getElementById('slash-menu');
+        const inputArea = document.querySelector('.chat-input-area');
+        if (slash && !inputArea.contains(e.target)) slash.classList.remove('show');
       });
     });
 
@@ -1511,12 +1571,24 @@
       document.getElementById('setting-temp').value = temp;
       document.getElementById('temp-val').innerText = temp;
       document.getElementById('setting-ctx').value = ctx;
+      updateCtxLabel(ctx);
       saveSettings();
       showToast(`Preset: ${label}`);
     }
 
     function deselectIntents() {
       document.querySelectorAll('.intent-card').forEach(c => c.classList.remove('active'));
+    }
+
+    function updateCtxLabel(val) {
+      const lbl = document.getElementById('ctx-label');
+      if (!lbl) return;
+      const v = parseInt(val);
+      if (v <= 4096) lbl.innerText = '4,096 tokens (~1.2 GB VRAM)';
+      else if (v <= 8192) lbl.innerText = '8,192 tokens (~2.4 GB VRAM)';
+      else if (v <= 16384) lbl.innerText = '16,384 tokens (~4.8 GB VRAM)';
+      else if (v <= 32768) lbl.innerText = '32,768 tokens (~9.6 GB VRAM)';
+      else lbl.innerText = '65,536 tokens (~18 GB VRAM)';
     }
 
     function switchTab(tabId) {
@@ -1532,6 +1604,7 @@
       if (tabId === 'studio') setTimeout(() => Plotly.Plots.resize('plot-container'), 100);
     }
 
+    /* COMPANION SELECTOR */
     function toggleModelDropdown() {
       const pill = document.getElementById('companion-pill');
       const menu = document.getElementById('model-dropdown');
@@ -1568,129 +1641,79 @@
       const welcome = document.getElementById('welcome-companion-label');
       if (welcome) welcome.innerText = m;
       renderModelDropdown();
-      showToast(`Active Companion: ${m}`);
+      showToast(`Active: ${m}`);
     }
 
-    /* MODEL LIFECYCLE MANAGEMENT (DOWNLOAD & DELETE) */
-    async function downloadAndRunModel(cardId, modelTag, displayName) {
-      const progContainer = document.getElementById('prog-' + cardId);
-      if (!progContainer) return;
-
-      progContainer.style.display = 'block';
-      const bar = progContainer.querySelector('.download-progress-bar');
-      const pctLabel = progContainer.querySelector('.prog-pct');
-      bar.style.width = '0%';
-      pctLabel.innerText = '0%';
-      showToast(`Pulling ${displayName} via daemon...`);
-
-      try {
-        const response = await fetch(`${OLLAMA_HOST}/api/pull`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name: modelTag, stream: true })
-        });
-
-        if (!response.ok || !response.body) throw new Error('Daemon pull unreachable');
-
-        const reader = response.body.getReader();
-        const decoder = new TextDecoder();
-        let buffer = '';
-
-        while (true) {
-          const { done, value } = await reader.read();
-          if (done) break;
-
-          buffer += decoder.decode(value, { stream: true });
-          const lines = buffer.split('\n');
-          buffer = lines.pop();
-
-          for (const line of lines) {
-            if (!line.trim()) continue;
-            try {
-              const data = JSON.parse(line);
-              if (data.total && data.completed) {
-                const pct = Math.min(100, Math.round((data.completed / data.total) * 100));
-                bar.style.width = pct + '%';
-                pctLabel.innerText = pct + '%';
-              }
-            } catch (e) {}
-          }
-        }
-      } catch (err) {
-        let progress = 0;
-        await new Promise((resolve) => {
-          const intv = setInterval(() => {
-            progress += 25;
-            if (progress > 100) progress = 100;
-            bar.style.width = progress + '%';
-            pctLabel.innerText = progress + '%';
-            if (progress === 100) { clearInterval(intv); resolve(); }
-          }, 120);
-        });
-      }
-
-      setTimeout(() => {
-        progContainer.style.display = 'none';
-        installedModels.push(modelTag);
-        changeModel(modelTag);
-        switchTab('studio');
-        showToast(`Ready: ${displayName} activated.`);
-      }, 300);
-    }
-
-    async function deleteInstalledModel(modelTag, cardId) {
-      if (modelTag === currentModel && availableModels.length > 1) {
-        const fallback = availableModels.find(m => m.tag !== modelTag);
-        if (fallback) changeModel(fallback.tag);
-      }
-      try {
-        await fetch(`${OLLAMA_HOST}/api/delete`, {
-          method: 'DELETE',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name: modelTag })
-        });
-      } catch (e) {}
-
-      installedModels = installedModels.filter(m => m !== modelTag);
-      showToast(`Model ${modelTag} deleted from memory & disk`);
-      checkOllamaConnection();
-    }
-
-    async function checkOllamaConnection() {
-      const dot = document.getElementById('status-dot');
-      const text = document.getElementById('daemon-status-text');
-      try {
-        const res = await fetch(`${OLLAMA_HOST}/api/tags`);
-        if (res.ok) {
-          dot.classList.remove('disconnected');
-          text.innerText = 'Engine: Connected';
-          const data = await res.json();
-          if (data.models) {
-            const tags = data.models.map(m => m.name);
-            tags.forEach(t => {
-              if (!availableModels.some(am => am.tag === t || am.tag + ':latest' === t)) {
-                availableModels.unshift({ tag: t, name: t, spec: 'Local Model' });
-              }
-            });
-            renderModelDropdown();
-          }
-        } else {
-          dot.classList.add('disconnected');
-          text.innerText = 'Engine: Offline';
-        }
-      } catch (e) {
-        dot.classList.add('disconnected');
-        text.innerText = 'Engine: Reconnecting';
+    /* FLOATING SLASH COMMAND MENU */
+    function handleInput(e) {
+      const val = e.target.value;
+      const menu = document.getElementById('slash-menu');
+      if (val.startsWith('/')) {
+        menu.classList.add('show');
+      } else {
+        menu.classList.remove('show');
       }
     }
 
-    /* HIGH-SPEED NDJSON TOKEN STREAMING */
+    function applySlashCommand(cmd) {
+      const tx = document.getElementById('prompt-input');
+      const menu = document.getElementById('slash-menu');
+      menu.classList.remove('show');
+      if (cmd === '/clear') {
+        clearCurrentChat();
+        tx.value = '';
+        return;
+      }
+      tx.value = cmd;
+      tx.focus();
+      if (cmd.startsWith('/simulate')) switchWorkbenchMode('sim');
+      else if (cmd.startsWith('/cad3d')) switchWorkbenchMode('3d');
+    }
+
+    /* CANCELLATION / INFERENCE CONTROLLER */
+    function handleSendOrCancel() {
+      if (isGenerating) {
+        cancelGeneration();
+      } else {
+        sendPrompt();
+      }
+    }
+
+    function cancelGeneration() {
+      if (currentAbortController) {
+        currentAbortController.abort();
+        currentAbortController = null;
+      }
+      isGenerating = false;
+      resetSendButton();
+      showToast('Generation cancelled');
+    }
+
+    function setSendingButton() {
+      isGenerating = true;
+      const btn = document.getElementById('btn-send');
+      btn.classList.add('stopping');
+      btn.title = 'Stop Generation';
+      btn.innerHTML = `<svg viewBox="0 0 24 24" style="width:14px; height:14px; fill:#ffffff; stroke:none;"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>`;
+    }
+
+    function resetSendButton() {
+      isGenerating = false;
+      const btn = document.getElementById('btn-send');
+      btn.classList.remove('stopping');
+      btn.title = 'Send';
+      btn.innerHTML = `<svg viewBox="0 0 24 24" style="width:14px; height:14px; stroke:#000000; stroke-width:2.2; fill:none; stroke-linecap:round; stroke-linejoin:round;"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>`;
+    }
+
+    /* INFERENCE WITH ABORT CONTROLLER */
     async function sendPrompt() {
       const input = document.getElementById('prompt-input');
       const text = input.value.trim();
       if (!text) return;
+
+      document.getElementById('slash-menu').classList.remove('show');
       input.value = '';
-      input.style.height = '34px';
+      input.style.height = '38px';
 
       const chatBox = document.getElementById('chat-box');
       const userDiv = document.createElement('div');
@@ -1704,7 +1727,6 @@
         <div class="msg-header">
           <img src="assets/micro_logo_v.png" class="msg-avatar-v" alt="V">
           <span>${currentModel}</span>
-          <span class="msg-badge-local">STEM Sovereign</span>
         </div>
         <div class="msg-content"><span style="color:#71717a">Computing proof...</span></div>
       `;
@@ -1713,8 +1735,10 @@
       const scrollWrapper = document.querySelector('.chat-scroll-wrapper');
       scrollWrapper.scrollTop = scrollWrapper.scrollHeight;
 
-      // STEM auto-extraction
-      autoExtractSTEMFromPrompt(text);
+      // Auto-switch STEM workbench
+      if (text.startsWith('/simulate') || text.includes('simulation') || text.includes('pendulum')) switchWorkbenchMode('sim');
+      else if (text.startsWith('/cad3d') || text.includes('3d') || text.includes('cad') || text.includes('mesh')) switchWorkbenchMode('3d');
+      else autoExtractSTEMFromPrompt(text);
 
       const tempVal = parseFloat(document.getElementById('setting-temp').value) || 0.05;
       const ctxVal = parseInt(document.getElementById('setting-ctx').value) || 8192;
@@ -1723,10 +1747,14 @@
       const contentEl = asstDiv.querySelector('.msg-content');
       let rawAccumulated = '';
 
+      currentAbortController = new AbortController();
+      setSendingButton();
+
       try {
         const response = await fetch(`${OLLAMA_HOST}/api/generate`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
+          signal: currentAbortController.signal,
           body: JSON.stringify({
             model: currentModel,
             prompt: text,
@@ -1736,7 +1764,7 @@
           })
         });
 
-        if (!response.ok || !response.body) throw new Error('Inference daemon error');
+        if (!response.ok || !response.body) throw new Error('Daemon unreachable');
 
         const reader = response.body.getReader();
         const decoder = new TextDecoder();
@@ -1769,47 +1797,293 @@
         autoExtractSTEMFromResponse(text, rawAccumulated);
         saveCurrentSessionMessages();
       } catch (err) {
-        contentEl.innerHTML = `<span style="color:#ef4444;">Connection failed: ${err.message}.</span>`;
+        if (err.name === 'AbortError') {
+          contentEl.innerHTML = formatMarkdown(rawAccumulated) + `<div style="color:var(--text-subtle); margin-top:8px; font-size:12px;">[Generation stopped by user]</div>`;
+        } else {
+          contentEl.innerHTML = `<span style="color:#ef4444;">Error: ${err.message}. Check daemon.</span>`;
+        }
+      } finally {
+        resetSendButton();
       }
       scrollWrapper.scrollTop = scrollWrapper.scrollHeight;
     }
 
     function formatMarkdown(str) {
       return str
-        .replace(/<think>/g, '<div class="reasoning-box"><div class="reasoning-header"><svg class="icon" viewBox="0 0 24 24" style="width:10px; height:10px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> Proof Step</div>')
+        .replace(/<think>/g, '<div class="reasoning-box"><div class="reasoning-header"><svg class="icon" viewBox="0 0 24 24" style="width:11px; height:11px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> Proof Step</div>')
         .replace(/<\/think>/g, '</div>')
-        .replace(/### (.*?)\n/g, '<h4 style="color:#ffffff; margin:6px 0 3px; font-size:12.5px;">$1</h4>')
+        .replace(/### (.*?)\n/g, '<h4 style="color:#ffffff; margin:8px 0 4px; font-size:13.5px;">$1</h4>')
         .replace(/\*\*(.*?)\*\*/g, '<strong style="color:#ffffff;">$1</strong>');
     }
 
-    /* AUTOMATIC FORMULA & PROOF EXTRACTOR */
-    function autoExtractSTEMFromPrompt(query) {
-      const lower = query.toLowerCase();
-      if (lower.includes('gaussian') || lower.includes('normal')) loadPreset('gaussian');
-      else if (lower.includes('sigmoid') || lower.includes('logistic')) loadPreset('sigmoid');
-      else if (lower.includes('fourier') || lower.includes('square wave')) loadPreset('fourier');
-      else if (lower.includes('sinc') || lower.includes('3d')) loadPreset('sinc3d');
-      else if (lower.includes('oscillator') || lower.includes('harmonic') || lower.includes('damping')) loadPreset('damped');
-    }
+    /* DUAL-ENGINE STEM WORKBENCH (2D, 3D CAD, PHYSICS SIM) */
+    function switchWorkbenchMode(mode) {
+      currentWbMode = mode;
+      document.querySelectorAll('.wb-tab').forEach(b => b.classList.remove('active'));
+      const activeBtn = document.getElementById('tab-btn-' + mode);
+      if (activeBtn) activeBtn.classList.add('active');
 
-    function autoExtractSTEMFromResponse(promptText, responseText) {
-      const mathMatch = responseText.match(/\$\$([\s\S]*?)\$\$/);
-      if (mathMatch) {
-        document.getElementById('proof-title').innerText = 'Extracted Mathematical Proof:';
-        document.getElementById('math-proof').innerHTML = `$$${mathMatch[1].trim()}$$`;
-        renderLatex();
+      const plotEl = document.getElementById('plot-container');
+      const canvasEl = document.getElementById('sim-canvas');
+      const formulaBar = document.getElementById('formula-bar-container');
+      const sliderGrid = document.getElementById('slider-grid-container');
+      const chips = document.getElementById('plot-chips-container');
+      const title = document.getElementById('wb-view-title');
+      const badge = document.getElementById('wb-engine-badge');
+
+      if (simAnimationId) {
+        cancelAnimationFrame(simAnimationId);
+        simAnimationId = null;
+      }
+
+      if (mode === '2d') {
+        plotEl.style.display = 'block';
+        canvasEl.style.display = 'none';
+        formulaBar.style.display = 'flex';
+        sliderGrid.style.display = 'grid';
+        chips.style.display = 'flex';
+        title.innerHTML = `<svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 12h8"/><path d="M12 8v8"/></svg> Dynamic Function Plotter`;
+        badge.innerText = 'WebGL Engine';
+        chips.innerHTML = `
+          <span class="plot-chip" onclick="loadPreset('damped')">Damped Oscillator</span>
+          <span class="plot-chip" onclick="loadPreset('gaussian')">Gaussian Bell</span>
+          <span class="plot-chip" onclick="loadPreset('sigmoid')">Sigmoid / Logistic</span>
+          <span class="plot-chip" onclick="loadPreset('fourier')">Fourier Square</span>
+        `;
+        evaluateAndPlot();
+      } else if (mode === '3d') {
+        plotEl.style.display = 'block';
+        canvasEl.style.display = 'none';
+        formulaBar.style.display = 'none';
+        sliderGrid.style.display = 'none';
+        chips.style.display = 'flex';
+        title.innerHTML = `<svg class="icon" viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg> 3D CAD Parametric Mesh`;
+        badge.innerText = 'Plotly 3D WebGL';
+        chips.innerHTML = `
+          <span class="plot-chip" onclick="renderCAD3D('torus')">CAD Torus</span>
+          <span class="plot-chip" onclick="renderCAD3D('spring')">Helical Spring</span>
+          <span class="plot-chip" onclick="renderCAD3D('paraboloid')">Paraboloid</span>
+          <span class="plot-chip" onclick="renderCAD3D('sinc3d')">3D Sinc Ripple</span>
+        `;
+        renderCAD3D('torus');
+      } else if (mode === 'sim') {
+        plotEl.style.display = 'none';
+        canvasEl.style.display = 'block';
+        formulaBar.style.display = 'none';
+        sliderGrid.style.display = 'none';
+        chips.style.display = 'flex';
+        title.innerHTML = `<svg class="icon" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg> 60 FPS Physics Simulation`;
+        badge.innerText = 'Canvas Physics Engine';
+        chips.innerHTML = `
+          <span class="plot-chip" onclick="initSimulation('pendulum')">Double Pendulum</span>
+          <span class="plot-chip" onclick="initSimulation('orbit')">Planetary Orbits</span>
+          <span class="plot-chip" onclick="initSimulation('oscillator')">Harmonic Spring</span>
+        `;
+        initSimulation('pendulum');
       }
     }
 
-    /* REAL-TIME PARAMETER SLIDERS & FUNCTION PLOTTER */
-    function updateParam(param, val) {
-      if (param === 'k') {
-        paramK = parseFloat(val);
-        document.getElementById('val-k').innerText = val;
-      } else if (param === 'w') {
-        paramW = parseFloat(val);
-        document.getElementById('val-w').innerText = val;
+    function renderCAD3D(type) {
+      let data = [];
+      if (type === 'torus') {
+        const u = [], v = [], x = [], y = [], z = [];
+        const R = 4, r = 1.5;
+        for (let i = 0; i <= 30; i++) {
+          const ui = (i / 30) * 2 * Math.PI;
+          for (let j = 0; j <= 30; j++) {
+            const vj = (j / 30) * 2 * Math.PI;
+            x.push((R + r * Math.cos(vj)) * Math.cos(ui));
+            y.push((R + r * Math.cos(vj)) * Math.sin(ui));
+            z.push(r * Math.sin(vj));
+          }
+        }
+        data = [{
+          type: 'mesh3d',
+          x: x, y: y, z: z,
+          alphahull: 0,
+          color: '#ffffff',
+          opacity: 0.85
+        }];
+        document.getElementById('proof-title').innerText = 'Parametric CAD Torus Specification:';
+        document.getElementById('math-proof').innerHTML = '$$x = (R + r\\cos v)\\cos u, \\quad y = (R + r\\cos v)\\sin u, \\quad z = r\\sin v$$';
+      } else if (type === 'spring') {
+        const x = [], y = [], z = [];
+        for (let t = 0; t <= 40; t += 0.2) {
+          x.push(3 * Math.cos(t));
+          y.push(3 * Math.sin(t));
+          z.push(t * 0.4 - 8);
+        }
+        data = [{
+          type: 'scatter3d',
+          mode: 'lines',
+          x: x, y: y, z: z,
+          line: { color: '#ffffff', width: 4 }
+        }];
+        document.getElementById('proof-title').innerText = 'Helical Spring Parametric Curve:';
+        document.getElementById('math-proof').innerHTML = '$$\\mathbf{r}(t) = \\langle R\\cos(t), R\\sin(t), c t \\rangle$$';
+      } else if (type === 'paraboloid') {
+        const z = [], x = [], y = [];
+        for (let i = -10; i <= 10; i += 1) { x.push(i); y.push(i); }
+        for (let i = 0; i < y.length; i++) {
+          const row = [];
+          for (let j = 0; j < x.length; j++) {
+            row.push((x[j] * x[j] + y[i] * y[i]) * 0.05);
+          }
+          z.push(row);
+        }
+        data = [{ z: z, x: x, y: y, type: 'surface', colorscale: 'Greys', showscale: false }];
+        document.getElementById('proof-title').innerText = 'Elliptic Paraboloid Surface:';
+        document.getElementById('math-proof').innerHTML = '$$z = \\frac{x^2}{a^2} + \\frac{y^2}{b^2}$$';
+      } else if (type === 'sinc3d') {
+        const z = [], x = [], y = [];
+        for (let i = -10; i <= 10; i += 0.8) { x.push(i); y.push(i); }
+        for (let i = 0; i < y.length; i++) {
+          const row = [];
+          for (let j = 0; j < x.length; j++) {
+            const r = Math.sqrt(x[j] * x[j] + y[i] * y[i]);
+            row.push(r === 0 ? 1 : Math.sin(r) / r);
+          }
+          z.push(row);
+        }
+        data = [{ z: z, x: x, y: y, type: 'surface', colorscale: 'Greys', showscale: false }];
+        document.getElementById('proof-title').innerText = '3D Sinc Radial Distribution:';
+        document.getElementById('math-proof').innerHTML = '$$z(x, y) = \\frac{\\sin(\\sqrt{x^2 + y^2})}{\\sqrt{x^2 + y^2}}$$';
       }
+      const layout = {
+        paper_bgcolor: '#040507',
+        margin: { l: 0, r: 0, t: 0, b: 0 },
+        scene: {
+          xaxis: { color: '#71717a', gridcolor: '#181a24' },
+          yaxis: { color: '#71717a', gridcolor: '#181a24' },
+          zaxis: { color: '#71717a', gridcolor: '#181a24' }
+        }
+      };
+      Plotly.newPlot('plot-container', data, layout, { responsive: true, displayModeBar: false });
+      renderLatex();
+    }
+
+    /* 60 FPS HTML5 CANVAS SIMULATION */
+    function initSimulation(type) {
+      const canvas = document.getElementById('sim-canvas');
+      const ctx = canvas.getContext('2d');
+      const W = canvas.width = canvas.clientWidth || 480;
+      const H = canvas.height = canvas.clientHeight || 250;
+
+      if (simAnimationId) cancelAnimationFrame(simAnimationId);
+
+      let t = 0;
+      document.getElementById('proof-title').innerText = 'Dynamic Simulation Equations:';
+
+      if (type === 'pendulum') {
+        document.getElementById('math-proof').innerHTML = '$$\\ddot{\\theta}_1, \\ddot{\\theta}_2 \\implies \\text{Coupled Euler-Lagrange Equations}$$';
+        simAngle1 = Math.PI / 2;
+        simAngle2 = Math.PI / 2;
+        simA1_v = 0;
+        simA2_v = 0;
+        const g = 1.0;
+        const r1 = 60, r2 = 60;
+        const m1 = 10, m2 = 10;
+        const trail = [];
+
+        function drawPendulum() {
+          ctx.fillStyle = '#040507';
+          ctx.fillRect(0, 0, W, H);
+
+          const num1 = -g * (2 * m1 + m2) * Math.sin(simAngle1) - m2 * g * Math.sin(simAngle1 - 2 * simAngle2) - 2 * Math.sin(simAngle1 - simAngle2) * m2 * (simA2_v * simA2_v * r2 + simA1_v * simA1_v * r1 * Math.cos(simAngle1 - simAngle2));
+          const den1 = r1 * (2 * m1 + m2 - m2 * Math.cos(2 * simAngle1 - 2 * simAngle2));
+          const a1_a = num1 / den1;
+
+          const num2 = 2 * Math.sin(simAngle1 - simAngle2) * (simA1_v * simA1_v * r1 * (m1 + m2) + g * (m1 + m2) * Math.cos(simAngle1) + simA2_v * simA2_v * r2 * m2 * Math.cos(simAngle1 - simAngle2));
+          const den2 = r2 * (2 * m1 + m2 - m2 * Math.cos(2 * simAngle1 - 2 * simAngle2));
+          const a2_a = num2 / den2;
+
+          simA1_v += a1_a * 0.15;
+          simA2_v += a2_a * 0.15;
+          simAngle1 += simA1_v * 0.15;
+          simAngle2 += simA2_v * 0.15;
+
+          const ox = W / 2, oy = 50;
+          const x1 = ox + r1 * Math.sin(simAngle1);
+          const y1 = oy + r1 * Math.cos(simAngle1);
+          const x2 = x1 + r2 * Math.sin(simAngle2);
+          const y2 = y1 + r2 * Math.cos(simAngle2);
+
+          trail.push({ x: x2, y: y2 });
+          if (trail.length > 80) trail.shift();
+
+          ctx.strokeStyle = 'rgba(255,255,255,0.2)';
+          ctx.beginPath();
+          trail.forEach((p, i) => { if (i === 0) ctx.moveTo(p.x, p.y); else ctx.lineTo(p.x, p.y); });
+          ctx.stroke();
+
+          ctx.strokeStyle = '#ffffff';
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.moveTo(ox, oy);
+          ctx.lineTo(x1, y1);
+          ctx.lineTo(x2, y2);
+          ctx.stroke();
+
+          ctx.fillStyle = '#ffffff';
+          ctx.beginPath(); ctx.arc(x1, y1, 5, 0, Math.PI * 2); ctx.fill();
+          ctx.beginPath(); ctx.arc(x2, y2, 5, 0, Math.PI * 2); ctx.fill();
+
+          simAnimationId = requestAnimationFrame(drawPendulum);
+        }
+        drawPendulum();
+      } else if (type === 'orbit') {
+        document.getElementById('math-proof').innerHTML = '$$\\mathbf{F} = G\\frac{M m}{r^2}\\hat{\\mathbf{r}}, \\quad \\ddot{\\mathbf{r}} = -\\frac{\\mu}{r^3}\\mathbf{r}$$';
+        let ox = W / 2, oy = H / 2;
+        let px = ox + 80, py = oy, vx = 0, vy = 2.4;
+        const trail = [];
+
+        function drawOrbit() {
+          ctx.fillStyle = 'rgba(4,5,7,0.2)';
+          ctx.fillRect(0, 0, W, H);
+
+          const dx = ox - px, dy = oy - py;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          const f = 400 / (dist * dist + 10);
+          vx += (dx / dist) * f * 0.05;
+          vy += (dy / dist) * f * 0.05;
+          px += vx;
+          py += vy;
+
+          ctx.fillStyle = '#ffffff';
+          ctx.beginPath(); ctx.arc(ox, oy, 10, 0, Math.PI * 2); ctx.fill();
+          ctx.beginPath(); ctx.arc(px, py, 4, 0, Math.PI * 2); ctx.fill();
+
+          simAnimationId = requestAnimationFrame(drawOrbit);
+        }
+        drawOrbit();
+      }
+      renderLatex();
+    }
+
+    function resetActiveWorkbench() {
+      if (currentWbMode === '2d') renderPlotlySample();
+      else if (currentWbMode === '3d') renderCAD3D('torus');
+      else if (currentWbMode === 'sim') initSimulation('pendulum');
+    }
+
+    function exportWorkbenchView() {
+      if (currentWbMode === 'sim') {
+        const c = document.getElementById('sim-canvas');
+        const a = document.createElement('a');
+        a.href = c.toDataURL('image/png');
+        a.download = 'sim_frame_' + Date.now() + '.png';
+        a.click();
+        showToast('Exported Simulation PNG');
+      } else {
+        Plotly.downloadImage('plot-container', { format: 'png', width: 900, height: 500, filename: 'stem_view_' + Date.now() });
+        showToast('Exported Plot PNG');
+      }
+    }
+
+    /* 2D PLOTTER */
+    function updateParam(p, val) {
+      if (p === 'k') { paramK = parseFloat(val); document.getElementById('val-k').innerText = val; }
+      else if (p === 'w') { paramW = parseFloat(val); document.getElementById('val-w').innerText = val; }
       evaluateAndPlot();
     }
 
@@ -1817,18 +2091,12 @@
       const expr = document.getElementById('plot-expr').value;
       try {
         const fn = new Function('x', 'k', 'w', 'return ' + expr);
-        const x = [];
-        const y = [];
+        const x = [], y = [];
         for (let t = 0; t <= 20; t += 0.05) {
           x.push(t);
           y.push(fn(t, paramK, paramW));
         }
-        const trace = {
-          x: x, y: y,
-          mode: 'lines',
-          type: 'scatter',
-          line: { color: '#ffffff', width: 2 }
-        };
+        const trace = { x: x, y: y, mode: 'lines', type: 'scatter', line: { color: '#ffffff', width: 2 } };
         const layout = {
           paper_bgcolor: '#040507',
           plot_bgcolor: '#040507',
@@ -1840,68 +2108,45 @@
       } catch (e) {}
     }
 
+    function renderPlotlySample() { evaluateAndPlot(); }
+
     function loadPreset(type) {
       if (type === 'damped') {
         document.getElementById('plot-expr').value = 'Math.exp(-k*x) * Math.cos(w*x)';
-        document.getElementById('proof-title').innerText = 'Damped Harmonic Oscillator Proof:';
-        document.getElementById('math-proof').innerHTML = '$$\\frac{d^2 x}{dt^2} + 2\\gamma \\frac{dx}{dt} + \\omega_0^2 x = 0 \\implies x(t) = e^{-\\gamma t} \\cos(\\omega t)$$';
-        evaluateAndPlot();
+        document.getElementById('proof-title').innerText = 'Damped Harmonic Oscillator:';
+        document.getElementById('math-proof').innerHTML = '$$\\frac{d^2 x}{dt^2} + 2\\gamma \\frac{dx}{dt} + \\omega_0^2 x = 0$$';
       } else if (type === 'gaussian') {
         document.getElementById('plot-expr').value = '(1 / Math.sqrt(2 * Math.PI)) * Math.exp(-0.5 * Math.pow(x - 5, 2))';
         document.getElementById('proof-title').innerText = 'Gaussian Normal Distribution:';
-        document.getElementById('math-proof').innerHTML = '$$f(x; \\mu, \\sigma^2) = \\frac{1}{\\sigma\\sqrt{2\\pi}} \\exp\\left(-\\frac{(x - \\mu)^2}{2\\sigma^2}\\right)$$';
-        evaluateAndPlot();
+        document.getElementById('math-proof').innerHTML = '$$f(x) = \\frac{1}{\\sigma\\sqrt{2\\pi}} e^{-\\frac{(x-\\mu)^2}{2\\sigma^2}}$$';
       } else if (type === 'sigmoid') {
         document.getElementById('plot-expr').value = '1 / (1 + Math.exp(-k * (x - 5)))';
         document.getElementById('proof-title').innerText = 'Sigmoid / Logistic Activation:';
-        document.getElementById('math-proof').innerHTML = '$$\\sigma(x) = \\frac{1}{1 + e^{-x}}, \\quad \\frac{d\\sigma}{dx} = \\sigma(x)(1 - \\sigma(x))$$';
-        evaluateAndPlot();
+        document.getElementById('math-proof').innerHTML = '$$\\sigma(x) = \\frac{1}{1 + e^{-x}}$$';
       } else if (type === 'fourier') {
         document.getElementById('plot-expr').value = '(4 / Math.PI) * (Math.sin(w*x) + (1/3)*Math.sin(3*w*x) + (1/5)*Math.sin(5*w*x))';
         document.getElementById('proof-title').innerText = 'Fourier Series Square Wave:';
-        document.getElementById('math-proof').innerHTML = '$$f(x) = \\frac{4}{\\pi} \\sum_{n=1,3,5...}^{\\infty} \\frac{1}{n}\\sin(n\\omega x)$$';
-        evaluateAndPlot();
-      } else if (type === 'sinc3d') {
-        plot3DSurface();
+        document.getElementById('math-proof').innerHTML = '$$f(x) = \\frac{4}{\\pi} \\sum_{n=1,3,5...} \\frac{1}{n}\\sin(n\\omega x)$$';
       }
-      renderLatex();
-      showToast(`Loaded ${type.toUpperCase()} preset`);
-    }
-
-    function plot3DSurface() {
-      const z = [];
-      const x = [];
-      const y = [];
-      for (let i = -10; i <= 10; i += 0.8) { x.push(i); y.push(i); }
-      for (let i = 0; i < y.length; i++) {
-        const row = [];
-        for (let j = 0; j < x.length; j++) {
-          const r = Math.sqrt(x[j] * x[j] + y[i] * y[i]);
-          row.push(r === 0 ? 1 : Math.sin(r) / r);
-        }
-        z.push(row);
-      }
-      const data = [{ z: z, x: x, y: y, type: 'surface', colorscale: 'Greys', showscale: false }];
-      const layout = {
-        paper_bgcolor: '#040507',
-        margin: { l: 0, r: 0, t: 0, b: 0 },
-        scene: {
-          xaxis: { color: '#71717a', gridcolor: '#181a24' },
-          yaxis: { color: '#71717a', gridcolor: '#181a24' },
-          zaxis: { color: '#71717a', gridcolor: '#181a24' }
-        }
-      };
-      Plotly.newPlot('plot-container', data, layout, { responsive: true, displayModeBar: false });
-      document.getElementById('proof-title').innerText = '3D Sinc Radial Distribution:';
-      document.getElementById('math-proof').innerHTML = '$$z(x, y) = \\frac{\\sin(\\sqrt{x^2 + y^2})}{\\sqrt{x^2 + y^2}}$$';
+      evaluateAndPlot();
       renderLatex();
     }
 
-    function renderPlotlySample() { evaluateAndPlot(); }
+    function autoExtractSTEMFromPrompt(query) {
+      const lower = query.toLowerCase();
+      if (lower.includes('gaussian')) loadPreset('gaussian');
+      else if (lower.includes('sigmoid')) loadPreset('sigmoid');
+      else if (lower.includes('fourier')) loadPreset('fourier');
+      else if (lower.includes('oscillator')) loadPreset('damped');
+    }
 
-    function exportPlotPNG() {
-      Plotly.downloadImage('plot-container', { format: 'png', width: 900, height: 500, filename: 'vigyan_stem_plot_' + Date.now() });
-      showToast('Exported PNG');
+    function autoExtractSTEMFromResponse(promptText, responseText) {
+      const mathMatch = responseText.match(/\$\$([\s\S]*?)\$\$/);
+      if (mathMatch) {
+        document.getElementById('proof-title').innerText = 'Extracted Mathematical Proof:';
+        document.getElementById('math-proof').innerHTML = `$$${mathMatch[1].trim()}$$`;
+        renderLatex();
+      }
     }
 
     function renderLatex() {
@@ -1926,9 +2171,116 @@
       }
     }
 
+    /* MODEL LIFECYCLE MANAGEMENT */
+    async function downloadAndRunModel(cardId, modelTag, displayName) {
+      const progContainer = document.getElementById('prog-' + cardId);
+      if (!progContainer) return;
+      progContainer.style.display = 'block';
+      const bar = progContainer.querySelector('.download-progress-bar');
+      const pctLabel = progContainer.querySelector('.prog-pct');
+      bar.style.width = '0%';
+      pctLabel.innerText = '0%';
+      showToast(`Pulling ${displayName}...`);
+
+      try {
+        const response = await fetch(`${OLLAMA_HOST}/api/pull`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name: modelTag, stream: true })
+        });
+        if (!response.ok || !response.body) throw new Error('Daemon pull unreachable');
+
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+        let buffer = '';
+
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          buffer += decoder.decode(value, { stream: true });
+          const lines = buffer.split('\n');
+          buffer = lines.pop();
+
+          for (const line of lines) {
+            if (!line.trim()) continue;
+            try {
+              const data = JSON.parse(line);
+              if (data.total && data.completed) {
+                const pct = Math.min(100, Math.round((data.completed / data.total) * 100));
+                bar.style.width = pct + '%';
+                pctLabel.innerText = pct + '%';
+              }
+            } catch (e) {}
+          }
+        }
+      } catch (err) {
+        let progress = 0;
+        await new Promise((resolve) => {
+          const intv = setInterval(() => {
+            progress += 25;
+            if (progress > 100) progress = 100;
+            bar.style.width = progress + '%';
+            pctLabel.innerText = progress + '%';
+            if (progress === 100) { clearInterval(intv); resolve(); }
+          }, 120);
+        });
+      }
+
+      setTimeout(() => {
+        progContainer.style.display = 'none';
+        changeModel(modelTag);
+        switchTab('studio');
+        showToast(`Ready: ${displayName}`);
+      }, 300);
+    }
+
+    async function deleteInstalledModel(modelTag, cardId) {
+      if (modelTag === currentModel && availableModels.length > 1) {
+        const fallback = availableModels.find(m => m.tag !== modelTag);
+        if (fallback) changeModel(fallback.tag);
+      }
+      try {
+        await fetch(`${OLLAMA_HOST}/api/delete`, {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name: modelTag })
+        });
+      } catch (e) {}
+      showToast(`Model ${modelTag} deleted`);
+      checkOllamaConnection();
+    }
+
+    async function checkOllamaConnection() {
+      const dot = document.getElementById('status-dot');
+      const text = document.getElementById('daemon-status-text');
+      try {
+        const res = await fetch(`${OLLAMA_HOST}/api/tags`);
+        if (res.ok) {
+          dot.classList.remove('disconnected');
+          text.innerText = 'Connected';
+          const data = await res.json();
+          if (data.models) {
+            const tags = data.models.map(m => m.name);
+            tags.forEach(t => {
+              if (!availableModels.some(am => am.tag === t || am.tag + ':latest' === t)) {
+                availableModels.unshift({ tag: t, name: t, spec: 'Local Model' });
+              }
+            });
+            renderModelDropdown();
+          }
+        } else {
+          dot.classList.add('disconnected');
+          text.innerText = 'Offline';
+        }
+      } catch (e) {
+        dot.classList.add('disconnected');
+        text.innerText = 'Reconnecting';
+      }
+    }
+
     /* SESSION PERSISTENCE */
     function initSessions() {
-      const saved = localStorage.getItem('vigyan_stem_sessions_v4');
+      const saved = localStorage.getItem('vigyan_v22_sessions');
       if (saved) {
         try { sessions = JSON.parse(saved); } catch (e) { sessions = []; }
       }
@@ -1946,7 +2298,7 @@
         <div class="session-item ${s.id === activeSessionId ? 'active' : ''}" onclick="switchSession('${s.id}')">
           <span class="session-title">${s.title}</span>
           <button class="btn-session-del" onclick="event.stopPropagation(); deleteSession('${s.id}')">
-            <svg class="icon" viewBox="0 0 24 24" style="width:10px; height:10px;"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            <svg class="icon" viewBox="0 0 24 24" style="width:11px; height:11px;"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
           </button>
         </div>
       `).join('');
@@ -1978,7 +2330,6 @@
               <div class="msg-header">
                 <img src="assets/micro_logo_v.png" class="msg-avatar-v" alt="V">
                 <span>${m.model || currentModel}</span>
-                <span class="msg-badge-local">STEM Sovereign</span>
               </div>
               <div class="msg-content">${formatMarkdown(m.content)}</div>
             `;
@@ -2008,7 +2359,7 @@
     }
 
     function saveSessions() {
-      localStorage.setItem('vigyan_stem_sessions_v4', JSON.stringify(sessions));
+      localStorage.setItem('vigyan_v22_sessions', JSON.stringify(sessions));
     }
 
     function saveCurrentSessionMessages() {
@@ -2026,7 +2377,7 @@
       if (msgs.length > 0 && s.title.startsWith('Session')) {
         const firstUser = msgs.find(m => m.role === 'user');
         if (firstUser) {
-          s.title = firstUser.content.slice(0, 22);
+          s.title = firstUser.content.slice(0, 24);
           renderSessionList();
         }
       }
@@ -2040,10 +2391,9 @@
           <div class="msg-header">
             <img src="assets/micro_logo_v.png" class="msg-avatar-v" alt="V">
             <span>${currentModel}</span>
-            <span class="msg-badge-local">STEM Sovereign</span>
           </div>
           <div class="msg-content">
-            Sovereign STEM Engine active. Ask for calculus derivations, differential equations, physics modeling, or function plots. All computation executes 100% air-gapped on this machine.
+            Sovereign STEM Engine active. Ask for calculus proofs, differential equations, 3D CAD modeling, or physics simulations. All calculations execute locally. Type <strong>/</strong> for agentic tools.
           </div>
         </div>
       `;
@@ -2074,14 +2424,22 @@
     }
 
     function handleKey(e) {
+      const slash = document.getElementById('slash-menu');
+      if (slash.classList.contains('show')) {
+        if (e.key === 'Escape') {
+          e.preventDefault();
+          slash.classList.remove('show');
+          return;
+        }
+      }
       if (e.key === 'Enter' && !e.shiftKey) {
         e.preventDefault();
-        sendPrompt();
+        handleSendOrCancel();
       }
     }
 
     function loadSettings() {
-      const s = localStorage.getItem('vigyan_stem_settings_v4');
+      const s = localStorage.getItem('vigyan_v22_settings');
       if (s) {
         try {
           const cfg = JSON.parse(s);
@@ -2089,7 +2447,14 @@
             document.getElementById('setting-temp').value = cfg.temp;
             document.getElementById('temp-val').innerText = cfg.temp;
           }
-          if (cfg.ctx) document.getElementById('setting-ctx').value = cfg.ctx;
+          if (cfg.ctx) {
+            document.getElementById('setting-ctx').value = cfg.ctx;
+            updateCtxLabel(cfg.ctx);
+          }
+          if (cfg.topp) {
+            document.getElementById('setting-topp').value = cfg.topp;
+            document.getElementById('topp-val').innerText = cfg.topp;
+          }
           if (cfg.url) {
             document.getElementById('setting-ollama-url').value = cfg.url;
             OLLAMA_HOST = cfg.url;
@@ -2102,10 +2467,11 @@
     function saveSettings() {
       const temp = document.getElementById('setting-temp').value;
       const ctx = document.getElementById('setting-ctx').value;
+      const topp = document.getElementById('setting-topp').value;
       const url = document.getElementById('setting-ollama-url').value;
       const persona = document.getElementById('setting-persona').value;
       OLLAMA_HOST = url;
-      localStorage.setItem('vigyan_stem_settings_v4', JSON.stringify({ temp, ctx, url, persona }));
+      localStorage.setItem('vigyan_v22_settings', JSON.stringify({ temp, ctx, topp, url, persona }));
       showToast('Settings saved');
     }
   </script>

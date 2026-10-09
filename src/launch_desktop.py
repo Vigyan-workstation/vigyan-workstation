@@ -22,7 +22,7 @@ def main():
     GLib.set_application_name("Vigyan Pro")
 
     win = Gtk.Window(type=Gtk.WindowType.TOPLEVEL)
-    win.set_title("Vigyan Pro — Sovereign Studio")
+    win.set_title("Vigyan Pro")
     win.set_wmclass("vigyan-pro", "vigyan-pro")
     win.set_role("vigyan-pro")
     win.set_default_size(1340, 740)
