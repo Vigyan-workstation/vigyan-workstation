@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Vigyan Pro</title>
   <!-- Offline KaTeX -->
   <link rel="stylesheet" href="vendor/katex.min.css">
@@ -20,7 +20,8 @@
       --card-hover: #151720;
       --border: rgba(255, 255, 255, 0.08);
       --border-subtle: rgba(255, 255, 255, 0.05);
-      --border-active: rgba(255, 255, 255, 0.22);
+      --border-active: rgba(255, 255, 255, 0.24);
+      --glow-subtle: 0 0 20px rgba(255, 255, 255, 0.03);
       --text: #f4f4f6;
       --text-muted: #a1a1aa;
       --text-subtle: #71717a;
@@ -33,8 +34,9 @@
     body {
       background: var(--bg);
       color: var(--text);
-      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Inter", sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Segoe UI", Roboto, "Inter", sans-serif;
       height: 100vh;
+      width: 100vw;
       display: flex;
       flex-direction: column;
       overflow: hidden;
@@ -67,6 +69,8 @@
       padding: 0 16px;
       flex-shrink: 0;
       z-index: 50;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
     }
     .header-left {
       display: flex;
@@ -119,6 +123,7 @@
       border: 1px solid var(--border-subtle);
       padding: 2px 8px;
       border-radius: 4px;
+      transition: all 0.2s;
     }
     .header-right {
       display: flex;
@@ -148,7 +153,8 @@
       display: flex;
       flex-direction: column;
       flex-shrink: 0;
-      transition: width 0.2s var(--ease-spring), opacity 0.2s ease;
+      transition: width 0.22s var(--ease-spring), opacity 0.2s ease;
+      z-index: 30;
     }
     .sidebar.collapsed {
       width: 0;
@@ -194,6 +200,7 @@
       color: #ffffff;
       border-color: var(--border-active);
       font-weight: 600;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.4);
     }
 
     /* SESSIONS SECTION */
@@ -285,15 +292,16 @@
     }
     .btn-clear-all:hover { color: #ffffff; }
 
-    /* CHAT WORKSPACE */
+    /* CHAT WORKSPACE (FLUID RESPONSIVE) */
     .chat-section {
       flex: 1;
       display: flex;
       flex-direction: column;
       background: #000000;
       position: relative;
-      min-width: 320px;
-      border-right: 1px solid var(--border);
+      min-width: 340px;
+      height: 100%;
+      overflow: hidden;
     }
     .chat-toolbar {
       padding: 8px 16px;
@@ -303,6 +311,7 @@
       justify-content: space-between;
       background: #050608;
       position: relative;
+      z-index: 25;
     }
     .companion-selector-wrapper { position: relative; }
     .companion-pill {
@@ -370,7 +379,7 @@
     .dropdown-model-tag { font-size: 12.5px; font-weight: 600; color: #ffffff; }
     .dropdown-model-spec { font-size: 11px; color: var(--text-subtle); }
 
-    .toolbar-actions { display: flex; gap: 6px; }
+    .toolbar-actions { display: flex; gap: 6px; align-items: center; }
     .btn-action {
       background: #0f1118;
       border: 1px solid var(--border);
@@ -398,11 +407,11 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 24px 24px 140px 24px;
+      padding: 20px 24px 140px 24px;
     }
     .chat-container {
       width: 100%;
-      max-width: 780px;
+      max-width: 800px;
       display: flex;
       flex-direction: column;
       gap: 16px;
@@ -423,6 +432,7 @@
       color: #ffffff;
       font-size: 14.5px;
       line-height: 1.6;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.3);
     }
     .msg.assistant {
       align-self: flex-start;
@@ -434,6 +444,7 @@
       font-size: 14.5px;
       line-height: 1.65;
       width: 100%;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.4);
     }
     .msg-header {
       font-size: 12px;
@@ -478,15 +489,15 @@
       bottom: 56px;
       left: 0;
       right: 0;
-      background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.85) 40%, #000000 100%);
+      background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.88) 40%, #000000 100%);
       padding: 8px 24px 10px 24px;
       display: flex;
       justify-content: center;
       z-index: 20;
     }
-    .input-inner-wrapper { width: 100%; max-width: 780px; position: relative; }
+    .input-inner-wrapper { width: 100%; max-width: 800px; position: relative; }
     
-    /* ENHANCED FLOATING SLASH COMMAND MENU */
+    /* ENHANCED FLOATING SLASH MENU */
     .slash-menu {
       display: none;
       position: absolute;
@@ -496,6 +507,7 @@
       border: 1px solid var(--border-active);
       border-radius: 10px;
       width: 360px;
+      max-width: 90vw;
       z-index: 95;
       padding: 6px;
       box-shadow: 0 16px 36px rgba(0,0,0,0.95);
@@ -545,11 +557,12 @@
       border: 1px solid rgba(255, 255, 255, 0.14);
       border-radius: 12px;
       padding: 8px 10px;
-      transition: border-color 0.15s;
+      transition: border-color 0.15s, box-shadow 0.15s;
     }
     .input-capsule:focus-within {
       border-color: rgba(255, 255, 255, 0.3);
       background: #0c0e14;
+      box-shadow: 0 0 18px rgba(255, 255, 255, 0.04);
     }
     
     .btn-slash-trigger {
@@ -613,13 +626,43 @@
       color: #ffffff;
     }
 
+    /* RESIZABLE DRAG DIVIDER */
+    .workbench-resizer {
+      width: 6px;
+      background: transparent;
+      cursor: col-resize;
+      position: relative;
+      flex-shrink: 0;
+      z-index: 40;
+      transition: background 0.15s;
+    }
+    .workbench-resizer::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 2px;
+      width: 2px;
+      background: var(--border);
+      transition: background 0.15s, width 0.15s;
+    }
+    .workbench-resizer:hover::after,
+    .workbench-resizer.dragging::after {
+      background: rgba(255, 255, 255, 0.4);
+      width: 3px;
+    }
+
     /* INDUSTRY-BEST STEM WORKBENCH AS A TOOL */
     .stem-section {
       width: 540px;
+      min-width: 340px;
+      max-width: 75vw;
       background: #030406;
       display: flex;
       flex-direction: column;
       flex-shrink: 0;
+      height: 100%;
+      overflow: hidden;
     }
     .stem-header {
       padding: 7px 12px;
@@ -668,6 +711,7 @@
       border: 1px solid var(--border);
       border-radius: 8px;
       padding: 12px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.5);
     }
     .stem-card-header {
       display: flex;
@@ -800,6 +844,11 @@
       border-radius: 6px;
       border: 1px solid var(--border-subtle);
       overflow-x: auto;
+      cursor: pointer;
+      transition: border-color 0.15s;
+    }
+    .proof-box:hover {
+      border-color: var(--border-active);
     }
 
     /* SOVEREIGN VAULT */
@@ -819,6 +868,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.6);
     }
     .hero-title {
       font-size: 13.5px;
@@ -982,6 +1032,7 @@
     .intent-card.active {
       background: #11131c;
       border-color: #ffffff;
+      box-shadow: 0 4px 16px rgba(255,255,255,0.06);
     }
     .intent-card-title { font-size: 12px; font-weight: 600; color: #ffffff; }
     .intent-card-desc { font-size: 11px; color: var(--text-muted); line-height: 1.45; }
@@ -1090,6 +1141,17 @@
       box-shadow: 0 8px 24px rgba(0,0,0,0.6);
     }
     #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* RESPONSIVE BREAKPOINTS */
+    @media (max-width: 1024px) {
+      .sidebar { width: 0; opacity: 0; overflow: hidden; border-right: none; }
+      .sidebar.open-mobile { width: 220px; opacity: 1; }
+      .stem-section { width: 440px; }
+    }
+    @media (max-width: 768px) {
+      .stem-section { display: none; }
+      .workbench-resizer { display: none; }
+    }
   </style>
 </head>
 <body>
@@ -1107,7 +1169,7 @@
       </div>
     </div>
     <div class="header-right">
-      <!-- Clean & clutter-free right header -->
+      <!-- Clean, minimal & distraction-free -->
     </div>
   </header>
 
@@ -1151,7 +1213,7 @@
         </div>
       </aside>
 
-      <section class="chat-section">
+      <section class="chat-section" id="chat-section">
         <div class="chat-toolbar">
           <div class="companion-selector-wrapper">
             <div class="companion-pill" id="companion-pill" onclick="toggleModelDropdown()">
@@ -1177,7 +1239,7 @@
                 <span id="welcome-companion-label">olmoe:1b-7b</span>
               </div>
               <div class="msg-content" id="welcome-msg-text">
-                Sovereign STEM Lab active. Ready for rigorous proofs, 3D CAD meshes, astronomy orbits, chemical kinetics, and physical simulations. Click <strong>[/]</strong> or type <strong>/</strong> for agentic tools.
+                Sovereign STEM Lab active. Ready for multi-turn calculus, 3D CAD meshes, astronomy orbits, chemical kinetics, and physical simulations. Click <strong>[/]</strong> or type <strong>/</strong> for agentic tools.
               </div>
             </div>
           </div>
@@ -1239,8 +1301,11 @@
         </div>
       </section>
 
+      <!-- RESIZABLE DRAG DIVIDER -->
+      <div class="workbench-resizer" id="workbench-resizer" title="Drag to resize STEM Workbench"></div>
+
       <!-- UPGRADED STEM WORKBENCH AS A REAL TOOL -->
-      <section class="stem-section">
+      <section class="stem-section" id="stem-section">
         <div class="stem-header">
           <div class="workbench-tabs">
             <button class="wb-tab active" id="tab-btn-plot" onclick="switchWorkbenchMode('plot')">Plotter</button>
@@ -1260,7 +1325,7 @@
                 <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 12h8"/><path d="M12 8v8"/></svg>
                 Dynamic Function Plotter
               </span>
-              <span class="stem-card-badge" id="wb-engine-badge">WebGL Engine</span>
+              <span class="stem-card-badge" id="wb-engine-badge">WebGL 2D</span>
             </div>
             
             <div class="formula-bar" id="formula-bar-container">
@@ -1304,7 +1369,7 @@
                 Copy LaTeX
               </button>
             </div>
-            <div class="proof-box" id="proof-container">
+            <div class="proof-box" id="proof-container" onclick="copyLatexProof()" title="Click to copy LaTeX">
               <div style="font-size:11px; color:var(--text-subtle); margin-bottom:4px;" id="proof-title">Analytical Differential Formulation:</div>
               <div id="math-proof">
                 $$\frac{d^2 x}{dt^2} + 2\gamma \frac{dx}{dt} + \omega_0^2 x = 0$$
@@ -1617,6 +1682,7 @@
       renderModelDropdown();
       checkOllamaConnection();
       switchWorkbenchMode('plot');
+      initWorkbenchResizer();
       renderLatex();
       setInterval(checkOllamaConnection, 10000);
 
@@ -1641,6 +1707,59 @@
       });
     });
 
+    /* DRAGGABLE WORKBENCH RESIZER */
+    function initWorkbenchResizer() {
+      const resizer = document.getElementById('workbench-resizer');
+      const stemSection = document.getElementById('stem-section');
+      const chatSection = document.getElementById('chat-section');
+      if (!resizer || !stemSection || !chatSection) return;
+
+      let isDragging = false;
+
+      function onPointerDown(e) {
+        isDragging = true;
+        resizer.classList.add('dragging');
+        document.body.style.cursor = 'col-resize';
+        e.preventDefault();
+      }
+
+      function onPointerMove(e) {
+        if (!isDragging) return;
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const totalW = window.innerWidth;
+        const newStemW = totalW - clientX;
+        
+        // Limits: min 320px for stem, min 360px for chat
+        if (newStemW >= 320 && (clientX >= 360)) {
+          stemSection.style.width = newStemW + 'px';
+          if (currentWbMode !== 'sim') {
+            Plotly.Plots.resize('plot-container');
+          } else {
+            const canvas = document.getElementById('sim-canvas');
+            if (canvas) canvas.width = canvas.clientWidth;
+          }
+        }
+      }
+
+      function onPointerUp() {
+        if (!isDragging) return;
+        isDragging = false;
+        resizer.classList.remove('dragging');
+        document.body.style.cursor = 'default';
+        if (currentWbMode !== 'sim') {
+          Plotly.Plots.resize('plot-container');
+        }
+      }
+
+      resizer.addEventListener('mousedown', onPointerDown);
+      document.addEventListener('mousemove', onPointerMove);
+      document.addEventListener('mouseup', onPointerUp);
+
+      resizer.addEventListener('touchstart', onPointerDown, { passive: false });
+      document.addEventListener('touchmove', onPointerMove, { passive: false });
+      document.addEventListener('touchend', onPointerUp);
+    }
+
     function showToast(msg) {
       const t = document.getElementById('toast');
       t.innerText = msg;
@@ -1656,10 +1775,11 @@
     }
 
     function toggleSidebar() {
-      document.getElementById('sidebar').classList.toggle('collapsed');
+      const sb = document.getElementById('sidebar');
+      sb.classList.toggle('collapsed');
       setTimeout(() => {
         if (currentWbMode !== 'sim') Plotly.Plots.resize('plot-container');
-      }, 220);
+      }, 240);
     }
 
     /* DOMAIN SELECTION (UNIFIED LAB, ASTRONOMY, BIOMED, CHEM) */
@@ -1670,12 +1790,11 @@
       if (activeEl) activeEl.classList.add('active');
 
       const badge = document.getElementById('header-domain-badge');
-      const personaInput = document.getElementById('setting-persona');
       const welcome = document.getElementById('welcome-msg-text');
 
       if (domainId === 'lab') {
         badge.innerText = 'Lab Studio';
-        if (welcome) welcome.innerText = 'Unified STEM Lab active. Ready for calculus, physics, chemistry, and astronomical derivations. Click [/] or type / for agentic tools.';
+        if (welcome) welcome.innerText = 'Unified STEM Lab active. Ready for multi-turn calculus, physics, chemistry, and astronomical derivations. Click [/] or type / for agentic tools.';
         switchWorkbenchMode('plot');
       } else if (domainId === 'astronomy') {
         badge.innerText = 'Astronomy';
@@ -1890,7 +2009,17 @@
       btn.innerHTML = `<svg viewBox="0 0 24 24" style="width:14px; height:14px; stroke:#000000; stroke-width:2.2; fill:none; stroke-linecap:round; stroke-linejoin:round;"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>`;
     }
 
-    /* INFERENCE WITH AGENT-WORKBENCH BRIDGE */
+    /* MULTI-TURN CONTEXT MANAGEMENT & INFERENCE */
+    function buildConversationHistory() {
+      const s = sessions.find(x => x.id === activeSessionId);
+      if (!s || !s.messages) return [];
+      // Keep last 10 messages for rich multi-turn context
+      return s.messages.slice(-10).map(m => ({
+        role: m.role === 'user' ? 'user' : 'assistant',
+        content: m.plainText || m.content
+      }));
+    }
+
     async function sendPrompt() {
       const input = document.getElementById('prompt-input');
       const text = input.value.trim();
@@ -1933,22 +2062,50 @@
       const contentEl = asstDiv.querySelector('.msg-content');
       let rawAccumulated = '';
 
+      // Prepare multi-turn messages
+      const history = buildConversationHistory();
+      history.push({ role: 'user', content: text });
+
       currentAbortController = new AbortController();
       setSendingButton();
 
       try {
-        const response = await fetch(`${OLLAMA_HOST}/api/generate`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          signal: currentAbortController.signal,
-          body: JSON.stringify({
-            model: currentModel,
-            prompt: text,
-            system: personaVal,
-            options: { temperature: tempVal, num_ctx: ctxVal },
-            stream: true
-          })
-        });
+        // Use /api/chat if supported or fallback to /api/generate
+        let response = null;
+        try {
+          response = await fetch(`${OLLAMA_HOST}/api/chat`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            signal: currentAbortController.signal,
+            body: JSON.stringify({
+              model: currentModel,
+              messages: [
+                { role: 'system', content: personaVal },
+                ...history
+              ],
+              options: { temperature: tempVal, num_ctx: ctxVal },
+              stream: true
+            })
+          });
+        } catch (e) {
+          response = null;
+        }
+
+        // Fallback to /api/generate if /api/chat unavailable
+        if (!response || !response.ok) {
+          response = await fetch(`${OLLAMA_HOST}/api/generate`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            signal: currentAbortController.signal,
+            body: JSON.stringify({
+              model: currentModel,
+              prompt: text,
+              system: personaVal,
+              options: { temperature: tempVal, num_ctx: ctxVal },
+              stream: true
+            })
+          });
+        }
 
         if (!response.ok || !response.body) throw new Error('Daemon unreachable');
 
@@ -1969,8 +2126,9 @@
             if (!line.trim()) continue;
             try {
               const data = JSON.parse(line);
-              if (data.response) {
-                rawAccumulated += data.response;
+              const piece = (data.message && data.message.content) || data.response || '';
+              if (piece) {
+                rawAccumulated += piece;
                 contentEl.innerHTML = formatMarkdown(rawAccumulated);
                 scrollWrapper.scrollTop = scrollWrapper.scrollHeight;
               }
@@ -2029,7 +2187,6 @@
     }
 
     function autoAgentWorkbenchBridge(promptText, responseText) {
-      // 1. Check for explicit workbench code directives
       const plotMatch = responseText.match(/```workbench:plot\s+([\s\S]*?)```/);
       if (plotMatch) {
         document.getElementById('plot-expr').value = plotMatch[1].trim();
@@ -2051,7 +2208,6 @@
         initSimulation(simType);
       }
 
-      // 2. Extract mathematical proofs for drawer
       const mathMatch = responseText.match(/\$\$([\s\S]*?)\$\$/);
       if (mathMatch) {
         document.getElementById('proof-title').innerText = 'Extracted Mathematical Proof:';
@@ -2145,7 +2301,6 @@
           cx.push(R_c * Math.cos(a)); cy.push(R_c * Math.sin(a)); cz.push(0);
           hx.push(R_h * Math.cos(a)); hy.push(R_h * Math.sin(a)); hz.push(0);
         }
-        // Bond lines for carbon ring
         const bx = [], by = [], bz = [];
         for (let i = 0; i <= 6; i++) {
           const a = ((i % 6) * Math.PI) / 3;
@@ -2159,7 +2314,7 @@
       } else if (type === 'water') {
         proofTitle.innerText = 'Water (H2O) Bent Molecular Geometry:';
         mathProof.innerHTML = '$$\\angle H-O-H = 104.5^\\circ, \\quad r_{O-H} = 0.958\\text{ \\AA}, \\quad \\mu = 1.85\\text{ D}$$';
-        const angle = (104.5 * Math.PI) / 360; // half angle
+        const angle = (104.5 * Math.PI) / 360;
         const r = 1.2;
         data = [
           { type: 'scatter3d', mode: 'lines', x: [r * Math.sin(angle), 0, -r * Math.sin(angle)], y: [r * Math.cos(angle), 0, r * Math.cos(angle)], z: [0, 0, 0], line: { color: '#ffffff', width: 6 }, showlegend: false },
@@ -2266,8 +2421,10 @@
         const trail = [];
 
         function drawPendulum() {
+          const curW = canvas.width = canvas.clientWidth;
+          const curH = canvas.height = canvas.clientHeight;
           ctx.fillStyle = '#040507';
-          ctx.fillRect(0, 0, W, H);
+          ctx.fillRect(0, 0, curW, curH);
 
           const num1 = -g * (2 * m1 + m2) * Math.sin(simAngle1) - m2 * g * Math.sin(simAngle1 - 2 * simAngle2) - 2 * Math.sin(simAngle1 - simAngle2) * m2 * (simA2_v * simA2_v * r2 + simA1_v * simA1_v * r1 * Math.cos(simAngle1 - simAngle2));
           const den1 = r1 * (2 * m1 + m2 - m2 * Math.cos(2 * simAngle1 - 2 * simAngle2));
@@ -2282,7 +2439,7 @@
           simAngle1 += simA1_v * 0.15;
           simAngle2 += simA2_v * 0.15;
 
-          const ox = W / 2, oy = 48;
+          const ox = curW / 2, oy = 48;
           const x1 = ox + r1 * Math.sin(simAngle1);
           const y1 = oy + r1 * Math.cos(simAngle1);
           const x2 = x1 + r2 * Math.sin(simAngle2);
@@ -2317,8 +2474,12 @@
         const trail = [];
 
         function drawOrbit() {
+          const curW = canvas.width = canvas.clientWidth;
+          const curH = canvas.height = canvas.clientHeight;
+          ox = curW / 2; oy = curH / 2;
+
           ctx.fillStyle = 'rgba(4,5,7,0.18)';
-          ctx.fillRect(0, 0, W, H);
+          ctx.fillRect(0, 0, curW, curH);
 
           const dx = ox - px, dy = oy - py;
           const dist = Math.sqrt(dx * dx + dy * dy);
@@ -2335,7 +2496,7 @@
           trail.forEach((p, i) => { if (i === 0) ctx.moveTo(p.x, p.y); else ctx.lineTo(p.x, p.y); });
           ctx.stroke();
 
-          // Central Sun
+          // Central Star
           ctx.fillStyle = '#ffffff';
           ctx.beginPath(); ctx.arc(ox, oy, 9, 0, Math.PI * 2); ctx.fill();
 
@@ -2352,11 +2513,13 @@
         let S = 100.0, P = 0.0;
         const Vmax = 1.2, Km = 25.0;
         const historyS = [], historyP = [];
-        let t = 0;
 
         function drawEnzyme() {
+          const curW = canvas.width = canvas.clientWidth;
+          const curH = canvas.height = canvas.clientHeight;
+
           ctx.fillStyle = '#040507';
-          ctx.fillRect(0, 0, W, H);
+          ctx.fillRect(0, 0, curW, curH);
 
           const rate = (Vmax * S) / (Km + S);
           S = Math.max(0, S - rate * 0.35);
@@ -2364,31 +2527,28 @@
 
           historyS.push(S);
           historyP.push(P);
-          if (historyS.length > W - 60) { historyS.shift(); historyP.shift(); }
+          if (historyS.length > curW - 60) { historyS.shift(); historyP.shift(); }
 
-          // Grid
           ctx.strokeStyle = '#12141c';
           ctx.beginPath();
-          for (let y = 30; y < H - 30; y += 40) { ctx.moveTo(40, y); ctx.lineTo(W - 20, y); }
+          for (let y = 30; y < curH - 30; y += 40) { ctx.moveTo(40, y); ctx.lineTo(curW - 20, y); }
           ctx.stroke();
 
-          // Substrate curve S
           ctx.strokeStyle = '#ef4444';
           ctx.lineWidth = 2;
           ctx.beginPath();
           historyS.forEach((val, i) => {
             const x = 40 + i;
-            const y = (H - 40) - (val / 100) * (H - 80);
+            const y = (curH - 40) - (val / 100) * (curH - 80);
             if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
           });
           ctx.stroke();
 
-          // Product curve P
           ctx.strokeStyle = '#10b981';
           ctx.beginPath();
           historyP.forEach((val, i) => {
             const x = 40 + i;
-            const y = (H - 40) - (val / 100) * (H - 80);
+            const y = (curH - 40) - (val / 100) * (curH - 80);
             if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
           });
           ctx.stroke();
@@ -2407,8 +2567,11 @@
         const histC = [];
 
         function drawReaction() {
+          const curW = canvas.width = canvas.clientWidth;
+          const curH = canvas.height = canvas.clientHeight;
+
           ctx.fillStyle = '#040507';
-          ctx.fillRect(0, 0, W, H);
+          ctx.fillRect(0, 0, curW, curH);
 
           const forward = kf * A * B;
           const reverse = kr * C;
@@ -2416,14 +2579,14 @@
           A -= net; B -= net; C += net;
 
           histC.push(C);
-          if (histC.length > W - 60) histC.shift();
+          if (histC.length > curW - 60) histC.shift();
 
           ctx.strokeStyle = '#ffffff';
           ctx.lineWidth = 2;
           ctx.beginPath();
           histC.forEach((val, i) => {
             const x = 40 + i;
-            const y = (H - 40) - (val / 80) * (H - 80);
+            const y = (curH - 40) - (val / 80) * (curH - 80);
             if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
           });
           ctx.stroke();
@@ -2674,7 +2837,7 @@
 
     /* SESSIONS PERSISTENCE */
     function initSessions() {
-      const saved = localStorage.getItem('vigyan_v23_sessions');
+      const saved = localStorage.getItem('vigyan_v24_sessions');
       if (saved) {
         try { sessions = JSON.parse(saved); } catch (e) { sessions = []; }
       }
@@ -2753,7 +2916,7 @@
     }
 
     function saveSessions() {
-      localStorage.setItem('vigyan_v23_sessions', JSON.stringify(sessions));
+      localStorage.setItem('vigyan_v24_sessions', JSON.stringify(sessions));
     }
 
     function saveCurrentSessionMessages() {
@@ -2761,10 +2924,11 @@
       if (!s) return;
       const msgs = [];
       document.querySelectorAll('#chat-box .msg').forEach(el => {
-        if (el.classList.contains('user')) msgs.push({ role: 'user', content: el.innerText });
-        else {
+        if (el.classList.contains('user')) {
+          msgs.push({ role: 'user', content: el.innerText, plainText: el.innerText });
+        } else {
           const c = el.querySelector('.msg-content');
-          msgs.push({ role: 'assistant', model: currentModel, content: c ? c.innerHTML : '' });
+          msgs.push({ role: 'assistant', model: currentModel, content: c ? c.innerHTML : '', plainText: c ? c.innerText : '' });
         }
       });
       s.messages = msgs;
@@ -2787,7 +2951,7 @@
             <span>${currentModel}</span>
           </div>
           <div class="msg-content" id="welcome-msg-text">
-            Sovereign STEM Lab active. Ready for rigorous proofs, 3D CAD meshes, astronomy orbits, chemical kinetics, and physical simulations. Click <strong>[/]</strong> or type <strong>/</strong> for agentic tools.
+            Sovereign STEM Lab active. Ready for multi-turn calculus, 3D CAD meshes, astronomy orbits, chemical kinetics, and physical simulations. Click <strong>[/]</strong> or type <strong>/</strong> for agentic tools.
           </div>
         </div>
       `;
@@ -2801,7 +2965,7 @@
     }
 
     function loadSettings() {
-      const s = localStorage.getItem('vigyan_v23_settings');
+      const s = localStorage.getItem('vigyan_v24_settings');
       if (s) {
         try {
           const cfg = JSON.parse(s);
@@ -2833,7 +2997,7 @@
       const url = document.getElementById('setting-ollama-url').value;
       const persona = document.getElementById('setting-persona').value;
       OLLAMA_HOST = url;
-      localStorage.setItem('vigyan_v23_settings', JSON.stringify({ temp, ctx, topp, url, persona }));
+      localStorage.setItem('vigyan_v24_settings', JSON.stringify({ temp, ctx, topp, url, persona }));
       showToast('Settings saved');
     }
   </script>

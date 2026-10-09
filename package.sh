@@ -1,16 +1,16 @@
 #!/usr/bin/env bash
 # ==============================================================================
-# Vigyan Pro Desktop - Automated Release Packaging Script
-# Builds native Debian (.deb) package and standalone portable (.tar.gz) bundle
+# Vigyan Pro Desktop - Multi-OS Release Packaging Script
+# Builds packages for Linux (.deb, .tar.gz), Windows (.zip), and macOS (.tar.gz)
 # ==============================================================================
 
 set -e
 
-RAW_VERSION="${1:-2.0.0}"
+RAW_VERSION="${1:-2.4.0}"
 VERSION="${RAW_VERSION#v}"
 
 echo "========================================================"
-echo "  Building Vigyan Pro Desktop Release v${VERSION}"
+echo "  Building Vigyan Pro Multi-OS Desktop Release v${VERSION}"
 echo "========================================================"
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -21,7 +21,7 @@ rm -rf "$DIST_DIR"
 mkdir -p "$DIST_DIR"
 
 # ------------------------------------------------------------------------------
-# 1. BUILD DEBIAN (.deb) PACKAGE
+# 1. BUILD DEBIAN (.deb) PACKAGE FOR LINUX
 # ------------------------------------------------------------------------------
 echo "==> Staging Debian package..."
 DEB_STAGE="$SCRIPT_DIR/.build_deb"
@@ -113,14 +113,8 @@ else
     rm -rf "$TMP_PKG"
     mkdir -p "$TMP_PKG"
     echo "2.0" > "$TMP_PKG/debian-binary"
-    
-    # Control tarball
     tar -czf "$TMP_PKG/control.tar.gz" -C "$DEB_STAGE/DEBIAN" .
-    
-    # Data tarball
     tar -czf "$TMP_PKG/data.tar.gz" --exclude='./DEBIAN' -C "$DEB_STAGE" .
-    
-    # Pack into .deb using ar
     (cd "$TMP_PKG" && ar rcs "$DEB_OUTPUT" debian-binary control.tar.gz data.tar.gz)
     rm -rf "$TMP_PKG"
 fi
@@ -129,9 +123,9 @@ rm -rf "$DEB_STAGE"
 echo "✓ Debian Package Built: $DEB_OUTPUT"
 
 # ------------------------------------------------------------------------------
-# 2. BUILD PORTABLE STANDALONE ARCHIVE (.tar.gz)
+# 2. BUILD PORTABLE LINUX ARCHIVE (.tar.gz)
 # ------------------------------------------------------------------------------
-echo "==> Staging Portable Archive..."
+echo "==> Staging Portable Linux Archive..."
 TAR_STAGE="$SCRIPT_DIR/.build_tar/vigyan-pro"
 rm -rf "$SCRIPT_DIR/.build_tar"
 mkdir -p "$TAR_STAGE"
@@ -141,7 +135,6 @@ cp -r "$SCRIPT_DIR/assets" "$TAR_STAGE/"
 cp -r "$SCRIPT_DIR/bin" "$TAR_STAGE/"
 chmod +x "$TAR_STAGE/bin/vigyan-pro"
 
-# Quick launcher in root of archive
 cat <<'EOF' > "$TAR_STAGE/launch.sh"
 #!/usr/bin/env bash
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -152,9 +145,64 @@ chmod +x "$TAR_STAGE/launch.sh"
 TAR_OUTPUT="$DIST_DIR/vigyan-pro_${VERSION}_linux_x86_64.tar.gz"
 tar -czf "$TAR_OUTPUT" -C "$SCRIPT_DIR/.build_tar" vigyan-pro
 rm -rf "$SCRIPT_DIR/.build_tar"
-echo "✓ Portable Archive Built: $TAR_OUTPUT"
+echo "✓ Linux Portable Built: $TAR_OUTPUT"
+
+# ------------------------------------------------------------------------------
+# 3. BUILD PORTABLE WINDOWS ARCHIVE (.zip)
+# ------------------------------------------------------------------------------
+echo "==> Staging Portable Windows Archive..."
+WIN_STAGE="$SCRIPT_DIR/.build_win/vigyan-pro"
+rm -rf "$SCRIPT_DIR/.build_win"
+mkdir -p "$WIN_STAGE"
+
+cp -r "$SCRIPT_DIR/src" "$WIN_STAGE/"
+cp -r "$SCRIPT_DIR/assets" "$WIN_STAGE/"
+
+# Root launcher batch script
+cat <<'EOF' > "$WIN_STAGE/Vigyan-Pro.bat"
+@echo off
+title Vigyan Pro
+cd /d "%~dp0"
+call src\launch_win.bat %*
+EOF
+
+WIN_OUTPUT="$DIST_DIR/vigyan-pro_${VERSION}_windows_x86_64.zip"
+if which zip >/dev/null 2>&1; then
+    (cd "$SCRIPT_DIR/.build_win" && zip -r -q "$WIN_OUTPUT" vigyan-pro)
+else
+    # Fallback to python zipfile
+    python3 -c "
+import shutil
+shutil.make_archive('$DIST_DIR/vigyan-pro_${VERSION}_windows_x86_64', 'zip', '$SCRIPT_DIR/.build_win', 'vigyan-pro')
+"
+fi
+rm -rf "$SCRIPT_DIR/.build_win"
+echo "✓ Windows Portable Built: $WIN_OUTPUT"
+
+# ------------------------------------------------------------------------------
+# 4. BUILD PORTABLE MACOS ARCHIVE (.tar.gz)
+# ------------------------------------------------------------------------------
+echo "==> Staging Portable macOS Archive..."
+MAC_STAGE="$SCRIPT_DIR/.build_mac/vigyan-pro"
+rm -rf "$SCRIPT_DIR/.build_mac"
+mkdir -p "$MAC_STAGE"
+
+cp -r "$SCRIPT_DIR/src" "$MAC_STAGE/"
+cp -r "$SCRIPT_DIR/assets" "$MAC_STAGE/"
+
+cat <<'EOF' > "$MAC_STAGE/launch.sh"
+#!/usr/bin/env bash
+DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+exec "$DIR/src/launch_mac.sh" "$@"
+EOF
+chmod +x "$MAC_STAGE/launch.sh"
+
+MAC_OUTPUT="$DIST_DIR/vigyan-pro_${VERSION}_macos_universal.tar.gz"
+tar -czf "$MAC_OUTPUT" -C "$SCRIPT_DIR/.build_mac" vigyan-pro
+rm -rf "$SCRIPT_DIR/.build_mac"
+echo "✓ macOS Portable Built: $MAC_OUTPUT"
 
 echo "========================================================"
-echo "  Packaging Complete!"
+echo "  Multi-OS Packaging Complete!"
 ls -lh "$DIST_DIR"
 echo "========================================================"

@@ -1,0 +1,67 @@
+name: Multi-OS Desktop Release Build
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-linux:
+    name: Build Linux Packages (Debian & Tarball)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install dependencies
+        run: sudo apt-get update && sudo apt-get install -y python3-gi gir1.2-gtk-3.0 gir1.2-webkit2-4.1
+      - name: Package Linux
+        run: |
+          chmod +x package.sh
+          ./package.sh ${{ github.ref_name }}
+      - name: Upload Linux Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-packages
+          path: dist/*
+
+  build-windows:
+    name: Build Windows Portable Package
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Package Windows
+        shell: bash
+        run: |
+          mkdir -p dist
+          mkdir -p .build_win/vigyan-pro
+          cp -r src .build_win/vigyan-pro/
+          cp -r assets .build_win/vigyan-pro/
+          echo '@echo off' > .build_win/vigyan-pro/Vigyan-Pro.bat
+          echo 'call src\launch_win.bat %*' >> .build_win/vigyan-pro/Vigyan-Pro.bat
+          cd .build_win && 7z a -tzip ../dist/vigyan-pro_${{ github.ref_name }}_windows_x86_64.zip vigyan-pro
+      - name: Upload Windows Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-packages
+          path: dist/*.zip
+
+  build-macos:
+    name: Build macOS Universal Package
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Package macOS
+        run: |
+          mkdir -p dist
+          mkdir -p .build_mac/vigyan-pro
+          cp -r src .build_mac/vigyan-pro/
+          cp -r assets .build_mac/vigyan-pro/
+          tar -czf dist/vigyan-pro_${{ github.ref_name }}_macos_universal.tar.gz -C .build_mac vigyan-pro
+      - name: Upload macOS Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: macos-packages
+          path: dist/*.tar.gz
