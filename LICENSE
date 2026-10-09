@@ -1,0 +1,41 @@
+PROPRIETARY AND CONFIDENTIAL SOFTWARE LICENSE AGREEMENT
+VIGYAN PRO ENTERPRISE DESKTOP WORKSTATION
+
+Copyright (c) 2026 Shreyansh Lab. All Rights Reserved.
+
+NOTICE TO USER:
+THIS IS A PROPRIETARY SOFTWARE LICENSE AGREEMENT BETWEEN YOU (THE "LICENSEE") 
+AND SHREYANSH LAB (THE "LICENSOR"). BY DOWNLOADING, INSTALLING, COPYING, OR 
+USING THIS SOFTWARE ("VIGYAN PRO DESKTOP"), YOU AGREE TO BE BOUND BY THE 
+TERMS OF THIS AGREEMENT.
+
+1. GRANT OF LICENSE
+Subject to the terms and conditions of this Agreement, Licensor grants Licensee
+a non-exclusive, non-transferable, revocable license to install and use 
+Vigyan Pro Desktop solely for authorized research, computational modeling, 
+hardware engineering, and private internal evaluation.
+
+2. RESTRICTIONS
+Licensee shall not:
+(a) Reverse engineer, decompile, or disassemble the sovereign model pipelines 
+    or proprietary binary wrappers;
+(b) Sublicense, lease, rent, or distribute Vigyan Pro Desktop binaries or source 
+    code without prior written authorization from Licensor;
+(c) Remove, alter, or obscure any proprietary notices, labels, or micro-glyphs;
+(d) Utilize the software to generate, distribute, or optimize malicious payloads 
+    or violate applicable international export control regulations.
+
+3. AIR-GAPPED OPERATION & DATA SOVEREIGNTY
+Vigyan Pro Desktop does not transmit telemetry, prompts, inference logs, or 
+weights to external networks. Licensee retains 100% ownership and confidentiality 
+over all mathematical formulas, CAD geometry, and weights processed locally.
+
+4. DISCLAIMER OF WARRANTY
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
+FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT.
+
+5. LIMITATION OF LIABILITY
+IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, 
+DAMAGES, OR OTHER LIABILITY ARISING FROM, OUT OF, OR IN CONNECTION WITH THE 
+SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.

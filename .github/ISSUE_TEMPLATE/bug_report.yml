@@ -1,0 +1,51 @@
+name: Bug Report
+description: Create a report to help us improve Vigyan Pro Desktop
+title: "[BUG]: "
+labels: ["bug", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for reporting a bug. Please ensure no proprietary weights or sensitive tokens are included in logs.
+  - type: dropdown
+    id: os
+    attributes:
+      label: Operating System
+      options:
+        - Linux (Ubuntu / Debian .deb)
+        - Linux (Generic .tar.gz)
+        - Windows 10/11 (WebView2)
+        - macOS (Apple Silicon WKWebView)
+        - macOS (Intel WKWebView)
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Vigyan Pro Version
+      placeholder: "e.g., 2.7.0"
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: Describe the Bug
+      placeholder: A clear and concise description of the issue.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps To Reproduce
+      placeholder: |
+        1. Open Vigyan Pro Desktop
+        2. Navigate to STEM Workbench
+        3. Click '...'
+        4. See error
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Terminal / Console Output
+      placeholder: Paste logs if available.

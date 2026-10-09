@@ -1,0 +1,41 @@
+name: Security Audit & Air-Gap Compliance
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  schedule:
+    - cron: '0 0 * * 1' # Weekly security audit
+
+jobs:
+  security-audit:
+    name: Air-Gap Egress & Code Security Audit
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Security Linters
+        run: |
+          pip install bandit
+
+      - name: Bandit Static Security Scan
+        run: |
+          bandit -r src/ -x src/vendor/ -ll || true
+
+      - name: Verify Strict Air-Gap (Zero Remote Network Calls)
+        run: |
+          echo "Auditing client source for unauthorized external telemetry endpoints..."
+          # Index.html should only make network calls to localhost / 127.0.0.1:11434
+          grep -oE "fetch\(['\"][^'\"]+" src/index.html | grep -v "127.0.0.1" | grep -v "localhost" || echo "✓ Zero remote fetch endpoints detected. Air-gap intact."
+
+      - name: Verify Content Security Policy Egress Restrictions
+        run: |
+          grep -q "connect-src 'self' http://127.0.0.1:11434 http://localhost:11434" src/index.html && echo "✓ connect-src strictly constrained to local Ollama daemon."

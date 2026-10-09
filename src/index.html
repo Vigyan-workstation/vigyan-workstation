@@ -3,6 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' file: data: blob: http://127.0.0.1:11434 http://localhost:11434; script-src 'self' 'unsafe-inline' 'unsafe-eval' file: blob:; style-src 'self' 'unsafe-inline' file:; font-src 'self' file: data:; img-src 'self' file: data: blob:; connect-src 'self' http://127.0.0.1:11434 http://localhost:11434; object-src 'none'; frame-src 'none'; base-uri 'self'; form-action 'none';">
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta name="referrer" content="no-referrer">
   <title>Vigyan Pro</title>
   <!-- Offline KaTeX -->
   <link rel="stylesheet" href="vendor/katex.min.css">
@@ -1775,10 +1778,27 @@
       wrapper.scrollTop = wrapper.scrollHeight;
     }
 
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
     function formatMessageContent(txt) {
-      // Basic markdown bold, code, and linebreaks
-      let out = txt.replace(/```([\s\S]*?)```/g, '<pre style="background:#090a0f; border:1px solid var(--border); padding:8px; border-radius:6px; overflow-x:auto; font-family:ui-monospace,monospace; margin:6px 0;"><code>$1</code></pre>');
-      out = out.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+      if (!txt) return '';
+      // Escape HTML entities to prevent script injection / XSS
+      let out = escapeHtml(txt);
+      // Fenced code blocks
+      out = out.replace(/```([\s\S]*?)```/g, '<pre style="background:#090a0f; border:1px solid var(--border); padding:8px; border-radius:6px; overflow-x:auto; font-family:ui-monospace,monospace; margin:6px 0;"><code>$1</code></pre>');
+      // Inline code
+      out = out.replace(/`([^`]+)`/g, '<code style="background:#141722; padding:2px 5px; border-radius:4px; font-size:12px; font-family:ui-monospace,monospace;">$1</code>');
+      // Bold
+      out = out.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+      // Linebreaks
       out = out.replace(/\n/g, '<br>');
       return out;
     }

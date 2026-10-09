@@ -1,0 +1,36 @@
+name: Feature Request
+description: Propose a new scientific workspace, simulation model, or UI capability
+title: "[FEAT]: "
+labels: ["enhancement", "proposal"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please submit feature suggestions aligned with our sovereign STEM, semiconductor, and air-gapped architecture.
+  - type: dropdown
+    id: domain
+    attributes:
+      label: Target Domain
+      options:
+        - Semiconductor & VLSI Physics
+        - Mathematical Calculus & AST Derivations
+        - Astronomy & Orbital Mechanics
+        - Biomedical & Molecular Chemistry
+        - UI/UX & Native Desktop Shell
+        - Sovereign LLM / MoE Inference
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem Statement
+      placeholder: Describe the computational or scientific use case you are addressing.
+    validations:
+      required: true
+  - type: textarea
+    id: proposed_solution
+    attributes:
+      label: Proposed Solution
+      placeholder: Detailed description of the feature, equations, or visual components.
+    validations:
+      required: true

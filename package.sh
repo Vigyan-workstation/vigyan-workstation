@@ -6,7 +6,7 @@
 
 set -e
 
-RAW_VERSION="${1:-2.6.0}"
+RAW_VERSION="${1:-2.7.0}"
 VERSION="${RAW_VERSION#v}"
 
 echo "========================================================"
@@ -202,7 +202,15 @@ tar -czf "$MAC_OUTPUT" -C "$SCRIPT_DIR/.build_mac" vigyan-pro
 rm -rf "$SCRIPT_DIR/.build_mac"
 echo "✓ macOS Portable Built: $MAC_OUTPUT"
 
+# ------------------------------------------------------------------------------
+# 5. GENERATE CRYPTOGRAPHIC SHA-256 CHECKSUMS FOR ENTERPRISE AUDIT
+# ------------------------------------------------------------------------------
+echo "==> Generating Cryptographic SHA-256 Checksums for Enterprise Security Audit..."
+(cd "$DIST_DIR" && sha256sum vigyan-pro_* > SHA256SUMS)
+echo "✓ Enterprise SHA256SUMS generated:"
+cat "$DIST_DIR/SHA256SUMS"
+
 echo "========================================================"
-echo "  Multi-OS Packaging Complete!"
+echo "  Enterprise Multi-OS Packaging Complete!"
 ls -lh "$DIST_DIR"
 echo "========================================================"

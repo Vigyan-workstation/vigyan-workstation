@@ -1,0 +1,49 @@
+name: CI - Multi-OS Desktop Verification
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  validate-and-package:
+    name: Build & Security Verification
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Validate Python Launchers Syntax
+        run: |
+          python3 -m py_compile src/launch_desktop.py
+          python3 -m py_compile src/launch_desktop_win.py
+          python3 -m py_compile src/launch_desktop_mac.py
+          python3 -m py_compile src/run_desktop.py
+
+      - name: Validate Content Security Policy & Offline Assets
+        run: |
+          test -f src/index.html
+          grep -q "Content-Security-Policy" src/index.html || { echo "Missing CSP in index.html"; exit 1; }
+          grep -q "nosniff" src/index.html || { echo "Missing X-Content-Type-Options in index.html"; exit 1; }
+          test -f src/vendor/katex.min.js
+          test -f src/vendor/katex.min.css
+          test -f src/vendor/plotly.min.js
+
+      - name: Run Multi-OS Package Script
+        run: |
+          chmod +x package.sh
+          ./package.sh 2.7.0
+
+      - name: Verify Cryptographic SHA-256 Checksums
+        run: |
+          cd dist
+          test -f SHA256SUMS
+          sha256sum --check SHA256SUMS
+          cat SHA256SUMS

@@ -1,0 +1,44 @@
+name: Release Multi-OS Desktop Packages
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+permissions:
+  contents: write
+
+jobs:
+  publish-release:
+    name: Build & Publish Release Assets
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Build All Multi-OS Packages
+        run: |
+          chmod +x package.sh
+          TAG_NAME="${{ github.ref_name }}"
+          VERSION="${TAG_NAME#v}"
+          ./package.sh "$VERSION"
+
+      - name: Publish GitHub Release with Cryptographic Checksums
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            dist/vigyan-pro_*_amd64.deb
+            dist/vigyan-pro_*_linux_x86_64.tar.gz
+            dist/vigyan-pro_*_windows_x86_64.zip
+            dist/vigyan-pro_*_macos_universal.tar.gz
+            dist/SHA256SUMS
+          name: "Vigyan Pro Desktop ${{ github.ref_name }}"
+          draft: false
+          prerelease: false
+          generate_release_notes: true

@@ -92,9 +92,38 @@ def main():
     except Exception:
         pass
 
+    # Enterprise Air-Gap Security Settings
+    try:
+        settings.set_enable_hyperlink_auditing(False)
+        settings.set_enable_dns_prefetching(False)
+        settings.set_enable_offline_web_application_cache(False)
+        settings.set_enable_plugins(False)
+    except Exception:
+        pass
+
     # WebKit View
     webview = WebKit2.WebView.new_with_settings(settings)
     webview.set_background_color(Gdk.RGBA(0, 0, 0, 1))
+
+    # Enterprise Navigation Policy: Prevent webview URL hijacking / unauthorized redirection
+    def on_decide_policy(view, decision, decision_type):
+        if decision_type == WebKit2.PolicyDecisionType.NAVIGATION_ACTION:
+            action = decision.get_navigation_action()
+            req = action.get_request()
+            uri = req.get_uri() if req else ""
+            if uri.startswith("file://") or uri.startswith("about:blank"):
+                return False
+            # Ignore arbitrary web requests in workstation frame and safely open externally if needed
+            decision.ignore()
+            try:
+                import webbrowser
+                webbrowser.open(uri)
+            except Exception:
+                pass
+            return True
+        return False
+
+    webview.connect("decide-policy", on_decide_policy)
 
     # Dynamic index.html discovery
     index_candidates = [
