@@ -16,12 +16,11 @@
       --sidebar: #050608;
       --surface: #08090d;
       --surface-elevated: #0e1015;
-      --card: #0f1117;
-      --card-hover: #151720;
+      --card: #0a0c12;
+      --card-hover: #12141d;
       --border: rgba(255, 255, 255, 0.08);
       --border-subtle: rgba(255, 255, 255, 0.05);
-      --border-active: rgba(255, 255, 255, 0.24);
-      --glow-subtle: 0 0 20px rgba(255, 255, 255, 0.03);
+      --border-active: rgba(255, 255, 255, 0.22);
       --text: #f4f4f6;
       --text-muted: #a1a1aa;
       --text-subtle: #71717a;
@@ -58,7 +57,7 @@
       flex-shrink: 0;
     }
 
-    /* ULTRA-MINIMAL TOP HEADER */
+    /* TOP HEADER */
     header {
       background: #040507;
       border-bottom: 1px solid var(--border);
@@ -69,8 +68,6 @@
       padding: 0 16px;
       flex-shrink: 0;
       z-index: 50;
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
     }
     .header-left {
       display: flex;
@@ -125,11 +122,6 @@
       border-radius: 4px;
       transition: all 0.2s;
     }
-    .header-right {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
 
     /* VIEWPORT */
     main {
@@ -180,7 +172,7 @@
       border-bottom: 1px solid var(--border-subtle);
     }
     .domain-item {
-      padding: 8px 10px;
+      padding: 7px 10px;
       border-radius: 6px;
       cursor: pointer;
       font-size: 12.5px;
@@ -200,7 +192,6 @@
       color: #ffffff;
       border-color: var(--border-active);
       font-weight: 600;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.4);
     }
 
     /* SESSIONS SECTION */
@@ -379,7 +370,6 @@
     .dropdown-model-tag { font-size: 12.5px; font-weight: 600; color: #ffffff; }
     .dropdown-model-spec { font-size: 11px; color: var(--text-subtle); }
 
-    .toolbar-actions { display: flex; gap: 6px; align-items: center; }
     .btn-action {
       background: #0f1118;
       border: 1px solid var(--border);
@@ -541,7 +531,7 @@
       font-size: 12px;
       font-weight: 700;
       color: #ffffff;
-      min-width: 88px;
+      min-width: 96px;
     }
     .slash-desc {
       font-size: 11.5px;
@@ -634,7 +624,6 @@
       position: relative;
       flex-shrink: 0;
       z-index: 40;
-      transition: background 0.15s;
     }
     .workbench-resizer::after {
       content: '';
@@ -652,7 +641,7 @@
       width: 3px;
     }
 
-    /* INDUSTRY-BEST STEM WORKBENCH AS A TOOL */
+    /* STEM WORKBENCH AS A TOOL */
     .stem-section {
       width: 540px;
       min-width: 340px;
@@ -760,7 +749,6 @@
     }
     .btn-plot:hover { background: #222533; }
 
-    /* REAL-TIME PARAMETER SLIDERS */
     .slider-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -851,7 +839,9 @@
       border-color: var(--border-active);
     }
 
-    /* SOVEREIGN VAULT */
+    /* =========================================================================
+       CLEAN UNCLUTTERED SOVEREIGN VAULT (LUXURY OBSIDIAN SYSTEM)
+       ========================================================================= */
     .hub-container {
       flex: 1;
       overflow-y: auto;
@@ -859,9 +849,12 @@
       display: flex;
       flex-direction: column;
       gap: 16px;
+      max-width: 1080px;
+      margin: 0 auto;
+      width: 100%;
     }
     .hub-hero {
-      background: #090b10;
+      background: #07090e;
       border: 1px solid var(--border);
       border-radius: 10px;
       padding: 16px 20px;
@@ -884,16 +877,16 @@
       margin-top: 4px;
       font-size: 11.5px;
       color: var(--text-muted);
+      font-family: ui-monospace, monospace;
     }
-    .hero-spec { font-family: ui-monospace, monospace; }
 
     .hub-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
       gap: 14px;
     }
     .hub-card {
-      background: #08090d;
+      background: var(--card);
       border: 1px solid var(--border);
       border-radius: 8px;
       padding: 14px;
@@ -904,7 +897,7 @@
       transition: border-color 0.15s, background 0.15s;
     }
     .hub-card:hover {
-      background: #0c0e14;
+      background: var(--card-hover);
       border-color: var(--border-active);
     }
     .hub-card-header {
@@ -924,12 +917,10 @@
     }
     .author-shreyansh { background: #121018; color: #d4b5ff; border: 1px solid rgba(168,85,247,0.25); }
     .author-allenai { background: #0c161d; color: #93c5fd; border: 1px solid rgba(59,130,246,0.25); }
-    .hub-card-specs {
+    .hub-card-desc {
       font-size: 11.5px;
       color: var(--text-muted);
-      margin-top: 6px;
-      display: flex;
-      gap: 8px;
+      margin-top: 4px;
     }
     .hub-card-footer {
       display: flex;
@@ -980,7 +971,9 @@
       justify-content: space-between;
     }
 
-    /* SETTINGS */
+    /* =========================================================================
+       PREMIUM OBSIDIAN GLASSMORHPISM SETTINGS
+       ========================================================================= */
     .settings-container {
       flex: 1;
       overflow-y: auto;
@@ -988,97 +981,109 @@
       display: flex;
       flex-direction: column;
       gap: 16px;
-      max-width: 840px;
+      max-width: 860px;
       margin: 0 auto;
       width: 100%;
     }
-    .settings-header-card {
-      background: #090a0f;
+    .settings-section-card {
+      background: #080a0f;
       border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 14px 18px;
+      border-radius: 10px;
+      padding: 16px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+    }
+    .section-card-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border-subtle);
     }
-    .settings-title {
-      font-size: 13.5px;
+    .section-card-title {
+      font-size: 12.5px;
       font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
       color: #ffffff;
       display: flex;
       align-items: center;
-      gap: 7px;
+      gap: 8px;
     }
+    .section-card-badge {
+      font-size: 11px;
+      color: var(--text-subtle);
+      font-family: ui-monospace, monospace;
+    }
+
     .intent-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
+      gap: 10px;
     }
     .intent-card {
-      background: #08090d;
+      background: #0c0e15;
       border: 1px solid var(--border);
       border-radius: 8px;
-      padding: 14px;
+      padding: 12px;
       cursor: pointer;
       display: flex;
       flex-direction: column;
-      gap: 5px;
+      gap: 4px;
       transition: all 0.15s;
     }
     .intent-card:hover {
-      background: #0d0f16;
+      background: #121520;
       border-color: var(--border-active);
     }
     .intent-card.active {
-      background: #11131c;
+      background: #141724;
       border-color: #ffffff;
-      box-shadow: 0 4px 16px rgba(255,255,255,0.06);
+      box-shadow: 0 0 16px rgba(255,255,255,0.06);
     }
     .intent-card-title { font-size: 12px; font-weight: 600; color: #ffffff; }
-    .intent-card-desc { font-size: 11px; color: var(--text-muted); line-height: 1.45; }
+    .intent-card-desc { font-size: 11px; color: var(--text-muted); line-height: 1.4; }
 
-    .accordion-header {
-      background: #090a0f;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 12px 16px;
-      cursor: pointer;
+    .setting-row {
       display: flex;
-      align-items: center;
-      justify-content: space-between;
-      font-size: 12px;
-      font-weight: 600;
-      color: #ffffff;
-    }
-    .accordion-body {
-      display: none;
-      background: #06070a;
-      border: 1px solid var(--border);
-      border-top: none;
-      border-radius: 0 0 8px 8px;
-      padding: 16px;
       flex-direction: column;
-      gap: 14px;
+      gap: 6px;
     }
-    .accordion-body.open { display: flex; }
-    .setting-item { display: flex; flex-direction: column; gap: 5px; }
     .setting-label {
-      font-size: 11px;
+      font-size: 11.5px;
       font-weight: 500;
       color: var(--text-muted);
       display: flex;
       justify-content: space-between;
     }
     .setting-input {
-      background: #0b0d13;
+      background: #0c0e15;
       border: 1px solid var(--border);
       border-radius: 6px;
       color: #ffffff;
-      padding: 7px 10px;
-      font-size: 12px;
+      padding: 8px 12px;
+      font-size: 12.5px;
       outline: none;
+      transition: border-color 0.15s;
     }
     .setting-input:focus { border-color: var(--border-active); }
+
+    /* VRAM CAPACITY BAR */
+    .vram-bar-container {
+      background: #10121a;
+      height: 6px;
+      border-radius: 3px;
+      overflow: hidden;
+      margin-top: 4px;
+    }
+    .vram-bar-fill {
+      background: #ffffff;
+      height: 100%;
+      width: 20%;
+      transition: width 0.25s var(--ease-spring);
+    }
 
     /* FLOATING BOTTOM DOCK */
     .floating-dock {
@@ -1141,22 +1146,11 @@
       box-shadow: 0 8px 24px rgba(0,0,0,0.6);
     }
     #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-
-    /* RESPONSIVE BREAKPOINTS */
-    @media (max-width: 1024px) {
-      .sidebar { width: 0; opacity: 0; overflow: hidden; border-right: none; }
-      .sidebar.open-mobile { width: 220px; opacity: 1; }
-      .stem-section { width: 440px; }
-    }
-    @media (max-width: 768px) {
-      .stem-section { display: none; }
-      .workbench-resizer { display: none; }
-    }
   </style>
 </head>
 <body>
 
-  <!-- ULTRA-MINIMAL TOP HEADER -->
+  <!-- TOP HEADER -->
   <header>
     <div class="header-left">
       <button class="btn-toggle-sidebar" onclick="toggleSidebar()" title="Toggle Sidebar">
@@ -1168,21 +1162,23 @@
         <div class="domain-indicator" id="header-domain-badge">Lab Studio</div>
       </div>
     </div>
-    <div class="header-right">
-      <!-- Clean, minimal & distraction-free -->
-    </div>
+    <div class="header-right"></div>
   </header>
 
   <main>
     <!-- 1. STUDIO TAB -->
     <div class="tab-content active" id="tab-studio">
       <aside class="sidebar" id="sidebar">
-        <!-- DOMAINS SELECTOR -->
+        <!-- DOMAINS SELECTOR (NOW INCLUDES SEMICONDUCTOR) -->
         <div class="sidebar-section-header">Workspaces</div>
         <div class="domain-list">
           <div class="domain-item active" id="domain-lab" onclick="selectDomain('lab')">
             <svg class="icon" viewBox="0 0 24 24"><path d="M10 2v7.31L4.1 19a2 2 0 0 0 1.66 3h12.48a2 2 0 0 0 1.66-3L14 9.31V2"/></svg>
             <span>Lab Studio</span>
+          </div>
+          <div class="domain-item" id="domain-semiconductor" onclick="selectDomain('semiconductor')">
+            <svg class="icon" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/><line x1="20" y1="9" x2="23" y2="9"/><line x1="20" y1="14" x2="23" y2="14"/><line x1="1" y1="9" x2="4" y2="9"/><line x1="1" y1="14" x2="4" y2="14"/></svg>
+            <span>Semiconductor</span>
           </div>
           <div class="domain-item" id="domain-astronomy" onclick="selectDomain('astronomy')">
             <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="6"/><ellipse cx="12" cy="12" rx="10" ry="3.5" transform="rotate(-25 12 12)"/></svg>
@@ -1239,7 +1235,7 @@
                 <span id="welcome-companion-label">olmoe:1b-7b</span>
               </div>
               <div class="msg-content" id="welcome-msg-text">
-                Sovereign STEM Lab active. Ready for multi-turn calculus, 3D CAD meshes, astronomy orbits, chemical kinetics, and physical simulations. Click <strong>[/]</strong> or type <strong>/</strong> for agentic tools.
+                Sovereign STEM Lab active. Ready for multi-turn calculus, semiconductor physics, 3D CAD meshes, astronomy orbits, and simulations. Click <strong>[/]</strong> or type <strong>/</strong> for agentic tools.
               </div>
             </div>
           </div>
@@ -1248,7 +1244,6 @@
         <!-- INPUT AREA WITH INTEGRATED / BUTTON -->
         <div class="chat-input-area">
           <div class="input-inner-wrapper">
-            <!-- ENHANCED FLOATING SLASH MENU -->
             <div class="slash-menu" id="slash-menu">
               <div class="slash-menu-header">
                 <span>Agentic Commands</span>
@@ -1257,6 +1252,10 @@
               <div class="slash-item active" data-cmd="/simulate " onclick="applySlashCommand('/simulate ')">
                 <span class="slash-cmd">/simulate</span>
                 <span class="slash-desc">Run 60 FPS physics &amp; celestial simulation</span>
+              </div>
+              <div class="slash-item" data-cmd="/semiconductor " onclick="applySlashCommand('/semiconductor ')">
+                <span class="slash-cmd">/semiconductor</span>
+                <span class="slash-desc">MOSFET IV curves &amp; PN junction band bending</span>
               </div>
               <div class="slash-item" data-cmd="/cad3d " onclick="applySlashCommand('/cad3d ')">
                 <span class="slash-cmd">/cad3d</span>
@@ -1277,10 +1276,6 @@
               <div class="slash-item" data-cmd="/derive " onclick="applySlashCommand('/derive ')">
                 <span class="slash-cmd">/derive</span>
                 <span class="slash-desc">Step-by-step mathematical LaTeX proof</span>
-              </div>
-              <div class="slash-item" data-cmd="/mcp " onclick="applySlashCommand('/mcp ')">
-                <span class="slash-cmd">/mcp</span>
-                <span class="slash-desc">Symbolic CAS algebraic execution</span>
               </div>
               <div class="slash-item" data-cmd="/clear" onclick="applySlashCommand('/clear')">
                 <span class="slash-cmd">/clear</span>
@@ -1304,7 +1299,7 @@
       <!-- RESIZABLE DRAG DIVIDER -->
       <div class="workbench-resizer" id="workbench-resizer" title="Drag to resize STEM Workbench"></div>
 
-      <!-- UPGRADED STEM WORKBENCH AS A REAL TOOL -->
+      <!-- STEM WORKBENCH -->
       <section class="stem-section" id="stem-section">
         <div class="stem-header">
           <div class="workbench-tabs">
@@ -1380,18 +1375,20 @@
       </section>
     </div>
 
-    <!-- 2. SOVEREIGN VAULT TAB -->
+    <!-- 2. CLEAN UNCLUTTERED SOVEREIGN VAULT TAB -->
     <div class="tab-content" id="tab-hub">
       <div class="hub-container">
         <div class="hub-hero">
           <div>
             <div class="hero-title">
-              Active Companion: OLMoE 1B-7B 64-Expert MoE
+              Active Sovereign Model: OLMoE 1B-7B
             </div>
             <div class="hero-meta">
-              <span class="hero-spec">Weights: 3.3 GB</span>
-              <span class="hero-spec">Active: 1B/token</span>
-              <span class="hero-spec">Author: @allenai</span>
+              <span>3.3 GB</span>
+              <span>·</span>
+              <span>64-Expert MoE</span>
+              <span>·</span>
+              <span>@allenai</span>
             </div>
           </div>
           <button class="btn-action" style="background:#ffffff; color:#000000; font-weight:600; padding:6px 14px;" onclick="switchTab('studio')">
@@ -1401,11 +1398,9 @@
         </div>
 
         <div style="display:flex; justify-content:space-between; align-items:center;">
-          <div style="font-size:12px; font-weight:600; color:var(--text-muted); display:flex; align-items:center; gap:6px;">
-            <svg class="icon" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-            Sovereign Catalog: @shreyansh12183 &amp; @allenai
+          <div style="font-size:12px; font-weight:600; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px;">
+            Sovereign Catalog (@shreyansh12183 &amp; @allenai)
           </div>
-          <span style="font-size:11px; color:var(--text-subtle);">6 Verified Sovereign STEM Models</span>
         </div>
 
         <div class="hub-grid">
@@ -1413,11 +1408,11 @@
           <div class="hub-card" id="card-olmoe">
             <div>
               <div class="hub-card-header">
-                <div class="hub-card-name">OLMoE 1B-7B 64-Expert MoE</div>
+                <div class="hub-card-name">OLMoE 1B-7B MoE</div>
                 <div class="hub-card-size">3.3 GB</div>
               </div>
-              <span class="author-badge author-allenai">@allenai / OLMoE-1B-7B-0924</span>
-              <div class="hub-card-specs"><span>64 Sparse Experts</span><span>·</span><span>1B Active</span></div>
+              <span class="author-badge author-allenai">@allenai</span>
+              <div class="hub-card-desc">64 Sparse Experts · 1B Active / Token</div>
               <div class="download-progress-container" id="prog-olmoe">
                 <div class="download-progress-track"><div class="download-progress-bar"></div></div>
                 <div class="download-progress-text"><span>Pulling...</span><span class="prog-pct">0%</span></div>
@@ -1438,20 +1433,19 @@
           <div class="hub-card" id="card-moe">
             <div>
               <div class="hub-card-header">
-                <div class="hub-card-name">Vigyan 1.5B 4x-MoE STEM</div>
+                <div class="hub-card-name">Vigyan 1.5B 4x-MoE</div>
                 <div class="hub-card-size">2.1 GB</div>
               </div>
-              <span class="author-badge author-shreyansh">@shreyansh12183 / Vigyan-1.5B-4x-MoE</span>
-              <div class="hub-card-specs"><span>Top-2 MoE</span><span>·</span><span>Calculus &amp; Physics</span></div>
+              <span class="author-badge author-shreyansh">@shreyansh12183</span>
+              <div class="hub-card-desc">Top-2 Routing · Calculus &amp; Physics Solver</div>
               <div class="download-progress-container" id="prog-moe">
                 <div class="download-progress-track"><div class="download-progress-bar"></div></div>
                 <div class="download-progress-text"><span>Pulling...</span><span class="prog-pct">0%</span></div>
               </div>
             </div>
             <div class="hub-card-footer">
-              <span style="font-size:11px; color:var(--text-subtle);">Q4_K_M GGUF</span>
+              <span style="font-size:11px; color:var(--text-subtle); font-family:ui-monospace,monospace;">Q4_K_M</span>
               <button class="btn-action" onclick="downloadAndRunModel('moe', 'vigyan-1.5b-moe', 'Vigyan 1.5B 4x-MoE')">
-                <svg class="icon" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                 Download
               </button>
             </div>
@@ -1461,20 +1455,19 @@
           <div class="hub-card" id="card-math">
             <div>
               <div class="hub-card-header">
-                <div class="hub-card-name">OLMo2 7B PhD Pure Math</div>
+                <div class="hub-card-name">OLMo2 7B Pure Math</div>
                 <div class="hub-card-size">4.3 GB</div>
               </div>
-              <span class="author-badge author-shreyansh">@shreyansh12183 / olmo2-7b-phd-pure-math</span>
-              <div class="hub-card-specs"><span>Real Analysis</span><span>·</span><span>Theorems</span></div>
+              <span class="author-badge author-shreyansh">@shreyansh12183</span>
+              <div class="hub-card-desc">Doctoral Real Analysis &amp; Theorems</div>
               <div class="download-progress-container" id="prog-math">
                 <div class="download-progress-track"><div class="download-progress-bar"></div></div>
                 <div class="download-progress-text"><span>Pulling...</span><span class="prog-pct">0%</span></div>
               </div>
             </div>
             <div class="hub-card-footer">
-              <span style="font-size:11px; color:var(--text-subtle);">Q4_K_M GGUF</span>
+              <span style="font-size:11px; color:var(--text-subtle); font-family:ui-monospace,monospace;">Q4_K_M</span>
               <button class="btn-action" onclick="downloadAndRunModel('math', 'olmo2-7b-pure-math', 'OLMo2 7B Pure Math')">
-                <svg class="icon" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                 Download
               </button>
             </div>
@@ -1484,20 +1477,19 @@
           <div class="hub-card" id="card-rtl">
             <div>
               <div class="hub-card-header">
-                <div class="hub-card-name">OLMo2 7B Silicon RTL &amp; EDA</div>
+                <div class="hub-card-name">OLMo2 7B Silicon EDA</div>
                 <div class="hub-card-size">4.3 GB</div>
               </div>
-              <span class="author-badge author-shreyansh">@shreyansh12183 / olmo2-7b-silicon-rtl-eda</span>
-              <div class="hub-card-specs"><span>Verilog ASIC</span><span>·</span><span>Synthesis</span></div>
+              <span class="author-badge author-shreyansh">@shreyansh12183</span>
+              <div class="hub-card-desc">ASIC Verilog RTL &amp; Microelectronics</div>
               <div class="download-progress-container" id="prog-rtl">
                 <div class="download-progress-track"><div class="download-progress-bar"></div></div>
                 <div class="download-progress-text"><span>Pulling...</span><span class="prog-pct">0%</span></div>
               </div>
             </div>
             <div class="hub-card-footer">
-              <span style="font-size:11px; color:var(--text-subtle);">Q4_K_M GGUF</span>
+              <span style="font-size:11px; color:var(--text-subtle); font-family:ui-monospace,monospace;">Q4_K_M</span>
               <button class="btn-action" onclick="downloadAndRunModel('rtl', 'olmo2-7b-silicon-eda', 'OLMo2 7B Silicon EDA')">
-                <svg class="icon" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                 Download
               </button>
             </div>
@@ -1510,17 +1502,16 @@
                 <div class="hub-card-name">OLMo 2 1B Instruct</div>
                 <div class="hub-card-size">1.1 GB</div>
               </div>
-              <span class="author-badge author-allenai">@allenai / OLMo-2-0425-1B-Instruct</span>
-              <div class="hub-card-specs"><span>Dense 1B</span><span>·</span><span>Ultra-Low Latency</span></div>
+              <span class="author-badge author-allenai">@allenai</span>
+              <div class="hub-card-desc">Dense 1B · Ultra-Low Latency Inference</div>
               <div class="download-progress-container" id="prog-olmo2-1b">
                 <div class="download-progress-track"><div class="download-progress-bar"></div></div>
                 <div class="download-progress-text"><span>Pulling...</span><span class="prog-pct">0%</span></div>
               </div>
             </div>
             <div class="hub-card-footer">
-              <span style="font-size:11px; color:var(--text-subtle);">Q4_K_M GGUF</span>
+              <span style="font-size:11px; color:var(--text-subtle); font-family:ui-monospace,monospace;">Q4_K_M</span>
               <button class="btn-action" onclick="downloadAndRunModel('olmo2-1b', 'olmo2:1b', 'OLMo 2 1B Instruct')">
-                <svg class="icon" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                 Download
               </button>
             </div>
@@ -1533,17 +1524,16 @@
                 <div class="hub-card-name">Olmo 3 7B Instruct</div>
                 <div class="hub-card-size">4.4 GB</div>
               </div>
-              <span class="author-badge author-allenai">@allenai / Olmo-3-7B-Instruct</span>
-              <div class="hub-card-specs"><span>Dense 7B</span><span>·</span><span>Scientific Reasoning</span></div>
+              <span class="author-badge author-allenai">@allenai</span>
+              <div class="hub-card-desc">Dense 7B · Multidisciplinary Science</div>
               <div class="download-progress-container" id="prog-olmo3">
                 <div class="download-progress-track"><div class="download-progress-bar"></div></div>
                 <div class="download-progress-text"><span>Pulling...</span><span class="prog-pct">0%</span></div>
               </div>
             </div>
             <div class="hub-card-footer">
-              <span style="font-size:11px; color:var(--text-subtle);">Q4_K_M GGUF</span>
+              <span style="font-size:11px; color:var(--text-subtle); font-family:ui-monospace,monospace;">Q4_K_M</span>
               <button class="btn-action" onclick="downloadAndRunModel('olmo3', 'olmo3:7b', 'Olmo 3 7B Instruct')">
-                <svg class="icon" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                 Download
               </button>
             </div>
@@ -1552,27 +1542,52 @@
       </div>
     </div>
 
-    <!-- 3. SETTINGS TAB -->
+    <!-- 3. PREMIUM OBSIDIAN GLASSMORHPISM SETTINGS TAB -->
     <div class="tab-content" id="tab-settings">
       <div class="settings-container">
-        <div class="settings-header-card">
-          <div class="settings-title">
-            <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-            STEM Runtime &amp; Context Configuration
+        <!-- 1. COMPUTE & LOCAL DAEMON -->
+        <div class="settings-section-card">
+          <div class="section-card-header">
+            <span class="section-card-title">
+              <svg class="icon" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>
+              Inference Daemon &amp; Hardware Acceleration
+            </span>
+            <span class="section-card-badge" id="settings-ping-badge">127.0.0.1:11434</span>
           </div>
-          <div class="domain-indicator">Ollama Local</div>
+          <div style="display:grid; grid-template-columns: 2fr 1fr; gap:12px;">
+            <div class="setting-row">
+              <div class="setting-label"><span>Daemon Host Endpoint</span></div>
+              <input id="setting-ollama-url" type="text" class="setting-input" value="http://127.0.0.1:11434">
+            </div>
+            <div class="setting-row">
+              <div class="setting-label"><span>Model Memory Cache</span></div>
+              <select id="setting-keepalive" class="setting-input">
+                <option value="5m">5 Minutes</option>
+                <option value="15m" selected>15 Minutes</option>
+                <option value="60m">1 Hour</option>
+                <option value="-1">Indefinite (VRAM Lock)</option>
+              </select>
+            </div>
+          </div>
         </div>
 
-        <div>
-          <div style="font-size:12px; font-weight:600; color:#e5e7eb; margin-bottom:8px;">Reasoning Intent Preset:</div>
+        <!-- 2. REASONING INTENT PRESET -->
+        <div class="settings-section-card">
+          <div class="section-card-header">
+            <span class="section-card-title">
+              <svg class="icon" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              Reasoning Intent Profile
+            </span>
+            <span class="section-card-badge">Zero Hallucination</span>
+          </div>
           <div class="intent-grid">
             <div class="intent-card active" id="intent-precise" onclick="selectIntent('precise', 0.05, 8192, 'Deterministic Proof')">
               <div class="intent-card-title">Deterministic Proof</div>
-              <div class="intent-card-desc">Temp 0.05 · Strict symbolic proofs, exact KaTeX equations, zero hallucination.</div>
+              <div class="intent-card-desc">Temp 0.05 · Strict symbolic derivations, KaTeX proofs, deterministic physics.</div>
             </div>
             <div class="intent-card" id="intent-balanced" onclick="selectIntent('balanced', 0.3, 4096, 'Balanced Analysis')">
               <div class="intent-card-title">Balanced Analysis</div>
-              <div class="intent-card-desc">Temp 0.3 · Structured physics explanations, engineering trade-offs.</div>
+              <div class="intent-card-desc">Temp 0.3 · Structured physics explanations and engineering trade-offs.</div>
             </div>
             <div class="intent-card" id="intent-creative" onclick="selectIntent('creative', 0.7, 4096, 'Exploratory Synthesis')">
               <div class="intent-card-title">Exploratory Synthesis</div>
@@ -1581,47 +1596,63 @@
           </div>
         </div>
 
-        <div>
-          <div class="accordion-header" onclick="toggleAccordion()">
-            <span style="display:flex; align-items:center; gap:8px;">
-              <svg class="icon" viewBox="0 0 24 24"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
-              Advanced Inference &amp; Context Buffer
+        <!-- 3. CONTEXT BUFFER & VRAM ALLOCATION -->
+        <div class="settings-section-card">
+          <div class="section-card-header">
+            <span class="section-card-title">
+              <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              Context Window &amp; GPU Memory Footprint
             </span>
-            <svg class="chevron-icon" id="accordion-arrow" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+            <span class="section-card-badge" id="ctx-label">8,192 tokens (~2.4 GB VRAM)</span>
           </div>
-          <div class="accordion-body" id="accordion-content">
-            <div class="setting-item">
-              <div class="setting-label"><span>Context Window Buffer (Tokens)</span><span id="ctx-label" style="color:#ffffff;">8,192 tokens (~2.4 GB VRAM)</span></div>
-              <select id="setting-ctx" class="setting-input" onchange="updateCtxLabel(this.value)">
-                <option value="4096">4,096 tokens (Fast / Low RAM)</option>
-                <option value="8192" selected>8,192 tokens (Standard STEM Proofs)</option>
-                <option value="16384">16,384 tokens (Extended Derivations)</option>
-                <option value="32768">32,768 tokens (Full Context Window)</option>
-                <option value="65536">65,536 tokens (Massive Scientific Documents)</option>
-              </select>
+          <div class="setting-row">
+            <select id="setting-ctx" class="setting-input" onchange="updateCtxLabel(this.value)">
+              <option value="4096">4,096 tokens (Fast / Low RAM footprint)</option>
+              <option value="8192" selected>8,192 tokens (Standard STEM Proofs)</option>
+              <option value="16384">16,384 tokens (Extended Derivations)</option>
+              <option value="32768">32,768 tokens (Full Context Window)</option>
+              <option value="65536">65,536 tokens (Massive Scientific Documents)</option>
+            </select>
+            <div class="vram-bar-container">
+              <div class="vram-bar-fill" id="vram-bar-fill"></div>
             </div>
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
-              <div class="setting-item">
-                <div class="setting-label"><span>Temperature</span><span id="temp-val" style="color:#ffffff;">0.05</span></div>
-                <input id="setting-temp" type="range" min="0" max="1" step="0.05" value="0.05" oninput="document.getElementById('temp-val').innerText = this.value; deselectIntents();">
-              </div>
-              <div class="setting-item">
-                <div class="setting-label"><span>Top-P Nucleus</span><span id="topp-val" style="color:#ffffff;">0.95</span></div>
-                <input id="setting-topp" type="range" min="0.1" max="1" step="0.05" value="0.95" oninput="document.getElementById('topp-val').innerText = this.value;">
-              </div>
+          </div>
+        </div>
+
+        <!-- 4. SAMPLING CONTROLS -->
+        <div class="settings-section-card">
+          <div class="section-card-header">
+            <span class="section-card-title">
+              <svg class="icon" viewBox="0 0 24 24"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/></svg>
+              Precision Sampling Controls
+            </span>
+          </div>
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px;">
+            <div class="setting-row">
+              <div class="setting-label"><span>Temperature</span><span id="temp-val" style="color:#ffffff;">0.05</span></div>
+              <input id="setting-temp" type="range" class="stem-slider" min="0" max="1" step="0.05" value="0.05" oninput="document.getElementById('temp-val').innerText = this.value; deselectIntents();">
             </div>
-            <div class="setting-item">
-              <div class="setting-label">Ollama Daemon Endpoint</div>
-              <input id="setting-ollama-url" type="text" class="setting-input" value="http://127.0.0.1:11434">
+            <div class="setting-row">
+              <div class="setting-label"><span>Top-P Nucleus</span><span id="topp-val" style="color:#ffffff;">0.95</span></div>
+              <input id="setting-topp" type="range" class="stem-slider" min="0.1" max="1" step="0.05" value="0.95" oninput="document.getElementById('topp-val').innerText = this.value;">
             </div>
-            <div class="setting-item">
-              <div class="setting-label">STEM System Prompt</div>
-              <textarea id="setting-persona" class="setting-input" style="height:65px; resize:none;">You are Vigyan Pro, a sovereign STEM AI engine. When providing calculations or proofs, use LaTeX inside $$...$$. To render visualizations on the user's workbench, you can emit tool blocks like ```workbench:plot [expr]``` or ```workbench:3d [torus|benzene|water|methane|spring]``` or ```workbench:sim [orbit|pendulum|enzyme|reaction]```.</textarea>
-            </div>
-            <div style="display:flex; gap:8px; margin-top:4px;">
-              <button class="btn-action" onclick="checkOllamaConnection()">Ping Daemon</button>
-              <button class="btn-action" style="background:#ffffff; color:#000000; font-weight:600;" onclick="saveSettings()">Save Preferences</button>
-            </div>
+          </div>
+        </div>
+
+        <!-- 5. SYSTEM PROMPT & ACTIONS -->
+        <div class="settings-section-card">
+          <div class="section-card-header">
+            <span class="section-card-title">
+              <svg class="icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+              Sovereign STEM Persona &amp; Directives
+            </span>
+          </div>
+          <div class="setting-row">
+            <textarea id="setting-persona" class="setting-input" style="height:68px; resize:none;">You are Vigyan Pro, a sovereign STEM AI engine. When providing calculations or proofs, use LaTeX inside $$...$$. To render visualizations on the user's workbench, you can emit tool blocks like ```workbench:plot [expr]``` or ```workbench:3d [silicon|benzene|water|methane|torus|spring]``` or ```workbench:sim [pn-junction|orbit|pendulum|enzyme|reaction]```.</textarea>
+          </div>
+          <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:4px;">
+            <button class="btn-action" onclick="checkOllamaConnection()">Ping Daemon</button>
+            <button class="btn-action" style="background:#ffffff; color:#000000; font-weight:600;" onclick="saveSettings()">Save Preferences</button>
           </div>
         </div>
       </div>
@@ -1728,9 +1759,7 @@
         const clientX = e.touches ? e.touches[0].clientX : e.clientX;
         const totalW = window.innerWidth;
         const newStemW = totalW - clientX;
-        
-        // Limits: min 320px for stem, min 360px for chat
-        if (newStemW >= 320 && (clientX >= 360)) {
+        if (newStemW >= 320 && clientX >= 360) {
           stemSection.style.width = newStemW + 'px';
           if (currentWbMode !== 'sim') {
             Plotly.Plots.resize('plot-container');
@@ -1746,9 +1775,7 @@
         isDragging = false;
         resizer.classList.remove('dragging');
         document.body.style.cursor = 'default';
-        if (currentWbMode !== 'sim') {
-          Plotly.Plots.resize('plot-container');
-        }
+        if (currentWbMode !== 'sim') Plotly.Plots.resize('plot-container');
       }
 
       resizer.addEventListener('mousedown', onPointerDown);
@@ -1767,13 +1794,6 @@
       setTimeout(() => t.classList.remove('show'), 2600);
     }
 
-    function toggleAccordion() {
-      const b = document.getElementById('accordion-content');
-      const arr = document.getElementById('accordion-arrow');
-      b.classList.toggle('open');
-      arr.style.transform = b.classList.contains('open') ? 'rotate(180deg)' : 'rotate(0deg)';
-    }
-
     function toggleSidebar() {
       const sb = document.getElementById('sidebar');
       sb.classList.toggle('collapsed');
@@ -1782,7 +1802,7 @@
       }, 240);
     }
 
-    /* DOMAIN SELECTION (UNIFIED LAB, ASTRONOMY, BIOMED, CHEM) */
+    /* DOMAIN SELECTION (INCLUDES SEMICONDUCTOR) */
     function selectDomain(domainId) {
       activeDomain = domainId;
       document.querySelectorAll('.domain-item').forEach(el => el.classList.remove('active'));
@@ -1794,8 +1814,13 @@
 
       if (domainId === 'lab') {
         badge.innerText = 'Lab Studio';
-        if (welcome) welcome.innerText = 'Unified STEM Lab active. Ready for multi-turn calculus, physics, chemistry, and astronomical derivations. Click [/] or type / for agentic tools.';
+        if (welcome) welcome.innerText = 'Unified STEM Lab active. Ready for multi-turn calculus, semiconductor physics, 3D CAD meshes, astronomy orbits, and simulations. Click [/] or type / for agentic tools.';
         switchWorkbenchMode('plot');
+      } else if (domainId === 'semiconductor') {
+        badge.innerText = 'Semiconductor';
+        if (welcome) welcome.innerText = 'Microelectronics & Semiconductor Physics active. Silicon crystal diamond cubic lattice, PN junction band bending & carrier drift-diffusion, and MOSFET saturation dynamics initialized.';
+        switchWorkbenchMode('3d');
+        renderCAD3D('silicon');
       } else if (domainId === 'astronomy') {
         badge.innerText = 'Astronomy';
         if (welcome) welcome.innerText = 'Astrophysics & Celestial Mechanics Workspace active. Keplerian 2-body orbit solver, gravitational N-body simulations, and stellar kinematics initialized.';
@@ -1834,13 +1859,16 @@
 
     function updateCtxLabel(val) {
       const lbl = document.getElementById('ctx-label');
+      const bar = document.getElementById('vram-bar-fill');
       if (!lbl) return;
       const v = parseInt(val);
-      if (v <= 4096) lbl.innerText = '4,096 tokens (~1.2 GB VRAM)';
-      else if (v <= 8192) lbl.innerText = '8,192 tokens (~2.4 GB VRAM)';
-      else if (v <= 16384) lbl.innerText = '16,384 tokens (~4.8 GB VRAM)';
-      else if (v <= 32768) lbl.innerText = '32,768 tokens (~9.6 GB VRAM)';
-      else lbl.innerText = '65,536 tokens (~18 GB VRAM)';
+      let pct = 20;
+      if (v <= 4096) { lbl.innerText = '4,096 tokens (~1.2 GB VRAM)'; pct = 20; }
+      else if (v <= 8192) { lbl.innerText = '8,192 tokens (~2.4 GB VRAM)'; pct = 35; }
+      else if (v <= 16384) { lbl.innerText = '16,384 tokens (~4.8 GB VRAM)'; pct = 55; }
+      else if (v <= 32768) { lbl.innerText = '32,768 tokens (~9.6 GB VRAM)'; pct = 75; }
+      else { lbl.innerText = '65,536 tokens (~18 GB VRAM)'; pct = 100; }
+      if (bar) bar.style.width = pct + '%';
     }
 
     function switchTab(tabId) {
@@ -1961,7 +1989,9 @@
       tx.value = cmd;
       tx.focus();
 
-      if (cmd.startsWith('/simulate')) {
+      if (cmd.startsWith('/semiconductor')) {
+        selectDomain('semiconductor');
+      } else if (cmd.startsWith('/simulate')) {
         switchWorkbenchMode('sim');
       } else if (cmd.startsWith('/cad3d')) {
         switchWorkbenchMode('3d');
@@ -2013,7 +2043,6 @@
     function buildConversationHistory() {
       const s = sessions.find(x => x.id === activeSessionId);
       if (!s || !s.messages) return [];
-      // Keep last 10 messages for rich multi-turn context
       return s.messages.slice(-10).map(m => ({
         role: m.role === 'user' ? 'user' : 'assistant',
         content: m.plainText || m.content
@@ -2052,7 +2081,6 @@
       const scrollWrapper = document.querySelector('.chat-scroll-wrapper');
       scrollWrapper.scrollTop = scrollWrapper.scrollHeight;
 
-      // Handle direct command triggers
       handleDirectPromptDirectives(text);
 
       const tempVal = parseFloat(document.getElementById('setting-temp').value) || 0.05;
@@ -2062,7 +2090,6 @@
       const contentEl = asstDiv.querySelector('.msg-content');
       let rawAccumulated = '';
 
-      // Prepare multi-turn messages
       const history = buildConversationHistory();
       history.push({ role: 'user', content: text });
 
@@ -2070,7 +2097,6 @@
       setSendingButton();
 
       try {
-        // Use /api/chat if supported or fallback to /api/generate
         let response = null;
         try {
           response = await fetch(`${OLLAMA_HOST}/api/chat`, {
@@ -2091,7 +2117,6 @@
           response = null;
         }
 
-        // Fallback to /api/generate if /api/chat unavailable
         if (!response || !response.ok) {
           response = await fetch(`${OLLAMA_HOST}/api/generate`, {
             method: 'POST',
@@ -2163,7 +2188,16 @@
     /* DIRECT PROMPT DIRECTIVES & AGENT BRIDGE */
     function handleDirectPromptDirectives(text) {
       const lower = text.toLowerCase();
-      if (lower.startsWith('/astronomy') || lower.includes('astronomy') || lower.includes('kepler') || lower.includes('orbit')) {
+      if (lower.startsWith('/semiconductor') || lower.includes('semiconductor') || lower.includes('mosfet') || lower.includes('pn junction') || lower.includes('silicon')) {
+        selectDomain('semiconductor');
+        if (lower.includes('pn') || lower.includes('junction') || lower.includes('band')) {
+          switchWorkbenchMode('sim');
+          initSimulation('pn-junction');
+        } else {
+          switchWorkbenchMode('3d');
+          renderCAD3D('silicon');
+        }
+      } else if (lower.startsWith('/astronomy') || lower.includes('astronomy') || lower.includes('kepler') || lower.includes('orbit')) {
         selectDomain('astronomy');
         switchWorkbenchMode('sim');
         initSimulation('orbit');
@@ -2216,7 +2250,7 @@
       }
     }
 
-    /* STEM WORKBENCH IMPLEMENTATION (PLOTTER, 3D CAD/MOL, SIMULATION) */
+    /* STEM WORKBENCH IMPLEMENTATION */
     function switchWorkbenchMode(mode) {
       currentWbMode = mode;
       document.querySelectorAll('.wb-tab').forEach(b => b.classList.remove('active'));
@@ -2244,6 +2278,8 @@
         title.innerHTML = `<svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 12h8"/><path d="M12 8v8"/></svg> Dynamic Function Plotter`;
         badge.innerText = 'WebGL 2D';
         presets.innerHTML = `
+          <span class="tool-btn" onclick="loadPlotPreset('mosfet')">MOSFET Saturation</span>
+          <span class="tool-btn" onclick="loadPlotPreset('diode')">Shockley Diode</span>
           <span class="tool-btn" onclick="loadPlotPreset('damped')">Damped Oscillator</span>
           <span class="tool-btn" onclick="loadPlotPreset('gaussian')">Gaussian Normal</span>
           <span class="tool-btn" onclick="loadPlotPreset('sigmoid')">Sigmoid / Logistic</span>
@@ -2258,15 +2294,15 @@
         title.innerHTML = `<svg class="icon" viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg> 3D CAD &amp; Molecular Conformations`;
         badge.innerText = 'Plotly WebGL 3D';
         presets.innerHTML = `
+          <span class="tool-btn" onclick="renderCAD3D('silicon')">Silicon Lattice (Diamond Si)</span>
           <span class="tool-btn" onclick="renderCAD3D('benzene')">Benzene (C6H6)</span>
           <span class="tool-btn" onclick="renderCAD3D('water')">Water (H2O)</span>
           <span class="tool-btn" onclick="renderCAD3D('methane')">Methane (CH4)</span>
           <span class="tool-btn" onclick="renderCAD3D('torus')">CAD Torus</span>
           <span class="tool-btn" onclick="renderCAD3D('spring')">Helical Spring</span>
           <span class="tool-btn" onclick="renderCAD3D('paraboloid')">Paraboloid</span>
-          <span class="tool-btn" onclick="renderCAD3D('sinc3d')">3D Sinc Ripple</span>
         `;
-        renderCAD3D('benzene');
+        renderCAD3D(activeDomain === 'semiconductor' ? 'silicon' : 'benzene');
       } else if (mode === 'sim') {
         plotEl.style.display = 'none';
         canvasEl.style.display = 'block';
@@ -2275,12 +2311,13 @@
         title.innerHTML = `<svg class="icon" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg> 60 FPS Dynamic Simulation Engine`;
         badge.innerText = 'Dynamic Canvas';
         presets.innerHTML = `
+          <span class="tool-btn" onclick="initSimulation('pn-junction')">PN Junction Band Bending</span>
           <span class="tool-btn" onclick="initSimulation('pendulum')">Double Pendulum</span>
           <span class="tool-btn" onclick="initSimulation('orbit')">Kepler Orbit (Astronomy)</span>
           <span class="tool-btn" onclick="initSimulation('enzyme')">Enzyme Kinetics (Biomed)</span>
           <span class="tool-btn" onclick="initSimulation('reaction')">Equilibrium (Chem)</span>
         `;
-        initSimulation('pendulum');
+        initSimulation(activeDomain === 'semiconductor' ? 'pn-junction' : 'pendulum');
       }
     }
 
@@ -2290,7 +2327,32 @@
       const proofTitle = document.getElementById('proof-title');
       const mathProof = document.getElementById('math-proof');
 
-      if (type === 'benzene') {
+      if (type === 'silicon') {
+        proofTitle.innerText = 'Silicon Diamond Cubic Crystal Lattice:';
+        mathProof.innerHTML = '$$\\text{Diamond Lattice: } Fd\\bar{3}m, \\quad a = 5.43\\text{ \\AA}, \\quad \\text{Tetrahedral Bond Angle: } 109.47^\\circ$$';
+        // Diamond unit cell FCC vertices + 4 basis points
+        const a = 5.43;
+        const atoms = [
+          [0,0,0], [a,0,0], [0,a,0], [a,a,0], [0,0,a], [a,0,a], [0,a,a], [a,a,a],
+          [a/2, a/2, 0], [a/2, 0, a/2], [0, a/2, a/2], [a/2, a/2, a], [a/2, a, a/2], [a, a/2, a/2],
+          [a/4, a/4, a/4], [3*a/4, 3*a/4, a/4], [3*a/4, a/4, 3*a/4], [a/4, 3*a/4, 3*a/4]
+        ];
+        const bx = [], by = [], bz = [];
+        // Add tetrahedral covalent bonds
+        const tetra = [
+          [[a/4, a/4, a/4], [0,0,0]], [[a/4, a/4, a/4], [a/2, a/2, 0]], [[a/4, a/4, a/4], [a/2, 0, a/2]], [[a/4, a/4, a/4], [0, a/2, a/2]]
+        ];
+        tetra.forEach(b => {
+          bx.push(b[0][0], b[1][0], null);
+          by.push(b[0][1], b[1][1], null);
+          bz.push(b[0][2], b[1][2], null);
+        });
+
+        data = [
+          { type: 'scatter3d', mode: 'lines', x: bx, y: by, z: bz, line: { color: '#a1a1aa', width: 4 }, showlegend: false },
+          { type: 'scatter3d', mode: 'markers', x: atoms.map(p => p[0]), y: atoms.map(p => p[1]), z: atoms.map(p => p[2]), marker: { size: 9, color: '#38bdf8' }, name: 'Silicon (Si)' }
+        ];
+      } else if (type === 'benzene') {
         proofTitle.innerText = 'Benzene (C6H6) Planar Aromatic Ring:';
         mathProof.innerHTML = '$$\\text{Delocalized } \\pi\text{-system: } D_{6h} \\text{ symmetry, } r_{C-C} = 1.40\\text{ \\AA}, r_{C-H} = 1.08\\text{ \\AA}$$';
         const R_c = 1.4, R_h = 2.4;
@@ -2369,20 +2431,6 @@
           z.push(row);
         }
         data = [{ z: z, x: x, y: y, type: 'surface', colorscale: 'Greys', showscale: false }];
-      } else if (type === 'sinc3d') {
-        proofTitle.innerText = '3D Sinc Radial Distribution:';
-        mathProof.innerHTML = '$$z(x, y) = \\frac{\\sin(\\sqrt{x^2 + y^2})}{\\sqrt{x^2 + y^2}}$$';
-        const z = [], x = [], y = [];
-        for (let i = -10; i <= 10; i += 0.8) { x.push(i); y.push(i); }
-        for (let i = 0; i < y.length; i++) {
-          const row = [];
-          for (let j = 0; j < x.length; j++) {
-            const r = Math.sqrt(x[j] * x[j] + y[i] * y[i]);
-            row.push(r === 0 ? 1 : Math.sin(r) / r);
-          }
-          z.push(row);
-        }
-        data = [{ z: z, x: x, y: y, type: 'surface', colorscale: 'Greys', showscale: false }];
       }
 
       const layout = {
@@ -2411,7 +2459,87 @@
       const proofTitle = document.getElementById('proof-title');
       const mathProof = document.getElementById('math-proof');
 
-      if (type === 'pendulum') {
+      if (type === 'pn-junction') {
+        proofTitle.innerText = 'PN Junction Band Diagram & Space-Charge Depletion:';
+        mathProof.innerHTML = '$$W_{\\text{dep}} = \\sqrt{\\frac{2\\epsilon_s}{q} \\left(\\frac{N_A + N_D}{N_A N_D}\\right) (V_{bi} - V)}, \\quad E_c(x) - E_v(x) = E_g$$';
+        let bias = 0.0;
+        let t = 0;
+
+        function drawPN() {
+          const curW = canvas.width = canvas.clientWidth;
+          const curH = canvas.height = canvas.clientHeight;
+          ctx.fillStyle = '#040507';
+          ctx.fillRect(0, 0, curW, curH);
+
+          t += 0.03;
+          bias = Math.sin(t) * 0.3; // Oscillate forward and reverse bias
+
+          const midX = curW / 2;
+          const depW = Math.max(20, 60 * (1 - bias * 1.5));
+
+          // Draw P-type and N-type regions
+          ctx.fillStyle = 'rgba(239, 68, 68, 0.08)'; // P-type
+          ctx.fillRect(40, 30, midX - 40, curH - 60);
+          ctx.fillStyle = 'rgba(56, 189, 248, 0.08)'; // N-type
+          ctx.fillRect(midX, 30, curW - midX - 40, curH - 60);
+
+          // Depletion zone highlight
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.05)';
+          ctx.fillRect(midX - depW / 2, 30, depW, curH - 60);
+
+          // Energy Band lines: Ec (conduction) and Ev (valence)
+          const Eg = 70; // Bandgap visual offset
+          const qVbi = 60 * (1 - bias);
+
+          ctx.strokeStyle = '#38bdf8'; // Conduction band Ec
+          ctx.lineWidth = 2.2;
+          ctx.beginPath();
+          for (let x = 40; x <= curW - 40; x += 2) {
+            let y = 60;
+            if (x < midX - depW / 2) y = 60;
+            else if (x > midX + depW / 2) y = 60 + qVbi;
+            else {
+              const u = (x - (midX - depW / 2)) / depW;
+              y = 60 + qVbi * (0.5 - 0.5 * Math.cos(u * Math.PI));
+            }
+            if (x === 40) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+          }
+          ctx.stroke();
+
+          // Valence band Ev
+          ctx.strokeStyle = '#ef4444';
+          ctx.beginPath();
+          for (let x = 40; x <= curW - 40; x += 2) {
+            let y = 60 + Eg;
+            if (x < midX - depW / 2) y = 60 + Eg;
+            else if (x > midX + depW / 2) y = 60 + Eg + qVbi;
+            else {
+              const u = (x - (midX - depW / 2)) / depW;
+              y = 60 + Eg + qVbi * (0.5 - 0.5 * Math.cos(u * Math.PI));
+            }
+            if (x === 40) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+          }
+          ctx.stroke();
+
+          // Fermi level Ef
+          ctx.strokeStyle = '#a1a1aa';
+          ctx.setLineDash([4, 4]);
+          ctx.beginPath();
+          ctx.moveTo(40, 110);
+          ctx.lineTo(curW - 40, 110);
+          ctx.stroke();
+          ctx.setLineDash([]);
+
+          // Labels
+          ctx.font = '11px ui-monospace, monospace';
+          ctx.fillStyle = '#38bdf8'; ctx.fillText('E_c (Conduction Band)', 50, 48);
+          ctx.fillStyle = '#ef4444'; ctx.fillText('E_v (Valence Band)', 50, 150);
+          ctx.fillStyle = '#ffffff'; ctx.fillText(`Bias V_a: ${bias.toFixed(2)} V  |  W_dep: ${depW.toFixed(1)} nm`, midX - 90, curH - 12);
+
+          simAnimationId = requestAnimationFrame(drawPN);
+        }
+        drawPN();
+      } else if (type === 'pendulum') {
         proofTitle.innerText = 'Coupled Double Pendulum Dynamics:';
         mathProof.innerHTML = '$$\\frac{d}{dt} \\left( \\frac{\\partial L}{\\partial \\dot{\\theta}_i} \\right) - \\frac{\\partial L}{\\partial \\theta_i} = 0 \\quad (i = 1, 2)$$';
         simAngle1 = Math.PI / 2;
@@ -2496,11 +2624,9 @@
           trail.forEach((p, i) => { if (i === 0) ctx.moveTo(p.x, p.y); else ctx.lineTo(p.x, p.y); });
           ctx.stroke();
 
-          // Central Star
           ctx.fillStyle = '#ffffff';
           ctx.beginPath(); ctx.arc(ox, oy, 9, 0, Math.PI * 2); ctx.fill();
 
-          // Orbiting Planet
           ctx.fillStyle = '#93c5fd';
           ctx.beginPath(); ctx.arc(px, py, 4, 0, Math.PI * 2); ctx.fill();
 
@@ -2603,7 +2729,7 @@
 
     function resetActiveWorkbench() {
       if (currentWbMode === 'plot') evaluateAndPlot();
-      else if (currentWbMode === '3d') renderCAD3D('benzene');
+      else if (currentWbMode === '3d') renderCAD3D(activeDomain === 'semiconductor' ? 'silicon' : 'benzene');
       else if (currentWbMode === 'sim') initSimulation(currentSimType);
     }
 
@@ -2652,7 +2778,15 @@
     function loadPlotPreset(type) {
       const title = document.getElementById('proof-title');
       const math = document.getElementById('math-proof');
-      if (type === 'damped') {
+      if (type === 'mosfet') {
+        document.getElementById('plot-expr').value = '0.5 * k * Math.pow(Math.max(0, x - 1.5), 2) * (1 + 0.02 * x)';
+        title.innerText = 'MOSFET Saturation Current (ID - VDS):';
+        math.innerHTML = '$$I_D = \\frac{1}{2} \\mu_n C_{ox} \\frac{W}{L} (V_{GS} - V_{th})^2 (1 + \\lambda V_{DS})$$';
+      } else if (type === 'diode') {
+        document.getElementById('plot-expr').value = '1e-6 * (Math.exp(x / (k * 2)) - 1)';
+        title.innerText = 'Shockley Ideal Diode Equation:';
+        math.innerHTML = '$$I = I_s \\left( e^{\\frac{q V}{\\eta k_B T}} - 1 \\right)$$';
+      } else if (type === 'damped') {
         document.getElementById('plot-expr').value = 'Math.exp(-k*x) * Math.cos(w*x)';
         title.innerText = 'Damped Harmonic Oscillator:';
         math.innerHTML = '$$\\frac{d^2 x}{dt^2} + 2\\gamma \\frac{dx}{dt} + \\omega_0^2 x = 0$$';
@@ -2820,7 +2954,9 @@
     async function checkOllamaConnection() {
       try {
         const res = await fetch(`${OLLAMA_HOST}/api/tags`);
+        const badge = document.getElementById('settings-ping-badge');
         if (res.ok) {
+          if (badge) badge.innerText = 'Connected (Ollama)';
           const data = await res.json();
           if (data.models) {
             const tags = data.models.map(m => m.name);
@@ -2831,13 +2967,18 @@
             });
             renderModelDropdown();
           }
+        } else {
+          if (badge) badge.innerText = 'Daemon Offline';
         }
-      } catch (e) {}
+      } catch (e) {
+        const badge = document.getElementById('settings-ping-badge');
+        if (badge) badge.innerText = 'Reconnecting';
+      }
     }
 
     /* SESSIONS PERSISTENCE */
     function initSessions() {
-      const saved = localStorage.getItem('vigyan_v24_sessions');
+      const saved = localStorage.getItem('vigyan_v25_sessions');
       if (saved) {
         try { sessions = JSON.parse(saved); } catch (e) { sessions = []; }
       }
@@ -2916,7 +3057,7 @@
     }
 
     function saveSessions() {
-      localStorage.setItem('vigyan_v24_sessions', JSON.stringify(sessions));
+      localStorage.setItem('vigyan_v25_sessions', JSON.stringify(sessions));
     }
 
     function saveCurrentSessionMessages() {
@@ -2951,7 +3092,7 @@
             <span>${currentModel}</span>
           </div>
           <div class="msg-content" id="welcome-msg-text">
-            Sovereign STEM Lab active. Ready for multi-turn calculus, 3D CAD meshes, astronomy orbits, chemical kinetics, and physical simulations. Click <strong>[/]</strong> or type <strong>/</strong> for agentic tools.
+            Sovereign STEM Lab active. Ready for multi-turn calculus, semiconductor physics, 3D CAD meshes, astronomy orbits, and simulations. Click <strong>[/]</strong> or type <strong>/</strong> for agentic tools.
           </div>
         </div>
       `;
@@ -2965,7 +3106,7 @@
     }
 
     function loadSettings() {
-      const s = localStorage.getItem('vigyan_v24_settings');
+      const s = localStorage.getItem('vigyan_v25_settings');
       if (s) {
         try {
           const cfg = JSON.parse(s);
@@ -2985,6 +3126,9 @@
             document.getElementById('setting-ollama-url').value = cfg.url;
             OLLAMA_HOST = cfg.url;
           }
+          if (cfg.keepalive) {
+            document.getElementById('setting-keepalive').value = cfg.keepalive;
+          }
           if (cfg.persona) document.getElementById('setting-persona').value = cfg.persona;
         } catch (e) {}
       }
@@ -2995,9 +3139,10 @@
       const ctx = document.getElementById('setting-ctx').value;
       const topp = document.getElementById('setting-topp').value;
       const url = document.getElementById('setting-ollama-url').value;
+      const keepalive = document.getElementById('setting-keepalive').value;
       const persona = document.getElementById('setting-persona').value;
       OLLAMA_HOST = url;
-      localStorage.setItem('vigyan_v24_settings', JSON.stringify({ temp, ctx, topp, url, persona }));
+      localStorage.setItem('vigyan_v25_settings', JSON.stringify({ temp, ctx, topp, url, keepalive, persona }));
       showToast('Settings saved');
     }
   </script>

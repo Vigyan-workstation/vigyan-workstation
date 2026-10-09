@@ -124,6 +124,38 @@ def main():
     win.add(webview)
     win.connect("destroy", Gtk.main_quit)
 
+    snapshot_path = None
+    if "--snapshot" in sys.argv:
+        idx = sys.argv.index("--snapshot")
+        if idx + 1 < len(sys.argv):
+            snapshot_path = sys.argv[idx + 1]
+
+    if snapshot_path:
+        def on_snapshot_done(view, res, target):
+            try:
+                surface = view.get_snapshot_finish(res)
+                surface.write_to_png(target)
+                print(f"[OK] Snapshot saved to {target}")
+            except Exception as e:
+                print(f"[ERR] Snapshot failed: {e}")
+            Gtk.main_quit()
+
+        def trigger_snapshot():
+            webview.get_snapshot(
+                WebKit2.SnapshotRegion.FULL_DOCUMENT,
+                WebKit2.SnapshotOptions.NONE,
+                None,
+                on_snapshot_done,
+                snapshot_path
+            )
+            return False
+
+        def on_load_changed(view, event):
+            if event == WebKit2.LoadEvent.FINISHED:
+                GLib.timeout_add(1500, trigger_snapshot)
+
+        webview.connect("load-changed", on_load_changed)
+
     win.show_all()
     win.present()
     Gtk.main()

@@ -1,28 +1,32 @@
-# Vigyan Pro — Sovereign Desktop Workstation
+# Vigyan Pro — Sovereign Desktop Workstation (v2.5.0)
 
-> **Enterprise Obsidian-Grade Sovereign STEM & Legal AI Desktop Workstation**  
-> *Zero browser chrome. 100% Native WebKitGTK desktop runtime. Offline KaTeX derivations & Plotly WebGL visualizations.*
+> **Enterprise Obsidian-Grade Sovereign STEM & Semiconductor AI Desktop Workstation**  
+> *Zero browser chrome. 100% Native cross-platform desktop runtime for Linux, Windows, and macOS.*  
+> *Offline KaTeX derivations, Plotly WebGL 3D visualizations, and 60 FPS physics simulations.*
 
 ---
 
 ## Overview
 
-**Vigyan Pro Desktop** is a sovereign, privacy-preserving AI desktop workstation built for researchers, engineers, and legal scholars. Designed with an Apple macOS obsidian titanium aesthetic and a zero-emoji monochrome design system, it pairs real-time local neural models with native symbolic and visual STEM tooling.
+**Vigyan Pro Desktop** is a sovereign, privacy-preserving AI workstation designed for researchers, computational physicists, and hardware/semiconductor engineers. Built with a pitch-black obsidian aesthetic (`#000000`) and a zero-emoji monochrome design system, it couples local neural inference with native mathematical, simulation, and 3D CAD tooling.
 
 ```
 ┌──────────────────────────────────────────────────────────────┐
-│  Vigyan Pro Desktop Shell (WebKitGTK / GTK3 / Wayland)       │
+│  Vigyan Pro Shell (WebKitGTK Linux / WebView2 Win / Mac)     │
 │  • Obsidian Pitch-Black Monochrome Design (#000000)          │
 │  • Brushed Titanium Faceted "V" Micro-Glyph Branding         │
 ├──────────────────────────────────────────────────────────────┤
 │  Triple Sovereign Workspace                                  │
-│  • Studio: Real-time NDJSON streaming inference              │
-│  • STEM Workbench: Native KaTeX proofs & Plotly WebGL plots  │
-│  • Sovereign Vault: Curated @shreyansh12183 & @allenai catalog│
+│  • Studio: Multi-turn streaming calculus & STEM dialogue     │
+│  • STEM Workbench: 2D Plotter, 3D CAD/Molecules & 60 FPS Sim │
+│  • Sovereign Vault: Curated @shreyansh12183 & @allenai models│
+├──────────────────────────────────────────────────────────────┤
+│  Specialized Scientific Workspaces                           │
+│  • Lab Studio · Semiconductor · Astronomy · Biomed · Chem    │
 ├──────────────────────────────────────────────────────────────┤
 │  Local Sovereign Runtime                                     │
 │  • Air-Gapped Ollama Daemon (127.0.0.1:11434)                │
-│  • Offline Vendor Engine (KaTeX, Plotly, LocalStorage)       │
+│  • Offline Vendor Engines (KaTeX, Plotly WebGL, Canvas 2D)   │
 └──────────────────────────────────────────────────────────────┘
 ```
 
@@ -30,33 +34,47 @@
 
 ## Features
 
-- **Apple macOS Permissive Design:** Clean SF Pro / Inter typography, pure obsidian background (`#000000`), subtle zinc hairline borders, and zero neon glows.
-- **Zero-Emoji Monochrome Iconography:** Feather/Linear hairline vector line icons across all tabs, actions, and intent cards.
-- **Real-Time NDJSON Streaming Inference:** Chunked token-by-token streaming with live Markdown and KaTeX rendering.
-- **Curated Sovereign Model Vault:**
-  - `Vidhi AI 1.5B (Legal Master)` (`@shreyansh12183 / Vidhi-AI-Instruct`)
-  - `Vigyan 1.5B 4x-MoE (STEM Solver)` (`@shreyansh12183 / Vigyan-1.5B-4x-MoE`)
-  - `OLMo2 7B PhD Pure Math` (`@shreyansh12183 / olmo2-7b-phd-pure-math`)
-  - `OLMo2 7B Silicon RTL & EDA` (`@shreyansh12183 / olmo2-7b-silicon-rtl-eda`)
-  - `OLMoE 1B-7B 64-Expert MoE` (`@allenai / OLMoE-1B-7B-0924`)
-  - `OLMo 2 1B Instruct` (`@allenai / OLMo-2-0425-1B-Instruct`)
-  - `Olmo 3 7B Instruct` (`@allenai / Olmo-3-7B-Instruct`)
-- **Native STEM Workbench:**
-  - 2D & 3D WebGL function visualization (Damped Wave, Gaussian Bell, Sigmoid, Fourier Square, 3D Sinc Ripple).
-  - Step-by-step mathematical proof drawer with one-click LaTeX clipboard copying.
-- **Multi-Session Local Persistence:** Complete offline session history, renaming, deletion, and markdown export.
+- **Multi-OS Native Workstation:** Linux (WebKitGTK 4.1), Windows (Microsoft Edge WebView2), macOS (Apple Cocoa WKWebView).
+- **Semiconductor & Microelectronics Physics:**
+  - 3D Silicon Diamond Cubic crystal lattice with covalent tetrahedral bonds.
+  - 60 FPS PN junction band bending simulator ($E_c, E_v, E_F$, dynamic bias oscillation, space-charge depletion width $W_{dep}$).
+  - MOSFET saturation curves and Shockley diode $I\text{-}V$ characteristic presets.
+- **Uncluttered Sovereign Vault:**
+  - `OLMoE 1B-7B MoE` (`@allenai / OLMoE-1B-7B-0924`) — 64 Sparse Experts, 1B Active/token.
+  - `Vigyan 1.5B 4x-MoE` (`@shreyansh12183 / Vigyan-1.5B-4x-MoE`) — Calculus & physics solver.
+  - `OLMo2 7B Pure Math` (`@shreyansh12183 / olmo2-7b-phd-pure-math`) — Doctoral real analysis.
+  - `OLMo2 7B Silicon EDA` (`@shreyansh12183 / olmo2-7b-silicon-rtl-eda`) — ASIC Verilog RTL.
+  - `OLMo 2 1B Instruct` (`@allenai / OLMo-2-0425-1B-Instruct`) — Low-latency inference.
+  - `Olmo 3 7B Instruct` (`@allenai / Olmo-3-7B-Instruct`) — Multidisciplinary science.
+- **Luxury Glassmorphic Settings:**
+  - Model memory cache keep-alive timeout control.
+  - Segmented reasoning profiles (Deterministic Proof, Balanced Analysis, Exploratory Synthesis).
+  - Dynamic context buffer slider with live VRAM allocation progress meter.
+  - Precision sampling controls and system persona directives.
+- **Zero-Emoji Monochrome Iconography:** Feather/Linear vector line icons across all tabs, actions, and intent cards.
+- **Multi-Turn Context Ingestion:** Rolling message buffer retaining formulas and derivation steps across conversational turns.
 
 ---
 
 ## Installation & Packaging
 
-### Option 1: Debian / Ubuntu (`.deb`)
+Download the latest release assets from the [GitHub Releases](https://github.com/shreyansh001boy-tech/vigyan-pro-desktop/releases):
 
-Download `vigyan-pro_2.0.0_amd64.deb` from the [GitHub Releases](https://github.com/shreyansh001boy-tech/vigyan-pro-desktop/releases) and install via `apt`:
-
+### Linux (`.deb` or Portable)
 ```bash
-sudo apt install ./vigyan-pro_2.0.0_amd64.deb
+# Debian / Ubuntu
+sudo apt install ./vigyan-pro_2.5.0_amd64.deb
+
+# Portable Archive
+tar -xzf vigyan-pro_2.5.0_linux_x86_64.tar.gz
+cd vigyan-pro-2.5.0 && ./vigyan-pro
 ```
+
+### Windows
+Extract `vigyan-pro_2.5.0_windows_x86_64.zip` and double-click `Vigyan-Pro.bat`.
+
+### macOS
+Extract `vigyan-pro_2.5.0_macos_universal.tar.gz` and execute `./Vigyan-Pro.command`.
 
 Run directly from your application launcher or terminal:
 ```bash
