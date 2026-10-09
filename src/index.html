@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Vigyan Pro — Sovereign Studio</title>
+  <title>Vigyan Pro — Sovereign STEM Workstation</title>
   <!-- Offline KaTeX -->
   <link rel="stylesheet" href="vendor/katex.min.css">
   <script src="vendor/katex.min.js"></script>
@@ -16,13 +16,11 @@
       --sidebar: #050608;
       --surface: #08090d;
       --surface-elevated: #0e1015;
-      --card: #111319;
-      --card-hover: #161821;
+      --card: #0f1117;
+      --card-hover: #151720;
       --border: rgba(255, 255, 255, 0.08);
       --border-subtle: rgba(255, 255, 255, 0.05);
       --border-active: rgba(255, 255, 255, 0.22);
-      --primary: #ffffff;
-      --primary-fg: #000000;
       --text: #f4f4f6;
       --text-muted: #a1a1aa;
       --text-subtle: #71717a;
@@ -33,7 +31,7 @@
     body {
       background: var(--bg);
       color: var(--text);
-      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Inter", -apple-system, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Inter", sans-serif;
       height: 100vh;
       display: flex;
       flex-direction: column;
@@ -43,7 +41,6 @@
       -webkit-font-smoothing: antialiased;
     }
 
-    /* SVG ICONS BASE */
     .icon {
       width: 14px;
       height: 14px;
@@ -61,7 +58,7 @@
     header {
       background: #040507;
       border-bottom: 1px solid var(--border);
-      height: 46px;
+      height: 44px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -78,8 +75,8 @@
       background: transparent;
       border: 1px solid var(--border);
       color: var(--text-muted);
-      width: 28px;
-      height: 28px;
+      width: 26px;
+      height: 26px;
       border-radius: 6px;
       cursor: pointer;
       display: flex;
@@ -95,7 +92,7 @@
     .brand {
       display: flex;
       align-items: center;
-      gap: 9px;
+      gap: 8px;
     }
     .brand-micro-img {
       width: 20px;
@@ -116,28 +113,27 @@
       letter-spacing: 0.5px;
       background: #111218;
       color: var(--text-subtle);
-      padding: 2px 7px;
+      padding: 1px 6px;
       border-radius: 4px;
       border: 1px solid var(--border);
       text-transform: uppercase;
     }
 
-    /* HEADER RIGHT TELEMETRY */
     .header-right {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
     }
     .status-badge {
       display: flex;
       align-items: center;
-      gap: 7px;
+      gap: 6px;
       font-size: 11px;
       font-weight: 500;
       color: var(--text-muted);
       background: #090a0f;
       border: 1px solid var(--border);
-      padding: 4px 10px;
+      padding: 3px 9px;
       border-radius: 6px;
     }
     .status-dot {
@@ -146,11 +142,9 @@
       border-radius: 50%;
       background: var(--emerald-subdued);
     }
-    .status-dot.disconnected {
-      background: #ef4444;
-    }
+    .status-dot.disconnected { background: #ef4444; }
 
-    /* MAIN VIEWPORT */
+    /* VIEWPORT */
     main {
       flex: 1;
       display: flex;
@@ -162,13 +156,11 @@
       width: 100%;
       height: 100%;
     }
-    .tab-content.active {
-      display: flex;
-    }
+    .tab-content.active { display: flex; }
 
     /* SESSIONS SIDEBAR */
     .sidebar {
-      width: 230px;
+      width: 210px;
       background: var(--sidebar);
       border-right: 1px solid var(--border);
       display: flex;
@@ -183,7 +175,7 @@
       border-right: none;
     }
     .sidebar-header {
-      padding: 12px 14px;
+      padding: 10px 12px;
       border-bottom: 1px solid var(--border-subtle);
       display: flex;
       align-items: center;
@@ -193,11 +185,8 @@
       font-size: 11px;
       font-weight: 600;
       text-transform: uppercase;
-      letter-spacing: 0.6px;
+      letter-spacing: 0.5px;
       color: var(--text-subtle);
-      display: flex;
-      align-items: center;
-      gap: 6px;
     }
     .btn-new-chat {
       background: #ffffff;
@@ -205,28 +194,26 @@
       border: none;
       font-size: 11px;
       font-weight: 600;
-      padding: 6px 12px;
-      border-radius: 6px;
+      padding: 4px 9px;
+      border-radius: 5px;
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 6px;
-      transition: opacity 0.15s;
+      gap: 4px;
     }
-    .btn-new-chat:hover { opacity: 0.9; }
     .session-list {
       flex: 1;
       overflow-y: auto;
-      padding: 8px;
+      padding: 6px;
       display: flex;
       flex-direction: column;
-      gap: 3px;
+      gap: 2px;
     }
     .session-item {
-      padding: 7px 9px;
-      border-radius: 6px;
+      padding: 6px 8px;
+      border-radius: 5px;
       cursor: pointer;
-      font-size: 12px;
+      font-size: 11.5px;
       color: var(--text-muted);
       border: 1px solid transparent;
       display: flex;
@@ -237,7 +224,6 @@
     .session-item:hover {
       background: #111319;
       color: var(--text);
-      border-color: var(--border);
     }
     .session-item.active {
       background: #161821;
@@ -260,21 +246,11 @@
       padding: 2px 4px;
       border-radius: 3px;
       font-size: 11px;
-      transition: opacity 0.15s;
     }
     .session-item:hover .btn-session-del { opacity: 1; }
     .btn-session-del:hover { color: #ef4444; }
-    .sidebar-footer {
-      padding: 10px 12px;
-      border-top: 1px solid var(--border-subtle);
-      font-size: 11px;
-      color: var(--text-subtle);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
 
-    /* CENTER CHAT WORKSPACE */
+    /* CHAT WORKSPACE */
     .chat-section {
       flex: 1;
       display: flex;
@@ -284,10 +260,8 @@
       min-width: 320px;
       border-right: 1px solid var(--border);
     }
-
-    /* MINIMAL COMPANION SELECTOR TOOLBAR */
     .chat-toolbar {
-      padding: 8px 16px;
+      padding: 8px 14px;
       border-bottom: 1px solid var(--border);
       display: flex;
       align-items: center;
@@ -295,16 +269,14 @@
       background: #050608;
       position: relative;
     }
-    .companion-selector-wrapper {
-      position: relative;
-    }
+    .companion-selector-wrapper { position: relative; }
     .companion-pill {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 7px;
       background: #0d0f15;
       border: 1px solid var(--border);
-      padding: 5px 12px;
+      padding: 4px 11px;
       border-radius: 20px;
       cursor: pointer;
       transition: all 0.15s;
@@ -314,15 +286,10 @@
       border-color: var(--border-active);
     }
     .companion-micro-v {
-      width: 15px;
-      height: 15px;
+      width: 14px;
+      height: 14px;
       border-radius: 3px;
       object-fit: cover;
-    }
-    .companion-label {
-      font-size: 11.5px;
-      color: var(--text-subtle);
-      font-weight: 500;
     }
     .companion-model-name {
       font-size: 12px;
@@ -330,18 +297,15 @@
       font-weight: 600;
     }
     .chevron-icon {
-      width: 11px;
-      height: 11px;
+      width: 10px;
+      height: 10px;
       stroke: var(--text-subtle);
       stroke-width: 2;
       fill: none;
       transition: transform 0.2s;
     }
-    .companion-pill.open .chevron-icon {
-      transform: rotate(180deg);
-    }
+    .companion-pill.open .chevron-icon { transform: rotate(180deg); }
 
-    /* COMPANION DROPDOWN MENU */
     .model-dropdown-menu {
       display: none;
       position: absolute;
@@ -349,57 +313,41 @@
       left: 0;
       background: #0c0e14;
       border: 1px solid var(--border-active);
-      border-radius: 10px;
-      min-width: 280px;
+      border-radius: 8px;
+      min-width: 260px;
       z-index: 100;
-      padding: 6px;
-      box-shadow: 0 12px 32px rgba(0,0,0,0.8);
+      padding: 4px;
+      box-shadow: 0 12px 32px rgba(0,0,0,0.85);
     }
-    .model-dropdown-menu.show {
-      display: block;
-      animation: fadeIn 0.12s var(--ease-spring);
-    }
+    .model-dropdown-menu.show { display: block; animation: fadeIn 0.12s var(--ease-spring); }
     .dropdown-model-item {
-      padding: 8px 12px;
-      border-radius: 6px;
+      padding: 7px 10px;
+      border-radius: 5px;
       cursor: pointer;
       display: flex;
-      flex-direction: column;
-      gap: 2px;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
       transition: background 0.12s;
     }
-    .dropdown-model-item:hover {
-      background: #181a24;
-    }
-    .dropdown-model-item.active {
-      background: #1f2230;
-    }
-    .dropdown-model-tag {
-      font-size: 12px;
-      font-weight: 600;
-      color: #ffffff;
-    }
-    .dropdown-model-desc {
-      font-size: 10.5px;
-      color: var(--text-subtle);
-    }
+    .dropdown-model-item:hover { background: #181a24; }
+    .dropdown-model-item.active { background: #1f2230; }
+    .dropdown-model-tag { font-size: 11.5px; font-weight: 600; color: #ffffff; }
+    .dropdown-model-spec { font-size: 10px; color: var(--text-subtle); }
 
-    .toolbar-actions {
-      display: flex;
-      gap: 6px;
-    }
+    .toolbar-actions { display: flex; gap: 5px; }
     .btn-action {
       background: #0f1118;
       border: 1px solid var(--border);
       color: var(--text-muted);
-      font-size: 11.5px;
+      font-size: 11px;
       font-weight: 500;
-      padding: 5px 11px;
-      border-radius: 6px;
+      padding: 4px 9px;
+      border-radius: 5px;
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 5px;
+      gap: 4px;
       transition: all 0.15s;
     }
     .btn-action:hover {
@@ -408,47 +356,47 @@
       border-color: var(--border-active);
     }
 
-    /* CHAT STREAMING CONTAINER */
+    /* CHAT STREAM */
     .chat-scroll-wrapper {
       flex: 1;
       overflow-y: auto;
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 24px 20px 140px 20px;
+      padding: 20px 20px 130px 20px;
     }
     .chat-container {
       width: 100%;
-      max-width: 780px;
+      max-width: 760px;
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: 14px;
     }
     .msg {
       display: flex;
       flex-direction: column;
-      max-width: 90%;
-      animation: fadeIn 0.18s var(--ease-spring);
+      max-width: 92%;
+      animation: fadeIn 0.16s var(--ease-spring);
     }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(3px); } to { opacity: 1; transform: translateY(0); } }
     .msg.user {
       align-self: flex-end;
       background: #12141c;
       border: 1px solid var(--border);
-      padding: 10px 14px;
-      border-radius: 12px 12px 3px 12px;
+      padding: 9px 13px;
+      border-radius: 10px 10px 2px 10px;
       color: #ffffff;
-      font-size: 13px;
-      line-height: 1.55;
+      font-size: 12.5px;
+      line-height: 1.5;
     }
     .msg.assistant {
       align-self: flex-start;
       background: #08090d;
       border: 1px solid var(--border);
-      padding: 12px 16px;
-      border-radius: 12px 12px 12px 3px;
+      padding: 11px 14px;
+      border-radius: 10px 10px 10px 2px;
       color: #e5e7eb;
-      font-size: 13px;
+      font-size: 12.5px;
       line-height: 1.6;
       width: 100%;
     }
@@ -456,75 +404,70 @@
       font-size: 11px;
       font-weight: 600;
       color: var(--text-muted);
-      margin-bottom: 8px;
+      margin-bottom: 6px;
       display: flex;
       align-items: center;
-      gap: 7px;
+      gap: 6px;
     }
     .msg-avatar-v {
-      width: 16px;
-      height: 16px;
+      width: 15px;
+      height: 15px;
       border-radius: 3px;
       object-fit: cover;
     }
     .msg-badge-local {
-      font-size: 9.5px;
-      font-weight: 500;
+      font-size: 9px;
+      font-weight: 600;
       color: var(--text-subtle);
       background: #111319;
       border: 1px solid var(--border);
-      padding: 1px 5px;
+      padding: 1px 4px;
       border-radius: 3px;
     }
-    .msg-content {
-      word-break: break-word;
-    }
+    .msg-content { word-break: break-word; }
     .reasoning-box {
       background: #040507;
       border-left: 2px solid #3f3f46;
-      padding: 8px 12px;
-      margin: 8px 0;
-      font-size: 12px;
+      padding: 6px 10px;
+      margin: 6px 0;
+      font-size: 11.5px;
       color: #a1a1aa;
       border-radius: 0 4px 4px 0;
     }
     .reasoning-header {
-      font-size: 10.5px;
+      font-size: 10px;
       font-weight: 600;
       color: #71717a;
       text-transform: uppercase;
       letter-spacing: 0.5px;
-      margin-bottom: 4px;
+      margin-bottom: 3px;
       display: flex;
       align-items: center;
-      gap: 5px;
+      gap: 4px;
     }
 
-    /* REFINED MACOS CHAT INPUT CAPSULE (NO PROMPT CHIPS) */
+    /* COMPACT INPUT CAPSULE */
     .chat-input-area {
       position: absolute;
       bottom: 56px;
       left: 0;
       right: 0;
-      background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.85) 40%, rgba(0,0,0,0.95) 100%);
-      padding: 8px 24px 8px 24px;
+      background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.85) 40%, #000000 100%);
+      padding: 6px 20px 8px 20px;
       display: flex;
       justify-content: center;
       z-index: 20;
     }
-    .input-inner-wrapper {
-      width: 100%;
-      max-width: 780px;
-    }
+    .input-inner-wrapper { width: 100%; max-width: 760px; }
     .input-capsule {
       display: flex;
       align-items: flex-end;
       gap: 8px;
       background: #090a0f;
       border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: 12px;
-      padding: 8px 12px;
-      transition: border-color 0.15s, box-shadow 0.15s;
+      border-radius: 10px;
+      padding: 6px 10px;
+      transition: border-color 0.15s;
     }
     .input-capsule:focus-within {
       border-color: rgba(255, 255, 255, 0.28);
@@ -535,45 +478,42 @@
       background: transparent;
       border: none;
       color: #ffffff;
-      font-size: 13px;
-      line-height: 1.5;
+      font-size: 12.5px;
+      line-height: 1.45;
       resize: none;
       outline: none;
-      height: 38px;
-      max-height: 160px;
+      height: 34px;
+      max-height: 140px;
       padding: 6px 0;
       font-family: inherit;
     }
-    .input-capsule textarea::placeholder {
-      color: var(--text-subtle);
-    }
+    .input-capsule textarea::placeholder { color: var(--text-subtle); }
     .btn-send {
       background: #ffffff;
       color: #000000;
       border: none;
-      width: 30px;
-      height: 30px;
-      border-radius: 8px;
+      width: 28px;
+      height: 28px;
+      border-radius: 7px;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
-      transition: opacity 0.15s, transform 0.1s;
+      transition: opacity 0.15s;
     }
     .btn-send:hover { opacity: 0.9; }
-    .btn-send:active { transform: scale(0.96); }
 
-    /* RIGHT STEM WORKBENCH */
+    /* UPGRADED STEM WORKBENCH (DESMOS + WOLFRAM GRADE) */
     .stem-section {
-      width: 480px;
+      width: 510px;
       background: #030406;
       display: flex;
       flex-direction: column;
       flex-shrink: 0;
     }
     .stem-header {
-      padding: 10px 16px;
+      padding: 8px 14px;
       border-bottom: 1px solid var(--border);
       display: flex;
       align-items: center;
@@ -581,36 +521,33 @@
       background: #050608;
     }
     .stem-title {
-      font-size: 12px;
+      font-size: 11.5px;
       font-weight: 600;
       color: #ffffff;
       display: flex;
       align-items: center;
-      gap: 7px;
-    }
-    .stem-actions {
-      display: flex;
       gap: 6px;
     }
+    .stem-actions { display: flex; gap: 5px; }
     .stem-body {
       flex: 1;
       overflow-y: auto;
-      padding: 14px;
+      padding: 12px;
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 10px;
     }
     .stem-card {
       background: #07080c;
       border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 12px;
+      border-radius: 7px;
+      padding: 10px;
     }
     .stem-card-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
     }
     .stem-card-title {
       font-size: 11px;
@@ -620,25 +557,22 @@
       letter-spacing: 0.5px;
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 5px;
     }
-    .stem-card-badge {
-      font-size: 10px;
-      font-weight: 600;
-      color: var(--text-subtle);
-    }
-    .plot-input-row {
+    .stem-card-badge { font-size: 10px; color: var(--text-subtle); }
+    
+    .formula-bar {
       display: flex;
       gap: 6px;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
     }
     .plot-input {
       flex: 1;
       background: #0b0d13;
       border: 1px solid var(--border);
-      border-radius: 6px;
+      border-radius: 5px;
       color: #ffffff;
-      font-family: ui-monospace, monospace;
+      font-family: ui-monospace, SFMono-Regular, monospace;
       font-size: 11px;
       padding: 5px 8px;
       outline: none;
@@ -650,31 +584,68 @@
       color: #ffffff;
       font-size: 11px;
       font-weight: 600;
-      padding: 5px 12px;
-      border-radius: 6px;
+      padding: 5px 11px;
+      border-radius: 5px;
       cursor: pointer;
     }
     .btn-plot:hover { background: #222533; }
+
+    /* REAL-TIME PARAMETER SLIDERS */
+    .slider-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 8px;
+      background: #040508;
+      border: 1px solid var(--border-subtle);
+      border-radius: 6px;
+      padding: 6px 10px;
+    }
+    .slider-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .slider-label {
+      font-size: 10.5px;
+      font-family: ui-monospace, monospace;
+      color: var(--text-muted);
+      min-width: 32px;
+    }
+    .stem-slider {
+      flex: 1;
+      accent-color: #ffffff;
+      cursor: pointer;
+      height: 4px;
+    }
+    .slider-val {
+      font-size: 10.5px;
+      font-family: ui-monospace, monospace;
+      color: #ffffff;
+      min-width: 28px;
+      text-align: right;
+    }
+
     #plot-container {
       width: 100%;
-      height: 250px;
+      height: 230px;
       background: #040507;
-      border-radius: 6px;
+      border-radius: 5px;
       overflow: hidden;
       border: 1px solid var(--border-subtle);
     }
     .plot-chips {
       display: flex;
-      gap: 6px;
+      gap: 5px;
       flex-wrap: wrap;
-      margin-top: 10px;
+      margin-top: 8px;
     }
     .plot-chip {
       background: #0c0e14;
       border: 1px solid var(--border);
       color: var(--text-muted);
-      font-size: 10.5px;
-      padding: 3px 8px;
+      font-size: 10px;
+      padding: 3px 7px;
       border-radius: 4px;
       cursor: pointer;
       transition: all 0.12s;
@@ -687,108 +658,109 @@
     .proof-box {
       font-size: 12px;
       color: #e5e7eb;
-      line-height: 1.55;
+      line-height: 1.5;
       padding: 8px 10px;
       background: #040507;
-      border-radius: 6px;
+      border-radius: 5px;
       border: 1px solid var(--border-subtle);
       overflow-x: auto;
     }
 
-    /* SOVEREIGN VAULT TAB */
+    /* SOVEREIGN VAULT (COMPACT & 2 PROFILES ONLY) */
     .hub-container {
       flex: 1;
       overflow-y: auto;
-      padding: 24px 32px 90px 32px;
+      padding: 20px 28px 80px 28px;
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: 14px;
     }
     .hub-hero {
-      background: linear-gradient(180deg, #0d0f17 0%, #08090e 100%);
+      background: #090b10;
       border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 16px 20px;
+      border-radius: 8px;
+      padding: 12px 16px;
       display: flex;
       align-items: center;
       justify-content: space-between;
     }
     .hero-title {
-      font-size: 13px;
+      font-size: 12.5px;
       font-weight: 600;
       color: #ffffff;
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 7px;
     }
     .hero-meta {
       display: flex;
-      gap: 12px;
-      margin-top: 5px;
-      font-size: 11px;
+      gap: 8px;
+      margin-top: 4px;
+      font-size: 10.5px;
       color: var(--text-subtle);
     }
     .hero-spec {
-      background: #050609;
+      background: #050608;
       border: 1px solid var(--border);
-      padding: 2px 7px;
-      border-radius: 4px;
+      padding: 1px 5px;
+      border-radius: 3px;
+    }
+    .hub-header-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
     }
     .hub-curated-badge {
       display: flex;
       align-items: center;
-      gap: 8px;
-      font-size: 11.5px;
+      gap: 6px;
+      font-size: 11px;
       font-weight: 500;
       color: var(--text-muted);
     }
     .hub-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-      gap: 12px;
+      grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+      gap: 10px;
     }
     .hub-card {
-      background: #090b10;
+      background: #08090d;
       border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 14px;
+      border-radius: 7px;
+      padding: 12px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      gap: 12px;
+      gap: 10px;
       transition: border-color 0.15s, background 0.15s;
     }
     .hub-card:hover {
       border-color: var(--border-active);
-      background: #0d0f16;
+      background: #0c0e14;
     }
     .hub-card-header {
       display: flex;
       align-items: flex-start;
       justify-content: space-between;
-      gap: 8px;
+      gap: 6px;
     }
-    .hub-card-name {
-      font-size: 13px;
-      font-weight: 600;
-      color: #ffffff;
-    }
+    .hub-card-name { font-size: 12px; font-weight: 600; color: #ffffff; }
     .hub-card-size {
-      font-size: 11px;
+      font-size: 10.5px;
       color: var(--text-subtle);
-      background: #050608;
+      background: #040507;
       border: 1px solid var(--border);
-      padding: 2px 6px;
-      border-radius: 4px;
+      padding: 1px 5px;
+      border-radius: 3px;
       white-space: nowrap;
     }
     .author-badge {
-      font-size: 10px;
+      font-size: 9.5px;
       font-weight: 600;
-      padding: 2px 6px;
-      border-radius: 4px;
+      padding: 1px 5px;
+      border-radius: 3px;
       display: inline-block;
-      margin-top: 4px;
+      margin-top: 3px;
     }
     .author-shreyansh {
       background: #111420;
@@ -800,33 +772,50 @@
       color: #d8b4fe;
       border: 1px solid rgba(216, 180, 254, 0.2);
     }
-    .hub-card-desc {
-      font-size: 11.5px;
-      color: var(--text-muted);
-      line-height: 1.45;
+    .hub-card-specs {
+      font-size: 10.5px;
+      color: var(--text-subtle);
+      display: flex;
+      gap: 6px;
+      margin-top: 4px;
     }
     .hub-card-footer {
       display: flex;
       align-items: center;
       justify-content: space-between;
       border-top: 1px solid var(--border-subtle);
-      padding-top: 10px;
+      padding-top: 8px;
     }
     .badge-ready {
-      font-size: 11px;
+      font-size: 10.5px;
       font-weight: 600;
       color: var(--emerald-subdued);
       display: flex;
       align-items: center;
-      gap: 5px;
+      gap: 4px;
     }
-    .download-progress-container {
-      display: none;
-      margin-top: 8px;
+    .btn-delete-model {
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text-subtle);
+      padding: 3px 6px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 10.5px;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      transition: all 0.15s;
     }
+    .btn-delete-model:hover {
+      background: rgba(239, 68, 68, 0.1);
+      border-color: rgba(239, 68, 68, 0.3);
+      color: #ef4444;
+    }
+    .download-progress-container { display: none; margin-top: 6px; }
     .download-progress-track {
       background: #151720;
-      height: 4px;
+      height: 3px;
       border-radius: 2px;
       overflow: hidden;
     }
@@ -837,91 +826,84 @@
       transition: width 0.15s ease;
     }
     .download-progress-text {
-      font-size: 10.5px;
+      font-size: 10px;
       color: var(--text-muted);
-      margin-top: 4px;
+      margin-top: 3px;
       display: flex;
       justify-content: space-between;
     }
 
-    /* COMMAND DECK / SETTINGS TAB */
+    /* SETTINGS / COMMAND DECK */
     .settings-container {
       flex: 1;
       overflow-y: auto;
-      padding: 24px 32px 90px 32px;
+      padding: 20px 28px 80px 28px;
       display: flex;
       flex-direction: column;
-      gap: 18px;
-      max-width: 860px;
+      gap: 14px;
+      max-width: 820px;
       margin: 0 auto;
       width: 100%;
     }
     .settings-header-card {
       background: #090a0f;
       border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 16px 20px;
+      border-radius: 8px;
+      padding: 12px 16px;
       display: flex;
       align-items: center;
       justify-content: space-between;
     }
     .settings-title {
-      font-size: 13px;
+      font-size: 12.5px;
       font-weight: 600;
       color: #ffffff;
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
     }
     .intent-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
+      gap: 10px;
     }
     .intent-card {
       background: #08090d;
       border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 14px;
+      border-radius: 7px;
+      padding: 12px;
       cursor: pointer;
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 4px;
       transition: all 0.15s;
     }
     .intent-card:hover {
-      background: #0e1017;
+      background: #0d0f16;
       border-color: var(--border-active);
     }
     .intent-card.active {
-      background: #12141e;
+      background: #11131c;
       border-color: #ffffff;
     }
     .intent-card-header {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
     }
-    .intent-card-title {
-      font-size: 12px;
-      font-weight: 600;
-      color: #ffffff;
-    }
-    .intent-card-desc {
-      font-size: 11px;
-      color: var(--text-muted);
-      line-height: 1.45;
-    }
+    .intent-card-title { font-size: 11.5px; font-weight: 600; color: #ffffff; }
+    .intent-card-desc { font-size: 10.5px; color: var(--text-muted); line-height: 1.4; }
+
     .accordion-header {
       background: #090a0f;
       border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 12px 16px;
+      border-radius: 7px;
+      padding: 10px 14px;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      font-size: 12px;
+      font-size: 11.5px;
       font-weight: 600;
       color: #ffffff;
     }
@@ -930,21 +912,15 @@
       background: #06070a;
       border: 1px solid var(--border);
       border-top: none;
-      border-radius: 0 0 8px 8px;
-      padding: 16px;
+      border-radius: 0 0 7px 7px;
+      padding: 14px;
       flex-direction: column;
-      gap: 14px;
+      gap: 12px;
     }
-    .accordion-body.open {
-      display: flex;
-    }
-    .setting-item {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
+    .accordion-body.open { display: flex; }
+    .setting-item { display: flex; flex-direction: column; gap: 4px; }
     .setting-label {
-      font-size: 11px;
+      font-size: 10.5px;
       font-weight: 500;
       color: var(--text-muted);
       display: flex;
@@ -953,10 +929,10 @@
     .setting-input {
       background: #0b0d13;
       border: 1px solid var(--border);
-      border-radius: 6px;
+      border-radius: 5px;
       color: #ffffff;
-      padding: 7px 10px;
-      font-size: 12px;
+      padding: 6px 9px;
+      font-size: 11.5px;
       outline: none;
     }
     .setting-input:focus { border-color: var(--border-active); }
@@ -971,10 +947,10 @@
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: 28px;
-      padding: 4px;
+      border-radius: 24px;
+      padding: 3px;
       display: flex;
-      gap: 4px;
+      gap: 3px;
       box-shadow: 0 16px 36px rgba(0, 0, 0, 0.85);
       z-index: 90;
     }
@@ -982,13 +958,13 @@
       background: transparent;
       border: none;
       color: var(--text-muted);
-      padding: 6px 14px;
-      border-radius: 20px;
+      padding: 5px 12px;
+      border-radius: 18px;
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 7px;
-      font-size: 12px;
+      gap: 6px;
+      font-size: 11.5px;
       font-weight: 500;
       transition: all 0.15s;
     }
@@ -1001,22 +977,20 @@
       color: #000000;
       font-weight: 600;
     }
-    .dock-tab.active .icon {
-      stroke: #000000;
-    }
+    .dock-tab.active .icon { stroke: #000000; }
 
     /* TOAST */
     #toast {
       position: fixed;
-      bottom: 68px;
+      bottom: 64px;
       left: 50%;
       transform: translateX(-50%) translateY(20px);
       background: #161822;
       border: 1px solid var(--border-active);
       color: #ffffff;
-      font-size: 12px;
+      font-size: 11.5px;
       font-weight: 500;
-      padding: 7px 16px;
+      padding: 6px 14px;
       border-radius: 20px;
       opacity: 0;
       pointer-events: none;
@@ -1024,10 +998,7 @@
       z-index: 100;
       box-shadow: 0 8px 24px rgba(0,0,0,0.6);
     }
-    #toast.show {
-      opacity: 1;
-      transform: translateX(-50%) translateY(0);
-    }
+    #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
   </style>
 </head>
 <body>
@@ -1047,7 +1018,10 @@
     <div class="header-right">
       <div class="status-badge" id="daemon-status-badge">
         <span class="status-dot" id="status-dot"></span>
-        <span id="daemon-status-text">Local Engine: Connected</span>
+        <span id="daemon-status-text">Engine: Connected</span>
+      </div>
+      <div class="status-badge" id="ram-badge" style="font-family:ui-monospace,monospace;">
+        RAM: 3.3 GB
       </div>
     </div>
   </header>
@@ -1055,40 +1029,30 @@
   <main>
     <!-- 1. STUDIO TAB -->
     <div class="tab-content active" id="tab-studio">
-      <!-- SIDEBAR -->
       <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
-          <span class="sidebar-title">
-            <svg class="icon" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-            Sessions
-          </span>
+          <span class="sidebar-title">Sessions</span>
           <button class="btn-new-chat" onclick="createNewSession()">
-            <svg class="icon" viewBox="0 0 24 24" style="stroke:#000000; width:12px; height:12px;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            <svg class="icon" viewBox="0 0 24 24" style="stroke:#000000; width:11px; height:11px;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
             New
           </button>
         </div>
-        <div class="session-list" id="session-list">
-          <!-- Dynamically populated -->
-        </div>
-        <div class="sidebar-footer">
+        <div class="session-list" id="session-list"></div>
+        <div style="padding:8px 10px; border-top:1px solid var(--border-subtle); display:flex; justify-content:space-between; font-size:10.5px; color:var(--text-subtle);">
           <span>Local Storage</span>
-          <button style="background:transparent; border:none; color:var(--text-subtle); cursor:pointer; font-size:11px;" onclick="clearAllSessions()">Clear All</button>
+          <button style="background:transparent; border:none; color:var(--text-subtle); cursor:pointer; font-size:10.5px;" onclick="clearAllSessions()">Clear All</button>
         </div>
       </aside>
 
-      <!-- CENTER CHAT WORKSPACE -->
       <section class="chat-section">
         <div class="chat-toolbar">
           <div class="companion-selector-wrapper">
             <div class="companion-pill" id="companion-pill" onclick="toggleModelDropdown()">
               <img src="assets/micro_logo_v.png" class="companion-micro-v" alt="V">
-              <span class="companion-label">Companion:</span>
-              <span class="companion-model-name" id="active-model-display">vidhi-ai:1.5b</span>
+              <span class="companion-model-name" id="active-model-display">olmoe:1b-7b</span>
               <svg class="chevron-icon" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
             </div>
-            <div class="model-dropdown-menu" id="model-dropdown">
-              <!-- Dynamically populated -->
-            </div>
+            <div class="model-dropdown-menu" id="model-dropdown"></div>
           </div>
           <div class="toolbar-actions">
             <button class="btn-action" onclick="exportCurrentChatMD()">
@@ -1107,24 +1071,22 @@
             <div class="msg assistant">
               <div class="msg-header">
                 <img src="assets/micro_logo_v.png" class="msg-avatar-v" alt="V">
-                <span id="welcome-companion-label">vidhi-ai:1.5b</span>
-                <span class="msg-badge-local">Local</span>
+                <span id="welcome-companion-label">olmoe:1b-7b</span>
+                <span class="msg-badge-local">STEM Sovereign</span>
               </div>
               <div class="msg-content">
-                Sovereign companion active for mathematics, STEM derivations, and statutory jurisprudence. All calculations and inferences execute locally and air-gapped on this machine.<br><br>
-                Type an equation, query a legal statute, or request a mathematical derivation to begin.
+                Sovereign STEM Engine active. Ask for calculus derivations, differential equations, physics modeling, or function plots. All computation executes 100% air-gapped on this machine.
               </div>
             </div>
           </div>
         </div>
 
-        <!-- REFINED INPUT CAPSULE (NO PROMPT CHIPS) -->
         <div class="chat-input-area">
           <div class="input-inner-wrapper">
             <div class="input-capsule">
-              <textarea id="prompt-input" placeholder="Type a STEM query, equation, or legal prompt... (Enter to send, Shift+Enter for newline)" onkeydown="handleKey(event)"></textarea>
+              <textarea id="prompt-input" placeholder="Solve, derive, or plot a formula... (Enter to send, Shift+Enter for newline)" onkeydown="handleKey(event)"></textarea>
               <button class="btn-send" onclick="sendPrompt()" title="Send">
-                <svg viewBox="0 0 24 24" style="width:14px; height:14px; stroke:#000000; stroke-width:2.2; fill:none; stroke-linecap:round; stroke-linejoin:round;"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                <svg viewBox="0 0 24 24" style="width:13px; height:13px; stroke:#000000; stroke-width:2.2; fill:none; stroke-linecap:round; stroke-linejoin:round;"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
               </button>
             </div>
           </div>
@@ -1139,14 +1101,8 @@
             STEM Workbench
           </div>
           <div class="stem-actions">
-            <button class="btn-action" onclick="exportPlotPNG()">
-              <svg class="icon" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-              PNG
-            </button>
-            <button class="btn-action" onclick="renderPlotlySample()">
-              <svg class="icon" viewBox="0 0 24 24"><path d="M23 4v6h-6"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
-              Reset
-            </button>
+            <button class="btn-action" onclick="exportPlotPNG()">PNG</button>
+            <button class="btn-action" onclick="renderPlotlySample()">Reset</button>
           </div>
         </div>
 
@@ -1155,21 +1111,38 @@
             <div class="stem-card-header">
               <span class="stem-card-title">
                 <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 12h8"/><path d="M12 8v8"/></svg>
-                Interactive Function Plotter
+                Dynamic Function Plotter
               </span>
-              <span class="stem-card-badge">Plotly WebGL</span>
+              <span class="stem-card-badge">WebGL Engine</span>
             </div>
-            <div class="plot-input-row">
-              <input type="text" id="plot-expr" class="plot-input" value="Math.exp(-0.15*x) * Math.cos(2*x)" placeholder="JavaScript function f(x)">
+            
+            <div class="formula-bar">
+              <input type="text" id="plot-expr" class="plot-input" value="Math.exp(-k*x) * Math.cos(w*x)" placeholder="f(x, k, w)">
               <button class="btn-plot" onclick="evaluateAndPlot()">Plot</button>
             </div>
+
+            <!-- INTERACTIVE REAL-TIME PARAMETER SLIDERS -->
+            <div class="slider-grid">
+              <div class="slider-item">
+                <span class="slider-label">k:</span>
+                <input type="range" class="stem-slider" id="param-k" min="0.01" max="1.5" step="0.02" value="0.15" oninput="updateParam('k', this.value)">
+                <span class="slider-val" id="val-k">0.15</span>
+              </div>
+              <div class="slider-item">
+                <span class="slider-label">ω:</span>
+                <input type="range" class="stem-slider" id="param-w" min="0.5" max="8.0" step="0.1" value="2.0" oninput="updateParam('w', this.value)">
+                <span class="slider-val" id="val-w">2.0</span>
+              </div>
+            </div>
+
             <div id="plot-container"></div>
+
             <div class="plot-chips">
-              <span class="plot-chip" onclick="renderPlotlySample()">Damped Wave</span>
-              <span class="plot-chip" onclick="plotGaussian()">Gaussian Bell</span>
-              <span class="plot-chip" onclick="plotSigmoid()">Sigmoid / Logistic</span>
-              <span class="plot-chip" onclick="plotFourierSquare()">Fourier Square</span>
-              <span class="plot-chip" onclick="plot3DSurface()">3D Sinc Ripple</span>
+              <span class="plot-chip" onclick="loadPreset('damped')">Damped Oscillator</span>
+              <span class="plot-chip" onclick="loadPreset('gaussian')">Gaussian Bell</span>
+              <span class="plot-chip" onclick="loadPreset('sigmoid')">Sigmoid / Logistic</span>
+              <span class="plot-chip" onclick="loadPreset('fourier')">Fourier Square</span>
+              <span class="plot-chip" onclick="loadPreset('sinc3d')">3D Sinc Ripple</span>
             </div>
           </div>
 
@@ -1177,15 +1150,15 @@
             <div class="stem-card-header">
               <span class="stem-card-title">
                 <svg class="icon" viewBox="0 0 24 24"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
-                Step-by-Step Derivation &amp; Proof
+                Derivation &amp; Proof Drawer
               </span>
-              <button class="btn-action" style="padding:2px 8px; font-size:10px;" onclick="copyLatexProof()">
-                <svg class="icon" viewBox="0 0 24 24" style="width:11px; height:11px;"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              <button class="btn-action" style="padding:2px 7px; font-size:10px;" onclick="copyLatexProof()">
+                <svg class="icon" viewBox="0 0 24 24" style="width:10px; height:10px;"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
                 Copy LaTeX
               </button>
             </div>
             <div class="proof-box" id="proof-container">
-              <div style="font-size:11px; color:var(--text-subtle); margin-bottom:4px;">Problem: Second-order differential equation describing damped oscillation:</div>
+              <div style="font-size:10.5px; color:var(--text-subtle); margin-bottom:3px;" id="proof-title">Harmonic Oscillator Differential Equation:</div>
               <div id="math-proof">
                 $$\frac{d^2 x}{dt^2} + 2\gamma \frac{dx}{dt} + \omega_0^2 x = 0$$
               </div>
@@ -1202,73 +1175,73 @@
           <div>
             <div class="hero-title">
               <span class="status-dot"></span>
-              Active Companion: Vidhi AI 1.5B (Legal Master)
+              Active Companion: OLMoE 1B-7B 64-Expert MoE
             </div>
             <div class="hero-meta">
-              <span class="hero-spec">RAM: 1.12 GB</span>
-              <span class="hero-spec">Quant: Q4_K_M GGUF</span>
-              <span class="hero-spec">Context: 131k</span>
-              <span class="hero-spec">Author: @shreyansh12183</span>
+              <span class="hero-spec">Weights: 3.3 GB</span>
+              <span class="hero-spec">Active: 1B/token</span>
+              <span class="hero-spec">Author: @allenai</span>
             </div>
           </div>
-          <button class="btn-action" style="background:#ffffff; color:#000000; font-weight:600; padding:6px 14px;" onclick="switchTab('studio')">
+          <button class="btn-action" style="background:#ffffff; color:#000000; font-weight:600; padding:5px 12px;" onclick="switchTab('studio')">
             Open Studio
-            <svg class="icon" viewBox="0 0 24 24" style="stroke:#000000; width:12px; height:12px;"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            <svg class="icon" viewBox="0 0 24 24" style="stroke:#000000; width:11px; height:11px;"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
           </button>
         </div>
 
-        <div style="display:flex; justify-content:space-between; align-items:center;">
+        <div class="hub-header-bar">
           <div class="hub-curated-badge">
             <svg class="icon" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-            Curated Sovereign Catalog: @shreyansh12183 &amp; @allenai
+            Sovereign Catalog: @shreyansh12183 &amp; @allenai
           </div>
-          <span style="font-size:11px; color:var(--text-subtle);">7 Verified Sovereign Weights</span>
+          <span style="font-size:10.5px; color:var(--text-subtle);">6 Verified Sovereign STEM Models</span>
         </div>
 
         <div class="hub-grid">
-          <!-- 1. VIDHI AI 1.5B -->
-          <div class="hub-card" id="card-vidhi">
+          <!-- 1. OLMOE 1B-7B MOE (ALLENAI) -->
+          <div class="hub-card" id="card-olmoe">
             <div>
               <div class="hub-card-header">
-                <div class="hub-card-name">Vidhi AI 1.5B (Legal Master)</div>
-                <div class="hub-card-size">1.12 GB</div>
+                <div class="hub-card-name">OLMoE 1B-7B 64-Expert MoE</div>
+                <div class="hub-card-size">3.3 GB</div>
               </div>
-              <span class="author-badge author-shreyansh">@shreyansh12183 / Vidhi-AI-Instruct</span>
-              <div class="hub-card-desc" style="margin-top:6px;">
-                Sovereign Indian jurisprudence model aligned on Bharatiya Nyaya Sanhita (BNS 2023) and procedural statutes.
-              </div>
-              <div class="download-progress-container" id="prog-vidhi">
+              <span class="author-badge author-allenai">@allenai / OLMoE-1B-7B-0924</span>
+              <div class="hub-card-specs"><span>64 Sparse Experts</span><span>·</span><span>1B Active</span><span>·</span><span>Default</span></div>
+              <div class="download-progress-container" id="prog-olmoe">
                 <div class="download-progress-track"><div class="download-progress-bar"></div></div>
-                <div class="download-progress-text"><span>Pulling layers...</span><span class="prog-pct">0%</span></div>
+                <div class="download-progress-text"><span>Pulling...</span><span class="prog-pct">0%</span></div>
               </div>
             </div>
             <div class="hub-card-footer">
               <span class="badge-ready">
-                <svg class="icon" viewBox="0 0 24 24" style="width:12px; height:12px; stroke:var(--emerald-subdued);"><polyline points="20 6 9 17 4 12"/></svg>
-                Active
+                <svg class="icon" viewBox="0 0 24 24" style="width:11px; height:11px; stroke:var(--emerald-subdued);"><polyline points="20 6 9 17 4 12"/></svg>
+                ACTIVE
               </span>
-              <button class="btn-action" onclick="switchTab('studio'); changeModel('vidhi-ai:1.5b')">Chat Now</button>
+              <div style="display:flex; gap:6px;">
+                <button class="btn-action" onclick="switchTab('studio'); changeModel('olmoe:1b-7b')">Chat</button>
+                <button class="btn-delete-model" onclick="deleteInstalledModel('olmoe:1b-7b', 'card-olmoe')" title="Delete model to reclaim space">
+                  <svg class="icon" viewBox="0 0 24 24" style="width:11px; height:11px;"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg>
+                </button>
+              </div>
             </div>
           </div>
 
-          <!-- 2. VIGYAN 1.5B 4x-MoE -->
+          <!-- 2. VIGYAN 1.5B 4x-MoE (SHREYANSH) -->
           <div class="hub-card" id="card-moe">
             <div>
               <div class="hub-card-header">
-                <div class="hub-card-name">Vigyan 1.5B 4x-MoE (STEM Solver)</div>
-                <div class="hub-card-size">2.10 GB</div>
+                <div class="hub-card-name">Vigyan 1.5B 4x-MoE STEM</div>
+                <div class="hub-card-size">2.1 GB</div>
               </div>
               <span class="author-badge author-shreyansh">@shreyansh12183 / Vigyan-1.5B-4x-MoE</span>
-              <div class="hub-card-desc" style="margin-top:6px;">
-                Top-2 Sparse Mixture of Experts architecture trained for high-speed multi-step STEM reasoning.
-              </div>
+              <div class="hub-card-specs"><span>Top-2 MoE</span><span>·</span><span>Calculus &amp; Physics</span></div>
               <div class="download-progress-container" id="prog-moe">
                 <div class="download-progress-track"><div class="download-progress-bar"></div></div>
-                <div class="download-progress-text"><span>Pulling layers...</span><span class="prog-pct">0%</span></div>
+                <div class="download-progress-text"><span>Pulling...</span><span class="prog-pct">0%</span></div>
               </div>
             </div>
             <div class="hub-card-footer">
-              <span style="font-size:11px; color:var(--text-subtle);">Q4_K_M GGUF</span>
+              <span style="font-size:10.5px; color:var(--text-subtle);">Q4_K_M GGUF</span>
               <button class="btn-action" onclick="downloadAndRunModel('moe', 'vigyan-1.5b-moe', 'Vigyan 1.5B 4x-MoE')">
                 <svg class="icon" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                 Download
@@ -1276,24 +1249,22 @@
             </div>
           </div>
 
-          <!-- 3. OLMo2 7B PhD Pure Math -->
+          <!-- 3. OLMo2 7B PhD Pure Math (SHREYANSH) -->
           <div class="hub-card" id="card-math">
             <div>
               <div class="hub-card-header">
                 <div class="hub-card-name">OLMo2 7B PhD Pure Math</div>
-                <div class="hub-card-size">4.30 GB</div>
+                <div class="hub-card-size">4.3 GB</div>
               </div>
               <span class="author-badge author-shreyansh">@shreyansh12183 / olmo2-7b-phd-pure-math</span>
-              <div class="hub-card-desc" style="margin-top:6px;">
-                Specialized doctoral-level reasoning model aligned for pure mathematics, real analysis, and theorem proofs.
-              </div>
+              <div class="hub-card-specs"><span>Real Analysis</span><span>·</span><span>Theorems</span></div>
               <div class="download-progress-container" id="prog-math">
                 <div class="download-progress-track"><div class="download-progress-bar"></div></div>
-                <div class="download-progress-text"><span>Pulling layers...</span><span class="prog-pct">0%</span></div>
+                <div class="download-progress-text"><span>Pulling...</span><span class="prog-pct">0%</span></div>
               </div>
             </div>
             <div class="hub-card-footer">
-              <span style="font-size:11px; color:var(--text-subtle);">Q4_K_M GGUF</span>
+              <span style="font-size:10.5px; color:var(--text-subtle);">Q4_K_M GGUF</span>
               <button class="btn-action" onclick="downloadAndRunModel('math', 'olmo2-7b-pure-math', 'OLMo2 7B Pure Math')">
                 <svg class="icon" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                 Download
@@ -1301,24 +1272,22 @@
             </div>
           </div>
 
-          <!-- 4. OLMo2 7B Silicon RTL & EDA -->
+          <!-- 4. OLMo2 7B Silicon RTL & EDA (SHREYANSH) -->
           <div class="hub-card" id="card-rtl">
             <div>
               <div class="hub-card-header">
                 <div class="hub-card-name">OLMo2 7B Silicon RTL &amp; EDA</div>
-                <div class="hub-card-size">4.30 GB</div>
+                <div class="hub-card-size">4.3 GB</div>
               </div>
               <span class="author-badge author-shreyansh">@shreyansh12183 / olmo2-7b-silicon-rtl-eda</span>
-              <div class="hub-card-desc" style="margin-top:6px;">
-                Hardware design specialist model for Verilog synthesis, digital ASIC design, and EDA automation.
-              </div>
+              <div class="hub-card-specs"><span>Verilog ASIC</span><span>·</span><span>Synthesis</span></div>
               <div class="download-progress-container" id="prog-rtl">
                 <div class="download-progress-track"><div class="download-progress-bar"></div></div>
-                <div class="download-progress-text"><span>Pulling layers...</span><span class="prog-pct">0%</span></div>
+                <div class="download-progress-text"><span>Pulling...</span><span class="prog-pct">0%</span></div>
               </div>
             </div>
             <div class="hub-card-footer">
-              <span style="font-size:11px; color:var(--text-subtle);">Q4_K_M GGUF</span>
+              <span style="font-size:10.5px; color:var(--text-subtle);">Q4_K_M GGUF</span>
               <button class="btn-action" onclick="downloadAndRunModel('rtl', 'olmo2-7b-silicon-eda', 'OLMo2 7B Silicon EDA')">
                 <svg class="icon" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                 Download
@@ -1326,49 +1295,22 @@
             </div>
           </div>
 
-          <!-- 5. OLMoE 1B-7B 64-Expert MoE -->
-          <div class="hub-card" id="card-olmoe">
-            <div>
-              <div class="hub-card-header">
-                <div class="hub-card-name">OLMoE 1B-7B 64-Expert MoE</div>
-                <div class="hub-card-size">2.40 GB</div>
-              </div>
-              <span class="author-badge author-allenai">@allenai / OLMoE-1B-7B-0924</span>
-              <div class="hub-card-desc" style="margin-top:6px;">
-                Allen AI flagship sparse Mixture-of-Experts: 64 fine-grained experts with 1B parameters active per token.
-              </div>
-              <div class="download-progress-container" id="prog-olmoe">
-                <div class="download-progress-track"><div class="download-progress-bar"></div></div>
-                <div class="download-progress-text"><span>Pulling layers...</span><span class="prog-pct">0%</span></div>
-              </div>
-            </div>
-            <div class="hub-card-footer">
-              <span style="font-size:11px; color:var(--text-subtle);">Q4_K_M GGUF</span>
-              <button class="btn-action" onclick="downloadAndRunModel('olmoe', 'olmoe:1b-7b', 'OLMoE 1B-7B MoE')">
-                <svg class="icon" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                Download
-              </button>
-            </div>
-          </div>
-
-          <!-- 6. OLMo 2 1B Instruct -->
+          <!-- 5. OLMo 2 1B Instruct (ALLENAI) -->
           <div class="hub-card" id="card-olmo2-1b">
             <div>
               <div class="hub-card-header">
                 <div class="hub-card-name">OLMo 2 1B Instruct</div>
-                <div class="hub-card-size">1.10 GB</div>
+                <div class="hub-card-size">1.1 GB</div>
               </div>
               <span class="author-badge author-allenai">@allenai / OLMo-2-0425-1B-Instruct</span>
-              <div class="hub-card-desc" style="margin-top:6px;">
-                Ultra-lightweight 1-billion parameter open base instruction model optimized for air-gapped CPU inference.
-              </div>
+              <div class="hub-card-specs"><span>Dense 1B</span><span>·</span><span>Ultra-Low Latency</span></div>
               <div class="download-progress-container" id="prog-olmo2-1b">
                 <div class="download-progress-track"><div class="download-progress-bar"></div></div>
-                <div class="download-progress-text"><span>Pulling layers...</span><span class="prog-pct">0%</span></div>
+                <div class="download-progress-text"><span>Pulling...</span><span class="prog-pct">0%</span></div>
               </div>
             </div>
             <div class="hub-card-footer">
-              <span style="font-size:11px; color:var(--text-subtle);">Q4_K_M GGUF</span>
+              <span style="font-size:10.5px; color:var(--text-subtle);">Q4_K_M GGUF</span>
               <button class="btn-action" onclick="downloadAndRunModel('olmo2-1b', 'olmo2:1b', 'OLMo 2 1B Instruct')">
                 <svg class="icon" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                 Download
@@ -1376,24 +1318,22 @@
             </div>
           </div>
 
-          <!-- 7. Olmo 3 7B Instruct -->
+          <!-- 6. Olmo 3 7B Instruct (ALLENAI) -->
           <div class="hub-card" id="card-olmo3">
             <div>
               <div class="hub-card-header">
                 <div class="hub-card-name">Olmo 3 7B Instruct</div>
-                <div class="hub-card-size">4.40 GB</div>
+                <div class="hub-card-size">4.4 GB</div>
               </div>
               <span class="author-badge author-allenai">@allenai / Olmo-3-7B-Instruct</span>
-              <div class="hub-card-desc" style="margin-top:6px;">
-                Full-scale 7-billion parameter open scientific reasoning model with rigorous grounding and transparent weights.
-              </div>
+              <div class="hub-card-specs"><span>Dense 7B</span><span>·</span><span>Scientific Reasoning</span></div>
               <div class="download-progress-container" id="prog-olmo3">
                 <div class="download-progress-track"><div class="download-progress-bar"></div></div>
-                <div class="download-progress-text"><span>Pulling layers...</span><span class="prog-pct">0%</span></div>
+                <div class="download-progress-text"><span>Pulling...</span><span class="prog-pct">0%</span></div>
               </div>
             </div>
             <div class="hub-card-footer">
-              <span style="font-size:11px; color:var(--text-subtle);">Q4_K_M GGUF</span>
+              <span style="font-size:10.5px; color:var(--text-subtle);">Q4_K_M GGUF</span>
               <button class="btn-action" onclick="downloadAndRunModel('olmo3', 'olmo3:7b', 'Olmo 3 7B Instruct')">
                 <svg class="icon" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                 Download
@@ -1411,95 +1351,71 @@
           <div>
             <div class="settings-title">
               <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-              Companion Preferences
+              STEM Neural Configuration
             </div>
-            <div style="font-size:11.5px; color:var(--text-subtle); margin-top:3px;">Configure reasoning style, context allocation, and runtime parameters.</div>
           </div>
-          <div class="status-badge">
-            <span class="status-dot"></span>
-            Ollama Linked
-          </div>
+          <div class="status-badge"><span class="status-dot"></span>Ollama Daemon</div>
         </div>
 
         <div>
-          <div style="font-size:12px; font-weight:600; color:#e5e7eb; margin-bottom:8px;">Reasoning Intent Preset:</div>
+          <div style="font-size:11px; font-weight:600; color:#e5e7eb; margin-bottom:6px;">Reasoning Intent Preset:</div>
           <div class="intent-grid">
-            <div class="intent-card active" id="intent-precise" onclick="selectIntent('precise', 0.1, 8192, 'Deterministic Rigor')">
+            <div class="intent-card active" id="intent-precise" onclick="selectIntent('precise', 0.05, 8192, 'Deterministic Proof')">
               <div class="intent-card-header">
                 <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
-                <div class="intent-card-title">Deterministic Rigor</div>
+                <div class="intent-card-title">Deterministic Proof</div>
               </div>
-              <div class="intent-card-desc">Strict mathematical proofs, exact KaTeX equations, zero hallucination. Ideal for STEM &amp; Law.</div>
+              <div class="intent-card-desc">Temp 0.05 · Strict symbolic proofs, exact KaTeX equations, zero hallucination.</div>
             </div>
-            <div class="intent-card" id="intent-balanced" onclick="selectIntent('balanced', 0.4, 4096, 'Balanced Dialogue')">
+            <div class="intent-card" id="intent-balanced" onclick="selectIntent('balanced', 0.3, 4096, 'Balanced Analysis')">
               <div class="intent-card-header">
                 <svg class="icon" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-                <div class="intent-card-title">Balanced Dialogue</div>
+                <div class="intent-card-title">Balanced Analysis</div>
               </div>
-              <div class="intent-card-desc">Natural conversation, thoughtful explanations, and structured problem solving.</div>
+              <div class="intent-card-desc">Temp 0.3 · Structured physics explanations, engineering trade-offs.</div>
             </div>
-            <div class="intent-card" id="intent-creative" onclick="selectIntent('creative', 0.8, 4096, 'Hypothesis Synthesis')">
+            <div class="intent-card" id="intent-creative" onclick="selectIntent('creative', 0.7, 4096, 'Exploratory Synthesis')">
               <div class="intent-card-header">
                 <svg class="icon" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                <div class="intent-card-title">Hypothesis Synthesis</div>
+                <div class="intent-card-title">Exploratory Synthesis</div>
               </div>
-              <div class="intent-card-desc">Open-ended hypothesis testing, engineering ideation, and flexible synthesis.</div>
+              <div class="intent-card-desc">Temp 0.7 · Open-ended mathematical hypotheses and algorithm design.</div>
             </div>
           </div>
         </div>
 
         <div>
           <div class="accordion-header" onclick="toggleAccordion()">
-            <span style="display:flex; align-items:center; gap:8px;">
-              <svg class="icon" viewBox="0 0 24 24"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
-              Advanced Neural Tuning &amp; Diagnostics
+            <span style="display:flex; align-items:center; gap:6px;">
+              <svg class="icon" viewBox="0 0 24 24"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/></svg>
+              Advanced Inference Parameters
             </span>
             <svg class="chevron-icon" id="accordion-arrow" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
           </div>
           <div class="accordion-body" id="accordion-content">
             <div class="setting-item">
-              <div class="setting-label"><span>Temperature</span><span id="temp-val" style="color:#ffffff;">0.1</span></div>
-              <input id="setting-temp" type="range" min="0" max="1" step="0.05" value="0.1" oninput="document.getElementById('temp-val').innerText = this.value; deselectIntents();">
+              <div class="setting-label"><span>Temperature</span><span id="temp-val" style="color:#ffffff;">0.05</span></div>
+              <input id="setting-temp" type="range" min="0" max="1" step="0.05" value="0.05" oninput="document.getElementById('temp-val').innerText = this.value; deselectIntents();">
             </div>
             <div class="setting-item">
-              <div class="setting-label">Context Window Buffer</div>
+              <div class="setting-label">Context Window</div>
               <select id="setting-ctx" class="setting-input">
-                <option value="4096">4096 tokens (Balanced RAM)</option>
-                <option value="8192" selected>8192 tokens (Extended Derivations)</option>
-                <option value="16384">16384 tokens (Full Context)</option>
+                <option value="4096">4096 tokens</option>
+                <option value="8192" selected>8192 tokens</option>
+                <option value="16384">16384 tokens</option>
               </select>
             </div>
             <div class="setting-item">
-              <div class="setting-label">Ollama Daemon Endpoint</div>
+              <div class="setting-label">Daemon Endpoint</div>
               <input id="setting-ollama-url" type="text" class="setting-input" value="http://127.0.0.1:11434">
             </div>
             <div class="setting-item">
-              <div class="setting-label">System Persona Prompt</div>
-              <textarea id="setting-persona" class="setting-input" style="height:70px; resize:none;">You are Vigyan Pro, a sovereign AI companion specializing in STEM, mathematics, and statutory jurisprudence. Always format mathematical formulas in standard LaTeX using $$...$$ and provide precise, step-by-step reasoning.</textarea>
+              <div class="setting-label">STEM System Prompt</div>
+              <textarea id="setting-persona" class="setting-input" style="height:60px; resize:none;">You are Vigyan Pro, a sovereign STEM AI engine specializing in mathematics, physics, and algorithmic reasoning. Provide concise, step-by-step mathematical proofs with LaTeX formatted inside $$...$$.</textarea>
             </div>
-            <div style="display:flex; gap:8px; margin-top:4px;">
-              <button class="btn-action" onclick="checkOllamaConnection()">
-                <svg class="icon" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-                Ping Daemon
-              </button>
-              <button class="btn-action" style="background:#ffffff; color:#000000; font-weight:600;" onclick="saveSettings()">
-                <svg class="icon" viewBox="0 0 24 24" style="stroke:#000000;"><polyline points="20 6 9 17 4 12"/></svg>
-                Save Preferences
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <div style="background:#08090d; border:1px solid var(--border); border-radius:8px; padding:14px;">
-          <div style="font-size:12px; font-weight:600; color:#e5e7eb; margin-bottom:8px;">Runtime Telemetry Profile</div>
-          <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-            <div style="background:#040507; border:1px solid var(--border-subtle); padding:10px; border-radius:6px;">
-              <div style="font-size:11px; color:var(--text-subtle);">Active Model Allocation</div>
-              <div style="font-size:13px; font-weight:600; color:#ffffff; margin-top:2px;" id="stat-model-ram">1.12 GB (Q4_K_M)</div>
-            </div>
-            <div style="background:#040507; border:1px solid var(--border-subtle); padding:10px; border-radius:6px;">
-              <div style="font-size:11px; color:var(--text-subtle);">Shell Footprint</div>
-              <div style="font-size:13px; font-weight:600; color:var(--emerald-subdued); margin-top:2px;">~42 MB (WebKitGTK Native)</div>
+            <div style="display:flex; gap:6px; margin-top:4px;">
+              <button class="btn-action" onclick="checkOllamaConnection()">Ping Daemon</button>
+              <button class="btn-action" style="background:#ffffff; color:#000000; font-weight:600;" onclick="saveSettings()">Save Preferences</button>
             </div>
           </div>
         </div>
@@ -1523,26 +1439,28 @@
     </button>
   </nav>
 
-  <!-- FLOATING TOAST -->
   <div id="toast">Notification</div>
 
   <script>
     let OLLAMA_HOST = 'http://127.0.0.1:11434';
-    let currentModel = 'vidhi-ai:1.5b';
+    let currentModel = 'olmoe:1b-7b';
+    let installedModels = ['olmoe:1b-7b'];
+
     let availableModels = [
-      { tag: 'vidhi-ai:1.5b', name: 'Vidhi AI 1.5B (Legal Master)', desc: 'Indian jurisprudence & statutes' },
-      { tag: 'vigyan-1.5b-moe', name: 'Vigyan 1.5B 4x-MoE', desc: 'Top-2 Sparse STEM reasoning' },
-      { tag: 'olmo2-7b-pure-math', name: 'OLMo2 7B Pure Math', desc: 'Pure mathematics & real analysis' },
-      { tag: 'olmo2-7b-silicon-eda', name: 'OLMo2 7B Silicon EDA', desc: 'Verilog RTL & hardware synthesis' },
-      { tag: 'olmoe:1b-7b', name: 'OLMoE 1B-7B MoE', desc: '64 fine-grained sparse experts' },
-      { tag: 'olmo2:1b', name: 'OLMo 2 1B Instruct', desc: 'Ultra-light 1B parameter base' },
-      { tag: 'olmo3:7b', name: 'Olmo 3 7B Instruct', desc: 'Full 7B scientific reasoning' }
+      { tag: 'olmoe:1b-7b', name: 'OLMoE 1B-7B MoE', spec: '64-Experts (Default)' },
+      { tag: 'vigyan-1.5b-moe', name: 'Vigyan 1.5B 4x-MoE', spec: 'Top-2 STEM Solver' },
+      { tag: 'olmo2-7b-pure-math', name: 'OLMo2 7B Pure Math', spec: 'Doctoral Analysis' },
+      { tag: 'olmo2-7b-silicon-eda', name: 'OLMo2 7B Silicon EDA', spec: 'ASIC RTL & Verilog' },
+      { tag: 'olmo2:1b', name: 'OLMo 2 1B Instruct', spec: 'Ultra-light CPU Base' },
+      { tag: 'olmo3:7b', name: 'Olmo 3 7B Instruct', spec: 'Open Scientific 7B' }
     ];
+
+    let paramK = 0.15;
+    let paramW = 2.0;
 
     let sessions = [];
     let activeSessionId = null;
 
-    // INITIALIZATION
     window.addEventListener('DOMContentLoaded', () => {
       loadSettings();
       renderPlotlySample();
@@ -1552,51 +1470,39 @@
       renderLatex();
       setInterval(checkOllamaConnection, 10000);
 
-      // Auto-expanding textarea
       const tx = document.getElementById('prompt-input');
       if (tx) {
         tx.addEventListener('input', () => {
           tx.style.height = 'auto';
-          tx.style.height = Math.min(tx.scrollHeight, 160) + 'px';
+          tx.style.height = Math.min(tx.scrollHeight, 140) + 'px';
         });
       }
 
-      // Close model dropdown on click outside
       document.addEventListener('click', (e) => {
         const wrapper = document.querySelector('.companion-selector-wrapper');
-        if (wrapper && !wrapper.contains(e.target)) {
-          closeModelDropdown();
-        }
+        if (wrapper && !wrapper.contains(e.target)) closeModelDropdown();
       });
     });
 
-    // TOAST
     function showToast(msg) {
       const t = document.getElementById('toast');
       t.innerText = msg;
       t.classList.add('show');
-      setTimeout(() => t.classList.remove('show'), 2800);
+      setTimeout(() => t.classList.remove('show'), 2600);
     }
 
-    // ACCORDION
     function toggleAccordion() {
       const b = document.getElementById('accordion-content');
       const arr = document.getElementById('accordion-arrow');
       b.classList.toggle('open');
-      if (b.classList.contains('open')) {
-        arr.style.transform = 'rotate(180deg)';
-      } else {
-        arr.style.transform = 'rotate(0deg)';
-      }
+      arr.style.transform = b.classList.contains('open') ? 'rotate(180deg)' : 'rotate(0deg)';
     }
 
-    // SIDEBAR
     function toggleSidebar() {
       document.getElementById('sidebar').classList.toggle('collapsed');
       setTimeout(() => Plotly.Plots.resize('plot-container'), 220);
     }
 
-    // INTENT PRESETS
     function selectIntent(type, temp, ctx, label) {
       document.querySelectorAll('.intent-card').forEach(c => c.classList.remove('active'));
       const activeCard = document.getElementById('intent-' + type);
@@ -1606,30 +1512,26 @@
       document.getElementById('temp-val').innerText = temp;
       document.getElementById('setting-ctx').value = ctx;
       saveSettings();
-      showToast(`Reasoning preset set to ${label}`);
+      showToast(`Preset: ${label}`);
     }
 
     function deselectIntents() {
       document.querySelectorAll('.intent-card').forEach(c => c.classList.remove('active'));
     }
 
-    // TAB SWITCHING
     function switchTab(tabId) {
       document.querySelectorAll('.dock-tab').forEach(t => t.classList.remove('active'));
       document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
       
-      const tabBtn = document.querySelector(`.dock-tab[data-tab="${tabId}"]`) || Array.from(document.querySelectorAll('.dock-tab')).find(el => el.innerText.toLowerCase().includes(tabId));
+      const tabBtn = document.querySelector(`.dock-tab[data-tab="${tabId}"]`);
       if (tabBtn) tabBtn.classList.add('active');
       
       const content = document.getElementById('tab-' + tabId);
       if (content) content.classList.add('active');
 
-      if (tabId === 'studio') {
-        setTimeout(() => Plotly.Plots.resize('plot-container'), 120);
-      }
+      if (tabId === 'studio') setTimeout(() => Plotly.Plots.resize('plot-container'), 100);
     }
 
-    // COMPANION DROPDOWN & MODEL SWITCHING
     function toggleModelDropdown() {
       const pill = document.getElementById('companion-pill');
       const menu = document.getElementById('model-dropdown');
@@ -1650,7 +1552,7 @@
       menu.innerHTML = availableModels.map(m => `
         <div class="dropdown-model-item ${m.tag === currentModel ? 'active' : ''}" onclick="selectModelFromDropdown('${m.tag}')">
           <div class="dropdown-model-tag">${m.tag}</div>
-          <div class="dropdown-model-desc">${m.name} — ${m.desc}</div>
+          <div class="dropdown-model-spec">${m.spec}</div>
         </div>
       `).join('');
     }
@@ -1662,15 +1564,14 @@
 
     function changeModel(m) {
       currentModel = m;
-      const display = document.getElementById('active-model-display');
-      if (display) display.innerText = m;
+      document.getElementById('active-model-display').innerText = m;
       const welcome = document.getElementById('welcome-companion-label');
       if (welcome) welcome.innerText = m;
       renderModelDropdown();
-      showToast(`Companion switched to ${m}`);
+      showToast(`Active Companion: ${m}`);
     }
 
-    // REAL IN-CARD MODEL PULLER
+    /* MODEL LIFECYCLE MANAGEMENT (DOWNLOAD & DELETE) */
     async function downloadAndRunModel(cardId, modelTag, displayName) {
       const progContainer = document.getElementById('prog-' + cardId);
       if (!progContainer) return;
@@ -1680,7 +1581,7 @@
       const pctLabel = progContainer.querySelector('.prog-pct');
       bar.style.width = '0%';
       pctLabel.innerText = '0%';
-      showToast(`Connecting to daemon to pull ${displayName}...`);
+      showToast(`Pulling ${displayName} via daemon...`);
 
       try {
         const response = await fetch(`${OLLAMA_HOST}/api/pull`, {
@@ -1689,9 +1590,7 @@
           body: JSON.stringify({ name: modelTag, stream: true })
         });
 
-        if (!response.ok || !response.body) {
-          throw new Error('Local daemon pull endpoint unreachable');
-        }
+        if (!response.ok || !response.body) throw new Error('Daemon pull unreachable');
 
         const reader = response.body.getReader();
         const decoder = new TextDecoder();
@@ -1718,31 +1617,45 @@
           }
         }
       } catch (err) {
-        // Smooth local simulated fallback if air-gapped without remote internet
         let progress = 0;
         await new Promise((resolve) => {
           const intv = setInterval(() => {
-            progress += 20;
+            progress += 25;
             if (progress > 100) progress = 100;
             bar.style.width = progress + '%';
             pctLabel.innerText = progress + '%';
-            if (progress === 100) {
-              clearInterval(intv);
-              resolve();
-            }
-          }, 150);
+            if (progress === 100) { clearInterval(intv); resolve(); }
+          }, 120);
         });
       }
 
       setTimeout(() => {
         progContainer.style.display = 'none';
+        installedModels.push(modelTag);
         changeModel(modelTag);
         switchTab('studio');
-        showToast(`Ready: ${displayName} active in Studio.`);
-      }, 350);
+        showToast(`Ready: ${displayName} activated.`);
+      }, 300);
     }
 
-    // CHECK OLLAMA DAEMON
+    async function deleteInstalledModel(modelTag, cardId) {
+      if (modelTag === currentModel && availableModels.length > 1) {
+        const fallback = availableModels.find(m => m.tag !== modelTag);
+        if (fallback) changeModel(fallback.tag);
+      }
+      try {
+        await fetch(`${OLLAMA_HOST}/api/delete`, {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name: modelTag })
+        });
+      } catch (e) {}
+
+      installedModels = installedModels.filter(m => m !== modelTag);
+      showToast(`Model ${modelTag} deleted from memory & disk`);
+      checkOllamaConnection();
+    }
+
     async function checkOllamaConnection() {
       const dot = document.getElementById('status-dot');
       const text = document.getElementById('daemon-status-text');
@@ -1750,63 +1663,60 @@
         const res = await fetch(`${OLLAMA_HOST}/api/tags`);
         if (res.ok) {
           dot.classList.remove('disconnected');
-          text.innerText = 'Local Engine: Connected';
+          text.innerText = 'Engine: Connected';
+          const data = await res.json();
+          if (data.models) {
+            const tags = data.models.map(m => m.name);
+            tags.forEach(t => {
+              if (!availableModels.some(am => am.tag === t || am.tag + ':latest' === t)) {
+                availableModels.unshift({ tag: t, name: t, spec: 'Local Model' });
+              }
+            });
+            renderModelDropdown();
+          }
         } else {
           dot.classList.add('disconnected');
-          text.innerText = 'Local Engine: Offline';
+          text.innerText = 'Engine: Offline';
         }
       } catch (e) {
         dot.classList.add('disconnected');
-        text.innerText = 'Local Engine: Reconnecting';
+        text.innerText = 'Engine: Reconnecting';
       }
     }
 
-    // ENTERPRISE NDJSON TOKEN STREAMING INFERENCE
+    /* HIGH-SPEED NDJSON TOKEN STREAMING */
     async function sendPrompt() {
       const input = document.getElementById('prompt-input');
       const text = input.value.trim();
       if (!text) return;
       input.value = '';
-      input.style.height = '38px';
+      input.style.height = '34px';
 
       const chatBox = document.getElementById('chat-box');
-
-      // User Message Bubble
       const userDiv = document.createElement('div');
       userDiv.className = 'msg user';
       userDiv.innerText = text;
       chatBox.appendChild(userDiv);
 
-      // Assistant Message Bubble
       const asstDiv = document.createElement('div');
       asstDiv.className = 'msg assistant';
       asstDiv.innerHTML = `
         <div class="msg-header">
           <img src="assets/micro_logo_v.png" class="msg-avatar-v" alt="V">
           <span>${currentModel}</span>
-          <span class="msg-badge-local">Local</span>
+          <span class="msg-badge-local">STEM Sovereign</span>
         </div>
-        <div class="msg-content"><span style="color:#71717a">Synthesizing reasoning...</span></div>
+        <div class="msg-content"><span style="color:#71717a">Computing proof...</span></div>
       `;
       chatBox.appendChild(asstDiv);
       
       const scrollWrapper = document.querySelector('.chat-scroll-wrapper');
       scrollWrapper.scrollTop = scrollWrapper.scrollHeight;
 
-      // STEM curve auto-detect
-      const lower = text.toLowerCase();
-      if (lower.includes('gaussian') || lower.includes('normal distribution')) {
-        plotGaussian();
-      } else if (lower.includes('sigmoid') || lower.includes('logistic')) {
-        plotSigmoid();
-      } else if (lower.includes('3d') || lower.includes('surface') || lower.includes('sinc')) {
-        plot3DSurface();
-      } else if (lower.includes('oscillator') || lower.includes('damped')) {
-        renderPlotlySample();
-      }
+      // STEM auto-extraction
+      autoExtractSTEMFromPrompt(text);
 
-      // Settings
-      const tempVal = parseFloat(document.getElementById('setting-temp').value) || 0.1;
+      const tempVal = parseFloat(document.getElementById('setting-temp').value) || 0.05;
       const ctxVal = parseInt(document.getElementById('setting-ctx').value) || 8192;
       const personaVal = document.getElementById('setting-persona').value || '';
 
@@ -1821,17 +1731,12 @@
             model: currentModel,
             prompt: text,
             system: personaVal,
-            options: {
-              temperature: tempVal,
-              num_ctx: ctxVal
-            },
+            options: { temperature: tempVal, num_ctx: ctxVal },
             stream: true
           })
         });
 
-        if (!response.ok || !response.body) {
-          throw new Error(response.statusText || 'Daemon response error');
-        }
+        if (!response.ok || !response.body) throw new Error('Inference daemon error');
 
         const reader = response.body.getReader();
         const decoder = new TextDecoder();
@@ -1859,201 +1764,146 @@
           }
         }
 
-        // Final formatting and KaTeX rendering
         contentEl.innerHTML = formatMarkdown(rawAccumulated);
         renderLatex();
-
-        if (rawAccumulated.includes('$$') || rawAccumulated.includes('\\frac') || lower.includes('calculus') || lower.includes('taylor') || lower.includes('derivative')) {
-          updateSolutionDrawer(text, rawAccumulated);
-        }
-
+        autoExtractSTEMFromResponse(text, rawAccumulated);
         saveCurrentSessionMessages();
       } catch (err) {
-        contentEl.innerHTML = `<span style="color:#ef4444;">Inference connection failed: ${err.message}. Local daemon is auto-reconnecting...</span>`;
+        contentEl.innerHTML = `<span style="color:#ef4444;">Connection failed: ${err.message}.</span>`;
       }
-
       scrollWrapper.scrollTop = scrollWrapper.scrollHeight;
     }
 
     function formatMarkdown(str) {
       return str
-        .replace(/<think>/g, '<div class="reasoning-box"><div class="reasoning-header"><svg class="icon" viewBox="0 0 24 24" style="width:11px; height:11px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> Thought Process</div>')
+        .replace(/<think>/g, '<div class="reasoning-box"><div class="reasoning-header"><svg class="icon" viewBox="0 0 24 24" style="width:10px; height:10px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> Proof Step</div>')
         .replace(/<\/think>/g, '</div>')
-        .replace(/### (.*?)\n/g, '<h4 style="color:#ffffff; margin:8px 0 4px; font-size:13px;">$1</h4>')
+        .replace(/### (.*?)\n/g, '<h4 style="color:#ffffff; margin:6px 0 3px; font-size:12.5px;">$1</h4>')
         .replace(/\*\*(.*?)\*\*/g, '<strong style="color:#ffffff;">$1</strong>');
     }
 
-    // MULTI-SESSION PERSISTENCE
-    function initSessions() {
-      const saved = localStorage.getItem('vigyan_pro_sessions_v3');
-      if (saved) {
-        try {
-          sessions = JSON.parse(saved);
-        } catch (e) { sessions = []; }
-      }
-      if (!sessions || sessions.length === 0) {
-        sessions = [{
-          id: 'session-' + Date.now(),
-          title: 'Initial Session',
-          messages: []
-        }];
-      }
-      activeSessionId = sessions[0].id;
-      renderSessionList();
+    /* AUTOMATIC FORMULA & PROOF EXTRACTOR */
+    function autoExtractSTEMFromPrompt(query) {
+      const lower = query.toLowerCase();
+      if (lower.includes('gaussian') || lower.includes('normal')) loadPreset('gaussian');
+      else if (lower.includes('sigmoid') || lower.includes('logistic')) loadPreset('sigmoid');
+      else if (lower.includes('fourier') || lower.includes('square wave')) loadPreset('fourier');
+      else if (lower.includes('sinc') || lower.includes('3d')) loadPreset('sinc3d');
+      else if (lower.includes('oscillator') || lower.includes('harmonic') || lower.includes('damping')) loadPreset('damped');
     }
 
-    function renderSessionList() {
-      const list = document.getElementById('session-list');
-      if (!list) return;
-      list.innerHTML = sessions.map(s => `
-        <div class="session-item ${s.id === activeSessionId ? 'active' : ''}" onclick="switchSession('${s.id}')">
-          <span class="session-title">${s.title}</span>
-          <button class="btn-session-del" onclick="event.stopPropagation(); deleteSession('${s.id}')">
-            <svg class="icon" viewBox="0 0 24 24" style="width:11px; height:11px;"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-          </button>
-        </div>
-      `).join('');
-    }
-
-    function createNewSession() {
-      const newId = 'session-' + Date.now();
-      sessions.unshift({
-        id: newId,
-        title: 'Session ' + (sessions.length + 1),
-        messages: []
-      });
-      activeSessionId = newId;
-      saveSessions();
-      renderSessionList();
-      clearChatBox();
-      showToast('Created new session');
-    }
-
-    function switchSession(id) {
-      activeSessionId = id;
-      renderSessionList();
-      clearChatBox();
-      const s = sessions.find(x => x.id === id);
-      if (s && s.messages && s.messages.length > 0) {
-        const box = document.getElementById('chat-box');
-        s.messages.forEach(m => {
-          const div = document.createElement('div');
-          div.className = 'msg ' + m.role;
-          if (m.role === 'user') {
-            div.innerText = m.content;
-          } else {
-            div.innerHTML = `
-              <div class="msg-header">
-                <img src="assets/micro_logo_v.png" class="msg-avatar-v" alt="V">
-                <span>${m.model || currentModel}</span>
-                <span class="msg-badge-local">Local</span>
-              </div>
-              <div class="msg-content">${formatMarkdown(m.content)}</div>
-            `;
-          }
-          box.appendChild(div);
-        });
+    function autoExtractSTEMFromResponse(promptText, responseText) {
+      const mathMatch = responseText.match(/\$\$([\s\S]*?)\$\$/);
+      if (mathMatch) {
+        document.getElementById('proof-title').innerText = 'Extracted Mathematical Proof:';
+        document.getElementById('math-proof').innerHTML = `$$${mathMatch[1].trim()}$$`;
         renderLatex();
       }
     }
 
-    function deleteSession(id) {
-      if (sessions.length <= 1) {
-        showToast('At least one session must remain');
-        return;
+    /* REAL-TIME PARAMETER SLIDERS & FUNCTION PLOTTER */
+    function updateParam(param, val) {
+      if (param === 'k') {
+        paramK = parseFloat(val);
+        document.getElementById('val-k').innerText = val;
+      } else if (param === 'w') {
+        paramW = parseFloat(val);
+        document.getElementById('val-w').innerText = val;
       }
-      sessions = sessions.filter(s => s.id !== id);
-      if (activeSessionId === id) {
-        activeSessionId = sessions[0].id;
-      }
-      saveSessions();
-      renderSessionList();
-      switchSession(activeSessionId);
+      evaluateAndPlot();
     }
 
-    function clearAllSessions() {
-      sessions = [{
-        id: 'session-' + Date.now(),
-        title: 'Initial Session',
-        messages: []
-      }];
-      activeSessionId = sessions[0].id;
-      saveSessions();
-      renderSessionList();
-      clearChatBox();
-      showToast('All sessions reset');
-    }
-
-    function saveSessions() {
-      localStorage.setItem('vigyan_pro_sessions_v3', JSON.stringify(sessions));
-    }
-
-    function saveCurrentSessionMessages() {
-      const s = sessions.find(x => x.id === activeSessionId);
-      if (!s) return;
-      const msgs = [];
-      document.querySelectorAll('#chat-box .msg').forEach(el => {
-        if (el.classList.contains('user')) {
-          msgs.push({ role: 'user', content: el.innerText });
-        } else {
-          const c = el.querySelector('.msg-content');
-          msgs.push({ role: 'assistant', model: currentModel, content: c ? c.innerHTML : '' });
+    function evaluateAndPlot() {
+      const expr = document.getElementById('plot-expr').value;
+      try {
+        const fn = new Function('x', 'k', 'w', 'return ' + expr);
+        const x = [];
+        const y = [];
+        for (let t = 0; t <= 20; t += 0.05) {
+          x.push(t);
+          y.push(fn(t, paramK, paramW));
         }
-      });
-      s.messages = msgs;
-      if (msgs.length > 0 && s.title.startsWith('Session')) {
-        const firstUser = msgs.find(m => m.role === 'user');
-        if (firstUser) {
-          s.title = firstUser.content.slice(0, 24);
-          renderSessionList();
-        }
-      }
-      saveSessions();
+        const trace = {
+          x: x, y: y,
+          mode: 'lines',
+          type: 'scatter',
+          line: { color: '#ffffff', width: 2 }
+        };
+        const layout = {
+          paper_bgcolor: '#040507',
+          plot_bgcolor: '#040507',
+          margin: { l: 32, r: 14, t: 14, b: 24 },
+          xaxis: { color: '#71717a', gridcolor: '#12141c', zerolinecolor: '#27272a' },
+          yaxis: { color: '#71717a', gridcolor: '#12141c', zerolinecolor: '#27272a' }
+        };
+        Plotly.react('plot-container', [trace], layout, { responsive: true, displayModeBar: false });
+      } catch (e) {}
     }
 
-    function clearChatBox() {
-      const box = document.getElementById('chat-box');
-      box.innerHTML = `
-        <div class="msg assistant">
-          <div class="msg-header">
-            <img src="assets/micro_logo_v.png" class="msg-avatar-v" alt="V">
-            <span>${currentModel}</span>
-            <span class="msg-badge-local">Local</span>
-          </div>
-          <div class="msg-content">
-            Sovereign companion active for mathematics, STEM derivations, and statutory jurisprudence. All calculations and inferences execute locally and air-gapped on this machine.<br><br>
-            Type an equation, query a legal statute, or request a mathematical derivation to begin.
-          </div>
-        </div>
-      `;
+    function loadPreset(type) {
+      if (type === 'damped') {
+        document.getElementById('plot-expr').value = 'Math.exp(-k*x) * Math.cos(w*x)';
+        document.getElementById('proof-title').innerText = 'Damped Harmonic Oscillator Proof:';
+        document.getElementById('math-proof').innerHTML = '$$\\frac{d^2 x}{dt^2} + 2\\gamma \\frac{dx}{dt} + \\omega_0^2 x = 0 \\implies x(t) = e^{-\\gamma t} \\cos(\\omega t)$$';
+        evaluateAndPlot();
+      } else if (type === 'gaussian') {
+        document.getElementById('plot-expr').value = '(1 / Math.sqrt(2 * Math.PI)) * Math.exp(-0.5 * Math.pow(x - 5, 2))';
+        document.getElementById('proof-title').innerText = 'Gaussian Normal Distribution:';
+        document.getElementById('math-proof').innerHTML = '$$f(x; \\mu, \\sigma^2) = \\frac{1}{\\sigma\\sqrt{2\\pi}} \\exp\\left(-\\frac{(x - \\mu)^2}{2\\sigma^2}\\right)$$';
+        evaluateAndPlot();
+      } else if (type === 'sigmoid') {
+        document.getElementById('plot-expr').value = '1 / (1 + Math.exp(-k * (x - 5)))';
+        document.getElementById('proof-title').innerText = 'Sigmoid / Logistic Activation:';
+        document.getElementById('math-proof').innerHTML = '$$\\sigma(x) = \\frac{1}{1 + e^{-x}}, \\quad \\frac{d\\sigma}{dx} = \\sigma(x)(1 - \\sigma(x))$$';
+        evaluateAndPlot();
+      } else if (type === 'fourier') {
+        document.getElementById('plot-expr').value = '(4 / Math.PI) * (Math.sin(w*x) + (1/3)*Math.sin(3*w*x) + (1/5)*Math.sin(5*w*x))';
+        document.getElementById('proof-title').innerText = 'Fourier Series Square Wave:';
+        document.getElementById('math-proof').innerHTML = '$$f(x) = \\frac{4}{\\pi} \\sum_{n=1,3,5...}^{\\infty} \\frac{1}{n}\\sin(n\\omega x)$$';
+        evaluateAndPlot();
+      } else if (type === 'sinc3d') {
+        plot3DSurface();
+      }
+      renderLatex();
+      showToast(`Loaded ${type.toUpperCase()} preset`);
+    }
+
+    function plot3DSurface() {
+      const z = [];
+      const x = [];
+      const y = [];
+      for (let i = -10; i <= 10; i += 0.8) { x.push(i); y.push(i); }
+      for (let i = 0; i < y.length; i++) {
+        const row = [];
+        for (let j = 0; j < x.length; j++) {
+          const r = Math.sqrt(x[j] * x[j] + y[i] * y[i]);
+          row.push(r === 0 ? 1 : Math.sin(r) / r);
+        }
+        z.push(row);
+      }
+      const data = [{ z: z, x: x, y: y, type: 'surface', colorscale: 'Greys', showscale: false }];
+      const layout = {
+        paper_bgcolor: '#040507',
+        margin: { l: 0, r: 0, t: 0, b: 0 },
+        scene: {
+          xaxis: { color: '#71717a', gridcolor: '#181a24' },
+          yaxis: { color: '#71717a', gridcolor: '#181a24' },
+          zaxis: { color: '#71717a', gridcolor: '#181a24' }
+        }
+      };
+      Plotly.newPlot('plot-container', data, layout, { responsive: true, displayModeBar: false });
+      document.getElementById('proof-title').innerText = '3D Sinc Radial Distribution:';
+      document.getElementById('math-proof').innerHTML = '$$z(x, y) = \\frac{\\sin(\\sqrt{x^2 + y^2})}{\\sqrt{x^2 + y^2}}$$';
       renderLatex();
     }
 
-    function clearCurrentChat() {
-      clearChatBox();
-      saveCurrentSessionMessages();
-      showToast('Chat cleared');
+    function renderPlotlySample() { evaluateAndPlot(); }
+
+    function exportPlotPNG() {
+      Plotly.downloadImage('plot-container', { format: 'png', width: 900, height: 500, filename: 'vigyan_stem_plot_' + Date.now() });
+      showToast('Exported PNG');
     }
 
-    function exportCurrentChatMD() {
-      let md = `# Vigyan Pro Session Export\n\n`;
-      document.querySelectorAll('#chat-box .msg').forEach(el => {
-        if (el.classList.contains('user')) {
-          md += `### User\n${el.innerText}\n\n`;
-        } else {
-          const c = el.querySelector('.msg-content');
-          md += `### Vigyan Pro (${currentModel})\n${c ? c.innerText : ''}\n\n---\n\n`;
-        }
-      });
-      const blob = new Blob([md], { type: 'text/markdown' });
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = `vigyan_session_${Date.now()}.md`;
-      a.click();
-      showToast('Exported markdown file');
-    }
-
-    // STEM & LATEX ENGINE
     function renderLatex() {
       if (window.renderMathInElement) {
         renderMathInElement(document.body, {
@@ -2068,200 +1918,161 @@
       }
     }
 
-    function updateSolutionDrawer(problemText, rawSolution) {
-      const container = document.getElementById('math-proof');
-      if (!container) return;
-      container.innerHTML = `
-        <div style="font-size:11px; color:var(--text-subtle); margin-bottom:4px;">Proof Step:</div>
-        <div>${rawSolution}</div>
-      `;
-      renderLatex();
-    }
-
     function copyLatexProof() {
       const container = document.getElementById('math-proof');
       if (container) {
         navigator.clipboard.writeText(container.innerText);
-        showToast('LaTeX proof copied to clipboard');
+        showToast('LaTeX proof copied');
       }
     }
 
-    // PLOTLY WORKBENCH
-    function renderPlotlySample() {
-      const x = [];
-      const y = [];
-      for (let t = 0; t <= 20; t += 0.05) {
-        x.push(t);
-        y.push(Math.exp(-0.15 * t) * Math.cos(2 * t));
+    /* SESSION PERSISTENCE */
+    function initSessions() {
+      const saved = localStorage.getItem('vigyan_stem_sessions_v4');
+      if (saved) {
+        try { sessions = JSON.parse(saved); } catch (e) { sessions = []; }
       }
-      const trace = {
-        x: x, y: y,
-        mode: 'lines',
-        type: 'scatter',
-        line: { color: '#ffffff', width: 2 }
-      };
-      const layout = {
-        paper_bgcolor: '#040507',
-        plot_bgcolor: '#040507',
-        margin: { l: 36, r: 16, t: 16, b: 28 },
-        xaxis: { color: '#71717a', gridcolor: '#12141c', zerolinecolor: '#27272a' },
-        yaxis: { color: '#71717a', gridcolor: '#12141c', zerolinecolor: '#27272a' }
-      };
-      Plotly.newPlot('plot-container', [trace], layout, { responsive: true, displayModeBar: false });
+      if (!sessions || sessions.length === 0) {
+        sessions = [{ id: 'session-' + Date.now(), title: 'STEM Session', messages: [] }];
+      }
+      activeSessionId = sessions[0].id;
+      renderSessionList();
     }
 
-    function plotGaussian() {
-      const x = [];
-      const y = [];
-      for (let t = -4; t <= 4; t += 0.05) {
-        x.push(t);
-        y.push((1 / Math.sqrt(2 * Math.PI)) * Math.exp(-0.5 * t * t));
-      }
-      const trace = {
-        x: x, y: y,
-        mode: 'lines',
-        type: 'scatter',
-        fill: 'tozeroy',
-        fillcolor: 'rgba(255, 255, 255, 0.05)',
-        line: { color: '#ffffff', width: 2 }
-      };
-      const layout = {
-        paper_bgcolor: '#040507',
-        plot_bgcolor: '#040507',
-        margin: { l: 36, r: 16, t: 16, b: 28 },
-        xaxis: { color: '#71717a', gridcolor: '#12141c' },
-        yaxis: { color: '#71717a', gridcolor: '#12141c' }
-      };
-      Plotly.newPlot('plot-container', [trace], layout, { responsive: true, displayModeBar: false });
+    function renderSessionList() {
+      const list = document.getElementById('session-list');
+      if (!list) return;
+      list.innerHTML = sessions.map(s => `
+        <div class="session-item ${s.id === activeSessionId ? 'active' : ''}" onclick="switchSession('${s.id}')">
+          <span class="session-title">${s.title}</span>
+          <button class="btn-session-del" onclick="event.stopPropagation(); deleteSession('${s.id}')">
+            <svg class="icon" viewBox="0 0 24 24" style="width:10px; height:10px;"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+      `).join('');
     }
 
-    function plotSigmoid() {
-      const x = [];
-      const y = [];
-      for (let t = -6; t <= 6; t += 0.1) {
-        x.push(t);
-        y.push(1 / (1 + Math.exp(-t)));
-      }
-      const trace = {
-        x: x, y: y,
-        mode: 'lines',
-        type: 'scatter',
-        line: { color: '#ffffff', width: 2 }
-      };
-      const layout = {
-        paper_bgcolor: '#040507',
-        plot_bgcolor: '#040507',
-        margin: { l: 36, r: 16, t: 16, b: 28 },
-        xaxis: { color: '#71717a', gridcolor: '#12141c' },
-        yaxis: { color: '#71717a', gridcolor: '#12141c' }
-      };
-      Plotly.newPlot('plot-container', [trace], layout, { responsive: true, displayModeBar: false });
+    function createNewSession() {
+      const newId = 'session-' + Date.now();
+      sessions.unshift({ id: newId, title: 'Session ' + (sessions.length + 1), messages: [] });
+      activeSessionId = newId;
+      saveSessions();
+      renderSessionList();
+      clearChatBox();
+      showToast('New session created');
     }
 
-    function plotFourierSquare() {
-      const x = [];
-      const y = [];
-      for (let t = -Math.PI * 2; t <= Math.PI * 2; t += 0.05) {
-        x.push(t);
-        let val = 0;
-        for (let n = 1; n <= 7; n += 2) {
-          val += (4 / (Math.PI * n)) * Math.sin(n * t);
+    function switchSession(id) {
+      activeSessionId = id;
+      renderSessionList();
+      clearChatBox();
+      const s = sessions.find(x => x.id === id);
+      if (s && s.messages && s.messages.length > 0) {
+        const box = document.getElementById('chat-box');
+        s.messages.forEach(m => {
+          const div = document.createElement('div');
+          div.className = 'msg ' + m.role;
+          if (m.role === 'user') div.innerText = m.content;
+          else {
+            div.innerHTML = `
+              <div class="msg-header">
+                <img src="assets/micro_logo_v.png" class="msg-avatar-v" alt="V">
+                <span>${m.model || currentModel}</span>
+                <span class="msg-badge-local">STEM Sovereign</span>
+              </div>
+              <div class="msg-content">${formatMarkdown(m.content)}</div>
+            `;
+          }
+          box.appendChild(div);
+        });
+        renderLatex();
+      }
+    }
+
+    function deleteSession(id) {
+      if (sessions.length <= 1) return;
+      sessions = sessions.filter(s => s.id !== id);
+      if (activeSessionId === id) activeSessionId = sessions[0].id;
+      saveSessions();
+      renderSessionList();
+      switchSession(activeSessionId);
+    }
+
+    function clearAllSessions() {
+      sessions = [{ id: 'session-' + Date.now(), title: 'STEM Session', messages: [] }];
+      activeSessionId = sessions[0].id;
+      saveSessions();
+      renderSessionList();
+      clearChatBox();
+      showToast('Sessions reset');
+    }
+
+    function saveSessions() {
+      localStorage.setItem('vigyan_stem_sessions_v4', JSON.stringify(sessions));
+    }
+
+    function saveCurrentSessionMessages() {
+      const s = sessions.find(x => x.id === activeSessionId);
+      if (!s) return;
+      const msgs = [];
+      document.querySelectorAll('#chat-box .msg').forEach(el => {
+        if (el.classList.contains('user')) msgs.push({ role: 'user', content: el.innerText });
+        else {
+          const c = el.querySelector('.msg-content');
+          msgs.push({ role: 'assistant', model: currentModel, content: c ? c.innerHTML : '' });
         }
-        y.push(val);
-      }
-      const trace = {
-        x: x, y: y,
-        mode: 'lines',
-        type: 'scatter',
-        line: { color: '#ffffff', width: 2 }
-      };
-      const layout = {
-        paper_bgcolor: '#040507',
-        plot_bgcolor: '#040507',
-        margin: { l: 36, r: 16, t: 16, b: 28 },
-        xaxis: { color: '#71717a', gridcolor: '#12141c' },
-        yaxis: { color: '#71717a', gridcolor: '#12141c' }
-      };
-      Plotly.newPlot('plot-container', [trace], layout, { responsive: true, displayModeBar: false });
-    }
-
-    function plot3DSurface() {
-      const z = [];
-      const x = [];
-      const y = [];
-      for (let i = -10; i <= 10; i += 0.8) {
-        x.push(i);
-        y.push(i);
-      }
-      for (let i = 0; i < y.length; i++) {
-        const row = [];
-        for (let j = 0; j < x.length; j++) {
-          const r = Math.sqrt(x[j] * x[j] + y[i] * y[i]);
-          row.push(r === 0 ? 1 : Math.sin(r) / r);
-        }
-        z.push(row);
-      }
-      const data = [{
-        z: z,
-        x: x,
-        y: y,
-        type: 'surface',
-        colorscale: 'Greys',
-        showscale: false
-      }];
-      const layout = {
-        paper_bgcolor: '#040507',
-        margin: { l: 0, r: 0, t: 0, b: 0 },
-        scene: {
-          xaxis: { color: '#71717a', gridcolor: '#181a24' },
-          yaxis: { color: '#71717a', gridcolor: '#181a24' },
-          zaxis: { color: '#71717a', gridcolor: '#181a24' }
-        }
-      };
-      Plotly.newPlot('plot-container', data, layout, { responsive: true, displayModeBar: false });
-    }
-
-    function evaluateAndPlot() {
-      const expr = document.getElementById('plot-expr').value;
-      try {
-        const fn = new Function('x', 'return ' + expr);
-        const x = [];
-        const y = [];
-        for (let t = -10; t <= 10; t += 0.1) {
-          x.push(t);
-          y.push(fn(t));
-        }
-        const trace = {
-          x: x, y: y,
-          mode: 'lines',
-          type: 'scatter',
-          line: { color: '#ffffff', width: 2 }
-        };
-        const layout = {
-          paper_bgcolor: '#040507',
-          plot_bgcolor: '#040507',
-          margin: { l: 36, r: 16, t: 16, b: 28 },
-          xaxis: { color: '#71717a', gridcolor: '#12141c' },
-          yaxis: { color: '#71717a', gridcolor: '#12141c' }
-        };
-        Plotly.newPlot('plot-container', [trace], layout, { responsive: true, displayModeBar: false });
-        showToast('Plot rendered');
-      } catch (e) {
-        showToast('Evaluation error: ' + e.message);
-      }
-    }
-
-    function exportPlotPNG() {
-      Plotly.downloadImage('plot-container', {
-        format: 'png',
-        width: 900,
-        height: 500,
-        filename: 'vigyan_plot_' + Date.now()
       });
-      showToast('Exported plot PNG');
+      s.messages = msgs;
+      if (msgs.length > 0 && s.title.startsWith('Session')) {
+        const firstUser = msgs.find(m => m.role === 'user');
+        if (firstUser) {
+          s.title = firstUser.content.slice(0, 22);
+          renderSessionList();
+        }
+      }
+      saveSessions();
     }
 
-    // KEYBOARD HANDLER
+    function clearChatBox() {
+      const box = document.getElementById('chat-box');
+      box.innerHTML = `
+        <div class="msg assistant">
+          <div class="msg-header">
+            <img src="assets/micro_logo_v.png" class="msg-avatar-v" alt="V">
+            <span>${currentModel}</span>
+            <span class="msg-badge-local">STEM Sovereign</span>
+          </div>
+          <div class="msg-content">
+            Sovereign STEM Engine active. Ask for calculus derivations, differential equations, physics modeling, or function plots. All computation executes 100% air-gapped on this machine.
+          </div>
+        </div>
+      `;
+      renderLatex();
+    }
+
+    function clearCurrentChat() {
+      clearChatBox();
+      saveCurrentSessionMessages();
+      showToast('Chat cleared');
+    }
+
+    function exportCurrentChatMD() {
+      let md = `# Vigyan Pro STEM Session Export\n\n`;
+      document.querySelectorAll('#chat-box .msg').forEach(el => {
+        if (el.classList.contains('user')) md += `### User\n${el.innerText}\n\n`;
+        else {
+          const c = el.querySelector('.msg-content');
+          md += `### Vigyan Pro (${currentModel})\n${c ? c.innerText : ''}\n\n---\n\n`;
+        }
+      });
+      const blob = new Blob([md], { type: 'text/markdown' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `vigyan_stem_${Date.now()}.md`;
+      a.click();
+      showToast('Exported Markdown');
+    }
+
     function handleKey(e) {
       if (e.key === 'Enter' && !e.shiftKey) {
         e.preventDefault();
@@ -2269,9 +2080,8 @@
       }
     }
 
-    // SETTINGS PERSISTENCE
     function loadSettings() {
-      const s = localStorage.getItem('vigyan_pro_settings_v3');
+      const s = localStorage.getItem('vigyan_stem_settings_v4');
       if (s) {
         try {
           const cfg = JSON.parse(s);
@@ -2295,8 +2105,8 @@
       const url = document.getElementById('setting-ollama-url').value;
       const persona = document.getElementById('setting-persona').value;
       OLLAMA_HOST = url;
-      localStorage.setItem('vigyan_pro_settings_v3', JSON.stringify({ temp, ctx, url, persona }));
-      showToast('Preferences saved');
+      localStorage.setItem('vigyan_stem_settings_v4', JSON.stringify({ temp, ctx, url, persona }));
+      showToast('Settings saved');
     }
   </script>
 </body>
