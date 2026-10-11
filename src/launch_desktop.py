@@ -55,6 +55,34 @@ def get_system_telemetry() -> dict:
     }
 
 
+def _ollama_is_healthy() -> bool:
+    """Return True if a local Ollama answers on its loopback port."""
+    try:
+        import urllib.request
+        req = urllib.request.Request("http://127.0.0.1:11434/api/tags", method="GET")
+        with urllib.request.urlopen(req, timeout=1.0) as resp:
+            return resp.status == 200
+    except Exception:
+        return False
+
+
+OLLAMA = OllamaSupervisor(["ollama", "serve"], is_healthy=_ollama_is_healthy)
+
+
+def ensure_ollama_daemon() -> None:
+    """Make sure a local Ollama is running; start one we own if it is not."""
+    try:
+        OLLAMA.start()
+    except OSError as exc:  # e.g. ollama is not installed
+        print(f"[WARN] could not start ollama: {exc}", file=sys.stderr)
+
+
+def _watch_ollama() -> bool:
+    """GLib timer callback: restart a crashed Ollama child. True keeps the timer."""
+    OLLAMA.check()
+    return True
+
+
 def main():
     # Exit through the GTK main loop so the cleanup after Gtk.main() always runs.
     try:
