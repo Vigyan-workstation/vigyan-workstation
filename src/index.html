@@ -3705,6 +3705,7 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
 
     // Auto-init on load
     window.addEventListener('DOMContentLoaded', () => {
+      renderChat();
       evaluateAndPlot();
       checkOllamaConnection();
       renderLatex(document.body);
