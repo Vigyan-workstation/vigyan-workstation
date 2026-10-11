@@ -361,6 +361,43 @@
       padding: 2px 4px;
     }
 
+    /* REASONING DRAWER (<think> blocks) */
+    .reasoning-drawer {
+      background: #090a0f;
+      border: 1px solid var(--border-subtle);
+      border-left: 3px solid #52525b;
+      border-radius: 6px;
+      margin: 8px 0;
+      overflow: hidden;
+      font-size: 12.5px;
+    }
+    .reasoning-drawer summary {
+      padding: 6px 12px;
+      cursor: pointer;
+      color: #a1a1aa;
+      font-family: ui-monospace, monospace;
+      font-size: 11.5px;
+      font-weight: 600;
+      user-select: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: #0d0f16;
+      border-bottom: 1px solid transparent;
+      outline: none;
+    }
+    .reasoning-drawer[open] summary {
+      border-bottom-color: var(--border-subtle);
+      color: #e4e4e7;
+    }
+    .reasoning-content {
+      padding: 10px 12px;
+      color: #a1a1aa;
+      line-height: 1.55;
+      font-style: italic;
+      white-space: pre-wrap;
+    }
+
     /* INPUT AREA WITH SLASH BUTTON */
     .chat-input-area {
       padding: 12px 20px 20px 20px;
@@ -1319,8 +1356,8 @@
             </div>
             <div class="proof-box" id="proof-container" onclick="copyLatexProof()" title="Click to copy LaTeX">
               <div style="font-size:11.5px; color:#d4d4d8; margin-bottom:4px;" id="proof-title">Analytical Differential Formulation:</div>
-              <div id="math-proof">
-                $$\\frac{d^2 x}{dt^2} + 2\\gamma \\frac{dx}{dt} + \\omega_0^2 x = 0$$
+              <div id="math-proof" data-latex="$$\frac{d^2 x}{dt^2} + 2\gamma \frac{dx}{dt} + \omega_0^2 x = 0$$">
+                $$\frac{d^2 x}{dt^2} + 2\gamma \frac{dx}{dt} + \omega_0^2 x = 0$$
               </div>
             </div>
           </div>
@@ -1845,6 +1882,20 @@
         return `__CODE_BLOCK_${idx}__`;
       });
 
+      // Chain-of-thought (<think>...</think>) extraction for DeepSeek-R1 / reasoning SLMs
+      const thinkBlocks = [];
+      out = out.replace(/<think>([\s\S]*?)<\/think>/gi, (m, content) => {
+        const idx = thinkBlocks.length;
+        thinkBlocks.push(escapeHtml(content.trim()));
+        return `__THINK_BLOCK_${idx}__`;
+      });
+      // Handle open unclosed <think> during active streaming
+      out = out.replace(/<think>([\s\S]*)$/gi, (m, content) => {
+        const idx = thinkBlocks.length;
+        thinkBlocks.push(escapeHtml(content.trim()));
+        return `__THINK_BLOCK_${idx}__`;
+      });
+
       // Escape general HTML
       out = escapeHtml(out);
 
@@ -1866,6 +1917,18 @@
 
       // Linebreaks (preserve clean breaks outside of tables/lists)
       out = out.replace(/\n/g, '<br>');
+
+      // Restore reasoning drawers
+      out = out.replace(/__THINK_BLOCK_(\d+)__/g, (m, idx) => {
+        const thought = thinkBlocks[idx];
+        return `<details class="reasoning-drawer" open>
+          <summary>
+            <svg style="width:12px; height:12px; stroke:currentColor; fill:none;" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            Cognitive Reasoning Chain
+          </summary>
+          <div class="reasoning-content">${thought}</div>
+        </details>`;
+      });
 
       // Restore code blocks with luxury syntax styling & copy button
       out = out.replace(/__CODE_BLOCK_(\d+)__/g, (m, idx) => {
@@ -2287,43 +2350,32 @@
     }
 
     function loadPlotPreset(type) {
-      const title = document.getElementById('proof-title');
-      const math = document.getElementById('math-proof');
       if (type === 'mosfet') {
         document.getElementById('plot-expr').value = '0.5 * k * Math.pow(Math.max(0, x - 1.5), 2) * (1 + 0.02 * x)';
-        title.innerText = 'MOSFET Saturation Current (ID - VDS):';
-        math.innerHTML = '$$I_D = \\frac{1}{2} \\mu_n C_{ox} \\frac{W}{L} (V_{GS} - V_{th})^2 (1 + \\lambda V_{DS})$$';
+        setLatexProof('MOSFET Saturation Current (ID - VDS):', '$$I_D = \\frac{1}{2} \\mu_n C_{ox} \\frac{W}{L} (V_{GS} - V_{th})^2 (1 + \\lambda V_{DS})$$');
       } else if (type === 'diode') {
         document.getElementById('plot-expr').value = '1e-6 * (Math.exp(x / (k * 2)) - 1)';
-        title.innerText = 'Shockley Ideal Diode Equation:';
-        math.innerHTML = '$$I = I_s \\left( e^{\\frac{q V}{\\eta k_B T}} - 1 \\right)$$';
+        setLatexProof('Shockley Ideal Diode Equation:', '$$I = I_s \\left( e^{\\frac{q V}{\\eta k_B T}} - 1 \\right)$$');
       } else if (type === 'damped') {
         document.getElementById('plot-expr').value = 'Math.exp(-k*x) * Math.cos(w*x)';
-        title.innerText = 'Damped Harmonic Oscillator:';
-        math.innerHTML = '$$\\frac{d^2 x}{dt^2} + 2\\gamma \\frac{dx}{dt} + \\omega_0^2 x = 0$$';
+        setLatexProof('Damped Harmonic Oscillator:', '$$\\frac{d^2 x}{dt^2} + 2\\gamma \\frac{dx}{dt} + \\omega_0^2 x = 0$$');
       } else if (type === 'soliton') {
         document.getElementById('plot-expr').value = 'a * Math.pow(1 / Math.cosh(k * (x - 10)), 2)';
-        title.innerText = 'Korteweg-de Vries (KdV) Soliton Wave:';
-        math.innerHTML = '$$u(x, t) = \\frac{c}{2} \\operatorname{sech}^2\\left( \\frac{\\sqrt{c}}{2}(x - ct) \\right)$$';
+        setLatexProof('Korteweg-de Vries (KdV) Soliton Wave:', '$$u(x, t) = \\frac{c}{2} \\operatorname{sech}^2\\left( \\frac{\\sqrt{c}}{2}(x - ct) \\right)$$');
       } else if (type === 'gaussian') {
         document.getElementById('plot-expr').value = '(1 / Math.sqrt(2 * Math.PI)) * Math.exp(-0.5 * Math.pow(x - 5, 2))';
-        title.innerText = 'Gaussian Normal Distribution:';
-        math.innerHTML = '$$f(x) = \\frac{1}{\\sigma\\sqrt{2\\pi}} e^{-\\frac{(x-\\mu)^2}{2\\sigma^2}}$$';
+        setLatexProof('Gaussian Normal Distribution:', '$$f(x) = \\frac{1}{\\sigma\\sqrt{2\\pi}} e^{-\\frac{(x-\\mu)^2}{2\\sigma^2}}$$');
       } else if (type === 'sigmoid') {
         document.getElementById('plot-expr').value = '1 / (1 + Math.exp(-k * (x - 5)))';
-        title.innerText = 'Sigmoid / Logistic Activation:';
-        math.innerHTML = '$$\\sigma(x) = \\frac{1}{1 + e^{-x}}$$';
+        setLatexProof('Sigmoid / Logistic Activation:', '$$\\sigma(x) = \\frac{1}{1 + e^{-x}}$$');
       } else if (type === 'fourier') {
         document.getElementById('plot-expr').value = '(4 / Math.PI) * (Math.sin(w*x) + (1/3)*Math.sin(3*w*x) + (1/5)*Math.sin(5*w*x))';
-        title.innerText = 'Fourier Series Square Wave:';
-        math.innerHTML = '$$f(x) = \\frac{4}{\\pi} \\sum_{n=1,3,5...} \\frac{1}{n}\\sin(n\\omega x)$$';
+        setLatexProof('Fourier Series Square Wave:', '$$f(x) = \\frac{4}{\\pi} \\sum_{n=1,3,5...} \\frac{1}{n}\\sin(n\\omega x)$$');
       } else if (type === 'bessel') {
         document.getElementById('plot-expr').value = 'Math.cos(w*x) / Math.sqrt(Math.PI * (x + 0.5))';
-        title.innerText = 'Zero-Order Bessel Function J₀(x) Asymptotic:';
-        math.innerHTML = '$$J_0(x) \\sim \\sqrt{\\frac{2}{\\pi x}} \\cos\\left(x - \\frac{\\pi}{4}\\right)$$';
+        setLatexProof('Zero-Order Bessel Function J₀(x) Asymptotic:', '$$J_0(x) \\sim \\sqrt{\\frac{2}{\\pi x}} \\cos\\left(x - \\frac{\\pi}{4}\\right)$$');
       }
       evaluateAndPlot();
-      renderLatex();
     }
 
     /* 3D CONTROLS & WEBGL MESHES */
@@ -2360,8 +2412,7 @@
       const mathProof = document.getElementById('math-proof');
 
       if (type === 'silicon') {
-        proofTitle.innerText = 'Silicon Diamond Cubic Crystal Lattice:';
-        mathProof.innerHTML = '$$\\text{Diamond Lattice: } Fd\\bar{3}m, \\quad a = 5.43\\text{ \\AA}, \\quad \\text{Tetrahedral Bond Angle: } 109.47^\\circ$$';
+        setLatexProof('Silicon Diamond Cubic Crystal Lattice:', '$$\\text{Diamond Lattice: } Fd\\bar{3}m, \\quad a = 5.43\\text{ \\AA}, \\quad \\text{Tetrahedral Bond Angle: } 109.47^\\circ$$');
         const a = 5.43;
         const atoms = [
           [0,0,0], [a,0,0], [0,a,0], [a,a,0], [0,0,a], [a,0,a], [0,a,a], [a,a,a],
@@ -2384,8 +2435,7 @@
           { type: 'scatter3d', mode: 'markers', x: atoms.map(p => p[0]), y: atoms.map(p => p[1]), z: atoms.map(p => p[2]), marker: { size: 9, color: '#38bdf8' }, name: 'Silicon (Si)' }
         ];
       } else if (type === 'graphene') {
-        proofTitle.innerText = 'Graphene Monolayer sp² Hexagonal Lattice:';
-        mathProof.innerHTML = '$$\\mathbf{a}_1 = \\frac{a}{2}(3, \\sqrt{3}), \\quad \\mathbf{a}_2 = \\frac{a}{2}(3, -\\sqrt{3}), \\quad a_{C-C} = 1.42\\text{ \\AA}$$';
+        setLatexProof('Graphene Monolayer sp² Hexagonal Lattice:', '$$\\mathbf{a}_1 = \\frac{a}{2}(3, \\sqrt{3}), \\quad \\mathbf{a}_2 = \\frac{a}{2}(3, -\\sqrt{3}), \\quad a_{C-C} = 1.42\\text{ \\AA}$$');
         const a_cc = 1.42;
         const gx = [], gy = [], gz = [];
         const bx = [], by = [], bz = [];
@@ -2405,8 +2455,7 @@
           { type: 'scatter3d', mode: 'markers', x: gx, y: gy, z: gz, marker: { size: 6, color: '#e5e7eb' }, name: 'Carbon (C)' }
         ];
       } else if (type === 'benzene') {
-        proofTitle.innerText = 'Benzene (C₆H₆) Planar Aromatic Ring:';
-        mathProof.innerHTML = '$$\\text{Delocalized } \\pi\\text{-system: } D_{6h} \\text{ symmetry, } r_{C-C} = 1.40\\text{ \\AA}, r_{C-H} = 1.08\\text{ \\AA}$$';
+        setLatexProof('Benzene (C₆H₆) Planar Aromatic Ring:', '$$\\text{Delocalized } \\pi\\text{-system: } D_{6h} \\text{ symmetry, } r_{C-C} = 1.40\\text{ \\AA}, r_{C-H} = 1.08\\text{ \\AA}$$');
         const R_c = 1.4, R_h = 2.4;
         const cx = [], cy = [], cz = [];
         const hx = [], hy = [], hz = [];
@@ -2426,8 +2475,7 @@
           { type: 'scatter3d', mode: 'markers', x: hx, y: hy, z: hz, marker: { size: 5, color: '#93c5fd' }, name: 'Hydrogen (H)' }
         ];
       } else if (type === 'caffeine') {
-        proofTitle.innerText = 'Caffeine (C₈H₁₀N₄O₂) Purine Conformation:';
-        mathProof.innerHTML = '$$\\text{1,3,7-Trimethylxanthine: } M_w = 194.19\\text{ g/mol}, \\quad C_8H_{10}N_4O_2$$';
+        setLatexProof('Caffeine (C₈H₁₀N₄O₂) Purine Conformation:', '$$\\text{1,3,7-Trimethylxanthine: } M_w = 194.19\\text{ g/mol}, \\quad C_8H_{10}N_4O_2$$');
         const c_atoms = [[0,0,0], [1.3,0,0], [1.9,1.2,0], [1.0,2.2,0], [-0.3,2.0,0], [-0.8,0.8,0], [2.4,-1.0,0], [-2.1,0.5,0]];
         const n_atoms = [[0.6,-1.1,0], [-0.6,-0.3,0], [1.4,3.4,0], [-1.5,1.9,0]];
         const o_atoms = [[2.8,1.4,0], [-0.7,3.1,0]];
@@ -2437,8 +2485,7 @@
           { type: 'scatter3d', mode: 'markers', x: o_atoms.map(p=>p[0]), y: o_atoms.map(p=>p[1]), z: o_atoms.map(p=>p[2]), marker: { size: 10, color: '#ef4444' }, name: 'Oxygen (O)' }
         ];
       } else if (type === 'water') {
-        proofTitle.innerText = 'Water (H₂O) Bent Molecular Geometry:';
-        mathProof.innerHTML = '$$\\angle H-O-H = 104.5^\\circ, \\quad r_{O-H} = 0.958\\text{ \\AA}, \\quad \\mu = 1.85\\text{ D}$$';
+        setLatexProof('Water (H₂O) Bent Molecular Geometry:', '$$\\angle H-O-H = 104.5^\\circ, \\quad r_{O-H} = 0.958\\text{ \\AA}, \\quad \\mu = 1.85\\text{ D}$$');
         const angle = (104.5 * Math.PI) / 360;
         const r = 1.2;
         data = [
@@ -2447,8 +2494,7 @@
           { type: 'scatter3d', mode: 'markers', x: [r * Math.sin(angle), -r * Math.sin(angle)], y: [r * Math.cos(angle), r * Math.cos(angle)], z: [0, 0], marker: { size: 7, color: '#93c5fd' }, name: 'Hydrogen (H)' }
         ];
       } else if (type === 'methane') {
-        proofTitle.innerText = 'Methane (CH₄) Tetrahedral Geometry:';
-        mathProof.innerHTML = '$$T_d \\text{ Symmetry: } \\angle H-C-H = 109.5^\\circ, \\quad r_{C-H} = 1.09\\text{ \\AA}$$';
+        setLatexProof('Methane (CH₄) Tetrahedral Geometry:', '$$T_d \\text{ Symmetry: } \\angle H-C-H = 109.5^\\circ, \\quad r_{C-H} = 1.09\\text{ \\AA}$$');
         const s = 1.2 / Math.sqrt(3);
         const h_coords = [[s, s, s], [s, -s, -s], [-s, s, -s], [-s, -s, s]];
         const bx = [], by = [], bz = [];
@@ -2461,8 +2507,7 @@
           { type: 'scatter3d', mode: 'markers', x: h_coords.map(c => c[0]), y: h_coords.map(c => c[1]), z: h_coords.map(c => c[2]), marker: { size: 6, color: '#93c5fd' }, name: 'Hydrogen (H)' }
         ];
       } else if (type === 'torus') {
-        proofTitle.innerText = 'Parametric CAD Torus Mesh:';
-        mathProof.innerHTML = '$$x = (R + r\\cos v)\\cos u, \\quad y = (R + r\\cos v)\\sin u, \\quad z = r\\sin v$$';
+        setLatexProof('Parametric CAD Torus Mesh:', '$$x = (R + r\\cos v)\\cos u, \\quad y = (R + r\\cos v)\\sin u, \\quad z = r\\sin v$$');
         const u = [], v = [], x = [], y = [], z = [];
         const R = 4, r = 1.5;
         for (let i = 0; i <= 30; i++) {
@@ -2476,16 +2521,14 @@
         }
         data = [{ type: isWireframe ? 'scatter3d' : 'mesh3d', mode: 'lines', x: x, y: y, z: z, alphahull: 0, color: '#ffffff', opacity: 0.85 }];
       } else if (type === 'spring') {
-        proofTitle.innerText = 'Helical Spring Parametric Curve:';
-        mathProof.innerHTML = '$$\\mathbf{r}(t) = \\langle R\\cos(t), R\\sin(t), c t \\rangle$$';
+        setLatexProof('Helical Spring Parametric Curve:', '$$\\mathbf{r}(t) = \\langle R\\cos(t), R\\sin(t), c t \\rangle$$');
         const x = [], y = [], z = [];
         for (let t = 0; t <= 40; t += 0.2) {
           x.push(3 * Math.cos(t)); y.push(3 * Math.sin(t)); z.push(t * 0.4 - 8);
         }
         data = [{ type: 'scatter3d', mode: 'lines', x: x, y: y, z: z, line: { color: '#ffffff', width: 4 } }];
       } else if (type === 'paraboloid') {
-        proofTitle.innerText = 'Elliptic Paraboloid Surface:';
-        mathProof.innerHTML = '$$z = \\frac{x^2}{a^2} + \\frac{y^2}{b^2}$$';
+        setLatexProof('Elliptic Paraboloid Surface:', '$$z = \\frac{x^2}{a^2} + \\frac{y^2}{b^2}$$');
         const z = [], x = [], y = [];
         for (let i = -10; i <= 10; i += 1) { x.push(i); y.push(i); }
         for (let i = 0; i < y.length; i++) {
@@ -2506,7 +2549,6 @@
         }
       };
       Plotly.newPlot('plot-container', data, layout, { responsive: true, displayModeBar: false });
-      renderLatex();
     }
 
     /* 60 FPS HTML5 CANVAS SIMULATION ENGINE */
@@ -2544,8 +2586,7 @@
       const mathProof = document.getElementById('math-proof');
 
       if (type === 'pn-junction') {
-        proofTitle.innerText = 'PN Junction Band Diagram & Space-Charge Depletion:';
-        mathProof.innerHTML = '$$W_{\\text{dep}} = \\sqrt{\\frac{2\\epsilon_s}{q} \\left(\\frac{N_A + N_D}{N_A N_D}\\right) (V_{bi} - V)}, \\quad E_c(x) - E_v(x) = E_g$$';
+        setLatexProof('PN Junction Band Diagram & Space-Charge Depletion:', '$$W_{\\text{dep}} = \\sqrt{\\frac{2\\epsilon_s}{q} \\left(\\frac{N_A + N_D}{N_A N_D}\\right) (V_{bi} - V)}, \\quad E_c(x) - E_v(x) = E_g$$');
         let t = 0;
 
         function drawPN() {
@@ -2622,8 +2663,7 @@
         }
         drawPN();
       } else if (type === 'quantum') {
-        proofTitle.innerText = 'Quantum Wavepacket Tunneling & Transmission:';
-        mathProof.innerHTML = '$$T = \\frac{1}{1 + \\frac{V_0^2 \\sinh^2(k_2 a)}{4 E(V_0 - E)}}, \\quad -\\frac{\\hbar^2}{2m}\\frac{d^2\\psi}{dx^2} + V(x)\\psi = E\\psi$$';
+        setLatexProof('Quantum Wavepacket Tunneling & Transmission:', '$$T = \\frac{1}{1 + \\frac{V_0^2 \\sinh^2(k_2 a)}{4 E(V_0 - E)}}, \\quad -\\frac{\\hbar^2}{2m}\\frac{d^2\\psi}{dx^2} + V(x)\\psi = E\\psi$$');
         let packetX = 60;
 
         function drawQuantum() {
@@ -2666,8 +2706,7 @@
         }
         drawQuantum();
       } else if (type === 'pendulum') {
-        proofTitle.innerText = 'Coupled Double Pendulum Dynamics:';
-        mathProof.innerHTML = '$$\\frac{d}{dt} \\left( \\frac{\\partial L}{\\partial \\dot{\\theta}_i} \\right) - \\frac{\\partial L}{\\partial \\theta_i} = 0 \\quad (i = 1, 2)$$';
+        setLatexProof('Coupled Double Pendulum Dynamics:', '$$\\frac{d}{dt} \\left( \\frac{\\partial L}{\\partial \\dot{\\theta}_i} \\right) - \\frac{\\partial L}{\\partial \\theta_i} = 0 \\quad (i = 1, 2)$$');
         let a1 = Math.PI / 2, a2 = Math.PI / 2;
         let a1_v = 0, a2_v = 0;
         const g = 1.0, r1 = 58, r2 = 58, m1 = 10, m2 = 10;
@@ -2721,8 +2760,7 @@
         }
         drawPendulum();
       } else if (type === 'orbit') {
-        proofTitle.innerText = 'Keplerian Two-Body Celestial Gravity:';
-        mathProof.innerHTML = '$$\\ddot{\\mathbf{r}} = -\\frac{G M}{r^3} \\mathbf{r}, \\quad E = \\frac{1}{2} v^2 - \\frac{\\mu}{r} = \\text{const}$$';
+        setLatexProof('Keplerian Two-Body Celestial Gravity:', '$$\\ddot{\\mathbf{r}} = -\\frac{G M}{r^3} \\mathbf{r}, \\quad E = \\frac{1}{2} v^2 - \\frac{\\mu}{r} = \\text{const}$$');
         let theta = 0;
         const e = 0.55;
         const a = 110;
@@ -2769,8 +2807,7 @@
         }
         drawOrbit();
       } else if (type === 'enzyme') {
-        proofTitle.innerText = 'Michaelis-Menten Biochemical Enzyme Kinetics:';
-        mathProof.innerHTML = '$$v = \\frac{V_{\\max} [S]}{K_m + [S]}, \\quad \\frac{d[S]}{dt} = -v, \\quad \\frac{d[P]}{dt} = v$$';
+        setLatexProof('Michaelis-Menten Biochemical Enzyme Kinetics:', '$$v = \\frac{V_{\\max} [S]}{K_m + [S]}, \\quad \\frac{d[S]}{dt} = -v, \\quad \\frac{d[P]}{dt} = v$$');
         let S = 90.0, P = 0.0;
         const Vmax = 1.2, Km = 25.0;
         const historyS = [], historyP = [];
@@ -2788,7 +2825,8 @@
 
           historyS.push(S);
           historyP.push(P);
-          if (historyS.length > curW - 60) { historyS.shift(); historyP.shift(); }
+          const maxHist = Math.min(300, Math.max(10, curW - 60));
+          while (historyS.length > maxHist) { historyS.shift(); historyP.shift(); }
 
           ctx.strokeStyle = '#ef4444';
           ctx.lineWidth = 2;
@@ -2817,8 +2855,7 @@
         }
         drawEnzyme();
       } else if (type === 'reaction') {
-        proofTitle.innerText = 'Reversible Chemical Equilibrium Kinetics:';
-        mathProof.innerHTML = '$$A + B \\underset{k_r}{\\overset{k_f}{\\rightleftharpoons}} C, \\quad K_{eq} = \\frac{[C]}{[A][B]} = \\frac{k_f}{k_r}$$';
+        setLatexProof('Reversible Chemical Equilibrium Kinetics:', '$$A + B \\underset{k_r}{\\overset{k_f}{\\rightleftharpoons}} C, \\quad K_{eq} = \\frac{[C]}{[A][B]} = \\frac{k_f}{k_r}$$');
         let A = 80.0, B = 80.0, C = 0.0;
         const kf = 0.002, kr = 0.01;
         const histC = [];
@@ -2836,7 +2873,8 @@
           A -= net; B -= net; C += net;
 
           histC.push(C);
-          if (histC.length > curW - 60) histC.shift();
+          const maxHist = Math.min(300, Math.max(10, curW - 60));
+          while (histC.length > maxHist) histC.shift();
 
           ctx.strokeStyle = '#ffffff';
           ctx.lineWidth = 2;
@@ -2856,7 +2894,6 @@
         }
         drawReaction();
       }
-      renderLatex();
     }
 
     function resetActiveWorkbench() {
@@ -2958,14 +2995,26 @@
       }
     }
 
+    function setLatexProof(titleText, latexString) {
+      const title = document.getElementById('proof-title');
+      const container = document.getElementById('math-proof');
+      if (title) title.innerText = titleText;
+      if (container) {
+        container.setAttribute('data-latex', latexString);
+        container.innerHTML = latexString;
+        renderLatex(container);
+      }
+    }
+
     function copyLatexProof() {
       const container = document.getElementById('math-proof');
       if (container) {
-        navigator.clipboard.writeText(container.innerText);
+        const rawLatex = container.getAttribute('data-latex') || container.innerText;
+        navigator.clipboard.writeText(rawLatex);
         const btn = document.getElementById('btn-copy-latex');
         if (btn) btn.innerText = 'Copied!';
         setTimeout(() => { if (btn) btn.innerText = 'Copy LaTeX'; }, 1500);
-        showToast('LaTeX proof copied');
+        showToast('Raw LaTeX proof copied');
       }
     }
 
