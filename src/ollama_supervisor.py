@@ -1,0 +1,65 @@
+"""Lifecycle supervisor for the local Ollama process.
+
+Deliberately has no GUI imports so it can be tested headless.
+"""
+from __future__ import annotations
+
+import subprocess
+from collections.abc import Callable, Sequence
+
+
+class OllamaSupervisor:
+    """Starts Ollama only if needed, and stops only the process it started."""
+
+    def __init__(
+        self,
+        command: Sequence[str],
+        is_healthy: Callable[[], bool],
+        stop_timeout: float = 5.0,
+    ) -> None:
+        self._command: list[str] = list(command)
+        self._is_healthy = is_healthy
+        self._stop_timeout = stop_timeout
+        self._process: subprocess.Popen[bytes] | None = None
+
+    @property
+    def pid(self) -> int | None:
+        """PID of the child we started, or None."""
+        return self._process.pid if self._process is not None else None
+
+    @property
+    def owns_process(self) -> bool:
+        """True while a child we started is still running."""
+        return self._process is not None and self._process.poll() is None
+
+    def start(self) -> bool:
+        """Spawn the child if none of ours is running and Ollama is not healthy.
+
+        Returns True only if a new process was spawned.
+        """
+        if self.owns_process:
+            return False
+        if self._is_healthy():
+            return False
+        # Fixed argument list, no shell. The child stays in our session on
+        # purpose, so it is not detached from the app's lifetime.
+        self._process = subprocess.Popen(
+            self._command,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+        )
+        return True
+
+    def stop(self) -> None:
+        """Terminate the child we started (if any) and reap it."""
+        process = self._process
+        if process is None:
+            return
+        if process.poll() is None:
+            process.terminate()
+            try:
+                process.wait(timeout=self._stop_timeout)
+            except subprocess.TimeoutExpired:
+                process.kill()
+                process.wait()
+        self._process = None
