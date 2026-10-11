@@ -4,8 +4,26 @@ Deliberately has no GUI imports so it can be tested headless.
 """
 from __future__ import annotations
 
+import logging
+import shutil
 import subprocess
+import sys
 from collections.abc import Callable, Sequence
+
+logger = logging.getLogger(__name__)
+
+
+def _with_parent_death_signal(command: list[str]) -> list[str]:
+    """Ask the Linux kernel to SIGTERM the child if this process dies.
+
+    Covers SIGKILL of the parent, which no Python cleanup code can catch.
+    """
+    if not sys.platform.startswith("linux"):
+        return command
+    if shutil.which("setpriv") is None:
+        logger.warning("setpriv not found; child may outlive a SIGKILLed parent")
+        return command
+    return ["setpriv", "--pdeathsig", "SIGTERM", *command]
 
 
 class OllamaSupervisor:
@@ -16,10 +34,12 @@ class OllamaSupervisor:
         command: Sequence[str],
         is_healthy: Callable[[], bool],
         stop_timeout: float = 5.0,
+        die_with_parent: bool = True,
     ) -> None:
         self._command: list[str] = list(command)
         self._is_healthy = is_healthy
         self._stop_timeout = stop_timeout
+        self._die_with_parent = die_with_parent
         self._process: subprocess.Popen[bytes] | None = None
 
     @property
@@ -43,8 +63,13 @@ class OllamaSupervisor:
             return False
         # Fixed argument list, no shell. The child stays in our session on
         # purpose, so it is not detached from the app's lifetime.
+        command = (
+            _with_parent_death_signal(self._command)
+            if self._die_with_parent
+            else self._command
+        )
         self._process = subprocess.Popen(
-            self._command,
+            command,
             stdout=subprocess.DEVNULL,
             stderr=subprocess.DEVNULL,
         )
