@@ -43,6 +43,7 @@ class OllamaSupervisor:
         self._die_with_parent = die_with_parent
         self._max_restarts = max_restarts
         self._restarts = 0
+        self._job: int | None = None  # Windows Job Object handle
         self._process: subprocess.Popen[bytes] | None = None
 
     @property
@@ -76,7 +77,31 @@ class OllamaSupervisor:
             stdout=subprocess.DEVNULL,
             stderr=subprocess.DEVNULL,
         )
+        if self._die_with_parent and sys.platform == "win32":
+            self._attach_to_job(self._process)
         return True
+
+    def _attach_to_job(self, process: subprocess.Popen[bytes]) -> None:
+        """Windows: tie the child to a kill-on-close Job Object (best effort)."""
+        try:
+            import win_job
+
+            if self._job is None:
+                self._job = win_job.create_kill_on_close_job()
+            win_job.assign_pid(self._job, process.pid)
+        except OSError as exc:
+            logger.warning("could not attach child to a Job Object: %s", exc)
+
+    def _close_job(self) -> None:
+        if self._job is None:
+            return
+        job, self._job = self._job, None
+        try:
+            import win_job
+
+            win_job.close_job(job)
+        except OSError as exc:
+            logger.warning("could not close Job Object: %s", exc)
 
     def check(self) -> bool:
         """Restart the child if it exited on its own. Returns True if restarted.
@@ -101,6 +126,7 @@ class OllamaSupervisor:
         """Terminate the child we started (if any) and reap it."""
         process = self._process
         if process is None:
+            self._close_job()
             return
         if process.poll() is None:
             process.terminate()
@@ -110,3 +136,4 @@ class OllamaSupervisor:
                 process.kill()
                 process.wait()
         self._process = None
+        self._close_job()
