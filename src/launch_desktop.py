@@ -39,6 +39,12 @@ def ensure_ollama_daemon() -> None:
         print(f"[WARN] could not start ollama: {exc}", file=sys.stderr)
 
 
+def _watch_ollama() -> bool:
+    """GLib timer callback: restart a crashed Ollama child. True keeps the timer."""
+    OLLAMA.check()
+    return True
+
+
 def main():
     # Exit through the GTK main loop so the cleanup after Gtk.main() always runs.
     GLib.unix_signal_add(GLib.PRIORITY_DEFAULT, signal.SIGINT, Gtk.main_quit)
@@ -190,6 +196,7 @@ def main():
 
     win.show_all()
     win.present()
+    GLib.timeout_add_seconds(5, _watch_ollama)
     try:
         Gtk.main()
     finally:

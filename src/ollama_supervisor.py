@@ -35,11 +35,14 @@ class OllamaSupervisor:
         is_healthy: Callable[[], bool],
         stop_timeout: float = 5.0,
         die_with_parent: bool = True,
+        max_restarts: int = 3,
     ) -> None:
         self._command: list[str] = list(command)
         self._is_healthy = is_healthy
         self._stop_timeout = stop_timeout
         self._die_with_parent = die_with_parent
+        self._max_restarts = max_restarts
+        self._restarts = 0
         self._process: subprocess.Popen[bytes] | None = None
 
     @property
@@ -74,6 +77,25 @@ class OllamaSupervisor:
             stderr=subprocess.DEVNULL,
         )
         return True
+
+    def check(self) -> bool:
+        """Restart the child if it exited on its own. Returns True if restarted.
+
+        Call periodically from the main thread. Does nothing after stop() and
+        gives up after max_restarts so a broken Ollama is not respawned forever.
+        """
+        process = self._process
+        if process is None or process.poll() is None:
+            return False
+        self._process = None  # poll() already reaped the dead child
+        if self._restarts >= self._max_restarts:
+            logger.error("ollama exited again; giving up after %d restarts", self._restarts)
+            return False
+        if self.start():
+            self._restarts += 1
+            logger.warning("ollama exited unexpectedly; restarted (%d)", self._restarts)
+            return True
+        return False
 
     def stop(self) -> None:
         """Terminate the child we started (if any) and reap it."""
