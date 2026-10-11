@@ -1202,8 +1202,8 @@
             <div class="input-box-row">
               <button class="btn-slash-toggle" onclick="toggleSlashMenu()" title="Open Agentic Commands">/</button>
               <input type="text" id="chat-prompt" class="main-chat-input" placeholder="Solve, derive, simulate, or plot... (Type / for agentic tools, Enter to run)" onkeydown="handleKey(event)">
-              <button class="btn-send" onclick="sendPrompt()" title="Execute Prompt">
-                <svg class="icon" viewBox="0 0 24 24" style="stroke:#000000;"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+              <button class="btn-send" id="btn-send-action" onclick="handleSendOrStop()" title="Execute Prompt">
+                <svg class="icon" id="send-icon-svg" viewBox="0 0 24 24" style="stroke:#000000;"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
               </button>
             </div>
           </div>
@@ -1383,15 +1383,15 @@
           <div class="vault-card">
             <div>
               <div class="vault-model-name">
-                <span>Vigyan 1.5B 4x-MoE</span>
-                <span style="font-size:11px; color:#a1a1aa;">2.1 GB</span>
+                <span>Vidhi AI 1.5B Legal</span>
+                <span style="font-size:11px; color:#a1a1aa;">1.1 GB</span>
               </div>
               <span class="vault-author-badge">@shreyansh12183</span>
-              <div class="vault-card-desc">Top-2 Routing · Calculus &amp; Physics Solver</div>
+              <div class="vault-card-desc">Bharatiya Nyaya Sanhita (BNS 2023) &amp; GST</div>
             </div>
             <div class="vault-card-footer">
               <span class="vault-tag">Q4_K_M</span>
-              <button class="btn-vault-action" onclick="downloadSovereignModel('vigyan-1.5b-4x-moe')">Download</button>
+              <button class="btn-vault-action" onclick="downloadSovereignModel('vidhi-ai:1.5b')">Download</button>
             </div>
           </div>
 
@@ -1399,15 +1399,15 @@
           <div class="vault-card">
             <div>
               <div class="vault-model-name">
-                <span>OLMo2 7B Pure Math</span>
-                <span style="font-size:11px; color:#a1a1aa;">4.3 GB</span>
+                <span>Qwen 2.5 1.5B STEM</span>
+                <span style="font-size:11px; color:#a1a1aa;">1.0 GB</span>
               </div>
-              <span class="vault-author-badge">@shreyansh12183</span>
-              <div class="vault-card-desc">Doctoral Real Analysis &amp; Theorems</div>
+              <span class="vault-author-badge">@qwen</span>
+              <div class="vault-card-desc">Calculus, Symbolic Math &amp; Code Synthesis</div>
             </div>
             <div class="vault-card-footer">
               <span class="vault-tag">Q4_K_M</span>
-              <button class="btn-vault-action" onclick="downloadSovereignModel('olmo2-7b-pure-math')">Download</button>
+              <button class="btn-vault-action" onclick="downloadSovereignModel('qwen2.5:1.5b')">Download</button>
             </div>
           </div>
 
@@ -1415,15 +1415,15 @@
           <div class="vault-card">
             <div>
               <div class="vault-model-name">
-                <span>OLMo2 7B Silicon EDA</span>
-                <span style="font-size:11px; color:#a1a1aa;">4.3 GB</span>
+                <span>Qwen 2.5 3B Coder</span>
+                <span style="font-size:11px; color:#a1a1aa;">2.0 GB</span>
               </div>
-              <span class="vault-author-badge">@shreyansh12183</span>
-              <div class="vault-card-desc">ASIC Verilog RTL &amp; Microelectronics</div>
+              <span class="vault-author-badge">@qwen</span>
+              <div class="vault-card-desc">Verilog RTL, FPGA &amp; Systems Programming</div>
             </div>
             <div class="vault-card-footer">
               <span class="vault-tag">Q4_K_M</span>
-              <button class="btn-vault-action" onclick="downloadSovereignModel('olmo2-7b-silicon-eda')">Download</button>
+              <button class="btn-vault-action" onclick="downloadSovereignModel('qwen2.5:3b')">Download</button>
             </div>
           </div>
 
@@ -1431,15 +1431,15 @@
           <div class="vault-card">
             <div>
               <div class="vault-model-name">
-                <span>OLMo 2 1B Instruct</span>
+                <span>DeepSeek R1 1.5B</span>
                 <span style="font-size:11px; color:#a1a1aa;">1.1 GB</span>
               </div>
-              <span class="vault-author-badge">@allenai</span>
-              <div class="vault-card-desc">Dense 1B · Ultra-Low Latency Inference</div>
+              <span class="vault-author-badge">@deepseek</span>
+              <div class="vault-card-desc">Chain-of-Thought Mathematical Reasoning</div>
             </div>
             <div class="vault-card-footer">
               <span class="vault-tag">Q4_K_M</span>
-              <button class="btn-vault-action" onclick="downloadSovereignModel('olmo2:1b')">Download</button>
+              <button class="btn-vault-action" onclick="downloadSovereignModel('deepseek-r1:1.5b')">Download</button>
             </div>
           </div>
 
@@ -1447,15 +1447,15 @@
           <div class="vault-card">
             <div>
               <div class="vault-model-name">
-                <span>Olmo 3 7B Instruct</span>
-                <span style="font-size:11px; color:#a1a1aa;">4.4 GB</span>
+                <span>Qwen 2.5 7B Instruct</span>
+                <span style="font-size:11px; color:#a1a1aa;">4.7 GB</span>
               </div>
-              <span class="vault-author-badge">@allenai</span>
-              <div class="vault-card-desc">Dense 7B · Multidisciplinary Science</div>
+              <span class="vault-author-badge">@qwen</span>
+              <div class="vault-card-desc">Full 7B Dense Institutional Precision</div>
             </div>
             <div class="vault-card-footer">
               <span class="vault-tag">Q4_K_M</span>
-              <button class="btn-vault-action" onclick="downloadSovereignModel('olmo3:7b')">Download</button>
+              <button class="btn-vault-action" onclick="downloadSovereignModel('qwen2.5:7b')">Download</button>
             </div>
           </div>
         </div>
@@ -1605,10 +1605,16 @@
     let OLLAMA_HOST = 'http://127.0.0.1:11434';
     let availableModels = ['olmoe:1b-7b'];
     let activeDomain = 'lab';
-    let activeSessionId = 'default';
-    let sessions = {
-      'default': { name: 'STEM Session', messages: [] }
-    };
+    let activeSessionId = localStorage.getItem('vigyan_active_session') || 'default';
+    let sessions = {};
+    try {
+      const saved = localStorage.getItem('vigyan_sessions_data');
+      if (saved) sessions = JSON.parse(saved);
+    } catch (e) {}
+    if (!sessions || Object.keys(sessions).length === 0 || !sessions[activeSessionId]) {
+      sessions = { 'default': { name: 'STEM Session', messages: [] } };
+      activeSessionId = 'default';
+    }
 
     /* STEM Workbench State */
     let currentWbMode = 'plot';
@@ -1877,8 +1883,18 @@
       return out;
     }
 
+    function saveSessions() {
+      try {
+        localStorage.setItem('vigyan_sessions_data', JSON.stringify(sessions));
+        localStorage.setItem('vigyan_active_session', activeSessionId);
+      } catch (e) {
+        console.warn('LocalStorage quota or save error:', e);
+      }
+    }
+
     function clearCurrentChat() {
       if (sessions[activeSessionId]) sessions[activeSessionId].messages = [];
+      saveSessions();
       renderChat();
       showToast('Chat history cleared');
     }
@@ -1887,6 +1903,7 @@
       const id = 'sess_' + Date.now();
       sessions[id] = { name: 'STEM Session ' + Object.keys(sessions).length, messages: [] };
       activeSessionId = id;
+      saveSessions();
       updateSessionList();
       renderChat();
       showToast('Created new session');
@@ -1894,6 +1911,7 @@
 
     function switchSession(id) {
       activeSessionId = id;
+      saveSessions();
       updateSessionList();
       renderChat();
     }
@@ -1921,7 +1939,34 @@
       document.getElementById('slash-menu').classList.remove('show');
     }
 
-    /* INFERENCE DISPATCH */
+    /* INFERENCE DISPATCH WITH ABORT CONTROLLER & STATE PERSISTENCE */
+    let activeStreamController = null;
+
+    function handleSendOrStop() {
+      if (activeStreamController) {
+        activeStreamController.abort();
+        activeStreamController = null;
+        setSendButtonState(false);
+        showToast('Generation cancelled');
+      } else {
+        sendPrompt();
+      }
+    }
+
+    function setSendButtonState(isStreaming) {
+      const btn = document.getElementById('btn-send-action');
+      if (!btn) return;
+      if (isStreaming) {
+        btn.style.background = '#ef4444';
+        btn.innerHTML = `<svg class="icon" viewBox="0 0 24 24" style="stroke:#ffffff; fill:#ffffff;"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>`;
+        btn.title = "Stop Generating";
+      } else {
+        btn.style.background = '#ffffff';
+        btn.innerHTML = `<svg class="icon" viewBox="0 0 24 24" style="stroke:#000000;"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>`;
+        btn.title = "Execute Prompt";
+      }
+    }
+
     async function sendPrompt() {
       const input = document.getElementById('chat-prompt');
       const text = input.value.trim();
@@ -1931,6 +1976,7 @@
 
       if (!sessions[activeSessionId]) sessions[activeSessionId] = { name: 'STEM Session', messages: [] };
       sessions[activeSessionId].messages.push({ role: 'user', content: text });
+      saveSessions();
       renderChat();
 
       // Check for client-side workbench triggers
@@ -1957,10 +2003,13 @@
         return;
       }
 
-      // Stream from Ollama
+      // Stream from Ollama with AbortController
       const assistantMsg = { role: 'assistant', content: '' };
       sessions[activeSessionId].messages.push(assistantMsg);
       renderChat();
+
+      activeStreamController = new AbortController();
+      setSendButtonState(true);
 
       try {
         const keepalive = document.getElementById('setting-keepalive').value || '15m';
@@ -1976,6 +2025,7 @@
         const resp = await fetch(`${OLLAMA_HOST}/api/chat`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
+          signal: activeStreamController.signal,
           body: JSON.stringify({
             model: currentModel,
             messages: hist,
@@ -2010,6 +2060,8 @@
           }
         }
 
+        saveSessions();
+
         // Parse tool blocks in assistant response
         const pMatch = assistantMsg.content.match(/```workbench:plot\s+([\s\S]*?)```/);
         if (pMatch) {
@@ -2029,8 +2081,16 @@
         }
 
       } catch (err) {
-        assistantMsg.content = `[Daemon Offline or Error: ${err.message}] Ensure Ollama is running at ${OLLAMA_HOST}.`;
+        if (err.name === 'AbortError') {
+          assistantMsg.content += ' [Stopped]';
+        } else {
+          assistantMsg.content = `[Daemon Offline or Error: ${err.message}] Ensure Ollama is running at ${OLLAMA_HOST}.`;
+        }
+        saveSessions();
         renderChat();
+      } finally {
+        activeStreamController = null;
+        setSendButtonState(false);
       }
     }
 
@@ -2149,9 +2209,21 @@
       evaluateAndPlot();
     }
 
+    function sanitizeMathExpression(expr) {
+      if (!expr || typeof expr !== 'string') return '0';
+      // Reject any malicious keywords that attempt prototype access, DOM manipulation, or eval chains
+      const blocked = /\b(window|document|fetch|XMLHttpRequest|eval|Function|constructor|prototype|__proto__|import|require|setTimeout|setInterval|alert)\b/i;
+      if (blocked.test(expr)) {
+        console.warn('Rejected potentially unsafe expression:', expr);
+        return '0';
+      }
+      // Allow only mathematical identifiers, numbers, operators, and parameters x, k, w, a
+      return expr;
+    }
+
     function evaluateAndPlot() {
-      const expr1 = document.getElementById('plot-expr').value;
-      const expr2 = document.getElementById('plot-expr-2').value;
+      const expr1 = sanitizeMathExpression(document.getElementById('plot-expr').value);
+      const expr2 = sanitizeMathExpression(document.getElementById('plot-expr-2').value);
       try {
         const fn1 = new Function('x', 'k', 'w', 'a', 'return ' + expr1);
         const x = [], y1 = [], y2 = [], yDeriv = [], yInteg = [];

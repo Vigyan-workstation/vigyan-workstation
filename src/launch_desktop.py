@@ -47,8 +47,13 @@ def _watch_ollama() -> bool:
 
 def main():
     # Exit through the GTK main loop so the cleanup after Gtk.main() always runs.
-    GLib.unix_signal_add(GLib.PRIORITY_DEFAULT, signal.SIGINT, Gtk.main_quit)
-    GLib.unix_signal_add(GLib.PRIORITY_DEFAULT, signal.SIGTERM, Gtk.main_quit)
+    try:
+        from gi.repository import GLibUnix
+        GLibUnix.signal_add(GLib.PRIORITY_DEFAULT, signal.SIGINT, Gtk.main_quit)
+        GLibUnix.signal_add(GLib.PRIORITY_DEFAULT, signal.SIGTERM, Gtk.main_quit)
+    except Exception:
+        GLib.unix_signal_add(GLib.PRIORITY_DEFAULT, signal.SIGINT, Gtk.main_quit)
+        GLib.unix_signal_add(GLib.PRIORITY_DEFAULT, signal.SIGTERM, Gtk.main_quit)
 
     # Wayland / XDG application identity mapping
     GLib.set_prgname("vigyan-pro")
@@ -59,13 +64,14 @@ def main():
 
     win = Gtk.Window(type=Gtk.WindowType.TOPLEVEL)
     win.set_title("Vigyan Pro")
-    win.set_wmclass("vigyan-pro", "vigyan-pro")
     win.set_role("vigyan-pro")
     win.set_default_size(1340, 740)
     win.set_position(Gtk.WindowPosition.CENTER)
 
-    # Pitch-black obsidian background
-    win.override_background_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(0, 0, 0, 1))
+    # Modern CSS Provider for pitch-black background (replaces deprecated override_background_color)
+    css_provider = Gtk.CssProvider()
+    css_provider.load_from_data(b"window { background-color: #000000; }")
+    win.get_style_context().add_provider(css_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
 
     # Icon resolution
     base_dir = os.path.dirname(os.path.abspath(__file__))
@@ -97,16 +103,6 @@ def main():
     settings.set_enable_smooth_scrolling(True)
     try:
         settings.set_hardware_acceleration_policy(WebKit2.HardwareAccelerationPolicy.ALWAYS)
-        settings.set_enable_accelerated_2d_canvas(True)
-    except Exception:
-        pass
-
-    # Enterprise Air-Gap Security Settings
-    try:
-        settings.set_enable_hyperlink_auditing(False)
-        settings.set_enable_dns_prefetching(False)
-        settings.set_enable_offline_web_application_cache(False)
-        settings.set_enable_plugins(False)
     except Exception:
         pass
 
