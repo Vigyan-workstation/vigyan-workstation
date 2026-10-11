@@ -123,6 +123,44 @@
       color: #e4e4e7;
       border: 1px solid rgba(255, 255, 255, 0.12);
     }
+    /* SEGMENTED HEADER NAVIGATION (REPLACES REDUNDANT BOTTOM DOCK) */
+    .header-nav {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      background: #090a10;
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      padding: 2px;
+    }
+    .dock-tab {
+      background: transparent;
+      border: none;
+      color: #a1a1aa;
+      padding: 4px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11.5px;
+      font-weight: 500;
+      transition: all 0.15s var(--ease-spring);
+    }
+    .dock-tab:hover {
+      background: rgba(255, 255, 255, 0.08);
+      color: #ffffff;
+    }
+    .dock-tab:active {
+      transform: scale(0.97);
+    }
+    .dock-tab.active {
+      background: #ffffff;
+      color: #000000;
+      font-weight: 600;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+    }
+    .dock-tab.active .icon { stroke: #000000; }
 
     /* MAIN CONTAINER */
     .app-main {
@@ -608,7 +646,7 @@
     .stem-body {
       flex: 1;
       overflow-y: auto;
-      padding: 12px 14px 80px 14px;
+      padding: 12px 14px 16px 14px;
       display: flex;
       flex-direction: column;
       gap: 12px;
@@ -1350,7 +1388,24 @@
       </div>
       <span class="header-badge" id="header-domain-badge">Lab Studio</span>
     </div>
-    <div style="display:flex; align-items:center; gap:12px;">
+    
+    <!-- EXECUTIVE SEGMENTED NAVIGATION -->
+    <nav class="header-nav">
+      <button class="dock-tab active" data-tab="studio" onclick="switchTab('studio')">
+        <svg class="icon" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+        <span>Studio</span>
+      </button>
+      <button class="dock-tab" data-tab="hub" onclick="switchTab('hub')">
+        <svg class="icon" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+        <span>Vault</span>
+      </button>
+      <button class="dock-tab" data-tab="settings" onclick="switchTab('settings')">
+        <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <span>Settings</span>
+      </button>
+    </nav>
+
+    <div style="display:flex; align-items:center; gap:10px;">
       <div class="hud-telemetry" id="top-hud-bar">
         <span class="hud-pill" id="hud-host-pill" title="Local Air-Gapped Daemon">
           <span class="hud-led"></span>
@@ -1585,25 +1640,25 @@
             </div>
           </div>
 
-          <!-- DERIVATION & PROOF DRAWER -->
-          <div class="stem-card">
-            <div class="stem-card-header">
+          <!-- DERIVATION & PROOF DRAWER (COLLAPSIBLE FOR ZERO CLUTTER) -->
+          <details class="stem-card proof-card-details" id="proof-card-drawer">
+            <summary class="stem-card-header" style="cursor:pointer; user-select:none;">
               <span class="stem-card-title">
                 <svg class="icon" viewBox="0 0 24 24"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
-                Derivation &amp; Proof Drawer
+                Analytical Proof &amp; Derivation
               </span>
-              <button class="btn-action" id="btn-copy-latex" style="padding:2px 8px; font-size:11px;" onclick="copyLatexProof()">
+              <button class="btn-action" id="btn-copy-latex" style="padding:2px 8px; font-size:11px;" onclick="event.stopPropagation(); copyLatexProof();">
                 <svg class="icon" viewBox="0 0 24 24" style="width:11px; height:11px;"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
                 Copy LaTeX
               </button>
-            </div>
-            <div class="proof-box" id="proof-container" onclick="copyLatexProof()" title="Click to copy LaTeX">
+            </summary>
+            <div class="proof-box" id="proof-container" onclick="copyLatexProof()" title="Click to copy LaTeX" style="margin-top:8px;">
               <div style="font-size:11.5px; color:#d4d4d8; margin-bottom:4px;" id="proof-title">Analytical Differential Formulation:</div>
               <div id="math-proof" data-latex="$$\frac{d^2 x}{dt^2} + 2\gamma \frac{dx}{dt} + \omega_0^2 x = 0$$">
                 $$\frac{d^2 x}{dt^2} + 2\gamma \frac{dx}{dt} + \omega_0^2 x = 0$$
               </div>
             </div>
-          </div>
+          </details>
         </div>
       </section>
     </div>
@@ -1878,21 +1933,6 @@
     </div>
   </main>
 
-  <!-- FLOATING BOTTOM DOCK -->
-  <nav class="floating-dock">
-    <button class="dock-tab active" data-tab="studio" onclick="switchTab('studio')">
-      <svg class="icon" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
-      <span>Studio</span>
-    </button>
-    <button class="dock-tab" data-tab="hub" onclick="switchTab('hub')">
-      <svg class="icon" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
-      <span>Vault</span>
-    </button>
-    <button class="dock-tab" data-tab="settings" onclick="switchTab('settings')">
-      <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-      <span>Settings</span>
-    </button>
-  </nav>
   <!-- RAYCAST-STYLE COMMAND PALETTE MODAL -->
   <div class="cmd-overlay" id="cmd-palette-overlay" onclick="handleCmdOverlayClick(event)">
     <div class="cmd-modal">
@@ -2145,27 +2185,27 @@
             Sovereign STEM Lab active. Ready for multi-turn calculus, semiconductor physics, 3D CAD meshes, astronomy orbits, and simulations. Click <strong>[/]</strong> or type <strong>/</strong> for agentic tools.
             
             <div class="capsule-strip-container">
-              <div class="capsule-strip-label">⚡ Instant Acceleration Capsules (1-Click Run)</div>
+              <div class="capsule-strip-label">Quick Computations</div>
               <div class="capsule-scroll-row">
                 <button class="prompt-capsule" onclick="quickFirePrompt('/semiconductor GaAs band bending and carrier transport')">
                   <svg class="icon" viewBox="0 0 24 24" style="width:12px; height:12px; stroke:#38bdf8;"><rect x="4" y="4" width="16" height="16" rx="2"/></svg>
-                  <span>GaAs Bandgap Bending</span>
+                  <span>GaAs Bandgap</span>
                 </button>
                 <button class="prompt-capsule" onclick="quickFirePrompt('/simulate quantum wavepacket tunneling probability')">
                   <svg class="icon" viewBox="0 0 24 24" style="width:12px; height:12px; stroke:#10b981;"><circle cx="12" cy="12" r="10"/></svg>
-                  <span>Quantum Tunneling Sim</span>
+                  <span>Quantum Tunneling</span>
                 </button>
                 <button class="prompt-capsule" onclick="quickFirePrompt('/simulate orbit Keplerian 2-body elliptic eccentricity 0.6')">
                   <svg class="icon" viewBox="0 0 24 24" style="width:12px; height:12px; stroke:#f59e0b;"><ellipse cx="12" cy="5" rx="9" ry="3"/></svg>
-                  <span>Kepler Orbit Dynamics</span>
+                  <span>Kepler Orbit</span>
                 </button>
                 <button class="prompt-capsule" onclick="quickFirePrompt('/plot Math.exp(-0.2*x)*Math.cos(2*x)')">
                   <svg class="icon" viewBox="0 0 24 24" style="width:12px; height:12px; stroke:#ffffff;"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-                  <span>Damped Oscillator Phase</span>
+                  <span>Damped Oscillator</span>
                 </button>
                 <button class="prompt-capsule" onclick="quickFirePrompt('/cad3d benzene')">
                   <svg class="icon" viewBox="0 0 24 24" style="width:12px; height:12px; stroke:#ec4899;"><polygon points="12 2 2 8.5 2 15.5 12 22 22 15.5 22 8.5 12 2"/></svg>
-                  <span>Benzene Ring Conformation</span>
+                  <span>Benzene Ring</span>
                 </button>
               </div>
             </div>
