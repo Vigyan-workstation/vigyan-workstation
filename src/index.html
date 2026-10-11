@@ -1047,51 +1047,179 @@
       transition: width 0.25s var(--ease-spring);
     }
 
-    /* FLOATING BOTTOM DOCK */
+    /* FLOATING BOTTOM DOCK WITH LUXURY SPRING PHYSICS */
     .floating-dock {
       position: fixed;
-      bottom: 14px;
+      bottom: 16px;
       left: 50%;
       transform: translateX(-50%);
-      background: rgba(10, 12, 18, 0.92);
-      backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(24px);
+      background: rgba(10, 12, 18, 0.88);
+      backdrop-filter: blur(28px);
+      -webkit-backdrop-filter: blur(28px);
       border: 1px solid rgba(255, 255, 255, 0.16);
-      border-radius: 26px;
-      padding: 4px;
+      border-radius: 28px;
+      padding: 5px;
       display: flex;
-      gap: 4px;
-      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.9);
+      gap: 5px;
+      box-shadow: 0 20px 48px rgba(0, 0, 0, 0.95), 0 0 0 1px rgba(255, 255, 255, 0.04);
       z-index: 100;
+      transition: all 0.28s var(--ease-spring);
+    }
+    .floating-dock:hover {
+      border-color: rgba(255, 255, 255, 0.28);
+      transform: translateX(-50%) translateY(-2px);
     }
     .dock-tab {
       background: transparent;
       border: none;
       color: #a1a1aa;
-      padding: 6px 16px;
-      border-radius: 20px;
+      padding: 7px 18px;
+      border-radius: 22px;
       cursor: pointer;
       display: flex;
       align-items: center;
       gap: 7px;
       font-size: 13px;
       font-weight: 500;
-      transition: all 0.15s;
+      transition: all 0.22s var(--ease-spring);
     }
     .dock-tab:hover {
-      background: rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.1);
       color: #ffffff;
+      transform: translateY(-1px) scale(1.03);
+    }
+    .dock-tab:active {
+      transform: scale(0.96);
     }
     .dock-tab.active {
       background: #ffffff;
       color: #000000;
       font-weight: 600;
+      box-shadow: 0 4px 14px rgba(255, 255, 255, 0.25);
     }
     .dock-tab.active .icon { stroke: #000000; }
 
+    /* STREAMING CARET & TELEMETRY BADGES */
+    .streaming-caret {
+      display: inline-block;
+      width: 7px;
+      height: 15px;
+      background: #ffffff;
+      vertical-align: -2px;
+      margin-left: 4px;
+      border-radius: 1px;
+      animation: caretPulse 0.8s infinite ease-in-out;
+      box-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
+    }
+    @keyframes caretPulse {
+      0%, 100% { opacity: 1; transform: scaleY(1); }
+      50% { opacity: 0.2; transform: scaleY(0.7); }
+    }
+    .stream-speed-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11px;
+      font-family: ui-monospace, monospace;
+      color: #10b981;
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      padding: 2px 7px;
+      border-radius: 4px;
+      margin-left: 8px;
+      animation: fadeIn 0.15s ease-out;
+    }
+
+    /* RAYCAST-STYLE COMMAND PALETTE (CTRL+K) */
+    .cmd-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.72);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      z-index: 1000;
+      display: none;
+      align-items: flex-start;
+      justify-content: center;
+      padding-top: 14vh;
+      animation: cmdFade 0.15s ease-out;
+    }
+    .cmd-overlay.show { display: flex; }
+    @keyframes cmdFade { from { opacity: 0; } to { opacity: 1; } }
+    .cmd-modal {
+      width: 580px;
+      max-width: 90vw;
+      background: #0b0d14;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 12px;
+      box-shadow: 0 24px 64px rgba(0, 0, 0, 0.95), 0 0 0 1px rgba(255, 255, 255, 0.06);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .cmd-search-box {
+      display: flex;
+      align-items: center;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border-subtle);
+      gap: 10px;
+    }
+    .cmd-search-input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: #ffffff;
+      font-size: 15px;
+      font-family: inherit;
+    }
+    .cmd-kbd-badge {
+      font-size: 10px;
+      font-family: ui-monospace, monospace;
+      padding: 2px 5px;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.08);
+      color: #a1a1aa;
+      border: 1px solid var(--border-subtle);
+    }
+    .cmd-results {
+      max-height: 340px;
+      overflow-y: auto;
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .cmd-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 12px;
+      border-radius: 7px;
+      cursor: pointer;
+      color: #d4d4d8;
+      font-size: 13px;
+      transition: all 0.12s;
+    }
+    .cmd-item:hover, .cmd-item.active {
+      background: rgba(255, 255, 255, 0.1);
+      color: #ffffff;
+    }
+    .cmd-item-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .cmd-tag {
+      font-size: 10.5px;
+      color: #71717a;
+      text-transform: uppercase;
+      font-family: ui-monospace, monospace;
+    }
+
     #toast {
       position: fixed;
-      bottom: 68px;
+      bottom: 74px;
       left: 50%;
       transform: translateX(-50%) translateY(20px);
       background: #181a26;
@@ -1123,6 +1251,13 @@
         <span>Vigyan Pro</span>
       </div>
       <span class="header-badge" id="header-domain-badge">Lab Studio</span>
+    </div>
+    <div style="display:flex; align-items:center; gap:8px;">
+      <button class="btn-action" style="padding:4px 10px; font-size:11.5px; display:flex; align-items:center; gap:6px; background:#0e1018; border-color:var(--border);" onclick="openCommandPalette()">
+        <svg class="icon" viewBox="0 0 24 24" style="width:12px; height:12px;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <span>Command Center</span>
+        <span class="cmd-kbd-badge">Ctrl K</span>
+      </button>
     </div>
   </header>
 
@@ -1596,6 +1731,25 @@
           </div>
         </div>
 
+        <!-- 4.5 TACTILE AUDIO HAPTICS -->
+        <div class="settings-section-card">
+          <div class="section-card-header">
+            <span class="section-card-title">
+              <svg class="icon" viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+              Sensory Feedback &amp; Haptics
+            </span>
+          </div>
+          <div style="display:flex; justify-content:space-between; align-items:center; padding:4px 0;">
+            <div>
+              <div style="font-size:12.5px; font-weight:600; color:#ffffff;">Synthesized Audio Clicks</div>
+              <div style="font-size:11px; color:#a1a1aa;">Subtle low-latency mechanical tick on navigation, prompt execution, and modal transitions.</div>
+            </div>
+            <button class="btn-action" id="btn-toggle-sound" style="padding:4px 12px; font-size:11.5px;" onclick="toggleSoundHaptics()">
+              Toggle Audio
+            </button>
+          </div>
+        </div>
+
         <!-- 5. SYSTEM PROMPT & ACTIONS -->
         <div class="settings-section-card">
           <div class="section-card-header">
@@ -1627,10 +1781,21 @@
       <span>Vault</span>
     </button>
     <button class="dock-tab" data-tab="settings" onclick="switchTab('settings')">
-      <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
       <span>Settings</span>
     </button>
   </nav>
+  <!-- RAYCAST-STYLE COMMAND PALETTE MODAL -->
+  <div class="cmd-overlay" id="cmd-palette-overlay" onclick="handleCmdOverlayClick(event)">
+    <div class="cmd-modal">
+      <div class="cmd-search-box">
+        <svg class="icon" viewBox="0 0 24 24" style="width:16px; height:16px; stroke:#a1a1aa;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" class="cmd-search-input" id="cmd-input" placeholder="Type a command or jump to workspace..." oninput="filterCommandPalette()" onkeydown="handleCmdKeyDown(event)">
+        <span class="cmd-kbd-badge">ESC</span>
+      </div>
+      <div class="cmd-results" id="cmd-results-list"></div>
+    </div>
+  </div>
 
   <div id="toast">Notification</div>
 
@@ -1667,6 +1832,73 @@
     let simIsRunning = true;
     let simBiasVal = 0.0;
     let simParamExtra = 1.0;
+
+    /* TACTILE AUDIO HAPTICS (SYNTHESIZED WEB AUDIO API) */
+    class AudioHaptics {
+      constructor() {
+        this.ctx = null;
+        this.enabled = localStorage.getItem('vigyan_sound_enabled') !== 'false';
+      }
+      init() {
+        if (!this.ctx) {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          if (AudioContext) this.ctx = new AudioContext();
+        }
+      }
+      playTick(freq = 140, duration = 0.02, type = 'sine') {
+        if (!this.enabled) return;
+        try {
+          this.init();
+          if (!this.ctx) return;
+          if (this.ctx.state === 'suspended') this.ctx.resume();
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = type;
+          osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(40, this.ctx.currentTime + duration);
+          gain.gain.setValueAtTime(0.04, this.ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + duration);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start();
+          osc.stop(this.ctx.currentTime + duration);
+        } catch (e) {}
+      }
+      click() { this.playTick(160, 0.02, 'sine'); }
+      send() { this.playTick(240, 0.04, 'triangle'); }
+      tab() { this.playTick(120, 0.025, 'sine'); }
+      success() { this.playTick(320, 0.06, 'sine'); }
+    }
+    const haptics = new AudioHaptics();
+
+    /* COMMAND CENTER REGISTRY */
+    let cmdSelectedIndex = 0;
+    let filteredCmds = [];
+    const COMMAND_ITEMS = [
+      { id: 'ws-lab', title: 'Switch to Lab Studio Workspace', tag: 'Workspace', run: () => selectDomain('lab') },
+      { id: 'ws-semi', title: 'Switch to Semiconductor Physics', tag: 'Workspace', run: () => selectDomain('semiconductor') },
+      { id: 'ws-astro', title: 'Switch to Astrophysics & Orbits', tag: 'Workspace', run: () => selectDomain('astronomy') },
+      { id: 'ws-biomed', title: 'Switch to Biomedical Kinetics', tag: 'Workspace', run: () => selectDomain('biomed') },
+      { id: 'ws-chem', title: 'Switch to Computational Chemistry', tag: 'Workspace', run: () => selectDomain('chem') },
+      { id: 'wb-plot', title: 'Workbench: Function Plotting', tag: 'View', run: () => switchWorkbenchMode('plot') },
+      { id: 'wb-3d', title: 'Workbench: 3D CAD & Molecular View', tag: 'View', run: () => switchWorkbenchMode('3d') },
+      { id: 'wb-sim', title: 'Workbench: Real-Time 60 FPS Simulation', tag: 'View', run: () => switchWorkbenchMode('sim') },
+      { id: 'new-session', title: 'Create New STEM Session', tag: 'Session', run: () => createNewSession() },
+      { id: 'clear-chat', title: 'Clear Current Chat History', tag: 'Session', run: () => clearCurrentChat() },
+      { id: 'export-png', title: 'Export Workbench Visual to PNG', tag: 'Export', run: () => exportWorkbenchView() },
+      { id: 'copy-latex', title: 'Copy Active LaTeX Proof', tag: 'Proof', run: () => copyLatexProof() },
+      { id: 'tab-studio', title: 'Navigate to Studio', tag: 'Dock', run: () => switchTab('studio') },
+      { id: 'tab-vault', title: 'Navigate to Sovereign Model Vault', tag: 'Dock', run: () => switchTab('hub') },
+      { id: 'tab-settings', title: 'Navigate to Workstation Settings', tag: 'Dock', run: () => switchTab('settings') },
+      { id: 'toggle-sound', title: 'Toggle Haptic Sound Feedback', tag: 'Audio', run: () => toggleSoundHaptics() }
+    ];
+
+    function toggleSoundHaptics() {
+      haptics.enabled = !haptics.enabled;
+      localStorage.setItem('vigyan_sound_enabled', haptics.enabled);
+      showToast(`Haptic sound ${haptics.enabled ? 'Enabled' : 'Muted'}`);
+      if (haptics.enabled) haptics.click();
+    }
 
     /* Draggable Splitter */
     (function initResizer() {
@@ -1750,6 +1982,7 @@
         renderCAD3D('benzene');
       }
       showToast(`Workspace: ${badge.innerText}`);
+      haptics.tab();
     }
 
     /* TAB SWITCHING */
@@ -1762,6 +1995,8 @@
       if (targetTab) targetTab.classList.add('active');
       if (targetBtn) targetBtn.classList.add('active');
 
+      haptics.tab();
+
       if (tabId === 'studio') {
         setTimeout(() => {
           if (window.Plotly && currentWbMode !== 'sim') Plotly.Plots.resize('plot-container');
@@ -1773,6 +2008,7 @@
     function toggleModelDropdown() {
       const menu = document.getElementById('model-dropdown');
       menu.classList.toggle('show');
+      haptics.click();
     }
     function changeModel(m) {
       currentModel = m;
@@ -1780,10 +2016,11 @@
       document.getElementById('welcome-companion-label').innerText = m;
       document.getElementById('model-dropdown').classList.remove('show');
       showToast(`Active model: ${m}`);
+      haptics.success();
     }
 
     /* CHAT RENDERING & PERSISTENCE */
-    function renderChat() {
+    function renderChat(isStreaming = false, tokPerSec = null) {
       const box = document.getElementById('chat-box');
       box.innerHTML = '';
       const s = sessions[activeSessionId] || { messages: [] };
@@ -1804,15 +2041,22 @@
         return;
       }
 
-      s.messages.forEach(m => {
+      s.messages.forEach((m, idx) => {
         const d = document.createElement('div');
         d.className = `msg ${m.role}`;
+        const isLastAssistant = (idx === s.messages.length - 1 && m.role === 'assistant');
+        const speedBadge = (isLastAssistant && isStreaming && tokPerSec) 
+          ? `<span class="stream-speed-badge"><svg style="width:10px; height:10px; stroke:currentColor; fill:none;" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>${tokPerSec} tok/s</span>` 
+          : '';
+        const caret = (isLastAssistant && isStreaming) ? '<span class="streaming-caret"></span>' : '';
+        
         d.innerHTML = `
           <div class="msg-header">
             ${m.role === 'assistant' ? '<img src="assets/micro_logo_v.png" class="msg-avatar-v" alt="V">' : ''}
             <span>${m.role === 'assistant' ? currentModel : 'You'}</span>
+            ${speedBadge}
           </div>
-          <div class="msg-content">${formatMessageContent(m.content)}</div>
+          <div class="msg-content">${formatMessageContent(m.content)}${caret}</div>
         `;
         box.appendChild(d);
       });
@@ -2103,6 +2347,8 @@
         const reader = resp.body.getReader();
         const decoder = new TextDecoder();
         let buffer = '';
+        let tokenCount = 0;
+        const streamStartTime = performance.now();
 
         while (true) {
           const { done, value } = await reader.read();
@@ -2117,13 +2363,18 @@
               const data = JSON.parse(line);
               if (data.message && data.message.content) {
                 assistantMsg.content += data.message.content;
-                renderChat();
+                tokenCount++;
+                const elapsedSec = Math.max(0.1, (performance.now() - streamStartTime) / 1000);
+                const tokPerSec = (tokenCount / elapsedSec).toFixed(1);
+                renderChat(true, tokPerSec);
               }
             } catch (e) {}
           }
         }
 
         saveSessions();
+        renderChat(false);
+        haptics.success();
 
         // Parse tool blocks in assistant response
         const pMatch = assistantMsg.content.match(/```workbench:plot\s+([\s\S]*?)```/);
@@ -3017,6 +3268,110 @@
         showToast('Raw LaTeX proof copied');
       }
     }
+
+    /* =========================================================================
+       COMMAND CENTER PALETTE IMPLEMENTATION (RAYCAST / LINEAR STYLE)
+       ========================================================================= */
+    function openCommandPalette() {
+      const overlay = document.getElementById('cmd-palette-overlay');
+      const input = document.getElementById('cmd-input');
+      overlay.classList.add('show');
+      input.value = '';
+      input.focus();
+      cmdSelectedIndex = 0;
+      filterCommandPalette();
+      haptics.click();
+    }
+
+    function closeCommandPalette() {
+      const overlay = document.getElementById('cmd-palette-overlay');
+      overlay.classList.remove('show');
+      cmdSelectedIndex = 0;
+      haptics.click();
+    }
+
+    function handleCmdOverlayClick(e) {
+      if (e.target.id === 'cmd-palette-overlay') closeCommandPalette();
+    }
+
+    function filterCommandPalette() {
+      const query = (document.getElementById('cmd-input').value || '').trim().toLowerCase();
+      filteredCmds = COMMAND_ITEMS.filter(item => {
+        return item.title.toLowerCase().includes(query) || item.tag.toLowerCase().includes(query);
+      });
+      if (cmdSelectedIndex >= filteredCmds.length) cmdSelectedIndex = 0;
+      renderCmdResults();
+    }
+
+    function renderCmdResults() {
+      const container = document.getElementById('cmd-results-list');
+      container.innerHTML = '';
+      if (filteredCmds.length === 0) {
+        container.innerHTML = '<div style="padding:16px; text-align:center; color:#71717a; font-size:12.5px;">No matching commands found.</div>';
+        return;
+      }
+      filteredCmds.forEach((item, index) => {
+        const div = document.createElement('div');
+        div.className = `cmd-item ${index === cmdSelectedIndex ? 'active' : ''}`;
+        div.innerHTML = `
+          <div class="cmd-item-left">
+            <svg class="icon" viewBox="0 0 24 24" style="width:13px; height:13px;"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            <span>${item.title}</span>
+          </div>
+          <span class="cmd-tag">${item.tag}</span>
+        `;
+        div.onclick = () => executeCmdItem(index);
+        container.appendChild(div);
+      });
+      const activeEl = container.children[cmdSelectedIndex];
+      if (activeEl) activeEl.scrollIntoView({ block: 'nearest' });
+    }
+
+    function executeCmdItem(index) {
+      const item = filteredCmds[index];
+      if (item && item.run) {
+        closeCommandPalette();
+        haptics.success();
+        item.run();
+      }
+    }
+
+    function handleCmdKeyDown(e) {
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        if (filteredCmds.length > 0) {
+          cmdSelectedIndex = (cmdSelectedIndex + 1) % filteredCmds.length;
+          renderCmdResults();
+          haptics.click();
+        }
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        if (filteredCmds.length > 0) {
+          cmdSelectedIndex = (cmdSelectedIndex - 1 + filteredCmds.length) % filteredCmds.length;
+          renderCmdResults();
+          haptics.click();
+        }
+      } else if (e.key === 'Enter') {
+        e.preventDefault();
+        if (filteredCmds.length > 0) executeCmdItem(cmdSelectedIndex);
+      } else if (e.key === 'Escape') {
+        e.preventDefault();
+        closeCommandPalette();
+      }
+    }
+
+    // Global Key Listener for Raycast-style Ctrl+K, /, and Esc
+    window.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && (e.key === 'k' || e.key === 'K')) {
+        e.preventDefault();
+        const overlay = document.getElementById('cmd-palette-overlay');
+        if (overlay.classList.contains('show')) closeCommandPalette();
+        else openCommandPalette();
+      } else if (e.key === 'Escape') {
+        const overlay = document.getElementById('cmd-palette-overlay');
+        if (overlay && overlay.classList.contains('show')) closeCommandPalette();
+      }
+    });
 
     function handleKey(e) {
       if (e.key === 'Enter') {
