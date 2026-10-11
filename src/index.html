@@ -1773,9 +1773,14 @@
         `;
         box.appendChild(d);
       });
-      renderLatex();
+      if (!window._katexRaf) {
+        window._katexRaf = requestAnimationFrame(() => {
+          renderLatex(box);
+          window._katexRaf = null;
+        });
+      }
       const wrapper = document.querySelector('.chat-scroll-wrapper');
-      wrapper.scrollTop = wrapper.scrollHeight;
+      if (wrapper) wrapper.scrollTop = wrapper.scrollHeight;
     }
 
     function escapeHtml(str) {
@@ -1788,18 +1793,87 @@
         .replace(/'/g, '&#039;');
     }
 
+    function parseMarkdownTables(text) {
+      const tableRegex = /((?:\|[^\n]+\|\r?\n)+)/g;
+      return text.replace(tableRegex, (match) => {
+        const rows = match.trim().split('\n').map(r => r.trim());
+        if (rows.length < 2) return match;
+        
+        let html = '<div class="table-container" style="overflow-x:auto; margin:8px 0; border:1px solid var(--border); border-radius:6px;"><table style="width:100%; border-collapse:collapse; font-size:12px; text-align:left;">';
+        let isHeader = true;
+
+        for (let i = 0; i < rows.length; i++) {
+          const row = rows[i];
+          // Skip markdown delimiter row |---|---|
+          if (/^\|[\s\-:|]+\|$/.test(row)) {
+            isHeader = false;
+            continue;
+          }
+          const cells = row.split('|').slice(1, -1);
+          if (isHeader) {
+            html += '<tr style="background:#0c0e14; border-bottom:1px solid var(--border);">';
+            cells.forEach(c => {
+              html += `<th style="padding:6px 10px; font-weight:600; color:#ffffff;">${c.trim()}</th>`;
+            });
+            html += '</tr>';
+          } else {
+            html += '<tr style="border-bottom:1px solid var(--border-subtle);">';
+            cells.forEach(c => {
+              html += `<td style="padding:6px 10px; color:#d4d4d8;">${c.trim()}</td>`;
+            });
+            html += '</tr>';
+          }
+        }
+        html += '</table></div>';
+        return html;
+      });
+    }
+
     function formatMessageContent(txt) {
       if (!txt) return '';
-      // Escape HTML entities to prevent script injection / XSS
-      let out = escapeHtml(txt);
-      // Fenced code blocks
-      out = out.replace(/```([\s\S]*?)```/g, '<pre style="background:#090a0f; border:1px solid var(--border); padding:8px; border-radius:6px; overflow-x:auto; font-family:ui-monospace,monospace; margin:6px 0;"><code>$1</code></pre>');
+      // Fenced code blocks extraction first (to prevent inner mangling)
+      const codeBlocks = [];
+      let out = txt.replace(/```([a-zA-Z0-9_\-:]*)\n?([\s\S]*?)```/g, (m, lang, code) => {
+        const idx = codeBlocks.length;
+        codeBlocks.push({ lang, code: escapeHtml(code.trim()) });
+        return `__CODE_BLOCK_${idx}__`;
+      });
+
+      // Escape general HTML
+      out = escapeHtml(out);
+
+      // Markdown Tables
+      out = parseMarkdownTables(out);
+
       // Inline code
-      out = out.replace(/`([^`]+)`/g, '<code style="background:#141722; padding:2px 5px; border-radius:4px; font-size:12px; font-family:ui-monospace,monospace;">$1</code>');
-      // Bold
+      out = out.replace(/`([^`]+)`/g, '<code style="background:#141722; padding:2px 5px; border-radius:4px; font-size:12px; font-family:ui-monospace,monospace; color:#38bdf8;">$1</code>');
+
+      // Bold & Italic
       out = out.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
-      // Linebreaks
+      out = out.replace(/\*([^*]+)\*/g, '<em>$1</em>');
+
+      // Bullet lists
+      out = out.replace(/^\s*[-*]\s+(.*)$/gm, '<li style="margin-left:18px; margin-bottom:3px; color:#e4e4e7;">$1</li>');
+
+      // Blockquotes
+      out = out.replace(/^>\s+(.*)$/gm, '<blockquote style="border-left:3px solid var(--cyan-accent); padding-left:10px; margin:6px 0; color:#a1a1aa;">$1</blockquote>');
+
+      // Linebreaks (preserve clean breaks outside of tables/lists)
       out = out.replace(/\n/g, '<br>');
+
+      // Restore code blocks with luxury syntax styling & copy button
+      out = out.replace(/__CODE_BLOCK_(\d+)__/g, (m, idx) => {
+        const b = codeBlocks[idx];
+        const langTag = b.lang ? `<span style="font-size:10px; color:#71717a; text-transform:uppercase; font-family:ui-monospace,monospace;">${b.lang}</span>` : '';
+        return `<div style="background:#090a0f; border:1px solid var(--border); border-radius:6px; margin:8px 0; overflow:hidden;">
+          <div style="background:#0c0e14; padding:3px 10px; border-bottom:1px solid var(--border-subtle); display:flex; justify-content:space-between; align-items:center;">
+            ${langTag}
+            <button class="btn-copy-code" style="background:transparent; border:none; color:#a1a1aa; font-size:11px; cursor:pointer;" onclick="navigator.clipboard.writeText(this.parentElement.nextElementSibling.innerText); showToast('Copied to clipboard');">Copy</button>
+          </div>
+          <pre style="padding:8px 10px; margin:0; overflow-x:auto; font-family:ui-monospace,monospace; font-size:12px; color:#f4f4f6;"><code>${b.code}</code></pre>
+        </div>`;
+      });
+
       return out;
     }
 
@@ -2733,9 +2807,11 @@
       }
     }
 
-    function renderLatex() {
-      if (window.renderMathInElement) {
-        renderMathInElement(document.body, {
+    function renderLatex(targetEl) {
+      if (!window.renderMathInElement) return;
+      const root = targetEl || document.getElementById('chat-box') || document.body;
+      try {
+        renderMathInElement(root, {
           delimiters: [
             {left: '$$', right: '$$', display: true},
             {left: '\\[', right: '\\]', display: true},
@@ -2744,6 +2820,69 @@
           ],
           throwOnError: false
         });
+      } catch (e) {
+        console.warn('KaTeX render notice:', e);
+      }
+    }
+
+    async function downloadSovereignModel(name) {
+      const btn = event ? event.target : null;
+      const origText = btn ? btn.innerText : 'Download';
+      if (btn) {
+        btn.disabled = true;
+        btn.innerText = 'Connecting...';
+        btn.style.opacity = '0.7';
+      }
+      showToast(`Contacting daemon to pull ${name}...`);
+
+      try {
+        const resp = await fetch(`${OLLAMA_HOST}/api/pull`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name: name, stream: true })
+        });
+
+        if (!resp.ok) throw new Error(`Status ${resp.status}`);
+
+        const reader = resp.body.getReader();
+        const decoder = new TextDecoder();
+        let buffer = '';
+
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          buffer += decoder.decode(value, { stream: true });
+          const lines = buffer.split('\n');
+          buffer = lines.pop();
+
+          for (const line of lines) {
+            if (!line.trim()) continue;
+            try {
+              const data = JSON.parse(line);
+              if (data.total && data.completed) {
+                const pct = Math.round((data.completed / data.total) * 100);
+                if (btn) btn.innerText = `${pct}%`;
+              } else if (data.status) {
+                if (btn) btn.innerText = data.status.slice(0, 12);
+              }
+            } catch (e) {}
+          }
+        }
+
+        showToast(`Model ${name} ready!`);
+        if (btn) {
+          btn.innerText = 'Installed';
+          btn.style.background = 'var(--emerald-subdued)';
+          btn.style.color = '#ffffff';
+        }
+        await checkOllamaConnection();
+      } catch (err) {
+        showToast(`Pull failed: ${err.message}`);
+        if (btn) {
+          btn.disabled = false;
+          btn.innerText = origText;
+          btn.style.opacity = '1';
+        }
       }
     }
 
@@ -2767,7 +2906,7 @@
     }
 
     /* =========================================================================
-       SETTINGS LOGIC
+       SETTINGS & DAEMON CONNECTION LOGIC
        ========================================================================= */
     function selectIntent(type, temp, ctx, title) {
       document.querySelectorAll('.intent-card').forEach(c => c.classList.remove('active'));
@@ -2794,9 +2933,10 @@
     }
 
     async function checkOllamaConnection() {
-      const host = document.getElementById('setting-host').value;
+      const hostInput = document.getElementById('setting-host');
+      const host = hostInput ? hostInput.value : OLLAMA_HOST;
       const badge = document.getElementById('daemon-status-badge');
-      badge.innerText = 'Pinging...';
+      if (badge) badge.innerText = 'Pinging...';
       try {
         const start = performance.now();
         const r = await fetch(`${host}/api/tags`);
@@ -2805,21 +2945,25 @@
           const data = await r.json();
           if (data.models && data.models.length > 0) {
             availableModels = data.models.map(m => m.name);
+            if (!availableModels.includes(currentModel) && availableModels.length > 0) {
+              currentModel = availableModels[0];
+              const curLabel = document.getElementById('current-model-name');
+              if (curLabel) curLabel.innerText = currentModel;
+            }
             updateModelDropdownUI();
           }
-          badge.innerText = `Connected (${lat}ms)`;
-          showToast(`Daemon alive (${lat}ms)`);
+          if (badge) badge.innerText = `Connected (${lat}ms)`;
         } else {
-          badge.innerText = 'Error (' + r.status + ')';
+          if (badge) badge.innerText = 'Error (' + r.status + ')';
         }
       } catch (e) {
-        badge.innerText = 'Disconnected';
-        showToast('Cannot reach Ollama daemon');
+        if (badge) badge.innerText = 'Disconnected';
       }
     }
 
     function updateModelDropdownUI() {
       const menu = document.getElementById('model-dropdown');
+      if (!menu) return;
       menu.innerHTML = '';
       availableModels.forEach(m => {
         const opt = document.createElement('div');
@@ -2828,10 +2972,6 @@
         opt.onclick = () => changeModel(m);
         menu.appendChild(opt);
       });
-    }
-
-    function downloadSovereignModel(name) {
-      showToast(`Initiating download for ${name}...`);
     }
 
     function deleteLocalModel(name) {
