@@ -15,31 +15,34 @@ gi.require_version('Gtk', '3.0')
 gi.require_version('WebKit2', '4.1')
 from gi.repository import Gtk, WebKit2, Gdk, GdkPixbuf, GLib
 
-def ensure_ollama_daemon():
-    """Verify local Ollama daemon is active; if not, attempt quiet background startup."""
+from ollama_supervisor import OllamaSupervisor
+
+def _ollama_is_healthy() -> bool:
+    """Return True if a local Ollama answers on its loopback port."""
     try:
         import urllib.request
         req = urllib.request.Request("http://127.0.0.1:11434/api/tags", method="GET")
         with urllib.request.urlopen(req, timeout=1.0) as resp:
-            if resp.status == 200:
-                return
+            return resp.status == 200
     except Exception:
-        pass
+        return False
 
-    # Try starting ollama serve in background if available
+
+OLLAMA = OllamaSupervisor(["ollama", "serve"], is_healthy=_ollama_is_healthy)
+
+
+def ensure_ollama_daemon() -> None:
+    """Make sure a local Ollama is running; start one we own if it is not."""
     try:
-        subprocess.Popen(
-            ["ollama", "serve"],
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL,
-            start_new_session=True
-        )
-    except Exception:
-        pass
+        OLLAMA.start()
+    except OSError as exc:  # e.g. ollama is not installed
+        print(f"[WARN] could not start ollama: {exc}", file=sys.stderr)
+
 
 def main():
-    signal.signal(signal.SIGINT, signal.SIG_DFL)
-    signal.signal(signal.SIGTERM, signal.SIG_DFL)
+    # Exit through the GTK main loop so the cleanup after Gtk.main() always runs.
+    GLib.unix_signal_add(GLib.PRIORITY_DEFAULT, signal.SIGINT, Gtk.main_quit)
+    GLib.unix_signal_add(GLib.PRIORITY_DEFAULT, signal.SIGTERM, Gtk.main_quit)
 
     # Wayland / XDG application identity mapping
     GLib.set_prgname("vigyan-pro")
@@ -187,7 +190,10 @@ def main():
 
     win.show_all()
     win.present()
-    Gtk.main()
+    try:
+        Gtk.main()
+    finally:
+        OLLAMA.stop()
 
 if __name__ == "__main__":
     main()
