@@ -582,6 +582,17 @@
       flex-shrink: 0;
       position: relative;
       overflow: hidden;
+      transition: width 0.22s var(--ease-spring);
+    }
+    .stem-section.collapsed {
+      width: 0px !important;
+      min-width: 0px !important;
+      border-left: none !important;
+      overflow: hidden !important;
+      visibility: hidden;
+    }
+    .workbench-resizer.collapsed {
+      display: none !important;
     }
     .stem-header {
       height: 42px;
@@ -1405,17 +1416,17 @@
       </button>
     </nav>
 
-    <div style="display:flex; align-items:center; gap:10px;">
+    <div style="display:flex; align-items:center; gap:8px;">
       <div class="hud-telemetry" id="top-hud-bar">
-        <span class="hud-pill" id="hud-host-pill" title="Local Air-Gapped Daemon">
-          <span class="hud-led"></span>
-          <span>127.0.0.1</span>
-        </span>
         <span class="hud-pill" id="hud-gpu-pill" title="Hardware Compute Allocation">
-          <svg class="icon" viewBox="0 0 24 24" style="width:11px; height:11px;"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M9 9h6v6H9z"/></svg>
+          <span class="hud-led"></span>
           <span id="hud-gpu-text">CPU 0% | RAM 0%</span>
         </span>
       </div>
+      <button class="btn-action" id="header-wb-toggle-btn" style="padding:4px 9px; font-size:11.5px; display:flex; align-items:center; gap:5px;" onclick="toggleWorkbench()" title="Toggle Workbench (Ctrl+B)">
+        <svg class="icon" viewBox="0 0 24 24" style="width:12px; height:12px;"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M15 3v18"/></svg>
+        <span id="header-wb-btn-text">Workbench</span>
+      </button>
       <button class="btn-action" style="padding:4px 10px; font-size:11.5px; display:flex; align-items:center; gap:6px; background:#0e1018; border-color:var(--border);" onclick="openCommandPalette()">
         <svg class="icon" viewBox="0 0 24 24" style="width:12px; height:12px;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
         <span>Command Center</span>
@@ -1536,7 +1547,7 @@
 
             <div class="input-box-row">
               <button class="btn-slash-toggle" onclick="toggleSlashMenu()" title="Open Agentic Commands">/</button>
-              <input type="text" id="chat-prompt" class="main-chat-input" placeholder="Solve, derive, simulate, or plot... (Type / for agentic tools, Enter to run)" onkeydown="handleKey(event)">
+              <input type="text" id="chat-prompt" class="main-chat-input" placeholder="Solve, derive, simulate, or plot... (Type / for agentic tools, Enter to run)" onkeydown="handleKey(event)" oninput="handlePromptInput(event)">
               <button class="btn-send" id="btn-send-action" onclick="handleSendOrStop()" title="Execute Prompt">
                 <svg class="icon" id="send-icon-svg" viewBox="0 0 24 24" style="stroke:#000000;"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
               </button>
@@ -1559,6 +1570,9 @@
           <div class="stem-actions">
             <button class="btn-action" onclick="exportWorkbenchView()" title="Export view PNG">PNG</button>
             <button class="btn-action" onclick="resetActiveWorkbench()" title="Reset current view">Reset</button>
+            <button class="btn-action" onclick="toggleWorkbench()" title="Close Workbench" style="padding:4px 6px;">
+              <svg class="icon" viewBox="0 0 24 24" style="width:12px; height:12px;"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
           </div>
         </div>
 
@@ -2094,6 +2108,35 @@
       }, 250);
     }
 
+    /* WORKBENCH TOGGLE (CLOSE / OPEN ON DEMAND) */
+    let isWorkbenchOpen = true;
+    function toggleWorkbench() {
+      const stem = document.getElementById('stem-section');
+      const resizer = document.getElementById('workbench-resizer');
+      const btn = document.getElementById('header-wb-toggle-btn');
+      isWorkbenchOpen = !isWorkbenchOpen;
+      if (isWorkbenchOpen) {
+        stem.classList.remove('collapsed');
+        if (resizer) resizer.classList.remove('collapsed');
+        if (btn) btn.classList.remove('active');
+        showToast('STEM Workbench opened');
+        haptics.tab();
+        setTimeout(() => {
+          if (window.Plotly && currentWbMode !== 'sim') Plotly.Plots.resize('plot-container');
+        }, 250);
+      } else {
+        stem.classList.add('collapsed');
+        if (resizer) resizer.classList.add('collapsed');
+        if (btn) btn.classList.add('active');
+        showToast('STEM Workbench closed — Chat Fullscreen');
+        haptics.click();
+      }
+    }
+
+    function openWorkbench() {
+      if (!isWorkbenchOpen) toggleWorkbench();
+    }
+
     /* DOMAIN WORKSPACE SELECTION */
     function selectDomain(domainId) {
       activeDomain = domainId;
@@ -2564,27 +2607,42 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
       renderChat();
 
       // Check for client-side workbench triggers
-      if (text.startsWith('/semiconductor')) {
+      const lowerText = text.toLowerCase();
+      if (lowerText.startsWith('/semiconductor')) {
         selectDomain('semiconductor');
         return;
-      } else if (text.startsWith('/cad3d')) {
+      } else if (lowerText.startsWith('/cad3d')) {
         switchWorkbenchMode('3d');
-        const match = text.match(/\/cad3d\s+(\w+)/);
-        if (match) renderCAD3D(match[1]);
+        const match = text.match(/\/cad3d\s*(\w*)/i);
+        const cadTarget = (match && match[1]) ? match[1].toLowerCase() : 'silicon';
+        renderCAD3D(cadTarget);
         return;
-      } else if (text.startsWith('/plot')) {
+      } else if (lowerText.startsWith('/plot')) {
         switchWorkbenchMode('plot');
-        const expr = text.replace('/plot', '').trim();
+        const expr = text.replace(/\/plot/i, '').trim();
         if (expr) {
           document.getElementById('plot-expr').value = expr;
           evaluateAndPlot();
         }
         return;
-      } else if (text.startsWith('/simulate')) {
+      } else if (lowerText.startsWith('/simulate')) {
         switchWorkbenchMode('sim');
-        const match = text.match(/\/simulate\s+(\w+)/);
-        if (match) initSimulation(match[1]);
+        let simTarget = 'pn-junction';
+        if (lowerText.includes('quantum') || lowerText.includes('tunnel')) simTarget = 'quantum';
+        else if (lowerText.includes('orbit') || lowerText.includes('kepler')) simTarget = 'orbit';
+        else if (lowerText.includes('pendulum') || lowerText.includes('oscillator')) simTarget = 'pendulum';
+        else if (lowerText.includes('enzyme') || lowerText.includes('kinetic')) simTarget = 'enzyme';
+        else if (lowerText.includes('reaction') || lowerText.includes('chem')) simTarget = 'reaction';
+        else {
+          const match = text.match(/\/simulate\s*(\w*)/i);
+          if (match && match[1]) simTarget = match[1].toLowerCase();
+        }
+        initSimulation(simTarget);
         return;
+      } else if (lowerText.startsWith('/derive')) {
+        openWorkbench();
+        const drawer = document.getElementById('proof-card-drawer');
+        if (drawer) drawer.open = true;
       }
 
       // Stream from Ollama with AbortController
@@ -2689,6 +2747,7 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
        ADVANCED STEM WORKBENCH IMPLEMENTATION (INDUSTRY BEST)
        ========================================================================= */
     function switchWorkbenchMode(mode) {
+      openWorkbench();
       currentWbMode = mode;
       document.querySelectorAll('.wb-tab').forEach(b => b.classList.remove('active'));
       const activeBtn = document.getElementById('tab-btn-' + mode);
@@ -3651,10 +3710,72 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
     });
 
     function handleKey(e) {
+      const menu = document.getElementById('slash-menu');
+      if (menu && menu.classList.contains('show')) {
+        const items = menu.querySelectorAll('.slash-item');
+        let activeIdx = -1;
+        items.forEach((it, i) => { if (it.classList.contains('active')) activeIdx = i; });
+
+        if (e.key === 'ArrowDown') {
+          e.preventDefault();
+          if (activeIdx < items.length - 1) {
+            items.forEach(it => it.classList.remove('active'));
+            items[activeIdx + 1].classList.add('active');
+            items[activeIdx + 1].scrollIntoView({ block: 'nearest' });
+          }
+          return;
+        } else if (e.key === 'ArrowUp') {
+          e.preventDefault();
+          if (activeIdx > 0) {
+            items.forEach(it => it.classList.remove('active'));
+            items[activeIdx - 1].classList.add('active');
+            items[activeIdx - 1].scrollIntoView({ block: 'nearest' });
+          }
+          return;
+        } else if (e.key === 'Tab' || (e.key === 'Enter' && activeIdx >= 0 && items[activeIdx])) {
+          e.preventDefault();
+          const cmd = items[activeIdx].getAttribute('data-cmd');
+          applySlashCommand(cmd);
+          return;
+        } else if (e.key === 'Escape') {
+          menu.classList.remove('show');
+          return;
+        }
+      }
+
       if (e.key === 'Enter') {
         sendPrompt();
       } else if (e.key === 'Escape') {
-        document.getElementById('slash-menu').classList.remove('show');
+        if (menu) menu.classList.remove('show');
+      }
+    }
+
+    function handlePromptInput(e) {
+      const val = e.target.value;
+      const menu = document.getElementById('slash-menu');
+      if (!menu) return;
+      if (val.startsWith('/')) {
+        menu.classList.add('show');
+        const filterText = val.substring(1).trim().toLowerCase();
+        const items = menu.querySelectorAll('.slash-item');
+        let matchedFirst = false;
+        items.forEach(item => {
+          const cmd = item.getAttribute('data-cmd').toLowerCase();
+          if (!filterText || cmd.includes(filterText)) {
+            item.style.display = 'flex';
+            if (!matchedFirst) {
+              item.classList.add('active');
+              matchedFirst = true;
+            } else {
+              item.classList.remove('active');
+            }
+          } else {
+            item.style.display = 'none';
+            item.classList.remove('active');
+          }
+        });
+      } else {
+        menu.classList.remove('show');
       }
     }
 
