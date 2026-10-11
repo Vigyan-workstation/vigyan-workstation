@@ -15,34 +15,44 @@ gi.require_version('Gtk', '3.0')
 gi.require_version('WebKit2', '4.1')
 from gi.repository import Gtk, WebKit2, Gdk, GdkPixbuf, GLib
 
+import json
 from ollama_supervisor import OllamaSupervisor
 
-def _ollama_is_healthy() -> bool:
-    """Return True if a local Ollama answers on its loopback port."""
+try:
+    import psutil
+except ImportError:
+    psutil = None
+
+def get_system_telemetry() -> dict:
+    """Return lightweight live hardware metrics (CPU, RAM, GPU/VRAM)."""
+    ram_pct = 0.0
+    cpu_pct = 0.0
+    if psutil:
+        try:
+            ram_pct = psutil.virtual_memory().percent
+            cpu_pct = psutil.cpu_percent(interval=None)
+        except Exception:
+            pass
+    
+    gpu_info = "CPU Only"
     try:
-        import urllib.request
-        req = urllib.request.Request("http://127.0.0.1:11434/api/tags", method="GET")
-        with urllib.request.urlopen(req, timeout=1.0) as resp:
-            return resp.status == 200
+        res = subprocess.run(
+            ["nvidia-smi", "--query-gpu=utilization.gpu,memory.used,memory.total", "--format=csv,noheader,nounits"],
+            stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, timeout=0.3
+        )
+        if res.returncode == 0 and res.stdout.strip():
+            parts = [p.strip() for p in res.stdout.strip().split(",")]
+            if len(parts) >= 3:
+                gpu_util, mem_used, mem_tot = parts[0], parts[1], parts[2]
+                gpu_info = f"GPU {gpu_util}% | {int(mem_used)/1024:.1f}/{int(mem_tot)/1024:.1f} GB"
     except Exception:
-        return False
+        pass
 
-
-OLLAMA = OllamaSupervisor(["ollama", "serve"], is_healthy=_ollama_is_healthy)
-
-
-def ensure_ollama_daemon() -> None:
-    """Make sure a local Ollama is running; start one we own if it is not."""
-    try:
-        OLLAMA.start()
-    except OSError as exc:  # e.g. ollama is not installed
-        print(f"[WARN] could not start ollama: {exc}", file=sys.stderr)
-
-
-def _watch_ollama() -> bool:
-    """GLib timer callback: restart a crashed Ollama child. True keeps the timer."""
-    OLLAMA.check()
-    return True
+    return {
+        "cpu_pct": cpu_pct,
+        "ram_pct": ram_pct,
+        "gpu_info": gpu_info
+    }
 
 
 def main():
@@ -93,7 +103,7 @@ def main():
         except Exception:
             pass
 
-    # WebKit Settings & GPU Acceleration
+    # WebKit Settings & UserContentManager IPC
     settings = WebKit2.Settings()
     settings.set_enable_javascript(True)
     settings.set_enable_webgl(True)
@@ -106,9 +116,41 @@ def main():
     except Exception:
         pass
 
+    ucm = WebKit2.UserContentManager()
+    
+    # Native IPC Message Handler (Bidirectional Communication)
+    def on_script_message(manager, js_result):
+        try:
+            val = js_result.to_value()
+            if val and val.is_string():
+                data = json.loads(val.to_string())
+                action = data.get("action")
+                if action == "get_telemetry":
+                    stats = get_system_telemetry()
+                    js = f"window.onNativeTelemetry && window.onNativeTelemetry({json.dumps(stats)});"
+                    webview.run_javascript(js, None, None, None)
+        except Exception as e:
+            print(f"[IPC ERR] {e}", file=sys.stderr)
+
+    ucm.register_script_message_handler("nativeHost")
+    ucm.connect("script-message-received::nativeHost", on_script_message)
+
     # WebKit View
-    webview = WebKit2.WebView.new_with_settings(settings)
+    webview = WebKit2.WebView.new_with_user_content_manager(ucm)
+    webview.set_settings(settings)
     webview.set_background_color(Gdk.RGBA(0, 0, 0, 1))
+
+    # Periodic Hardware Telemetry Broadcast (every 2 seconds)
+    def _push_telemetry():
+        try:
+            stats = get_system_telemetry()
+            js = f"window.onNativeTelemetry && window.onNativeTelemetry({json.dumps(stats)});"
+            webview.run_javascript(js, None, None, None)
+        except Exception:
+            pass
+        return True
+
+    GLib.timeout_add_seconds(2, _push_telemetry)
 
     # Enterprise Navigation Policy: Prevent webview URL hijacking / unauthorized redirection
     def on_decide_policy(view, decision, decision_type):

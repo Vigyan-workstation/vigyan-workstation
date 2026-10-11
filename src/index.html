@@ -1210,11 +1210,109 @@
       align-items: center;
       gap: 10px;
     }
-    .cmd-tag {
-      font-size: 10.5px;
-      color: #71717a;
-      text-transform: uppercase;
+    /* EXECUTIVE HARDWARE TELEMETRY HUD */
+    .hud-telemetry {
+      display: flex;
+      align-items: center;
+      gap: 12px;
       font-family: ui-monospace, monospace;
+      font-size: 11px;
+      color: #a1a1aa;
+    }
+    .hud-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 3px 8px;
+      background: #090a0f;
+      border: 1px solid var(--border-subtle);
+      border-radius: 6px;
+    }
+    .hud-led {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #10b981;
+      box-shadow: 0 0 6px rgba(16, 185, 129, 0.8);
+      animation: ledPulse 2s infinite ease-in-out;
+    }
+    @keyframes ledPulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.85); }
+    }
+
+    /* HIGH-VELOCITY PROMPT CAPSULES STRIP */
+    .capsule-strip-container {
+      margin-top: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .capsule-strip-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      font-weight: 600;
+      letter-spacing: 0.6px;
+      color: #71717a;
+    }
+    .capsule-scroll-row {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      scrollbar-width: none;
+    }
+    .capsule-scroll-row::-webkit-scrollbar { display: none; }
+    .prompt-capsule {
+      background: #0b0d14;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 6px 14px;
+      font-size: 12px;
+      color: #d4d4d8;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s var(--ease-spring);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .prompt-capsule:hover {
+      background: #ffffff;
+      color: #000000;
+      border-color: #ffffff;
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 4px 16px rgba(255, 255, 255, 0.18);
+    }
+    .prompt-capsule:active {
+      transform: scale(0.96);
+    }
+
+    /* INLINE STEM ACTIONS BAR IN CHAT */
+    .stem-card-actions {
+      display: flex;
+      gap: 6px;
+      margin-top: 8px;
+      padding-top: 8px;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    .btn-stem-mini {
+      background: #0d0f16;
+      border: 1px solid var(--border-subtle);
+      border-radius: 5px;
+      padding: 3px 8px;
+      font-size: 11px;
+      color: #a1a1aa;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.15s;
+    }
+    .btn-stem-mini:hover {
+      background: #ffffff;
+      color: #000000;
+      border-color: #ffffff;
     }
 
     #toast {
@@ -1252,7 +1350,17 @@
       </div>
       <span class="header-badge" id="header-domain-badge">Lab Studio</span>
     </div>
-    <div style="display:flex; align-items:center; gap:8px;">
+    <div style="display:flex; align-items:center; gap:12px;">
+      <div class="hud-telemetry" id="top-hud-bar">
+        <span class="hud-pill" id="hud-host-pill" title="Local Air-Gapped Daemon">
+          <span class="hud-led"></span>
+          <span>127.0.0.1</span>
+        </span>
+        <span class="hud-pill" id="hud-gpu-pill" title="Hardware Compute Allocation">
+          <svg class="icon" viewBox="0 0 24 24" style="width:11px; height:11px;"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M9 9h6v6H9z"/></svg>
+          <span id="hud-gpu-text">CPU 0% | RAM 0%</span>
+        </span>
+      </div>
       <button class="btn-action" style="padding:4px 10px; font-size:11.5px; display:flex; align-items:center; gap:6px; background:#0e1018; border-color:var(--border);" onclick="openCommandPalette()">
         <svg class="icon" viewBox="0 0 24 24" style="width:12px; height:12px;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
         <span>Command Center</span>
@@ -2035,6 +2143,32 @@
           </div>
           <div class="msg-content">
             Sovereign STEM Lab active. Ready for multi-turn calculus, semiconductor physics, 3D CAD meshes, astronomy orbits, and simulations. Click <strong>[/]</strong> or type <strong>/</strong> for agentic tools.
+            
+            <div class="capsule-strip-container">
+              <div class="capsule-strip-label">⚡ Instant Acceleration Capsules (1-Click Run)</div>
+              <div class="capsule-scroll-row">
+                <button class="prompt-capsule" onclick="quickFirePrompt('/semiconductor GaAs band bending and carrier transport')">
+                  <svg class="icon" viewBox="0 0 24 24" style="width:12px; height:12px; stroke:#38bdf8;"><rect x="4" y="4" width="16" height="16" rx="2"/></svg>
+                  <span>GaAs Bandgap Bending</span>
+                </button>
+                <button class="prompt-capsule" onclick="quickFirePrompt('/simulate quantum wavepacket tunneling probability')">
+                  <svg class="icon" viewBox="0 0 24 24" style="width:12px; height:12px; stroke:#10b981;"><circle cx="12" cy="12" r="10"/></svg>
+                  <span>Quantum Tunneling Sim</span>
+                </button>
+                <button class="prompt-capsule" onclick="quickFirePrompt('/simulate orbit Keplerian 2-body elliptic eccentricity 0.6')">
+                  <svg class="icon" viewBox="0 0 24 24" style="width:12px; height:12px; stroke:#f59e0b;"><ellipse cx="12" cy="5" rx="9" ry="3"/></svg>
+                  <span>Kepler Orbit Dynamics</span>
+                </button>
+                <button class="prompt-capsule" onclick="quickFirePrompt('/plot Math.exp(-0.2*x)*Math.cos(2*x)')">
+                  <svg class="icon" viewBox="0 0 24 24" style="width:12px; height:12px; stroke:#ffffff;"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                  <span>Damped Oscillator Phase</span>
+                </button>
+                <button class="prompt-capsule" onclick="quickFirePrompt('/cad3d benzene')">
+                  <svg class="icon" viewBox="0 0 24 24" style="width:12px; height:12px; stroke:#ec4899;"><polygon points="12 2 2 8.5 2 15.5 12 22 22 15.5 22 8.5 12 2"/></svg>
+                  <span>Benzene Ring Conformation</span>
+                </button>
+              </div>
+            </div>
           </div>
         `;
         box.appendChild(welcome);
@@ -2050,13 +2184,36 @@
           : '';
         const caret = (isLastAssistant && isStreaming) ? '<span class="streaming-caret"></span>' : '';
         
+        let assistantActions = '';
+        if (m.role === 'assistant' && !isStreaming && m.content) {
+          assistantActions = `
+            <div class="stem-card-actions">
+              <button class="btn-stem-mini" onclick="copyRawMessage(${idx})" title="Copy Markdown">
+                <svg class="icon" viewBox="0 0 24 24" style="width:10px; height:10px;"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                Copy
+              </button>
+              <button class="btn-stem-mini" onclick="quickExtractPlot(${idx})" title="Send to 2D Plotter">
+                <svg class="icon" viewBox="0 0 24 24" style="width:10px; height:10px;"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                Plotter
+              </button>
+              <button class="btn-stem-mini" onclick="quickExportLatex(${idx})" title="Export LaTeX Paper TeX">
+                <svg class="icon" viewBox="0 0 24 24" style="width:10px; height:10px;"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
+                Overleaf TeX
+              </button>
+            </div>
+          `;
+        }
+
         d.innerHTML = `
           <div class="msg-header">
             ${m.role === 'assistant' ? '<img src="assets/micro_logo_v.png" class="msg-avatar-v" alt="V">' : ''}
             <span>${m.role === 'assistant' ? currentModel : 'You'}</span>
             ${speedBadge}
           </div>
-          <div class="msg-content">${formatMessageContent(m.content)}${caret}</div>
+          <div class="msg-content">
+            ${formatMessageContent(m.content)}${caret}
+            ${assistantActions}
+          </div>
         `;
         box.appendChild(d);
       });
@@ -2198,6 +2355,86 @@
         console.warn('LocalStorage quota or save error:', e);
       }
     }
+
+    /* DOPAMINE ACCELERATION HELPERS (QUICK CAPSULES & INLINE STEM ACTIONS) */
+    function quickFirePrompt(cmdText) {
+      const input = document.getElementById('chat-prompt');
+      input.value = cmdText;
+      haptics.send();
+      sendPrompt();
+    }
+
+    function copyRawMessage(idx) {
+      const s = sessions[activeSessionId];
+      if (s && s.messages[idx]) {
+        navigator.clipboard.writeText(s.messages[idx].content);
+        showToast('Message copied to clipboard');
+        haptics.click();
+      }
+    }
+
+    function quickExtractPlot(idx) {
+      const s = sessions[activeSessionId];
+      if (!s || !s.messages[idx]) return;
+      const content = s.messages[idx].content;
+      
+      // Look for mathematical formulas or workbench plot tags
+      const wbMatch = content.match(/```workbench:plot\s+([\s\S]*?)```/);
+      if (wbMatch) {
+        switchWorkbenchMode('plot');
+        document.getElementById('plot-expr').value = wbMatch[1].trim();
+        evaluateAndPlot();
+        showToast('Loaded into 2D Plotter');
+        haptics.success();
+        return;
+      }
+      
+      const mathMatch = content.match(/\$\$([\s\S]*?)\$\$/) || content.match(/`([^`]+)`/);
+      if (mathMatch) {
+        switchWorkbenchMode('plot');
+        showToast('Formula loaded to Plotter');
+        haptics.success();
+      } else {
+        switchWorkbenchMode('plot');
+        showToast('Switched to Plotter');
+        haptics.click();
+      }
+    }
+
+    function quickExportLatex(idx) {
+      const s = sessions[activeSessionId];
+      if (!s || !s.messages[idx]) return;
+      const content = s.messages[idx].content;
+      const fullTex = `\\documentclass{article}
+\\usepackage{amsmath, amssymb, amsfonts}
+\\usepackage{graphicx}
+\\title{Vigyan Pro STEM Research Memo}
+\\author{EXPERIMENTLAB.IN}
+\\date{\\today}
+
+\\begin{document}
+\\maketitle
+
+${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end{verbatim}')}
+
+\\end{document}`;
+
+      navigator.clipboard.writeText(fullTex);
+      showToast('Complete Overleaf .tex document copied');
+      haptics.success();
+    }
+
+    // Native Hardware Telemetry Listener from Python WebKitGTK Bridge
+    window.onNativeTelemetry = function(stats) {
+      if (!stats) return;
+      const gpuText = document.getElementById('hud-gpu-text');
+      if (gpuText) {
+        const cpuStr = stats.cpu_pct !== undefined ? `CPU ${Math.round(stats.cpu_pct)}%` : 'CPU';
+        const ramStr = stats.ram_pct !== undefined ? `RAM ${Math.round(stats.ram_pct)}%` : 'RAM';
+        const gpuStr = stats.gpu_info || 'Local';
+        gpuText.innerText = `${cpuStr} | ${ramStr} | ${gpuStr}`;
+      }
+    };
 
     function clearCurrentChat() {
       if (sessions[activeSessionId]) sessions[activeSessionId].messages = [];
