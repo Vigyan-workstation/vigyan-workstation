@@ -52,7 +52,8 @@ def launch_webview2():
         "--force-dark-mode"
     ]
     try:
-        subprocess.Popen(cmd)
+        proc = subprocess.Popen(cmd)
+        proc.wait()
         return True
     except Exception as e:
         print(f"Failed to launch Edge app mode: {e}")
@@ -60,5 +61,30 @@ def launch_webview2():
         webbrowser.open(file_url)
         return True
 
+def _ollama_is_healthy() -> bool:
+    try:
+        import urllib.request
+        req = urllib.request.Request("http://127.0.0.1:11434/api/tags", method="GET")
+        with urllib.request.urlopen(req, timeout=1.0) as resp:
+            return resp.status == 200
+    except Exception:
+        return False
+
+def main():
+    try:
+        from ollama_supervisor import OllamaSupervisor
+        supervisor = OllamaSupervisor(["ollama", "serve"], is_healthy=_ollama_is_healthy)
+        try:
+            supervisor.start()
+        except Exception as exc:
+            print(f"[WARN] could not start ollama on windows: {exc}", file=sys.stderr)
+        try:
+            launch_webview2()
+        finally:
+            supervisor.stop()
+    except ImportError:
+        launch_webview2()
+
 if __name__ == "__main__":
-    launch_webview2()
+    main()
+
