@@ -35,6 +35,20 @@ def _alive(pid: int) -> bool:
     return True
 
 
+def _wait_until_started(pid: int, timeout: float = 3.0) -> None:
+    """Wait until setpriv has set the parent-death option and exec'd the command."""
+    deadline = time.monotonic() + timeout
+    while time.monotonic() < deadline:
+        try:
+            comm = Path(f"/proc/{pid}/comm").read_text().strip()
+        except FileNotFoundError:
+            return
+        if comm != "setpriv":
+            return
+        time.sleep(0.01)
+    raise AssertionError("child never finished starting")
+
+
 @pytest.mark.skipif(not sys.platform.startswith("linux"), reason="Linux only")
 def test_child_dies_when_parent_is_sigkilled() -> None:
     parent = subprocess.Popen(
@@ -45,6 +59,7 @@ def test_child_dies_when_parent_is_sigkilled() -> None:
         assert parent.stdout is not None
         child_pid = int(parent.stdout.readline())
         assert _alive(child_pid)
+        _wait_until_started(child_pid)
 
         parent.kill()  # SIGKILL: no cleanup code can run in the parent
         parent.wait()
