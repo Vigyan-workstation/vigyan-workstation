@@ -1,24 +1,20 @@
 """Lifecycle tests for the Ollama supervisor (no GUI, no network, no real Ollama)."""
 from __future__ import annotations
 
-import os
 import sys
 from collections.abc import Iterator
 
 import pytest
 
 from ollama_supervisor import OllamaSupervisor
+from proc_helpers import alive
 
 # A harmless stand-in for "ollama serve": sleeps for a minute.
 SLEEPER = [sys.executable, "-c", "import time; time.sleep(60)"]
 
 
 def _alive(pid: int) -> bool:
-    try:
-        os.kill(pid, 0)  # signal 0 = existence check only
-    except ProcessLookupError:
-        return False
-    return True
+    return alive(pid)
 
 
 @pytest.fixture

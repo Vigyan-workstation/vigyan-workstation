@@ -35,7 +35,7 @@ def test_crash_is_detected_and_child_restarted(supervisor: OllamaSupervisor) -> 
     supervisor.start()
     first_pid = supervisor.pid
     assert first_pid is not None
-    os.kill(first_pid, signal.SIGKILL)  # simulate Ollama crashing
+    os.kill(first_pid, getattr(signal, "SIGKILL", signal.SIGTERM))  # simulate a crash
     assert _wait_for(supervisor.check), "crash was never detected"
     assert supervisor.pid not in (None, first_pid)
     assert supervisor.owns_process

@@ -9,6 +9,7 @@ import time
 from pathlib import Path
 
 import pytest
+from proc_helpers import alive
 
 SRC = Path(__file__).resolve().parents[1] / "src"
 
@@ -28,11 +29,7 @@ time.sleep(60)
 
 
 def _alive(pid: int) -> bool:
-    try:
-        os.kill(pid, 0)
-    except ProcessLookupError:
-        return False
-    return True
+    return alive(pid)
 
 
 def _wait_until_started(pid: int, timeout: float = 3.0) -> None:
@@ -49,7 +46,7 @@ def _wait_until_started(pid: int, timeout: float = 3.0) -> None:
     raise AssertionError("child never finished starting")
 
 
-@pytest.mark.skipif(not sys.platform.startswith("linux"), reason="Linux only")
+@pytest.mark.skipif(sys.platform not in ("linux", "win32"), reason="Linux and Windows only")
 def test_child_dies_when_parent_is_sigkilled() -> None:
     parent = subprocess.Popen(
         [sys.executable, "-c", HELPER], stdout=subprocess.PIPE, text=True
@@ -70,4 +67,4 @@ def test_child_dies_when_parent_is_sigkilled() -> None:
         assert not _alive(child_pid), "child survived its parent being SIGKILLed"
     finally:
         if child_pid is not None and _alive(child_pid):
-            os.kill(child_pid, signal.SIGKILL)  # never leak, even on failure
+            os.kill(child_pid, getattr(signal, "SIGKILL", signal.SIGTERM))  # never leak
