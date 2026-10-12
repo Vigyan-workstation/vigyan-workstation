@@ -1857,15 +1857,15 @@
           <div class="vault-card">
             <div>
               <div class="vault-model-name">
-                <span>Vidhi AI 1.5B Legal</span>
+                <span>Qwen 2.5 Math 1.5B</span>
                 <span style="font-size:11px; color:#a1a1aa;">1.1 GB</span>
               </div>
-              <span class="vault-author-badge">@shreyansh12183</span>
-              <div class="vault-card-desc">Bharatiya Nyaya Sanhita (BNS 2023) &amp; GST</div>
+              <span class="vault-author-badge">@qwen</span>
+              <div class="vault-card-desc">Formal Proofs, Calculus &amp; Symbolic Math</div>
             </div>
             <div class="vault-card-footer">
               <span class="vault-tag">Q4_K_M</span>
-              <button class="btn-vault-action" onclick="downloadSovereignModel('vidhi-ai:1.5b')">Download</button>
+              <button class="btn-vault-action" onclick="downloadSovereignModel('qwen2.5-math:1.5b')">Download</button>
             </div>
           </div>
 
@@ -3508,27 +3508,22 @@ Provide rigorous mathematical and scientific analysis. Never emit square bracket
       if (!s || !s.messages[idx]) return;
       const content = s.messages[idx].content;
       
-      // Look for mathematical formulas or workbench plot tags
-      const wbMatch = content.match(/```workbench:plot\s+([\s\S]*?)```/);
-      if (wbMatch) {
-        switchWorkbenchMode('plot');
-        document.getElementById('plot-expr').value = wbMatch[1].trim();
-        evaluateAndPlot();
-        showToast('Loaded into 2D Plotter');
-        haptics.success();
-        return;
+      const wbMatch = content.match(/```(?:workbench:plot|plot)\s+([\s\S]*?)```/);
+      let expr = wbMatch ? wbMatch[1].trim() : '';
+      if (!expr) {
+        const mathMatch = content.match(/\$\$([\s\S]*?)\$\$/) || content.match(/`([^`]+)`/);
+        if (mathMatch) expr = mathMatch[1].trim();
       }
+      if (!expr) expr = 'Math.exp(-0.2*x)*Math.cos(2*x)';
       
-      const mathMatch = content.match(/\$\$([\s\S]*?)\$\$/) || content.match(/`([^`]+)`/);
-      if (mathMatch) {
-        switchWorkbenchMode('plot');
-        showToast('Formula loaded to Plotter');
-        haptics.success();
-      } else {
-        switchWorkbenchMode('plot');
-        showToast('Switched to Plotter');
-        haptics.click();
-      }
+      s.messages.push({
+        role: 'assistant',
+        content: `\`\`\`plot\n${expr}\n\`\`\`\n\n### Interactive 2D Function Plot • IN-CHAT\n- **Function**: \`f(x) = ${expr}\`\n- Tune parameter \(k\) and toggle derivatives \(f'(x)\) / integrals directly above.`
+      });
+      saveSessions();
+      renderChat();
+      showToast('Dynamic Plotter loaded in chat');
+      haptics.success();
     }
 
     function quickExportLatex(idx) {
@@ -3786,24 +3781,6 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
         renderChat(false);
         haptics.success();
 
-        // Parse tool blocks in assistant response
-        const pMatch = assistantMsg.content.match(/```workbench:plot\s+([\s\S]*?)```/);
-        if (pMatch) {
-          switchWorkbenchMode('plot');
-          document.getElementById('plot-expr').value = pMatch[1].trim();
-          evaluateAndPlot();
-        }
-        const cMatch = assistantMsg.content.match(/```workbench:3d\s+([\s\S]*?)```/);
-        if (cMatch) {
-          switchWorkbenchMode('3d');
-          renderCAD3D(cMatch[1].trim());
-        }
-        const sMatch = assistantMsg.content.match(/```workbench:sim\s+([\s\S]*?)```/);
-        if (sMatch) {
-          switchWorkbenchMode('sim');
-          initSimulation(sMatch[1].trim());
-        }
-
       } catch (err) {
         if (err.name === 'AbortError') {
           assistantMsg.content += ' [Stopped]';
@@ -4040,29 +4017,31 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
     }
 
     function loadPlotPreset(type) {
+      const pInput = document.getElementById('plot-expr');
+      if (!pInput) return;
       if (type === 'mosfet') {
-        document.getElementById('plot-expr').value = '0.5 * k * Math.pow(Math.max(0, x - 1.5), 2) * (1 + 0.02 * x)';
+        pInput.value = '0.5 * k * Math.pow(Math.max(0, x - 1.5), 2) * (1 + 0.02 * x)';
         setLatexProof('MOSFET Saturation Current (ID - VDS):', '$$I_D = \\frac{1}{2} \\mu_n C_{ox} \\frac{W}{L} (V_{GS} - V_{th})^2 (1 + \\lambda V_{DS})$$');
       } else if (type === 'diode') {
-        document.getElementById('plot-expr').value = '1e-6 * (Math.exp(x / (k * 2)) - 1)';
+        pInput.value = '1e-6 * (Math.exp(x / (k * 2)) - 1)';
         setLatexProof('Shockley Ideal Diode Equation:', '$$I = I_s \\left( e^{\\frac{q V}{\\eta k_B T}} - 1 \\right)$$');
       } else if (type === 'damped') {
-        document.getElementById('plot-expr').value = 'Math.exp(-k*x) * Math.cos(w*x)';
+        pInput.value = 'Math.exp(-k*x) * Math.cos(w*x)';
         setLatexProof('Damped Harmonic Oscillator:', '$$\\frac{d^2 x}{dt^2} + 2\\gamma \\frac{dx}{dt} + \\omega_0^2 x = 0$$');
       } else if (type === 'soliton') {
-        document.getElementById('plot-expr').value = 'a * Math.pow(1 / Math.cosh(k * (x - 10)), 2)';
+        pInput.value = 'a * Math.pow(1 / Math.cosh(k * (x - 10)), 2)';
         setLatexProof('Korteweg-de Vries (KdV) Soliton Wave:', '$$u(x, t) = \\frac{c}{2} \\operatorname{sech}^2\\left( \\frac{\\sqrt{c}}{2}(x - ct) \\right)$$');
       } else if (type === 'gaussian') {
-        document.getElementById('plot-expr').value = '(1 / Math.sqrt(2 * Math.PI)) * Math.exp(-0.5 * Math.pow(x - 5, 2))';
+        pInput.value = '(1 / Math.sqrt(2 * Math.PI)) * Math.exp(-0.5 * Math.pow(x - 5, 2))';
         setLatexProof('Gaussian Normal Distribution:', '$$f(x) = \\frac{1}{\\sigma\\sqrt{2\\pi}} e^{-\\frac{(x-\\mu)^2}{2\\sigma^2}}$$');
       } else if (type === 'sigmoid') {
-        document.getElementById('plot-expr').value = '1 / (1 + Math.exp(-k * (x - 5)))';
+        pInput.value = '1 / (1 + Math.exp(-k * (x - 5)))';
         setLatexProof('Sigmoid / Logistic Activation:', '$$\\sigma(x) = \\frac{1}{1 + e^{-x}}$$');
       } else if (type === 'fourier') {
-        document.getElementById('plot-expr').value = '(4 / Math.PI) * (Math.sin(w*x) + (1/3)*Math.sin(3*w*x) + (1/5)*Math.sin(5*w*x))';
+        pInput.value = '(4 / Math.PI) * (Math.sin(w*x) + (1/3)*Math.sin(3*w*x) + (1/5)*Math.sin(5*w*x))';
         setLatexProof('Fourier Series Square Wave:', '$$f(x) = \\frac{4}{\\pi} \\sum_{n=1,3,5...} \\frac{1}{n}\\sin(n\\omega x)$$');
       } else if (type === 'bessel') {
-        document.getElementById('plot-expr').value = 'Math.cos(w*x) / Math.sqrt(Math.PI * (x + 0.5))';
+        pInput.value = 'Math.cos(w*x) / Math.sqrt(Math.PI * (x + 0.5))';
         setLatexProof('Zero-Order Bessel Function J₀(x) Asymptotic:', '$$J_0(x) \\sim \\sqrt{\\frac{2}{\\pi x}} \\cos\\left(x - \\frac{\\pi}{4}\\right)$$');
       }
       evaluateAndPlot();
