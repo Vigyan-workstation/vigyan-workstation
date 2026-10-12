@@ -14,7 +14,153 @@
   <!-- Offline Plotly -->
   <script src="vendor/plotly.min.js"></script>
   <style>
-    :root {
+  
+    /* =========================================================================
+       EXPERIMENTLAB OFFICIAL WEBSITE ANIMATION SUITE & LUXURY DESIGN SYSTEM
+       ========================================================================= */
+    @property --hud-sweep {
+      syntax: '<angle>';
+      initial-value: 0deg;
+      inherits: false;
+    }
+
+    @keyframes radarSpin {
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes hudSweepOrbit {
+      to { --hud-sweep: 360deg; }
+    }
+
+    @keyframes textShimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+
+    @keyframes cardSlideIn {
+      from { opacity: 0; transform: translateY(8px) scale(0.99); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    @keyframes caretBlink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+
+    /* Radar Pulse Status Indicator */
+    .pulse-dot, .radar-indicator {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      position: relative;
+      display: inline-block;
+      background: #10b981;
+      box-shadow: 0 0 8px rgba(16, 185, 129, 0.8);
+      flex-shrink: 0;
+    }
+    .pulse-dot::before, .radar-indicator::before {
+      content: "";
+      position: absolute;
+      inset: -3px;
+      border-radius: 50%;
+      border: 1px dashed rgba(16, 185, 129, 0.6);
+      animation: radarSpin 4s linear infinite;
+    }
+
+    /* Conic Border Beam Sweep on Top Navigation Dock */
+    .header-nav {
+      position: relative;
+      overflow: hidden;
+    }
+    .header-nav::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      padding: 1px;
+      background: conic-gradient(from var(--hud-sweep),
+          transparent 0 70%,
+          rgba(255, 255, 255, 0.18) 82%,
+          rgba(255, 255, 255, 0.85) 90%,
+          transparent 96%);
+      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      animation: hudSweepOrbit 6s linear infinite;
+      pointer-events: none;
+    }
+
+    /* Tactical HUD Corner Brackets on In-Chat STEM Cards */
+    .stem-inline-card {
+      position: relative;
+      transition: all 0.3s var(--ease-spring);
+      animation: cardSlideIn 0.35s var(--ease-spring);
+    }
+    .stem-inline-card::before,
+    .stem-inline-card::after {
+      content: "";
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      border-color: rgba(255, 255, 255, 0.25);
+      transition: all 0.3s var(--ease-spring);
+      pointer-events: none;
+      z-index: 10;
+    }
+    .stem-inline-card::before {
+      top: 5px; left: 5px;
+      border-top: 1.5px solid;
+      border-left: 1.5px solid;
+    }
+    .stem-inline-card::after {
+      bottom: 5px; right: 5px;
+      border-bottom: 1.5px solid;
+      border-right: 1.5px solid;
+    }
+    .stem-inline-card:hover::before {
+      transform: translate(-2px, -2px);
+      border-color: #ffffff;
+      box-shadow: -2px -2px 6px rgba(255, 255, 255, 0.4);
+    }
+    .stem-inline-card:hover::after {
+      transform: translate(2px, 2px);
+      border-color: #ffffff;
+      box-shadow: 2px 2px 6px rgba(255, 255, 255, 0.4);
+    }
+
+    /* Metallic Text Shimmer on Brand Title */
+    .brand-title span {
+      background: linear-gradient(90deg, #ffffff 0%, #a1a1aa 50%, #ffffff 100%);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: textShimmer 5s linear infinite;
+    }
+
+    /* Glowing Focus Aura on Bottom Input Capsule */
+    .floating-prompt-capsule {
+      transition: all 0.25s var(--ease-spring);
+    }
+    .floating-prompt-capsule:focus-within {
+      border-color: rgba(255, 255, 255, 0.38) !important;
+      box-shadow: 0 0 28px rgba(56, 189, 248, 0.2), 0 8px 32px rgba(0, 0, 0, 0.85) !important;
+      transform: translateY(-1px);
+    }
+
+    /* Streaming Caret */
+    .streaming-caret {
+      display: inline-block;
+      width: 6px;
+      height: 14px;
+      background: #38bdf8;
+      margin-left: 4px;
+      vertical-align: middle;
+      border-radius: 1px;
+      animation: caretBlink 0.8s infinite;
+    }
+
+  :root {
       --bg: #000000;
       --bg-surface: #060608;
       --sidebar: #050608;
@@ -1915,7 +2061,13 @@
             </span>
           </div>
           <div class="setting-row">
-            <textarea id="setting-persona" class="setting-input" style="height:76px; resize:none;">You are Vigyan Pro, a sovereign STEM AI engine. When providing calculations or proofs, use LaTeX inside $$...$$. To render visualizations on the user's workbench, you can emit tool blocks like ```workbench:plot [expr]``` or ```workbench:3d [silicon|graphene|benzene|caffeine|water|methane|torus|spring]``` or ```workbench:sim [pn-junction|quantum|orbit|pendulum|enzyme|reaction]```.</textarea>
+            <textarea id="setting-persona" class="setting-input" style="height:76px; resize:none;">You are Vigyan Pro, an elite Sovereign STEM AI Engine by ExperimentLab. When presenting derivations or formulas, format with clean LaTeX ($$...$$). To illustrate concepts with interactive visualizers, emit standard code blocks:
+- For 3D CAD: ```cad3d\ngear\n``` (or dna, propeller, heatsink, truss, silicon, benzene, torus, spring)
+- For Semiconductor: ```semiconductor\nmosfet\n``` (or bandgap, pn)
+- For 2D Graphs: ```plot\nMath.sin(x)*Math.exp(-0.2*x)\n```
+- For Physics Simulations: ```simulate\norbit\n``` (or quantum, pn-junction, pendulum)
+- For Circuits: ```circuit\nfilter\n``` (or 555, rlc)
+Provide rigorous mathematical and scientific analysis. Never emit square brackets or workbench prefixes.</textarea>
           </div>
           <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:6px;">
             <button class="btn-action" onclick="checkOllamaConnection()">Ping Daemon</button>
@@ -2117,12 +2269,21 @@
       }
     }
 
-    /* MODEL DROPDOWN */
+    /* MODEL DROPDOWN WITH AUTO-DISMISS OUTSIDE CLICK */
     function toggleModelDropdown() {
       const menu = document.getElementById('model-dropdown');
       menu.classList.toggle('show');
       haptics.click();
     }
+
+    window.addEventListener('click', (e) => {
+      const dd = document.getElementById('model-dropdown');
+      if (dd && dd.classList.contains('show')) {
+        if (!e.target.closest('#active-model-btn') && !e.target.closest('#model-dropdown')) {
+          dd.classList.remove('show');
+        }
+      }
+    });
     function changeModel(m) {
       currentModel = m;
       document.getElementById('current-model-name').innerText = m;
@@ -3046,8 +3207,31 @@
       // Restore code blocks with interactive STEM cards or luxury syntax styling & copy button
       out = out.replace(/__CODE_BLOCK_(\d+)__/g, (m, idx) => {
         const b = codeBlocks[idx];
-        const rawLang = (b.lang || '').toLowerCase().trim();
-        const codeText = b.code.replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#039;/g, "'");
+        let rawLang = (b.lang || '').toLowerCase().trim();
+        let codeText = b.code.replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#039;/g, "'").trim();
+
+        // Normalize legacy workbench: prefixes and small model artifacts
+        if (rawLang.startsWith('workbench:')) {
+          rawLang = rawLang.replace('workbench:', '').trim();
+        }
+        const lowerCode = codeText.toLowerCase();
+
+        // Detect simulation types
+        if (rawLang === 'orbit' || lowerCode.includes('orbit') || lowerCode.includes('kepler')) {
+          rawLang = 'simulate';
+        } else if (lowerCode.includes('quantum') || lowerCode.includes('tunnel')) {
+          rawLang = 'simulate';
+        } else if (lowerCode.includes('pendulum')) {
+          rawLang = 'simulate';
+        } else if (lowerCode.includes('pn-junction') || lowerCode.includes('depletion')) {
+          rawLang = 'simulate';
+        } else if (rawLang === '3d' || lowerCode.includes('gear') || lowerCode.includes('propeller') || lowerCode.includes('heatsink') || lowerCode.includes('benzene')) {
+          rawLang = 'cad3d';
+        } else if (lowerCode.includes('mosfet') || lowerCode.includes('bandgap') || lowerCode.includes('vgs')) {
+          rawLang = 'semiconductor';
+        } else if (lowerCode.includes('math.sin') || lowerCode.includes('math.cos') || lowerCode.includes('math.exp')) {
+          rawLang = 'plot';
+        }
 
         const cardUid = 'card_' + Math.random().toString(36).substr(2, 9);
 
@@ -3559,6 +3743,13 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
         let tokenCount = 0;
         const streamStartTime = performance.now();
 
+        // Establish stable streaming DOM target ONCE (prevents violent screen vibrations)
+        renderChat(true);
+        const lastMsgEl = document.querySelector('#chat-box .msg.assistant:last-child');
+        const contentEl = lastMsgEl ? lastMsgEl.querySelector('.msg-content') : null;
+        const speedBadgeEl = lastMsgEl ? lastMsgEl.querySelector('.stream-speed-badge') : null;
+        const scrollWrapper = document.querySelector('.chat-scroll-wrapper');
+
         while (true) {
           const { done, value } = await reader.read();
           if (done) break;
@@ -3575,7 +3766,17 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
                 tokenCount++;
                 const elapsedSec = Math.max(0.1, (performance.now() - streamStartTime) / 1000);
                 const tokPerSec = (tokenCount / elapsedSec).toFixed(1);
-                renderChat(true, tokPerSec);
+                
+                // Stable in-place update (ZERO DOM WIPES, ZERO SCREEN JITTER)
+                if (contentEl) {
+                  contentEl.innerHTML = `${formatMessageContent(assistantMsg.content)}<span class="streaming-caret"></span>`;
+                }
+                if (speedBadgeEl) {
+                  speedBadgeEl.innerHTML = `<svg style="width:10px; height:10px; stroke:currentColor; fill:none;" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>${tokPerSec} tok/s`;
+                }
+                if (scrollWrapper) {
+                  scrollWrapper.scrollTop = scrollWrapper.scrollHeight;
+                }
               }
             } catch (e) {}
           }
@@ -5003,8 +5204,28 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
       showToast('Preferences saved');
     }
 
-    // Auto-init on load
+    // Auto-init on load with settings migration
     window.addEventListener('DOMContentLoaded', () => {
+      try {
+        const raw = localStorage.getItem('vigyan_v26_settings');
+        if (raw) {
+          const s = JSON.parse(raw);
+          if (s.temp) document.getElementById('setting-temp').value = s.temp;
+          if (s.ctx) document.getElementById('setting-ctx').value = s.ctx;
+          if (s.topp) document.getElementById('setting-topp').value = s.topp;
+          if (s.url) { document.getElementById('setting-host').value = s.url; OLLAMA_HOST = s.url; }
+          if (s.keepalive) document.getElementById('setting-keepalive').value = s.keepalive;
+          // Discard legacy corrupt persona containing workbench:3d if stored
+          if (s.persona && !s.persona.includes('workbench:3d')) {
+            document.getElementById('setting-persona').value = s.persona;
+          } else {
+            // Save fresh clean persona
+            s.persona = document.getElementById('setting-persona').value;
+            localStorage.setItem('vigyan_v26_settings', JSON.stringify(s));
+          }
+        }
+      } catch (e) {}
+
       renderChat();
       checkOllamaConnection();
       renderLatex(document.body);
