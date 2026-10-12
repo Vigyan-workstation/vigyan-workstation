@@ -16,6 +16,7 @@
   <style>
     :root {
       --bg: #000000;
+      --bg-surface: #060608;
       --sidebar: #050608;
       --surface: #090a0f;
       --surface-elevated: #10121a;
@@ -30,9 +31,11 @@
       --emerald-subdued: #10b981;
       --cyan-accent: #38bdf8;
       --amber-accent: #f59e0b;
+      --pink-accent: #ec4899;
       --danger: #ef4444;
       --accent: #ffffff;
       --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -47,6 +50,19 @@
       user-select: none;
       letter-spacing: -0.012em;
       -webkit-font-smoothing: antialiased;
+    }
+
+    /* EXPERIMENTLAB.IN FINE MONOCHROME GRID */
+    .bg-grid-overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background-size: 48px 48px;
+      background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+      pointer-events: none;
+      z-index: 0;
     }
 
     .icon {
@@ -365,38 +381,122 @@
       flex-direction: column;
       gap: 6px;
       width: 100%;
-      animation: fadeIn 0.2s ease-out;
+      animation: msgSpringIn 0.28s var(--ease-spring);
     }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes msgSpringIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes chipGlow {
+      0%, 100% { border-color: rgba(255, 255, 255, 0.1); }
+      50% { border-color: rgba(255, 255, 255, 0.35); }
+    }
     .msg-header {
       display: flex;
       align-items: center;
-      gap: 7px;
+      gap: 8px;
       font-size: 11.5px;
       font-weight: 600;
       color: #a1a1aa;
     }
     .msg-avatar-v {
-      width: 14px;
-      height: 14px;
-      border-radius: 2px;
+      width: 15px;
+      height: 15px;
+      border-radius: 3px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
     }
     .msg-content {
       font-size: 13.5px;
-      line-height: 1.6;
+      line-height: 1.62;
       color: #f4f4f6;
       word-break: break-word;
     }
     .msg.user .msg-content {
-      background: #10121a;
+      background: #0f1118;
       border: 1px solid var(--border);
       border-radius: 8px;
       padding: 10px 14px;
       align-self: flex-start;
       max-width: 90%;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
     }
     .msg.assistant .msg-content {
       padding: 2px 4px;
+    }
+
+    /* INLINE STEM INTERACTIVE CARDS */
+    .stem-inline-card {
+      background: #0a0b10;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      margin: 10px 0;
+      overflow: hidden;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+      animation: msgSpringIn 0.3s var(--ease-spring);
+    }
+    .stem-inline-header {
+      background: #0e1018;
+      padding: 7px 12px;
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .stem-inline-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .stem-inline-body {
+      padding: 10px 12px;
+    }
+    .stem-inline-canvas {
+      width: 100%;
+      height: 220px;
+      background: #050608;
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* CONTEXTUAL AI STEM ACTION CHIPS */
+    .ai-chips-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 8px;
+      padding-top: 8px;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    .ai-action-chip {
+      background: rgba(255, 255, 255, 0.035);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #d4d4d8;
+      font-size: 11px;
+      font-weight: 500;
+      padding: 4px 10px;
+      border-radius: 14px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.18s var(--ease-spring);
+      user-select: none;
+    }
+    .ai-action-chip:hover {
+      background: #ffffff;
+      color: #000000;
+      border-color: #ffffff;
+      transform: translateY(-1px) scale(1.02);
+      box-shadow: 0 4px 12px rgba(255, 255, 255, 0.18);
+    }
+    .ai-action-chip:active {
+      transform: scale(0.96);
     }
 
     /* REASONING DRAWER (<think> blocks) */
@@ -1387,6 +1487,9 @@
 </head>
 <body>
 
+  <!-- FINE GRID OVERLAY -->
+  <div class="bg-grid-overlay"></div>
+
   <!-- TOP APP HEADER -->
   <header class="top-header">
     <div class="header-left">
@@ -1564,7 +1667,8 @@
         <div class="stem-header">
           <div class="workbench-tabs">
             <button class="wb-tab active" id="tab-btn-plot" onclick="switchWorkbenchMode('plot')">Plotter</button>
-            <button class="wb-tab" id="tab-btn-3d" onclick="switchWorkbenchMode('3d')">3D CAD &amp; Mol</button>
+            <button class="wb-tab" id="tab-btn-3d" onclick="switchWorkbenchMode('3d')">3D CAD</button>
+            <button class="wb-tab" id="tab-btn-semi" onclick="switchWorkbenchMode('semi')">Semiconductor</button>
             <button class="wb-tab" id="tab-btn-sim" onclick="switchWorkbenchMode('sim')">Simulation</button>
           </div>
           <div class="stem-actions">
@@ -1644,8 +1748,9 @@
               </div>
             </div>
 
-            <!-- CANVAS / PLOTLY VIEWPORTS -->
+            <!-- CANVAS / PLOTLY / SEMI VIEWPORTS -->
             <div id="plot-container"></div>
+            <div id="semi-container" style="display:none; width:100%; min-height:260px; background:#06070a; border-radius:6px; overflow:hidden; border:1px solid var(--border-subtle);"></div>
             <canvas id="sim-canvas" width="516" height="250"></canvas>
 
             <!-- DOMAIN & TOOL PRESETS -->
@@ -2414,9 +2519,88 @@
         </details>`;
       });
 
-      // Restore code blocks with luxury syntax styling & copy button
+      // Restore code blocks with interactive STEM cards or luxury syntax styling & copy button
       out = out.replace(/__CODE_BLOCK_(\d+)__/g, (m, idx) => {
         const b = codeBlocks[idx];
+        const rawLang = (b.lang || '').toLowerCase().trim();
+        const codeText = b.code.replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#039;/g, "'");
+
+        // 1. Interactive 3D CAD Block in chat
+        if (rawLang === 'cad' || rawLang === '3d' || rawLang === 'stl' || rawLang === 'cad3d') {
+          const presetName = codeText.toLowerCase().includes('dna') ? 'dna' 
+            : codeText.toLowerCase().includes('propeller') ? 'propeller'
+            : codeText.toLowerCase().includes('heatsink') ? 'heatsink'
+            : codeText.toLowerCase().includes('truss') ? 'truss'
+            : codeText.toLowerCase().includes('silicon') ? 'silicon'
+            : 'gear';
+          return `<div class="stem-inline-card">
+            <div class="stem-inline-header">
+              <span class="stem-inline-title">
+                <svg class="icon" viewBox="0 0 24 24" style="stroke:#38bdf8;"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+                3D CAD Parametric Assembly • ${presetName.toUpperCase()}
+              </span>
+              <button class="btn-stem-mini" onclick="switchWorkbenchMode('3d'); renderCAD3D('${presetName}'); showToast('Opened in STEM Workbench');">
+                Inspect in Workbench
+              </button>
+            </div>
+            <div class="stem-inline-body">
+              <div style="font-size:12px; color:#d4d4d8; font-family:ui-monospace,monospace; margin-bottom:6px;">Parametric Geometry Specs: ${escapeHtml(codeText.slice(0, 100))}...</div>
+              <div class="ai-chips-row">
+                <span class="ai-action-chip" onclick="switchWorkbenchMode('3d'); renderCAD3D('${presetName}'); toggle3DWireframe();">Wireframe Mesh</span>
+                <span class="ai-action-chip" onclick="quickFirePrompt('/cad3d ${presetName} evaluate structural torsion shear stress and von Mises yield')">Evaluate Shear Stress</span>
+                <span class="ai-action-chip" onclick="quickFirePrompt('/derive parametric CAD geometry equations for ${presetName}')">Derive Parametric Math</span>
+              </div>
+            </div>
+          </div>`;
+        }
+
+        // 2. Semiconductor Physics Card in chat
+        if (rawLang === 'semiconductor' || rawLang === 'semi' || rawLang === 'mosfet' || rawLang === 'bandgap') {
+          return `<div class="stem-inline-card">
+            <div class="stem-inline-header">
+              <span class="stem-inline-title">
+                <svg class="icon" viewBox="0 0 24 24" style="stroke:#10b981;"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M9 9h6v6H9z"/></svg>
+                Semiconductor Device Physics • Solid State
+              </span>
+              <button class="btn-stem-mini" onclick="switchWorkbenchMode('semi'); showToast('Opened in Semiconductor Workbench');">
+                Inspect in Workbench
+              </button>
+            </div>
+            <div class="stem-inline-body">
+              <div style="font-size:12px; color:#d4d4d8; font-family:ui-monospace,monospace; margin-bottom:6px;">Device Carrier Model: ${escapeHtml(codeText.slice(0, 110))}...</div>
+              <div class="ai-chips-row">
+                <span class="ai-action-chip" onclick="quickFirePrompt('/semiconductor GaAs band bending and carrier transport')">GaAs Bandgap</span>
+                <span class="ai-action-chip" onclick="quickFirePrompt('/semiconductor MOSFET subthreshold swing and DIBL short-channel effects')">Subthreshold Swing &amp; DIBL</span>
+                <span class="ai-action-chip" onclick="quickFirePrompt('/derive Shockley diode equation diffusion current')">Derive Shockley Equation</span>
+              </div>
+            </div>
+          </div>`;
+        }
+
+        // 3. LaTeX / Math Proof Card in chat
+        if (rawLang === 'latex' || rawLang === 'math' || rawLang === 'tex') {
+          return `<div class="stem-inline-card">
+            <div class="stem-inline-header">
+              <span class="stem-inline-title">
+                <svg class="icon" viewBox="0 0 24 24" style="stroke:#f59e0b;"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
+                Analytical Mathematical Formulation
+              </span>
+              <button class="btn-stem-mini" onclick="navigator.clipboard.writeText(this.closest('.stem-inline-card').querySelector('.math-tex-block').innerText); showToast('LaTeX copied');">
+                Copy TeX
+              </button>
+            </div>
+            <div class="stem-inline-body">
+              <div class="math-tex-block" style="text-align:center; padding:8px 0;">$$${codeText}$$</div>
+              <div class="ai-chips-row">
+                <span class="ai-action-chip" onclick="quickFirePrompt('/derive step-by-step rigorous proof for this mathematical equation')">Derive Full Proof</span>
+                <span class="ai-action-chip" onclick="quickFirePrompt('/plot mathematical function corresponding to this expression')">Plot on 2D Workbench</span>
+                <span class="ai-action-chip" onclick="quickFirePrompt('/derive physical interpretation and dimensional analysis')">Dimensional Analysis</span>
+              </div>
+            </div>
+          </div>`;
+        }
+
+        // Standard Syntax Block with Copy button
         const langTag = b.lang ? `<span style="font-size:10px; color:#71717a; text-transform:uppercase; font-family:ui-monospace,monospace;">${b.lang}</span>` : '';
         return `<div style="background:#090a0f; border:1px solid var(--border); border-radius:6px; margin:8px 0; overflow:hidden;">
           <div style="background:#0c0e14; padding:3px 10px; border-bottom:1px solid var(--border-subtle); display:flex; justify-content:space-between; align-items:center;">
@@ -2609,12 +2793,26 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
       // Check for client-side workbench triggers
       const lowerText = text.toLowerCase();
       if (lowerText.startsWith('/semiconductor')) {
-        selectDomain('semiconductor');
+        switchWorkbenchMode('semi');
+        let semiTarget = 'mosfet';
+        if (lowerText.includes('bandgap') || lowerText.includes('eg') || lowerText.includes('varshni')) semiTarget = 'bandgap';
+        else if (lowerText.includes('pn') || lowerText.includes('diode') || lowerText.includes('junction')) semiTarget = 'pn';
+        renderSemiconductor(semiTarget);
         return;
       } else if (lowerText.startsWith('/cad3d')) {
         switchWorkbenchMode('3d');
-        const match = text.match(/\/cad3d\s*(\w*)/i);
-        const cadTarget = (match && match[1]) ? match[1].toLowerCase() : 'silicon';
+        let cadTarget = 'gear';
+        if (lowerText.includes('dna') || lowerText.includes('helix')) cadTarget = 'dna';
+        else if (lowerText.includes('propeller') || lowerText.includes('drone')) cadTarget = 'propeller';
+        else if (lowerText.includes('heatsink') || lowerText.includes('fin')) cadTarget = 'heatsink';
+        else if (lowerText.includes('truss') || lowerText.includes('bridge')) cadTarget = 'truss';
+        else if (lowerText.includes('silicon')) cadTarget = 'silicon';
+        else if (lowerText.includes('benzene')) cadTarget = 'benzene';
+        else if (lowerText.includes('graphene')) cadTarget = 'graphene';
+        else {
+          const match = text.match(/\/cad3d\s*(\w*)/i);
+          if (match && match[1]) cadTarget = match[1].toLowerCase();
+        }
         renderCAD3D(cadTarget);
         return;
       } else if (lowerText.startsWith('/plot')) {
@@ -2768,8 +2966,11 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
         simAnimationId = null;
       }
 
+      const semiEl = document.getElementById('semi-container');
+
       if (mode === 'plot') {
         plotEl.style.display = 'block';
+        if (semiEl) semiEl.style.display = 'none';
         canvasEl.style.display = 'none';
         plotFormula.style.display = 'flex';
         plotCalc.style.display = 'flex';
@@ -2790,28 +2991,48 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
         evaluateAndPlot();
       } else if (mode === '3d') {
         plotEl.style.display = 'block';
+        if (semiEl) semiEl.style.display = 'none';
         canvasEl.style.display = 'none';
         plotFormula.style.display = 'none';
         plotCalc.style.display = 'none';
         sliderGrid.style.display = 'none';
         extraBar.style.display = 'flex';
         setup3DControls();
-        title.innerHTML = `<svg class="icon" viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg> 3D CAD &amp; Molecular Conformations`;
+        title.innerHTML = `<svg class="icon" viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg> 3D CAD Parametric Assembly`;
         badge.innerText = 'Plotly WebGL 3D';
         presets.innerHTML = `
+          <span class="tool-btn" onclick="renderCAD3D('gear')">Planetary Gear</span>
+          <span class="tool-btn" onclick="renderCAD3D('dna')">B-DNA Double Helix</span>
+          <span class="tool-btn" onclick="renderCAD3D('propeller')">Drone Propeller</span>
+          <span class="tool-btn" onclick="renderCAD3D('heatsink')">Microchannel Heat Sink</span>
+          <span class="tool-btn" onclick="renderCAD3D('truss')">Warren Space Truss</span>
           <span class="tool-btn" onclick="renderCAD3D('silicon')">Silicon (Diamond Si)</span>
           <span class="tool-btn" onclick="renderCAD3D('graphene')">Graphene (sp² Sheet)</span>
           <span class="tool-btn" onclick="renderCAD3D('benzene')">Benzene (C₆H₆)</span>
-          <span class="tool-btn" onclick="renderCAD3D('caffeine')">Caffeine (C₈H₁₀N₄O₂)</span>
-          <span class="tool-btn" onclick="renderCAD3D('water')">Water (H₂O)</span>
-          <span class="tool-btn" onclick="renderCAD3D('methane')">Methane (CH₄)</span>
           <span class="tool-btn" onclick="renderCAD3D('torus')">CAD Torus</span>
           <span class="tool-btn" onclick="renderCAD3D('spring')">Helical Spring</span>
-          <span class="tool-btn" onclick="renderCAD3D('paraboloid')">Paraboloid</span>
         `;
-        renderCAD3D(activeDomain === 'semiconductor' ? 'silicon' : 'benzene');
+        renderCAD3D(activeDomain === 'semiconductor' ? 'silicon' : 'gear');
+      } else if (mode === 'semi') {
+        plotEl.style.display = 'none';
+        if (semiEl) semiEl.style.display = 'block';
+        canvasEl.style.display = 'none';
+        plotFormula.style.display = 'none';
+        plotCalc.style.display = 'none';
+        sliderGrid.style.display = 'none';
+        extraBar.style.display = 'flex';
+        setupSemiControls();
+        title.innerHTML = `<svg class="icon" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M9 9h6v6H9z"/><path d="M9 1v3m6-3v3m-6 17v3m6-3v3M1 9h3m-3 6h3m17-6h3m-3 6h3"/></svg> Semiconductor Device Physics`;
+        badge.innerText = 'Quantum Carrier';
+        presets.innerHTML = `
+          <span class="tool-btn" onclick="renderSemiconductor('mosfet')">MOSFET Inversion &amp; Saturation</span>
+          <span class="tool-btn" onclick="renderSemiconductor('bandgap')">Energy Bandgap (Si vs GaAs vs GaN)</span>
+          <span class="tool-btn" onclick="renderSemiconductor('pn')">PN Junction Depletion</span>
+        `;
+        renderSemiconductor('mosfet');
       } else if (mode === 'sim') {
         plotEl.style.display = 'none';
+        if (semiEl) semiEl.style.display = 'none';
         canvasEl.style.display = 'block';
         plotFormula.style.display = 'none';
         plotCalc.style.display = 'none';
@@ -2965,6 +3186,144 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
       evaluateAndPlot();
     }
 
+    /* SEMICONDUCTOR DEVICE CONTROLS & RENDERER */
+    let currentSemiType = 'mosfet';
+    let semiMaterial = 'Si';
+    let semiVgs = 1.2;
+    let semiVds = 1.0;
+    let semiVbias = 0.0;
+
+    const SEMI_MATERIALS = {
+      Si: { name: 'Silicon (Si)', Eg: '1.12 eV', ni: '1.5×10¹⁰ cm⁻³', eps: 11.7, Vth: 0.45 },
+      GaAs: { name: 'Gallium Arsenide (GaAs)', Eg: '1.42 eV', ni: '2.1×10⁶ cm⁻³', eps: 12.9, Vth: 0.35 },
+      GaN: { name: 'Gallium Nitride (GaN)', Eg: '3.40 eV', ni: '1.9×10⁻¹⁰ cm⁻³', eps: 8.9, Vth: 0.85 },
+      SiC: { name: 'Silicon Carbide (SiC)', Eg: '3.26 eV', ni: '1.5×10⁻⁸ cm⁻³', eps: 9.7, Vth: 0.70 }
+    };
+
+    function setupSemiControls() {
+      const left = document.getElementById('wb-extra-left');
+      const right = document.getElementById('wb-extra-right');
+      left.innerHTML = `
+        <select id="semi-mat-select" style="background:#090a10; border:1px solid var(--border); color:#ffffff; font-size:11px; padding:2px 6px; border-radius:4px;" onchange="setSemiMaterial(this.value)">
+          <option value="Si">Si (1.12 eV)</option>
+          <option value="GaAs">GaAs (1.42 eV)</option>
+          <option value="GaN">GaN (3.40 eV)</option>
+          <option value="SiC">SiC (3.26 eV)</option>
+        </select>
+        <span style="font-size:11px; color:#a1a1aa; margin-left:4px;">Vgs:</span>
+        <input type="range" class="stem-slider" style="width:65px;" min="0.0" max="2.5" step="0.05" value="${semiVgs}" oninput="updateSemiVgs(this.value)">
+        <span style="font-size:11px; color:#a1a1aa; margin-left:4px;">Vds:</span>
+        <input type="range" class="stem-slider" style="width:65px;" min="0.0" max="2.5" step="0.05" value="${semiVds}" oninput="updateSemiVds(this.value)">
+      `;
+      const mat = SEMI_MATERIALS[semiMaterial];
+      right.innerHTML = `<span id="semi-id-readout" style="font-size:11px; color:#38bdf8; font-weight:600;">Id: 2.14 mA • Eg: ${mat.Eg}</span>`;
+    }
+
+    function setSemiMaterial(mat) {
+      semiMaterial = mat;
+      renderSemiconductor(currentSemiType);
+    }
+    function updateSemiVgs(val) {
+      semiVgs = parseFloat(val);
+      renderSemiconductor(currentSemiType);
+    }
+    function updateSemiVds(val) {
+      semiVds = parseFloat(val);
+      renderSemiconductor(currentSemiType);
+    }
+
+    function renderSemiconductor(type) {
+      currentSemiType = type;
+      const container = document.getElementById('semi-container');
+      if (!container) return;
+      const mat = SEMI_MATERIALS[semiMaterial] || SEMI_MATERIALS.Si;
+      const Vth = mat.Vth;
+      const isInverted = semiVgs > Vth;
+      const isSaturated = semiVds > Math.max(0, semiVgs - Vth);
+      
+      let Id = 0;
+      if (semiVgs > Vth) {
+        const vov = semiVgs - Vth;
+        const kn = 2.4;
+        if (semiVds < vov) Id = kn * (vov * semiVds - 0.5 * semiVds * semiVds);
+        else Id = 0.5 * kn * vov * vov * (1 + 0.05 * semiVds);
+      }
+      const idStr = Math.max(0, Id).toFixed(2);
+      const readout = document.getElementById('semi-id-readout');
+      if (readout) readout.innerText = `Id: ${idStr} mA • Eg: ${mat.Eg}`;
+
+      if (type === 'mosfet') {
+        setLatexProof('MOSFET Channel Inversion & Pinch-Off (Gradual Channel):', '$$I_D = \\mu_n C_{ox} \\frac{W}{L} \\left[ (V_{GS} - V_{th})V_{DS} - \\frac{1}{2}V_{DS}^2 \\right], \\quad V_{DS,sat} = V_{GS} - V_{th}$$');
+        container.innerHTML = `
+          <div style="padding:12px; display:flex; flex-direction:column; align-items:center;">
+            <svg viewBox="0 0 540 210" style="width:100%; max-height:220px;">
+              <rect x="20" y="80" width="500" height="110" fill="#0c1020" stroke="#1e293b" stroke-width="1.5" rx="4"/>
+              <text x="270" y="165" fill="#64748b" font-size="11" font-family="monospace" text-anchor="middle">${mat.name} p-type Substrate (NA = 10¹⁶ cm⁻³)</text>
+              <rect x="40" y="80" width="100" height="50" fill="#0369a1" stroke="#38bdf8" stroke-width="1.2" rx="2"/>
+              <text x="90" y="110" fill="#ffffff" font-size="11" font-weight="bold" font-family="monospace" text-anchor="middle">Source (n⁺)</text>
+              <rect x="400" y="80" width="100" height="50" fill="#0369a1" stroke="#38bdf8" stroke-width="1.2" rx="2"/>
+              <text x="450" y="105" fill="#ffffff" font-size="11" font-weight="bold" font-family="monospace" text-anchor="middle">Drain (n⁺)</text>
+              <text x="450" y="122" fill="#bae6fd" font-size="9" font-family="monospace" text-anchor="middle">Vds = ${semiVds.toFixed(2)}V</text>
+              <rect x="150" y="66" width="240" height="12" fill="#047857" stroke="#10b981" stroke-width="1"/>
+              <text x="270" y="76" fill="#ecfdf5" font-size="9" font-family="monospace" text-anchor="middle">High-κ Gate Dielectric</text>
+              <rect x="170" y="44" width="200" height="20" fill="#b45309" stroke="#f59e0b" stroke-width="1.2" rx="2"/>
+              <text x="270" y="58" fill="#ffffff" font-size="10" font-weight="bold" font-family="monospace" text-anchor="middle">Metal Gate (Vgs = ${semiVgs.toFixed(2)}V)</text>
+              ${isInverted ? `
+                <rect x="140" y="80" width="260" height="${isSaturated ? '4' : '9'}" fill="#38bdf8" opacity="0.95"/>
+                <text x="270" y="100" fill="#38bdf8" font-size="9.5" font-family="monospace" text-anchor="middle">
+                  ${isSaturated ? 'Pinch-off Saturation Channel (Electrons e⁻)' : 'Conducting Inversion Channel (Linear Triode)'}
+                </text>
+              ` : `
+                <text x="270" y="100" fill="#71717a" font-size="9.5" font-family="monospace" text-anchor="middle">Subthreshold / Cutoff (Vgs &lt; Vth ${Vth}V)</text>
+              `}
+            </svg>
+            <div class="ai-chips-row" style="width:100%; justify-content:center;">
+              <span class="ai-action-chip" onclick="quickFirePrompt('/semiconductor MOSFET subthreshold swing and DIBL short-channel effects')">Subthreshold Swing &amp; DIBL</span>
+              <span class="ai-action-chip" onclick="quickFirePrompt('/semiconductor Compare electron mobility in GaAs vs Silicon FinFET')">GaAs vs Si Mobility</span>
+              <span class="ai-action-chip" onclick="quickFirePrompt('/derive MOSFET saturation drain current transconductance gm')">Derive gm Transconductance</span>
+            </div>
+          </div>
+        `;
+      } else if (type === 'bandgap') {
+        setLatexProof('Energy Bandgap vs Temperature (Varshni Empirical Model):', '$$E_g(T) = E_g(0) - \\frac{\\alpha T^2}{T + \\beta}, \\quad n_i(T) = \\sqrt{N_c N_v} \\exp\\left(-\\frac{E_g}{2 k_B T}\\right)$$');
+        container.innerHTML = `
+          <div style="padding:14px; text-align:center;">
+            <svg viewBox="0 0 500 190" style="width:100%; max-height:200px;">
+              <rect x="50" y="20" width="400" height="40" fill="#1e1b4b" stroke="#6366f1" stroke-width="1.5" rx="4"/>
+              <text x="250" y="45" fill="#c7d2fe" font-size="12" font-family="monospace" text-anchor="middle">Conduction Band (Ec) - Free Electron States</text>
+              <line x1="50" y1="95" x2="450" y2="95" stroke="#a1a1aa" stroke-dasharray="4,4" stroke-width="1"/>
+              <text x="250" y="90" fill="#a1a1aa" font-size="10" font-family="monospace" text-anchor="middle">Intrinsic Fermi Level (Ei)</text>
+              <rect x="50" y="130" width="400" height="40" fill="#0f172a" stroke="#38bdf8" stroke-width="1.5" rx="4"/>
+              <text x="250" y="155" fill="#bae6fd" font-size="12" font-family="monospace" text-anchor="middle">Valence Band (Ev) - Hole States</text>
+              <text x="250" y="112" fill="#38bdf8" font-size="11" font-weight="bold" font-family="monospace" text-anchor="middle">Eg = ${mat.Eg} (${mat.name})</text>
+            </svg>
+            <div class="ai-chips-row" style="width:100%; justify-content:center;">
+              <span class="ai-action-chip" onclick="quickFirePrompt('/semiconductor Varshni temperature dependence of bandgap for ${mat.name}')">Varshni T-Dependence</span>
+              <span class="ai-action-chip" onclick="quickFirePrompt('/semiconductor Direct vs Indirect bandgap recombination in GaAs')">Direct vs Indirect Recombination</span>
+            </div>
+          </div>
+        `;
+      } else if (type === 'pn') {
+        setLatexProof('PN Junction Built-in Potential & Depletion Width:', '$$V_{bi} = \\frac{k_B T}{q} \\ln\\left( \\frac{N_A N_D}{n_i^2} \\right), \\quad W = \\sqrt{ \\frac{2 \\varepsilon_s}{q} \\left( \\frac{1}{N_A} + \\frac{1}{N_D} \\right) (V_{bi} - V) }$$');
+        container.innerHTML = `
+          <div style="padding:14px; text-align:center;">
+            <svg viewBox="0 0 520 180" style="width:100%; max-height:190px;">
+              <rect x="30" y="40" width="210" height="100" fill="#1e1b4b" stroke="#38bdf8" stroke-width="1.5" rx="3"/>
+              <text x="135" y="95" fill="#ffffff" font-size="12" font-weight="bold" font-family="monospace" text-anchor="middle">p-region (Holes h⁺)</text>
+              <rect x="240" y="40" width="60" height="100" fill="#090a12" stroke="#f59e0b" stroke-width="1.2"/>
+              <text x="270" y="95" fill="#f59e0b" font-size="9.5" font-family="monospace" text-anchor="middle">Depletion</text>
+              <rect x="300" y="40" width="190" height="100" fill="#0369a1" stroke="#38bdf8" stroke-width="1.5" rx="3"/>
+              <text x="395" y="95" fill="#ffffff" font-size="12" font-weight="bold" font-family="monospace" text-anchor="middle">n-region (Electrons e⁻)</text>
+            </svg>
+            <div class="ai-chips-row" style="width:100%; justify-content:center;">
+              <span class="ai-action-chip" onclick="quickFirePrompt('/semiconductor PN junction reverse breakdown Zener vs Avalanche')">Zener vs Avalanche</span>
+              <span class="ai-action-chip" onclick="quickFirePrompt('/derive Shockley diode equation diffusion current')">Derive Shockley Equation</span>
+            </div>
+          </div>
+        `;
+      }
+    }
+
     /* 3D CONTROLS & WEBGL MESHES */
     function setup3DControls() {
       const left = document.getElementById('wb-extra-left');
@@ -2998,7 +3357,106 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
       const proofTitle = document.getElementById('proof-title');
       const mathProof = document.getElementById('math-proof');
 
-      if (type === 'silicon') {
+      if (type === 'gear') {
+        setLatexProof('Planetary Epicyclic Gear Transmission Assembly:', '$$i = 1 + \\frac{Z_{\\text{ring}}}{Z_{\\text{sun}}}, \\quad Z_{\\text{sun}} = 18, \\quad Z_{\\text{planet}} = 14, \\quad Z_{\\text{ring}} = 46$$');
+        const sunR = 2.0;
+        const planetR = 1.4;
+        const orbitR = 4.2;
+        const ringR = 7.0;
+        const sx = [], sy = [], sz = [];
+        const bx = [], by = [], bz = [];
+        
+        // Sun Gear (Center)
+        for (let a = 0; a <= 2 * Math.PI; a += 0.2) {
+          sx.push(sunR * Math.cos(a)); sy.push(sunR * Math.sin(a)); sz.push(0);
+        }
+        // 4 Planet Gears
+        for (let p = 0; p < 4; p++) {
+          const pAngle = (p / 4) * Math.PI * 2;
+          const px = orbitR * Math.cos(pAngle);
+          const py = orbitR * Math.sin(pAngle);
+          for (let a = 0; a <= 2 * Math.PI; a += 0.3) {
+            bx.push(px + planetR * Math.cos(a));
+            by.push(py + planetR * Math.sin(a));
+            bz.push(0);
+          }
+          bx.push(null); by.push(null); bz.push(null);
+        }
+        // Outer Ring
+        const rx = [], ry = [], rz = [];
+        for (let a = 0; a <= 2 * Math.PI; a += 0.15) {
+          rx.push(ringR * Math.cos(a)); ry.push(ringR * Math.sin(a)); rz.push(0);
+        }
+
+        data = [
+          { type: 'scatter3d', mode: 'lines', x: rx, y: ry, z: rz, line: { color: '#71717a', width: 6 }, name: 'Ring Annulus (Z=46)' },
+          { type: 'scatter3d', mode: 'lines', x: bx, y: by, z: bz, line: { color: '#38bdf8', width: 4 }, name: '4x Planet Gears (Z=14)' },
+          { type: 'scatter3d', mode: 'lines', x: sx, y: sy, z: sz, line: { color: '#ffffff', width: 5 }, name: 'Sun Gear (Z=18)' }
+        ];
+      } else if (type === 'dna') {
+        setLatexProof('B-DNA Double Helix Molecular Parameters:', '$$\\text{Pitch } p = 34\\text{ \\AA}, \\quad \\text{Diameter } d = 20\\text{ \\AA}, \\quad 10.5\\text{ bp/turn}, \\quad \\Delta\\theta = 34.3^\\circ$$');
+        const ax = [], ay = [], az = [];
+        const bx = [], by = [], bz = [];
+        const rx = [], ry = [], rz = [];
+        const R = 2.5;
+        for (let i = 0; i <= 36; i++) {
+          const a = i * 0.35;
+          const z = (i - 18) * 0.4;
+          const x1 = R * Math.cos(a), y1 = R * Math.sin(a);
+          const x2 = R * Math.cos(a + Math.PI), y2 = R * Math.sin(a + Math.PI);
+          ax.push(x1); ay.push(y1); az.push(z);
+          bx.push(x2); by.push(y2); bz.push(z);
+          if (i % 2 === 0) {
+            rx.push(x1, x2, null);
+            ry.push(y1, y2, null);
+            rz.push(z, z, null);
+          }
+        }
+        data = [
+          { type: 'scatter3d', mode: 'lines+markers', x: ax, y: ay, z: az, line: { color: '#38bdf8', width: 4 }, marker: { size: 4, color: '#38bdf8' }, name: 'Strand A (5′→3′)' },
+          { type: 'scatter3d', mode: 'lines+markers', x: bx, y: by, z: bz, line: { color: '#ec4899', width: 4 }, marker: { size: 4, color: '#ec4899' }, name: 'Strand B (3′→5′)' },
+          { type: 'scatter3d', mode: 'lines', x: rx, y: ry, z: rz, line: { color: '#10b981', width: 2 }, name: 'A-T / G-C Base Pairs' }
+        ];
+      } else if (type === 'propeller') {
+        setLatexProof('Aerodynamic Airfoil Drone Propeller Blade Twist:', '$$\\beta(r) = \\arctan\\left(\\frac{P}{2\\pi r}\\right), \\quad C_L = 2\\pi \\alpha, \\quad T = C_T \\rho n^2 D^4$$');
+        const px = [], py = [], pz = [];
+        for (let b = 0; b < 2; b++) {
+          const sign = (b === 0 ? 1 : -1);
+          for (let r = 1; r <= 8; r += 0.5) {
+            const chord = (8 - r) * 0.35;
+            const twist = (9 - r) * 0.08;
+            px.push(sign * r, -chord * Math.cos(twist), chord * Math.sin(twist));
+            px.push(sign * r, chord * Math.cos(twist), -chord * Math.sin(twist));
+            px.push(null); py.push(null); pz.push(null);
+          }
+        }
+        data = [
+          { type: 'scatter3d', mode: 'lines', x: px, y: py, z: pz, line: { color: '#ffffff', width: 3 }, name: 'Airfoil Chord Elements' },
+          { type: 'scatter3d', mode: 'markers', x: [0], y: [0], z: [0], marker: { size: 14, color: '#38bdf8' }, name: 'Motor Shaft Hub' }
+        ];
+      } else if (type === 'heatsink') {
+        setLatexProof('Microchannel Fin Array Heat Dissipation:', '$$q = \\sqrt{h P k A_c} (T_b - T_\\infty) \\tanh(m L_c), \\quad m = \\sqrt{\\frac{h P}{k A_c}}$$');
+        const fx = [], fy = [], fz = [];
+        for (let fin = -5; fin <= 5; fin += 1) {
+          const x = fin * 1.0;
+          fx.push(x, x, x, x, x, null);
+          fy.push(-4, 4, 4, -4, -4, null);
+          fz.push(0, 0, 5, 5, 0, null);
+        }
+        data = [{ type: 'scatter3d', mode: 'lines', x: fx, y: fy, z: fz, line: { color: '#38bdf8', width: 3 }, name: 'Aluminum Extruded Fins (11x)' }];
+      } else if (type === 'truss') {
+        setLatexProof('Warren Space Truss Finite Element Node Equilibrium:', '$$\\sum F_x = 0, \\quad \\sum F_y = 0, \\quad \\sum F_z = 0, \\quad \\mathbf{K} \\mathbf{u} = \\mathbf{F}$$');
+        const tx = [], ty = [], tz = [];
+        const L = 3.0;
+        for (let i = 0; i < 4; i++) {
+          const x1 = i * L, x2 = (i + 1) * L;
+          tx.push(x1, x2, null); ty.push(0, 0, null); tz.push(0, 0, null); // bottom
+          tx.push(x1 + L/2, x2 + L/2, null); ty.push(0, 0, null); tz.push(L, L, null); // top
+          tx.push(x1, x1 + L/2, null); ty.push(0, 0, null); tz.push(0, L, null); // diagonal 1
+          tx.push(x1 + L/2, x2, null); ty.push(0, 0, null); tz.push(L, 0, null); // diagonal 2
+        }
+        data = [{ type: 'scatter3d', mode: 'lines', x: tx, y: ty, z: tz, line: { color: '#ffffff', width: 4 }, name: 'Space Truss Members' }];
+      } else if (type === 'silicon') {
         setLatexProof('Silicon Diamond Cubic Crystal Lattice:', '$$\\text{Diamond Lattice: } Fd\\bar{3}m, \\quad a = 5.43\\text{ \\AA}, \\quad \\text{Tetrahedral Bond Angle: } 109.47^\\circ$$');
         const a = 5.43;
         const atoms = [
