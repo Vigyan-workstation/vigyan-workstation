@@ -36,12 +36,20 @@ class OllamaSupervisor:
         stop_timeout: float = 5.0,
         die_with_parent: bool = True,
         max_restarts: int = 3,
+        extra_env: dict[str, str] | None = None,
     ) -> None:
         self._command: list[str] = list(command)
         self._is_healthy = is_healthy
         self._stop_timeout = stop_timeout
         self._die_with_parent = die_with_parent
         self._max_restarts = max_restarts
+        self._extra_env: dict[str, str] = {
+            "OLLAMA_FLASH_ATTENTION": "1",
+            "OLLAMA_KV_CACHE_TYPE": "q8_0",
+            "OLLAMA_NUM_PARALLEL": "1",
+        }
+        if extra_env:
+            self._extra_env.update(extra_env)
         self._restarts = 0
         self._job: int | None = None  # Windows Job Object handle
         self._process: subprocess.Popen[bytes] | None = None
@@ -72,10 +80,15 @@ class OllamaSupervisor:
             if self._die_with_parent
             else self._command
         )
+        import os
+        child_env = os.environ.copy()
+        for k, v in self._extra_env.items():
+            child_env.setdefault(k, v)
         self._process = subprocess.Popen(
             command,
             stdout=subprocess.DEVNULL,
             stderr=subprocess.DEVNULL,
+            env=child_env,
         )
         if self._die_with_parent and sys.platform == "win32":
             self._attach_to_job(self._process)
