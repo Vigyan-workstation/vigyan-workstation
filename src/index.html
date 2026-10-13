@@ -67,12 +67,12 @@
       animation: radarSpin 4s linear infinite;
     }
 
-    /* Conic Border Beam Sweep on Top Navigation Dock */
-    .header-nav {
+    /* Orbiting HUD Conic Border Beam in Chat (Input Box, Welcome Badge, Active STEM Cards) */
+    .input-box-row {
       position: relative;
       overflow: hidden;
     }
-    .header-nav::before {
+    .input-box-row::before {
       content: "";
       position: absolute;
       inset: 0;
@@ -80,53 +80,275 @@
       padding: 1px;
       background: conic-gradient(from var(--hud-sweep),
           transparent 0 70%,
-          rgba(255, 255, 255, 0.18) 82%,
-          rgba(255, 255, 255, 0.85) 90%,
+          rgba(255, 255, 255, 0.22) 82%,
+          rgba(255, 255, 255, 0.90) 90%,
           transparent 96%);
       -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
       mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
       -webkit-mask-composite: xor;
       mask-composite: exclude;
-      animation: hudSweepOrbit 6s linear infinite;
+      animation: hudSweepOrbit 5.5s linear infinite;
       pointer-events: none;
+      z-index: 2;
+    }
+    .input-box-row:focus-within {
+      border-color: rgba(255, 255, 255, 0.45) !important;
+      box-shadow: 0 0 26px rgba(255, 255, 255, 0.14), 0 8px 30px rgba(0, 0, 0, 0.85) !important;
+      transform: translateY(-1px);
     }
 
-    /* Tactical HUD Corner Brackets on In-Chat STEM Cards */
+    /* Tactical HUD Corner Brackets & Conic Border Beam on In-Chat STEM Cards */
     .stem-inline-card {
       position: relative;
       transition: all 0.3s var(--ease-spring);
       animation: cardSlideIn 0.35s var(--ease-spring);
     }
-    .stem-inline-card::before,
+    .stem-inline-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      padding: 1px;
+      background: conic-gradient(from var(--hud-sweep),
+          transparent 0 74%,
+          rgba(255, 255, 255, 0.18) 84%,
+          rgba(56, 189, 248, 0.75) 90%,
+          transparent 96%);
+      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      animation: hudSweepOrbit 7s linear infinite;
+      pointer-events: none;
+      z-index: 10;
+    }
     .stem-inline-card::after {
       content: "";
       position: absolute;
+      bottom: 5px; right: 5px;
       width: 10px;
       height: 10px;
-      border-color: rgba(255, 255, 255, 0.25);
+      border-color: rgba(255, 255, 255, 0.3);
+      border-bottom: 1.5px solid;
+      border-right: 1.5px solid;
       transition: all 0.3s var(--ease-spring);
       pointer-events: none;
       z-index: 10;
     }
-    .stem-inline-card::before {
-      top: 5px; left: 5px;
-      border-top: 1.5px solid;
-      border-left: 1.5px solid;
-    }
-    .stem-inline-card::after {
-      bottom: 5px; right: 5px;
-      border-bottom: 1.5px solid;
-      border-right: 1.5px solid;
-    }
-    .stem-inline-card:hover::before {
-      transform: translate(-2px, -2px);
-      border-color: #ffffff;
-      box-shadow: -2px -2px 6px rgba(255, 255, 255, 0.4);
+    .stem-inline-card:hover {
+      border-color: rgba(255, 255, 255, 0.32);
+      box-shadow: 0 14px 36px rgba(0, 0, 0, 0.75);
     }
     .stem-inline-card:hover::after {
       transform: translate(2px, 2px);
       border-color: #ffffff;
       box-shadow: 2px 2px 6px rgba(255, 255, 255, 0.4);
+    }
+
+    /* Official Website Welcome Hero & 2x2 Tactical Bracket Cards (from chat.html) */
+    @keyframes revealUp {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .welcome-hero {
+      text-align: center;
+      margin: 28px auto 16px;
+      max-width: 680px;
+      animation: revealUp 0.5s var(--ease-out) both;
+    }
+    .welcome-badge {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-family: ui-monospace, "JetBrains Mono", monospace;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      padding: 6px 16px;
+      border-radius: 9999px;
+      margin-bottom: 16px;
+      background: rgba(10, 10, 14, 0.85);
+      backdrop-filter: blur(8px);
+      overflow: hidden;
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.5);
+    }
+    .welcome-badge::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 9999px;
+      padding: 1px;
+      background: conic-gradient(from var(--hud-sweep),
+          transparent 0 70%,
+          rgba(255, 255, 255, 0.25) 82%,
+          rgba(255, 255, 255, 0.85) 88%,
+          transparent 96%);
+      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      animation: hudSweepOrbit 5s linear infinite;
+      pointer-events: none;
+    }
+    .hud-radar {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      position: relative;
+      display: inline-block;
+      background: #ffffff;
+      box-shadow: 0 0 6px rgba(255, 255, 255, 0.8);
+      flex-shrink: 0;
+    }
+    .hud-radar::before {
+      content: "";
+      position: absolute;
+      inset: -3px;
+      border-radius: 50%;
+      border: 1px dashed rgba(255, 255, 255, 0.45);
+      animation: radarSpin 5s linear infinite;
+    }
+    .welcome-title {
+      font-size: 26px;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 10px;
+      letter-spacing: -0.03em;
+    }
+    .welcome-title span {
+      background: linear-gradient(180deg, #ffffff 40%, #a1a1aa 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .welcome-desc {
+      font-size: 13.5px;
+      color: #a1a1aa;
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+    .starter-prompts {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .prompt-card {
+      position: relative;
+      background: #0c0c0f;
+      border: 1px solid rgba(255, 255, 255, 0.10);
+      border-radius: 6px;
+      padding: 15px 18px;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.24s var(--ease-spring);
+      animation: revealUp 0.55s var(--ease-out) both;
+      animation-delay: calc(var(--i, 0) * 55ms);
+    }
+    .prompt-card::before,
+    .prompt-card::after {
+      content: "";
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      border-color: #ffffff;
+      transition: all 0.3s var(--ease-spring);
+      opacity: 0.25;
+      pointer-events: none;
+    }
+    .prompt-card::before {
+      top: 4px; left: 4px;
+      border-top: 1.5px solid;
+      border-left: 1.5px solid;
+    }
+    .prompt-card::after {
+      bottom: 4px; right: 4px;
+      border-bottom: 1.5px solid;
+      border-right: 1.5px solid;
+    }
+    .prompt-card:hover {
+      border-color: rgba(255, 255, 255, 0.28);
+      transform: translateY(-2px);
+      background: rgba(255, 255, 255, 0.04);
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.65);
+    }
+    .prompt-card:hover::before {
+      transform: translate(-2px, -2px);
+      opacity: 1;
+      box-shadow: -2px -2px 6px rgba(255, 255, 255, 0.4);
+    }
+    .prompt-card:hover::after {
+      transform: translate(2px, 2px);
+      opacity: 1;
+      box-shadow: 2px 2px 6px rgba(255, 255, 255, 0.4);
+    }
+    .prompt-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: #ffffff;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+    .prompt-sub {
+      font-size: 11.5px;
+      color: #71717a;
+      font-family: ui-monospace, monospace;
+    }
+
+    /* Sidebar Bottom Telemetry HUD Card (from chat.html) */
+    .sidebar-telemetry {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.10);
+      border-radius: 6px;
+      padding: 12px 14px;
+      font-family: ui-monospace, "JetBrains Mono", monospace;
+      font-size: 10.5px;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      margin-top: auto;
+    }
+    .telemetry-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #71717a;
+    }
+    .telemetry-row span:last-child {
+      color: #ffffff;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Pre-Token 3-Dot Bouncing Typing Indicator (from chat.html) */
+    .typing-indicator {
+      display: inline-flex;
+      gap: 5px;
+      align-items: center;
+      padding: 10px 14px;
+      background: #0c0c0f;
+      border: 1px solid rgba(255, 255, 255, 0.10);
+      border-radius: 6px;
+      margin: 4px 0;
+    }
+    .typing-dot {
+      width: 5px;
+      height: 5px;
+      background: #ffffff;
+      border-radius: 50%;
+      animation: typing-jump 1.3s infinite ease-in-out;
+    }
+    .typing-dot:nth-child(2) { animation-delay: 0.15s; }
+    .typing-dot:nth-child(3) { animation-delay: 0.3s; }
+    @keyframes typing-jump {
+      0%, 80%, 100% { transform: translateY(0); opacity: 0.3; }
+      40% { transform: translateY(-4px); opacity: 1; }
     }
 
     /* Metallic Text Shimmer on Brand Title */
@@ -138,22 +360,12 @@
       animation: textShimmer 5s linear infinite;
     }
 
-    /* Glowing Focus Aura on Bottom Input Capsule */
-    .floating-prompt-capsule {
-      transition: all 0.25s var(--ease-spring);
-    }
-    .floating-prompt-capsule:focus-within {
-      border-color: rgba(255, 255, 255, 0.38) !important;
-      box-shadow: 0 0 28px rgba(56, 189, 248, 0.2), 0 8px 32px rgba(0, 0, 0, 0.85) !important;
-      transform: translateY(-1px);
-    }
-
     /* Streaming Caret */
     .streaming-caret {
       display: inline-block;
       width: 6px;
       height: 14px;
-      background: #38bdf8;
+      background: #ffffff;
       margin-left: 4px;
       vertical-align: middle;
       border-radius: 1px;
@@ -1646,7 +1858,6 @@
         <img src="assets/micro_logo_v.png" class="brand-logo-img" alt="V">
         <span>Vigyan Pro</span>
       </div>
-      <span class="header-badge" id="header-domain-badge">Lab Studio</span>
     </div>
     
     <!-- EXECUTIVE SEGMENTED NAVIGATION -->
@@ -1683,42 +1894,31 @@
     <div class="tab-content active" id="tab-studio">
       <!-- SIDEBAR -->
       <aside class="sidebar" id="app-sidebar">
-        <div class="sidebar-section">
-          <div class="sidebar-section-title">Workspaces</div>
-          <div class="domain-list">
-            <div class="domain-item active" id="domain-lab" onclick="selectDomain('lab')">
-              <svg class="icon" viewBox="0 0 24 24"><path d="M10 2v7.31L4.1 20.03A1 1 0 0 0 5 21h14a1 1 0 0 0 .9-1.03L14 9.31V2"/></svg>
-              <span>Lab Studio</span>
-            </div>
-            <div class="domain-item" id="domain-semiconductor" onclick="selectDomain('semiconductor')">
-              <svg class="icon" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M9 9h6v6H9z"/><path d="M9 1v3m6-3v3m-6 17v3m6-3v3M1 9h3m-3 6h3m17-6h3m-3 6h3"/></svg>
-              <span>Semiconductor</span>
-            </div>
-            <div class="domain-item" id="domain-astronomy" onclick="selectDomain('astronomy')">
-              <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-              <span>Astronomy</span>
-            </div>
-            <div class="domain-item" id="domain-biomed" onclick="selectDomain('biomed')">
-              <svg class="icon" viewBox="0 0 24 24"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/></svg>
-              <span>Biomed</span>
-            </div>
-            <div class="domain-item" id="domain-chem" onclick="selectDomain('chem')">
-              <svg class="icon" viewBox="0 0 24 24"><polygon points="12 2 2 8.5 2 15.5 12 22 22 15.5 22 8.5 12 2"/></svg>
-              <span>Chemistry</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="sidebar-section" style="flex:1; overflow-y:auto;">
+        <div class="sidebar-section" style="flex:1; overflow-y:auto; display:flex; flex-direction:column;">
+          <button class="btn-new-session" style="width:100%; justify-content:center; padding:9px 12px; margin-bottom:14px; font-family:ui-monospace,monospace; font-size:11.5px;" onclick="createNewSession()">
+            <svg class="icon" viewBox="0 0 24 24" style="width:12px; height:12px; stroke:#000000;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            <span>+ New STEM Session</span>
+          </button>
           <div class="sidebar-section-title">
-            <span>Sessions</span>
-            <button class="btn-new-session" onclick="createNewSession()">
-              <svg class="icon" viewBox="0 0 24 24" style="width:11px; height:11px; stroke:#000000;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-              New
-            </button>
+            <span>Conversations</span>
           </div>
-          <div class="session-list" id="session-container">
+          <div class="session-list" id="session-container" style="flex:1; overflow-y:auto;">
             <div class="session-item active" id="session-default" onclick="switchSession('default')">STEM Session</div>
+          </div>
+
+          <div class="sidebar-telemetry">
+            <div class="telemetry-row">
+              <span>ENGINE</span>
+              <span id="sidebar-model-telemetry">OLMoE 1B-7B</span>
+            </div>
+            <div class="telemetry-row">
+              <span>EXECUTION</span>
+              <span>ON-PREMISE</span>
+            </div>
+            <div class="telemetry-row">
+              <span>CLOUD EGRESS</span>
+              <span>NONE <span class="hud-radar"></span></span>
+            </div>
           </div>
         </div>
       </aside>
@@ -2026,18 +2226,39 @@ Provide rigorous mathematical and scientific analysis. Never emit square bracket
     }
     const haptics = new AudioHaptics();
 
+    /* MONOSPACE CIPHER SCRAMBLE DECODE (FROM OFFICIAL WEBSITE index.html) */
+    const GLYPHS = '01<>-_/[]{}=+*^?#';
+    function decodeLabel(el) {
+      if (!el) return;
+      const target = el.dataset.origText || el.textContent;
+      el.dataset.origText = target;
+      const start = performance.now();
+      const step = (now) => {
+        const settled = Math.floor((now - start) / 360 * target.length);
+        let out = '';
+        for (let i = 0; i < target.length; i++) {
+          out += (i < settled || target[i] === ' ')
+            ? target[i]
+            : GLYPHS[Math.floor(Math.random() * GLYPHS.length)];
+        }
+        if (settled < target.length) {
+          el.textContent = out;
+          requestAnimationFrame(step);
+        } else {
+          el.textContent = target;
+        }
+      };
+      requestAnimationFrame(step);
+    }
+
     /* COMMAND CENTER REGISTRY */
     let cmdSelectedIndex = 0;
     let filteredCmds = [];
     const COMMAND_ITEMS = [
-      { id: 'ws-lab', title: 'Switch to Lab Studio Workspace', tag: 'Workspace', run: () => selectDomain('lab') },
-      { id: 'ws-semi', title: 'Switch to Semiconductor Physics', tag: 'Workspace', run: () => selectDomain('semiconductor') },
-      { id: 'ws-astro', title: 'Switch to Astrophysics & Orbits', tag: 'Workspace', run: () => selectDomain('astronomy') },
-      { id: 'ws-biomed', title: 'Switch to Biomedical Kinetics', tag: 'Workspace', run: () => selectDomain('biomed') },
-      { id: 'ws-chem', title: 'Switch to Computational Chemistry', tag: 'Workspace', run: () => selectDomain('chem') },
-      { id: 'cmd-plot', title: 'Plot 2D Function in Chat (/plot)', tag: 'Tool', run: () => quickFirePrompt('/plot Math.exp(-0.2*x)*Math.cos(2*x)') },
+      { id: 'cmd-semi', title: 'Semiconductor Physics (/semiconductor)', tag: 'Tool', run: () => quickFirePrompt('/semiconductor GaAs band bending and carrier transport') },
+      { id: 'cmd-sim', title: 'Run 60 FPS Simulation in Chat (/simulate)', tag: 'Tool', run: () => quickFirePrompt('/simulate orbit Keplerian 2-body elliptic eccentricity 0.6') },
       { id: 'cmd-cad', title: 'Render 3D CAD Assembly in Chat (/cad3d)', tag: 'Tool', run: () => quickFirePrompt('/cad3d gear') },
-      { id: 'cmd-sim', title: 'Run 60 FPS Simulation in Chat (/simulate)', tag: 'Tool', run: () => quickFirePrompt('/simulate orbit') },
+      { id: 'cmd-plot', title: 'Plot 2D Function in Chat (/plot)', tag: 'Tool', run: () => quickFirePrompt('/plot Math.exp(-0.2*x)*Math.cos(2*x)') },
       { id: 'new-session', title: 'Create New STEM Session', tag: 'Session', run: () => createNewSession() },
       { id: 'clear-chat', title: 'Clear Current Chat History', tag: 'Session', run: () => clearCurrentChat() },
       { id: 'tab-studio', title: 'Navigate to Studio', tag: 'Dock', run: () => switchTab('studio') },
@@ -2070,43 +2291,8 @@ Provide rigorous mathematical and scientific analysis. Never emit square bracket
       }
     }
 
-    /* DOMAIN WORKSPACE SELECTION */
     function selectDomain(domainId) {
       activeDomain = domainId;
-      document.querySelectorAll('.domain-item').forEach(el => el.classList.remove('active'));
-      const activeEl = document.getElementById('domain-' + domainId);
-      if (activeEl) activeEl.classList.add('active');
-
-      const badge = document.getElementById('header-domain-badge');
-      const welcome = document.getElementById('welcome-msg-text');
-
-      if (domainId === 'lab') {
-        badge.innerText = 'Lab Studio';
-        if (welcome) welcome.innerText = 'Unified STEM Lab active. Ready for multi-turn calculus, semiconductor physics, 3D CAD meshes, astronomy orbits, and simulations. Click [/] or type / for agentic tools.';
-        switchWorkbenchMode('plot');
-      } else if (domainId === 'semiconductor') {
-        badge.innerText = 'Semiconductor';
-        if (welcome) welcome.innerText = 'Microelectronics & Semiconductor Physics active. Silicon crystal diamond cubic lattice, PN junction band bending & carrier drift-diffusion, and MOSFET saturation dynamics initialized.';
-        switchWorkbenchMode('3d');
-        renderCAD3D('silicon');
-      } else if (domainId === 'astronomy') {
-        badge.innerText = 'Astronomy';
-        if (welcome) welcome.innerText = 'Astrophysics & Celestial Mechanics Workspace active. Keplerian 2-body orbit solver, gravitational N-body simulations, and stellar kinematics initialized.';
-        switchWorkbenchMode('sim');
-        initSimulation('orbit');
-      } else if (domainId === 'biomed') {
-        badge.innerText = 'Biomed';
-        if (welcome) welcome.innerText = 'Biomedical & Biochemical Workspace active. Enzyme kinetics, two-compartment pharmacokinetic clearance models, and metabolic decay dynamics initialized.';
-        switchWorkbenchMode('sim');
-        initSimulation('enzyme');
-      } else if (domainId === 'chem') {
-        badge.innerText = 'Chemistry';
-        if (welcome) welcome.innerText = 'Computational Chemistry & Molecular Workspace active. 3D molecular conformation models (Benzene, Caffeine, Water, Methane) and reaction rate dynamics initialized.';
-        switchWorkbenchMode('3d');
-        renderCAD3D('benzene');
-      }
-      showToast(`Workspace: ${badge.innerText}`);
-      haptics.tab();
     }
 
     /* TAB SWITCHING */
@@ -2120,12 +2306,6 @@ Provide rigorous mathematical and scientific analysis. Never emit square bracket
       if (targetBtn) targetBtn.classList.add('active');
 
       haptics.tab();
-
-      if (tabId === 'studio') {
-        setTimeout(() => {
-          if (window.Plotly && currentWbMode !== 'sim') Plotly.Plots.resize('plot-container');
-        }, 100);
-      }
     }
 
     /* MODEL DROPDOWN WITH AUTO-DISMISS OUTSIDE CLICK */
@@ -2145,8 +2325,18 @@ Provide rigorous mathematical and scientific analysis. Never emit square bracket
     });
     function changeModel(m) {
       currentModel = m;
-      document.getElementById('current-model-name').innerText = m;
-      document.getElementById('welcome-companion-label').innerText = m;
+      const curNameEl = document.getElementById('current-model-name');
+      if (curNameEl) {
+        curNameEl.textContent = m;
+        decodeLabel(curNameEl);
+      }
+      const sideTel = document.getElementById('sidebar-model-telemetry');
+      if (sideTel) {
+        sideTel.textContent = m.toUpperCase();
+        decodeLabel(sideTel);
+      }
+      const wc = document.getElementById('welcome-companion-label');
+      if (wc) wc.innerText = m;
       document.getElementById('model-dropdown').classList.remove('show');
       showToast(`Active model: ${m}`);
       haptics.success();
@@ -2160,43 +2350,51 @@ Provide rigorous mathematical and scientific analysis. Never emit square bracket
 
       if (s.messages.length === 0) {
         const welcome = document.createElement('div');
-        welcome.className = 'msg assistant';
+        welcome.className = 'welcome-hero';
         welcome.innerHTML = `
-          <div class="msg-header">
-            <img src="assets/micro_logo_v.png" class="msg-avatar-v" alt="V">
-            <span>${currentModel}</span>
+          <div class="welcome-badge">
+            <span class="hud-radar"></span>
+            <span id="welcome-badge-decode">SOVEREIGN STEM AI // 100% ON-PREMISE // ZERO DATA LEAKS</span>
           </div>
-          <div class="msg-content">
-            Sovereign STEM Lab active. Ready for multi-turn calculus, semiconductor physics, 3D CAD meshes, astronomy orbits, and simulations. Click <strong>[/]</strong> or type <strong>/</strong> for agentic tools.
-            
-            <div class="capsule-strip-container">
-              <div class="capsule-strip-label">Quick Computations</div>
-              <div class="capsule-scroll-row">
-                <button class="prompt-capsule" onclick="quickFirePrompt('/semiconductor GaAs band bending and carrier transport')">
-                  <svg class="icon" viewBox="0 0 24 24" style="width:12px; height:12px; stroke:#38bdf8;"><rect x="4" y="4" width="16" height="16" rx="2"/></svg>
-                  <span>GaAs Bandgap</span>
-                </button>
-                <button class="prompt-capsule" onclick="quickFirePrompt('/simulate quantum wavepacket tunneling probability')">
-                  <svg class="icon" viewBox="0 0 24 24" style="width:12px; height:12px; stroke:#10b981;"><circle cx="12" cy="12" r="10"/></svg>
-                  <span>Quantum Tunneling</span>
-                </button>
-                <button class="prompt-capsule" onclick="quickFirePrompt('/simulate orbit Keplerian 2-body elliptic eccentricity 0.6')">
-                  <svg class="icon" viewBox="0 0 24 24" style="width:12px; height:12px; stroke:#f59e0b;"><ellipse cx="12" cy="5" rx="9" ry="3"/></svg>
-                  <span>Kepler Orbit</span>
-                </button>
-                <button class="prompt-capsule" onclick="quickFirePrompt('/plot Math.exp(-0.2*x)*Math.cos(2*x)')">
-                  <svg class="icon" viewBox="0 0 24 24" style="width:12px; height:12px; stroke:#ffffff;"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-                  <span>Damped Oscillator</span>
-                </button>
-                <button class="prompt-capsule" onclick="quickFirePrompt('/cad3d benzene')">
-                  <svg class="icon" viewBox="0 0 24 24" style="width:12px; height:12px; stroke:#ec4899;"><polygon points="12 2 2 8.5 2 15.5 12 22 22 15.5 22 8.5 12 2"/></svg>
-                  <span>Benzene Ring</span>
-                </button>
+          <h2 class="welcome-title">Private AI for Science &amp; Math.<br><span>Runs on your hardware. Owned by you.</span></h2>
+          <p class="welcome-desc">
+            Select an interactive STEM module below or type <strong>/</strong> in the prompt bar to launch 60 FPS simulations, 3D CAD meshes, semiconductor physics, or symbolic derivations.
+          </p>
+
+          <div class="starter-prompts">
+            <div class="prompt-card" style="--i:0" onclick="quickFirePrompt('/semiconductor GaAs band bending and carrier transport')">
+              <div class="prompt-title">
+                <svg class="icon" viewBox="0 0 24 24" style="stroke:#10b981;"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M9 9h6v6H9z"/></svg>
+                <span>Semiconductor Physics</span>
               </div>
+              <div class="prompt-sub">/semiconductor // MOSFET IV &amp; GaAs Bandgap</div>
+            </div>
+            <div class="prompt-card" style="--i:1" onclick="quickFirePrompt('/simulate orbit Keplerian 2-body elliptic eccentricity 0.6')">
+              <div class="prompt-title">
+                <svg class="icon" viewBox="0 0 24 24" style="stroke:#f59e0b;"><circle cx="12" cy="12" r="10"/><ellipse cx="12" cy="12" rx="10" ry="4"/></svg>
+                <span>60 FPS Physics Simulation</span>
+              </div>
+              <div class="prompt-sub">/simulate // Kepler Orbits &amp; Quantum Tunneling</div>
+            </div>
+            <div class="prompt-card" style="--i:2" onclick="quickFirePrompt('/cad3d gear')">
+              <div class="prompt-title">
+                <svg class="icon" viewBox="0 0 24 24" style="stroke:#38bdf8;"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+                <span>3D CAD &amp; Molecular Mesh</span>
+              </div>
+              <div class="prompt-sub">/cad3d // Planetary Gear, Silicon &amp; Benzene</div>
+            </div>
+            <div class="prompt-card" style="--i:3" onclick="quickFirePrompt('/plot Math.exp(-0.2*x)*Math.cos(2*x)')">
+              <div class="prompt-title">
+                <svg class="icon" viewBox="0 0 24 24" style="stroke:#ffffff;"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                <span>Analytical Function Plotter</span>
+              </div>
+              <div class="prompt-sub">/plot // Damped Oscillator, f'(x) &amp; ∫f(x)dx</div>
             </div>
           </div>
         `;
         box.appendChild(welcome);
+        const badgeTextEl = welcome.querySelector('#welcome-badge-decode');
+        if (badgeTextEl) decodeLabel(badgeTextEl);
         return;
       }
 
@@ -2207,7 +2405,11 @@ Provide rigorous mathematical and scientific analysis. Never emit square bracket
         const speedBadge = (isLastAssistant && isStreaming && tokPerSec) 
           ? `<span class="stream-speed-badge"><svg style="width:10px; height:10px; stroke:currentColor; fill:none;" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>${tokPerSec} tok/s</span>` 
           : '';
-        const caret = (isLastAssistant && isStreaming) ? '<span class="streaming-caret"></span>' : '';
+        const isWaitingFirstToken = (isLastAssistant && isStreaming && !m.content);
+        const typingDots = isWaitingFirstToken
+          ? `<div class="typing-indicator"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div>`
+          : '';
+        const caret = (isLastAssistant && isStreaming && m.content) ? '<span class="streaming-caret"></span>' : '';
         
         let assistantActions = '';
         if (m.role === 'assistant' && !isStreaming && m.content) {
@@ -2236,7 +2438,7 @@ Provide rigorous mathematical and scientific analysis. Never emit square bracket
             ${speedBadge}
           </div>
           <div class="msg-content">
-            ${formatMessageContent(m.content)}${caret}
+            ${typingDots}${formatMessageContent(m.content)}${caret}
             ${assistantActions}
           </div>
         `;
@@ -2320,6 +2522,9 @@ Provide rigorous mathematical and scientific analysis. Never emit square bracket
           else if (type === 'circuit') initInChatCircuit(card);
           else if (type === 'sim') initInChatSim(card);
           card.setAttribute('data-inited', 'true');
+          // Trigger official website cipher decode on newly mounted STEM card tags
+          const tagEl = card.querySelector('.cad-title-tag, .semi-mat-tag, .sim-title-tag');
+          if (tagEl) decodeLabel(tagEl);
         } catch (err) {
           console.warn('In-Chat STEM Card init warning:', err);
         }
