@@ -182,13 +182,12 @@ class TestHybridComputeAndNeuroSymbolicStudio(unittest.TestCase):
             "initInChatBiology",
             "initInChatMathVisual",
             "initInChatMedical",
-            "openStemTaskHub",
-            "openLatexRefModal",
-            "openExportPdfModal",
             "setHybridComputeMode",
             "onBackendTypeChange",
         ]:
             self.assertIn(fn, html, f"Missing required function {fn} in src/index.html")
+        for removed_modal in ["openStemTaskHub", "openLatexRefModal", "openExportPdfModal"]:
+            self.assertNotIn(removed_modal, html, f"Removed modal function {removed_modal} should not be in src/index.html")
 
         scripts = re.findall(r"<script>(.*?)</script>", html, re.S)
         self.assertGreaterEqual(len(scripts), 1)

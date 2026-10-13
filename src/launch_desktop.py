@@ -1041,29 +1041,32 @@ def main():
 
     ucm = WebKit2.UserContentManager()
 
+    def _eval_js(js_code: str):
+        if hasattr(webview, "evaluate_javascript"):
+            webview.evaluate_javascript(js_code, -1, None, None, None, None, None)
+        else:
+            webview.run_javascript(js_code, None, None, None)
+
     # Native IPC Message Handler (Bidirectional Communication: Telemetry, Hybrid Mode, Neuro-Symbolic AST/GraphRAG)
     def on_script_message(manager, js_result):
         try:
-            val = js_result.to_value()
+            val = js_result.get_js_value() if hasattr(js_result, "get_js_value") else js_result.to_value()
             if val and val.is_string():
                 data = json.loads(val.to_string())
                 action = data.get("action") or data.get("cmd")
                 if action == "get_telemetry":
                     stats = get_system_telemetry()
-                    js = f"window.onNativeTelemetry && window.onNativeTelemetry({json.dumps(stats)});"
-                    webview.run_javascript(js, None, None, None)
+                    _eval_js(f"window.onNativeTelemetry && window.onNativeTelemetry({json.dumps(stats)});")
                 elif action == "set_compute_mode":
                     mode = data.get("mode", "auto")
                     stats = get_system_telemetry(override_mode=mode)
-                    js = f"window.onNativeTelemetry && window.onNativeTelemetry({json.dumps(stats)});"
-                    webview.run_javascript(js, None, None, None)
+                    _eval_js(f"window.onNativeTelemetry && window.onNativeTelemetry({json.dumps(stats)});")
                 elif action in ("neuro_symbolic_query", "enrich"):
                     req_id = data.get("reqId", "")
                     query_str = data.get("query", "")
                     enriched = enrich_stem_query(query_str)
                     enriched["reqId"] = req_id
-                    js = f"window.__onNeuroSymbolicResult && window.__onNeuroSymbolicResult({json.dumps(enriched)});"
-                    webview.run_javascript(js, None, None, None)
+                    _eval_js(f"window.__onNeuroSymbolicResult && window.__onNeuroSymbolicResult({json.dumps(enriched)});")
         except Exception as e:
             print(f"[IPC ERR] {e}", file=sys.stderr)
 
@@ -1079,8 +1082,7 @@ def main():
     def _push_telemetry():
         try:
             stats = get_system_telemetry()
-            js = f"window.onNativeTelemetry && window.onNativeTelemetry({json.dumps(stats)});"
-            webview.run_javascript(js, None, None, None)
+            _eval_js(f"window.onNativeTelemetry && window.onNativeTelemetry({json.dumps(stats)});")
         except Exception:
             pass
         return True

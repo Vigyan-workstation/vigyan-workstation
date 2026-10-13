@@ -1642,9 +1642,9 @@
   <!-- FINE GRID OVERLAY -->
   <div class="bg-grid-overlay"></div>
 
-  <!-- SINGLE UNIFIED 48PX EXECUTIVE HEADER -->
+  <!-- SINGLE UNIFIED 48PX CLEAN HEADER -->
   <header class="top-header">
-    <div class="header-left" style="gap:8px;">
+    <div class="header-left" style="gap:10px;">
       <button class="btn-icon" id="sidebar-toggle-btn" onclick="toggleSidebar()" title="Toggle Sidebar">
         <svg class="icon" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18"/></svg>
       </button>
@@ -1653,23 +1653,20 @@
         <span>Vigyan Pro</span>
       </div>
       <div style="position:relative; margin-left:4px;">
-        <button class="model-selector-btn" id="active-model-btn" onclick="toggleModelDropdown()" title="Select Active Model">
+        <button class="model-selector-btn" id="active-model-btn" onclick="toggleModelDropdown()" title="Choose AI Model">
           <img src="assets/micro_logo_v.png" class="msg-avatar-v" alt="V">
           <span id="current-model-name">olmoe:1b-7b</span>
           <svg class="icon" viewBox="0 0 24 24" style="width:11px; height:11px;"><polyline points="6 9 12 15 18 9"/></svg>
         </button>
         <div class="model-dropdown-menu" id="model-dropdown"></div>
       </div>
-      <span class="ns-badge" id="toolbar-backend-pill" onclick="switchTab('settings')" style="cursor:pointer;" title="Click to configure Multi-Backend Router &amp; Smart Hybrid GPU+CPU Split">
-        SYMPY AST + KÙZU GRAPHRAG
-      </span>
     </div>
-    
-    <!-- EXECUTIVE SEGMENTED NAVIGATION -->
+
+    <!-- CLEAN SEGMENTED NAVIGATION -->
     <nav class="header-nav">
       <button class="dock-tab active" data-tab="studio" onclick="switchTab('studio')">
-        <svg class="icon" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
-        <span>Studio</span>
+        <svg class="icon" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        <span>Chat</span>
       </button>
       <button class="dock-tab" data-tab="settings" onclick="switchTab('settings')">
         <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
@@ -1677,201 +1674,91 @@
       </button>
     </nav>
 
-    <div style="display:flex; align-items:center; gap:5px;">
-      <button class="btn-action" style="padding:4px 8px; font-size:11px; background:#0b0c10;" onclick="openStemTaskHub()" title="Open 8-Domain STEM Task Hub (Ctrl+T)">
-        <svg class="icon" viewBox="0 0 24 24" style="width:12px; height:12px;"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
-        <span>STEM Hub</span>
-      </button>
-      <button class="btn-action" style="padding:4px 8px; font-size:11px; background:#0b0c10; font-family:ui-monospace,monospace;" onclick="openLatexRefModal()" title="LaTeX Symbol &amp; Formula Reference (Alt+L)">
-        <span style="font-weight:700;">&Sigma;</span>
-        <span>LaTeX</span>
-      </button>
-      <button class="btn-action" style="padding:4px 8px; font-size:11px; background:#0b0c10;" onclick="toggleInChatSearch()" title="Find in Conversation (Ctrl+F)">
-        <svg class="icon" viewBox="0 0 24 24" style="width:12px; height:12px;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        <span>Find</span>
-      </button>
-      <button class="btn-action" style="padding:4px 8px; font-size:11px; background:#0b0c10;" onclick="openExportPdfModal()" title="Publication Vector PDF &amp; Overleaf .tex Export">
-        <svg class="icon" viewBox="0 0 24 24" style="width:12px; height:12px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-        <span>Export PDF</span>
-      </button>
-      <button class="btn-action" style="padding:4px 8px; font-size:11px; background:#0b0c10;" onclick="clearCurrentChat()" title="Clear Current Session History">
-        <svg class="icon" viewBox="0 0 24 24" style="width:12px; height:12px;"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg>
-      </button>
-      <div class="hud-telemetry" id="top-hud-bar" style="position:relative; display:flex; align-items:center; gap:4px;">
-        <span class="hud-pill" id="hud-gpu-pill" title="Click to inspect &amp; switch Smart Hybrid GPU + CPU Compute Allocation" onclick="toggleHybridHudPopover(event)" style="cursor:pointer;">
-          <span class="hud-led" id="hud-compute-led"></span>
-          <span id="hud-gpu-text">HYBRID AUTO | CPU 0%</span>
-        </span>
-        <select id="hud-compute-mode-select" onchange="setHybridComputeMode(this.value)" title="Select Hybrid GPU+CPU Compute Profile" style="background:#0b0c10; color:#e4e4e7; border:1px solid var(--border); border-radius:5px; padding:3px 6px; font-size:10.5px; font-family:ui-monospace,monospace; cursor:pointer; outline:none;">
-          <option value="auto">Auto Hybrid</option>
-          <option value="max_gpu">Max GPU</option>
-          <option value="balanced">Balanced Split</option>
-          <option value="cpu_eco">CPU Eco</option>
-        </select>
-        <!-- CLICKABLE HYBRID COMPUTE HUD POPOVER -->
-        <div class="hud-popover" id="hud-compute-popover" onclick="event.stopPropagation()">
-          <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border); padding-bottom:6px;">
-            <strong style="color:#ffffff; font-size:11.5px;">SMART HYBRID GPU + CPU SCHEDULER</strong>
-            <span class="ns-badge verified" id="popover-strategy-badge">HYBRID AUTO</span>
-          </div>
-          <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; font-size:10.5px; color:#d4d4d8;">
-            <div>GPU: <strong id="popover-gpu-name" style="color:#fff;">Probing...</strong></div>
-            <div>VRAM/GTT: <strong id="popover-vram-val" style="color:#fff;">0 / 0 MB</strong></div>
-            <div>CPU: <strong id="popover-cpu-val" style="color:#fff;">4C/8T (0%)</strong></div>
-            <div>RAM: <strong id="popover-ram-val" style="color:#fff;">0%</strong></div>
-            <div>Power: <strong id="popover-power-val" style="color:#fff;">AC Mains</strong></div>
-            <div>Params: <strong id="popover-params-val" style="color:#38bdf8;">gpu:-1 thr:4</strong></div>
-          </div>
-          <div style="display:grid; grid-template-columns:1fr 1fr; gap:5px; padding-top:4px; border-top:1px solid var(--border-subtle);">
-            <button class="btn-stem-mini" onclick="setHybridComputeMode('auto')">Auto Hybrid</button>
-            <button class="btn-stem-mini" onclick="setHybridComputeMode('max_gpu')">Max GPU (99)</button>
-            <button class="btn-stem-mini" onclick="setHybridComputeMode('balanced')">Balanced Split</button>
-            <button class="btn-stem-mini" onclick="setHybridComputeMode('cpu_eco')">CPU Eco (0)</button>
-          </div>
-        </div>
-      </div>
-      <button class="btn-action" style="padding:4px 8px; font-size:11px; background:#0e1018;" onclick="openCommandPalette()" title="Command Center (Ctrl+K)">
-        <span class="cmd-kbd-badge">Ctrl K</span>
-      </button>
+    <div style="display:flex; align-items:center; gap:8px;">
+      <span class="hud-pill" id="hud-gpu-pill" onclick="switchTab('settings')" style="cursor:pointer;" title="Smart GPU + CPU Hybrid Active">
+        <span class="hud-led" id="hud-compute-led"></span>
+        <span id="hud-gpu-text" style="font-family:var(--font-sans); font-size:11.5px; color:#d4d4d8;">Ready</span>
+      </span>
     </div>
   </header>
 
   <!-- APP MAIN -->
   <main class="app-main">
     
-    <!-- 1. STUDIO TAB -->
+    <!-- 1. CHAT TAB -->
     <div class="tab-content active" id="tab-studio">
-      <!-- SIDEBAR -->
+      <!-- CLEAN MINIMAL SIDEBAR -->
       <aside class="sidebar" id="app-sidebar">
         <div class="sidebar-section" style="flex:1; overflow-y:auto; display:flex; flex-direction:column;">
-          <button class="btn-new-session" style="width:100%; justify-content:center; padding:9px 12px; margin-bottom:8px; font-family:ui-monospace,monospace; font-size:11.5px;" onclick="createNewSession()">
-            <svg class="icon" viewBox="0 0 24 24" style="width:12px; height:12px; stroke:#000000;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            <span>+ New STEM Session</span>
+          <button class="btn-new-session" style="width:100%; justify-content:center; padding:9px 12px; margin-bottom:14px; font-size:12.5px;" onclick="createNewSession()">
+            <svg class="icon" viewBox="0 0 24 24" style="width:13px; height:13px; stroke:#000000;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            <span>New Chat</span>
           </button>
-          <div style="display:flex; gap:5px; margin-bottom:8px;">
-            <button class="btn-action" style="flex:1; justify-content:center; font-size:10.5px; padding:4px 6px;" onclick="exportAllSessionsJson()" title="Export All Sessions to JSON">Export JSON</button>
-            <button class="btn-action" style="flex:1; justify-content:center; font-size:10.5px; padding:4px 6px;" onclick="document.getElementById('session-import-file').click()" title="Import Sessions from JSON">Import JSON</button>
-            <input type="file" id="session-import-file" accept=".json,application/json" style="display:none;" onchange="importSessionsFromJsonFile(event)">
-          </div>
-          <div style="margin-bottom:10px;">
-            <input type="text" id="session-search-input" class="setting-input" placeholder="Filter sessions..." oninput="renderSidebarSessions()" style="width:100%; padding:5px 8px; font-size:11px; background:#08090c;">
-          </div>
           <div class="sidebar-section-title" style="display:flex; justify-content:space-between; align-items:center;">
-            <span>Conversations</span>
-            <span id="session-count-badge" style="font-size:10px; color:#71717a;">1</span>
+            <span>Recent Chats</span>
           </div>
           <div class="session-list" id="session-container" style="flex:1; overflow-y:auto;">
-            <div class="session-item active" id="session-default" onclick="switchSession('default')">STEM Session</div>
-          </div>
-
-          <div class="sidebar-telemetry">
-            <div class="telemetry-row">
-              <span>ENGINE</span>
-              <span id="sidebar-model-telemetry">OLMoE 1B-7B</span>
-            </div>
-            <div class="telemetry-row">
-              <span>COMPUTE</span>
-              <span id="sidebar-compute-telemetry">HYBRID AUTO</span>
-            </div>
-            <div class="telemetry-row">
-              <span>BACKEND</span>
-              <span id="sidebar-backend-telemetry">OLLAMA + SYMPY</span>
-            </div>
-            <div class="telemetry-row">
-              <span>CLOUD EGRESS</span>
-              <span id="sidebar-egress-telemetry">NONE <span class="hud-radar"></span></span>
-            </div>
+            <div class="session-item active" id="session-default" onclick="switchSession('default')">New Chat</div>
           </div>
         </div>
       </aside>
 
       <!-- CHAT INTERFACE -->
       <section class="chat-section">
-        <!-- IN-CHAT SEARCH BAR (CTRL+F) -->
-        <div class="inchat-search-bar" id="inchat-search-bar">
-          <svg class="icon" viewBox="0 0 24 24" style="width:13px; height:13px; stroke:#a1a1aa;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-          <input type="text" id="inchat-search-input" class="setting-input" placeholder="Find in conversation (formulas, derivations, code)..." oninput="performInChatSearch(this.value)" onkeydown="if(event.key==='Enter'){stepInChatSearch(event.shiftKey?-1:1);}else if(event.key==='Escape'){toggleInChatSearch(false);}" style="flex:1; max-width:380px; padding:4px 8px; font-size:12px;">
-          <span id="inchat-search-count" style="font-size:11px; font-family:ui-monospace,monospace; color:#a1a1aa; min-width:65px;">0 matches</span>
-          <button class="btn-stem-mini" onclick="stepInChatSearch(-1)" title="Previous Match (Shift+Enter)">↑</button>
-          <button class="btn-stem-mini" onclick="stepInChatSearch(1)" title="Next Match (Enter)">↓</button>
-          <button class="btn-stem-mini" onclick="toggleInChatSearch(false)" title="Close Search (ESC)">✕</button>
-        </div>
-
         <div class="chat-scroll-wrapper">
-          <div class="chat-container" id="chat-box">
-            <div class="msg assistant">
-              <div class="msg-header">
-                <img src="assets/micro_logo_v.png" class="msg-avatar-v" alt="V">
-                <span id="welcome-companion-label">olmoe:1b-7b</span>
-              </div>
-              <div class="msg-content" id="welcome-msg-text">
-                Sovereign STEM Lab active. Ready for multi-turn calculus, semiconductor physics, 3D CAD meshes, crystal lattices, molecular biology, clinical biomarkers, and simulations. Click <strong>[/]</strong> or type <strong>/</strong> for agentic tools.
-              </div>
-            </div>
-          </div>
+          <div class="chat-container" id="chat-box"></div>
         </div>
 
-        <!-- INPUT AREA WITH / BUTTON, FILE ATTACHMENT & AUTO-EXPANDING TEXTAREA -->
+        <!-- CLEAN GLOWING INPUT AREA -->
         <div class="chat-input-area">
           <div class="input-inner-wrapper">
             <div class="slash-menu" id="slash-menu">
               <div class="slash-menu-header">
-                <span>8-Domain Agentic Visualizers &amp; Symbolic Tools</span>
+                <span>Interactive Tools</span>
                 <span>ESC to close</span>
               </div>
-              <div class="slash-item active" data-cmd="/semiconductor " onclick="applySlashCommand('/semiconductor ')">
-                <span class="slash-cmd">/semiconductor</span>
-                <span class="slash-desc">MOSFET IV curves &amp; PN junction band bending</span>
-              </div>
-              <div class="slash-item" data-cmd="/simulate " onclick="applySlashCommand('/simulate ')">
-                <span class="slash-cmd">/simulate</span>
-                <span class="slash-desc">Run 60 FPS physics &amp; quantum wavepacket simulation</span>
-              </div>
-              <div class="slash-item" data-cmd="/cad3d " onclick="applySlashCommand('/cad3d ')">
+              <div class="slash-item active" data-cmd="/cad3d " onclick="applySlashCommand('/cad3d ')">
                 <span class="slash-cmd">/cad3d</span>
-                <span class="slash-desc">Interactive 3D CAD mesh, gear, heatsink, or molecule</span>
-              </div>
-              <div class="slash-item" data-cmd="/circuit " onclick="applySlashCommand('/circuit ')">
-                <span class="slash-cmd">/circuit</span>
-                <span class="slash-desc">Circuit schematic, live oscilloscope &amp; BOM inspector</span>
-              </div>
-              <div class="slash-item" data-cmd="/material " onclick="applySlashCommand('/material ')">
-                <span class="slash-cmd">/material</span>
-                <span class="slash-desc">3D crystal unit cell, Miller planes, Pb-Sn phase &amp; XRD</span>
-              </div>
-              <div class="slash-item" data-cmd="/biology " onclick="applySlashCommand('/biology ')">
-                <span class="slash-cmd">/biology</span>
-                <span class="slash-desc">3D B-DNA helix, K+ ion channel, protein &amp; ATP pathway</span>
-              </div>
-              <div class="slash-item" data-cmd="/math_visual " onclick="applySlashCommand('/math_visual ')">
-                <span class="slash-cmd">/math_visual</span>
-                <span class="slash-desc">3D hyperbolic paraboloid, 2D curl/div &amp; Taylor series</span>
-              </div>
-              <div class="slash-item" data-cmd="/medical " onclick="applySlashCommand('/medical ')">
-                <span class="slash-cmd">/medical</span>
-                <span class="slash-desc">Clinical biomarker panel, 12-lead ECG &amp; differential</span>
+                <span class="slash-desc">Interactive 3D Models (Gear, Drone, Molecule, Heat Sink)</span>
               </div>
               <div class="slash-item" data-cmd="/plot " onclick="applySlashCommand('/plot ')">
                 <span class="slash-cmd">/plot</span>
-                <span class="slash-desc">Plot 2D function with calculus derivatives &amp; area</span>
+                <span class="slash-desc">Plot 2D Math Functions &amp; Curves</span>
               </div>
-              <div class="slash-item" data-cmd="/derive " onclick="applySlashCommand('/derive ')">
-                <span class="slash-cmd">/derive</span>
-                <span class="slash-desc">SymPy AST verified mathematical proof in KaTeX</span>
+              <div class="slash-item" data-cmd="/simulate " onclick="applySlashCommand('/simulate ')">
+                <span class="slash-cmd">/simulate</span>
+                <span class="slash-desc">Live Physics Simulation (Orbits, Pendulum, Waves)</span>
+              </div>
+              <div class="slash-item" data-cmd="/circuit " onclick="applySlashCommand('/circuit ')">
+                <span class="slash-cmd">/circuit</span>
+                <span class="slash-desc">Electronic Circuit &amp; Live Waveform</span>
+              </div>
+              <div class="slash-item" data-cmd="/semiconductor " onclick="applySlashCommand('/semiconductor ')">
+                <span class="slash-cmd">/semiconductor</span>
+                <span class="slash-desc">Transistor &amp; Semiconductor Visualizer</span>
+              </div>
+              <div class="slash-item" data-cmd="/material " onclick="applySlashCommand('/material ')">
+                <span class="slash-cmd">/material</span>
+                <span class="slash-desc">3D Crystal Structures &amp; Materials</span>
+              </div>
+              <div class="slash-item" data-cmd="/biology " onclick="applySlashCommand('/biology ')">
+                <span class="slash-cmd">/biology</span>
+                <span class="slash-desc">3D DNA Helix, Cells &amp; Proteins</span>
+              </div>
+              <div class="slash-item" data-cmd="/math_visual " onclick="applySlashCommand('/math_visual ')">
+                <span class="slash-cmd">/math_visual</span>
+                <span class="slash-desc">3D Math Surfaces &amp; Vector Fields</span>
+              </div>
+              <div class="slash-item" data-cmd="/medical " onclick="applySlashCommand('/medical ')">
+                <span class="slash-cmd">/medical</span>
+                <span class="slash-desc">Heart ECG Monitor &amp; Vitals Dashboard</span>
               </div>
             </div>
 
-            <div class="attachment-chips-bar" id="attachment-chips-bar"></div>
-            <input type="file" id="chat-file-input" multiple accept=".py,.js,.ts,.cpp,.c,.h,.rs,.go,.tex,.md,.txt,.csv,.json,.yaml,.yml,.sql,.v,.sv,.png,.jpg,.jpeg,.webp" style="display:none;" onchange="handleFileAttachmentSelect(event)">
-
             <div class="input-box-row" id="prompt-box-wrapper">
-              <button class="btn-slash-toggle" onclick="toggleSlashMenu()" title="Open 8-Domain Agentic Commands">/</button>
-              <button class="btn-slash-toggle" onclick="document.getElementById('chat-file-input').click()" title="Attach Code, Data, LaTeX, or Image File">
-                <svg class="icon" viewBox="0 0 24 24" style="width:13px; height:13px;"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
-              </button>
-              <textarea id="chat-prompt" rows="1" class="main-chat-input" placeholder="Solve, derive, simulate, or visualize across 8 STEM domains... (Enter to send, Shift+Enter newline, / for tools)" onkeydown="handleKey(event)" oninput="handlePromptInput(event)"></textarea>
-              <button class="btn-slash-toggle" onclick="openLatexRefModal()" title="Insert LaTeX Symbol or Formula (Alt+L)" style="font-size:12px;">&Sigma;</button>
-              <button class="btn-send" id="btn-send-action" onclick="handleSendOrStop()" title="Execute Prompt">
+              <button class="btn-slash-toggle" onclick="toggleSlashMenu()" title="Open Interactive Tools">/</button>
+              <textarea id="chat-prompt" rows="1" class="main-chat-input" placeholder="Ask anything, or type / for interactive 3D &amp; science tools..." onkeydown="handleKey(event)" oninput="handlePromptInput(event)"></textarea>
+              <button class="btn-send" id="btn-send-action" onclick="handleSendOrStop()" title="Send Message">
                 <svg class="icon" id="send-icon-svg" viewBox="0 0 24 24" style="stroke:#000000;"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
               </button>
             </div>
@@ -1880,307 +1767,105 @@
       </section>
     </div>
 
-    <!-- 2. LUXURY OBSIDIAN GLASSMORHPISM SETTINGS TAB (PRISTINE HIGH-CONTRAST) -->
+    <!-- 2. SIMPLE 3-CARD SETTINGS TAB -->
     <div class="tab-content" id="tab-settings">
       <div class="settings-container">
-        <!-- 1. MULTI-BACKEND ROUTER & DAEMON CARD -->
+        <!-- CARD 1: AI MODEL & CONNECTION -->
         <div class="settings-section-card">
           <div class="section-card-header">
             <span class="section-card-title">
               <svg class="icon" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>
-              Unified Multi-Backend Inference Router
+              AI Model &amp; Connection
             </span>
-            <span class="section-card-badge" id="daemon-status-badge">Connected (Ollama)</span>
+            <span class="section-card-badge" id="daemon-status-badge">Connected</span>
           </div>
-          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px; margin-bottom:12px;">
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px; margin-bottom:14px;">
             <div class="setting-row">
-              <div class="setting-label"><span>Active Inference Backend</span></div>
+              <div class="setting-label"><span>AI Provider</span></div>
               <select id="setting-backend-type" class="setting-input" onchange="onBackendTypeChange(this.value)">
-                <option value="ollama">Local Ollama Daemon + Embedded Neuro-Symbolic Bridge (:11434)</option>
-                <option value="agent_server">Vigyan Neuro-Symbolic Agent Server (SymPy + KùzuDB :8085)</option>
-                <option value="llama_server">Local llama.cpp / vLLM OpenAI Server (:8080/v1)</option>
-                <option value="cloud_api">Custom OpenAI-Compatible API Endpoint</option>
+                <option value="ollama">Local AI (Automatic • Recommended)</option>
+                <option value="agent_server">Local Science Server (:8085)</option>
+                <option value="llama_server">Local Fast Server (:8080)</option>
+                <option value="cloud_api">Custom / Cloud API</option>
               </select>
             </div>
             <div class="setting-row">
-              <div class="setting-label"><span>Primary Host Endpoint</span></div>
+              <div class="setting-label"><span>Server Address</span></div>
               <input type="text" id="setting-host" class="setting-input" value="http://127.0.0.1:11434">
             </div>
           </div>
-          <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:14px;">
-            <div class="setting-row">
-              <div class="setting-label"><span>Neuro-Symbolic Agent URL</span></div>
-              <input type="text" id="setting-agent-host" class="setting-input" value="http://127.0.0.1:8085">
-            </div>
-            <div class="setting-row">
-              <div class="setting-label"><span>API Key (Optional for Cloud/vLLM)</span></div>
-              <input type="password" id="setting-api-key" class="setting-input" placeholder="sk-... (leave blank for local)">
-            </div>
-            <div class="setting-row">
-              <div class="setting-label"><span>Model Memory Keep-Alive</span></div>
-              <select id="setting-keepalive" class="setting-input">
-                <option value="5m">5 Minutes</option>
-                <option value="15m" selected>15 Minutes</option>
-                <option value="1h">1 Hour</option>
-                <option value="-1">Keep in RAM Indefinitely</option>
-              </select>
-            </div>
+          <div style="display:flex; gap:8px; align-items:center;">
+            <input type="text" id="vault-pull-input" class="setting-input" placeholder="Download a new AI model (e.g. qwen2.5-math:7b, llama3.2:3b)" style="flex:1;">
+            <button class="btn-action" id="btn-vault-pull" onclick="pullOllamaModel()" style="padding:7px 14px; font-weight:600;">Download Model</button>
           </div>
+          <div id="vault-pull-status" style="font-size:11px; color:#a1a1aa; margin-top:6px; display:none;"></div>
         </div>
 
-        <!-- 1.5 SMART HYBRID GPU + CPU COMPUTE SCHEDULER -->
+        <!-- CARD 2: HARDWARE PERFORMANCE -->
         <div class="settings-section-card">
           <div class="section-card-header">
             <span class="section-card-title">
-              <svg class="icon" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/><line x1="20" y1="9" x2="23" y2="9"/><line x1="20" y1="14" x2="23" y2="14"/><line x1="1" y1="9" x2="4" y2="9"/><line x1="1" y1="14" x2="4" y2="14"/></svg>
-              Smart Hybrid GPU + CPU Compute Engine
+              <svg class="icon" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/></svg>
+              Hardware Performance (GPU + CPU)
             </span>
-            <span class="section-card-badge" id="hybrid-hardware-badge">Detecting Hardware...</span>
+            <span class="section-card-badge" id="hybrid-hardware-badge">Automatic</span>
           </div>
-          <div class="intent-grid" style="grid-template-columns: repeat(4, 1fr); margin-bottom:12px;">
+          <div class="intent-grid" style="grid-template-columns: repeat(3, 1fr);">
             <div class="intent-card active" id="compute-card-auto" onclick="setHybridComputeMode('auto')">
-              <div class="intent-card-title">Auto Smart Hybrid</div>
-              <div class="intent-card-desc">Dynamically splits transformer layers across GPU VRAM/GTT &amp; physical CPU cores.</div>
+              <div class="intent-card-title">Smart Automatic (Recommended)</div>
+              <div class="intent-card-desc">Automatically combines your GPU and CPU for the fastest, smoothest responses.</div>
             </div>
             <div class="intent-card" id="compute-card-max_gpu" onclick="setHybridComputeMode('max_gpu')">
-              <div class="intent-card-title">Max GPU Offload</div>
-              <div class="intent-card-desc">Offloads all layers (num_gpu=99) with Flash Attention &amp; Q8_0 KV cache.</div>
-            </div>
-            <div class="intent-card" id="compute-card-balanced" onclick="setHybridComputeMode('balanced')">
-              <div class="intent-card-title">Balanced GPU+CPU</div>
-              <div class="intent-card-desc">Splits attention on GPU and MoE FFN experts across physical CPU cores.</div>
+              <div class="intent-card-title">Maximum Speed</div>
+              <div class="intent-card-desc">Uses maximum graphics card power when plugged in.</div>
             </div>
             <div class="intent-card" id="compute-card-cpu_eco" onclick="setHybridComputeMode('cpu_eco')">
-              <div class="intent-card-title">CPU Eco / Battery</div>
-              <div class="intent-card-desc">Pure physical-core AVX2/NEON execution (num_gpu=0) to preserve battery.</div>
+              <div class="intent-card-title">Battery Saver</div>
+              <div class="intent-card-desc">Quiet, low-power mode to save laptop battery life.</div>
             </div>
-          </div>
-          <div id="hybrid-telemetry-detail" style="padding:10px 12px; background:#050608; border:1px solid var(--border); border-radius:6px; font-family:ui-monospace,monospace; font-size:11px; color:#d4d4d8; display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px;">
-            <span>GPU: <strong id="settings-gpu-name">Probing...</strong></span>
-            <span>VRAM/GTT: <strong id="settings-vram-info">0 / 0 MB</strong></span>
-            <span>CPU Cores: <strong id="settings-cpu-info">Physical Threads</strong></span>
-            <span>Power: <strong id="settings-power-info">AC Power</strong></span>
           </div>
         </div>
 
-        <!-- 2. REASONING INTENT CARD -->
+        <!-- CARD 3: RESPONSE STYLE -->
         <div class="settings-section-card">
           <div class="section-card-header">
             <span class="section-card-title">
               <svg class="icon" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-              Reasoning Intent Profile
+              Response Style
             </span>
-            <span class="section-card-badge">Zero Hallucination</span>
           </div>
-          <div class="intent-grid">
-            <div class="intent-card active" id="intent-precise" onclick="selectIntent('precise', 0.05, 8192, 'Deterministic Proof')">
-              <div class="intent-card-title">Deterministic Proof</div>
-              <div class="intent-card-desc">Temp 0.05 · Strict symbolic derivations, KaTeX proofs, deterministic physics.</div>
+          <div class="intent-grid" style="margin-bottom:14px;">
+            <div class="intent-card active" id="intent-precise" onclick="selectIntent('precise', 0.05, 8192, 'Accurate & Step-by-Step')">
+              <div class="intent-card-title">Accurate &amp; Step-by-Step</div>
+              <div class="intent-card-desc">Best for math, science, and clear step-by-step problem solving.</div>
             </div>
-            <div class="intent-card" id="intent-balanced" onclick="selectIntent('balanced', 0.3, 4096, 'Balanced Analysis')">
-              <div class="intent-card-title">Balanced Analysis</div>
-              <div class="intent-card-desc">Temp 0.3 · Structured physics explanations and engineering trade-offs.</div>
+            <div class="intent-card" id="intent-balanced" onclick="selectIntent('balanced', 0.3, 4096, 'Balanced & Clear')">
+              <div class="intent-card-title">Balanced &amp; Clear</div>
+              <div class="intent-card-desc">Great for everyday questions, summaries, and explanations.</div>
             </div>
-            <div class="intent-card" id="intent-creative" onclick="selectIntent('creative', 0.7, 4096, 'Exploratory Synthesis')">
-              <div class="intent-card-title">Exploratory Synthesis</div>
-              <div class="intent-card-desc">Temp 0.7 · Open-ended mathematical hypotheses and algorithm design.</div>
+            <div class="intent-card" id="intent-creative" onclick="selectIntent('creative', 0.7, 4096, 'Creative & Exploratory')">
+              <div class="intent-card-title">Creative &amp; Exploratory</div>
+              <div class="intent-card-desc">Best for brainstorming new ideas and open-ended exploration.</div>
             </div>
+          </div>
+          <div style="display:flex; justify-content:flex-end; gap:8px;">
+            <button class="btn-action" style="background:#ffffff; color:#000000; font-weight:600; padding:7px 18px;" onclick="saveSettings()">Save Settings</button>
           </div>
         </div>
 
-        <!-- 3. CONTEXT BUFFER & VRAM ALLOCATION -->
-        <div class="settings-section-card">
-          <div class="section-card-header">
-            <span class="section-card-title">
-              <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-              Context Window &amp; GPU Memory Footprint
-            </span>
-            <span class="section-card-badge" id="ctx-label">8,192 tokens (~2.4 GB VRAM)</span>
-          </div>
-          <div class="setting-row">
-            <select id="setting-ctx" class="setting-input" onchange="updateCtxLabel(this.value)">
-              <option value="4096">4,096 tokens (Fast / Low RAM footprint)</option>
-              <option value="8192" selected>8,192 tokens (Standard STEM Proofs)</option>
-              <option value="16384">16,384 tokens (Extended Derivations)</option>
-              <option value="32768">32,768 tokens (Full Context Window)</option>
-              <option value="65536">65,536 tokens (Massive Scientific Documents)</option>
-            </select>
-            <div class="vram-bar-container">
-              <div class="vram-bar-fill" id="vram-bar-fill"></div>
-            </div>
-          </div>
-        </div>
-
-        <!-- 4. SAMPLING CONTROLS & SOVEREIGN MODEL VAULT -->
-        <div class="settings-section-card">
-          <div class="section-card-header">
-            <span class="section-card-title">
-              <svg class="icon" viewBox="0 0 24 24"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/></svg>
-              Precision Sampling &amp; Sovereign Model Vault
-            </span>
-          </div>
-          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px; margin-bottom:14px;">
-            <div class="setting-row">
-              <div class="setting-label"><span>Temperature</span><span id="temp-val" style="color:#ffffff; font-weight:600;">0.05</span></div>
-              <input id="setting-temp" type="range" class="stem-slider" min="0" max="1" step="0.05" value="0.05" oninput="document.getElementById('temp-val').innerText = this.value; deselectIntents();">
-            </div>
-            <div class="setting-row">
-              <div class="setting-label"><span>Top-P Nucleus</span><span id="topp-val" style="color:#ffffff; font-weight:600;">0.95</span></div>
-              <input id="setting-topp" type="range" class="stem-slider" min="0.1" max="1" step="0.05" value="0.95" oninput="document.getElementById('topp-val').innerText = this.value;">
-            </div>
-          </div>
-          <div style="display:flex; gap:8px; align-items:center;">
-            <input type="text" id="vault-pull-input" class="setting-input" placeholder="Pull Ollama model tag (e.g. qwen2.5-math:7b, deepseek-r1:7b, olmoe:1b-7b)" style="flex:1;">
-            <button class="btn-action" id="btn-vault-pull" onclick="pullOllamaModel()" style="padding:7px 14px; font-weight:600;">Pull Model</button>
-          </div>
-          <div id="vault-pull-status" style="font-size:11px; color:#a1a1aa; font-family:ui-monospace,monospace; margin-top:6px; display:none;"></div>
-        </div>
-
-        <!-- 4.5 TACTILE AUDIO HAPTICS -->
-        <div class="settings-section-card">
-          <div class="section-card-header">
-            <span class="section-card-title">
-              <svg class="icon" viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
-              Sensory Feedback &amp; Haptics
-            </span>
-          </div>
-          <div style="display:flex; justify-content:space-between; align-items:center; padding:4px 0;">
-            <div>
-              <div style="font-size:12.5px; font-weight:600; color:#ffffff;">Synthesized Audio Clicks</div>
-              <div style="font-size:11px; color:#a1a1aa;">Subtle low-latency mechanical tick on navigation, prompt execution, and modal transitions.</div>
-            </div>
-            <button class="btn-action" id="btn-toggle-sound" style="padding:4px 12px; font-size:11.5px;" onclick="toggleSoundHaptics()">
-              Toggle Audio
-            </button>
-          </div>
-        </div>
-
-        <!-- 5. SYSTEM PROMPT & ACTIONS -->
-        <div class="settings-section-card">
-          <div class="section-card-header">
-            <span class="section-card-title">
-              <svg class="icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-              Sovereign STEM Persona &amp; Directives
-            </span>
-          </div>
-          <div class="setting-row">
-            <textarea id="setting-persona" class="setting-input" style="height:88px; resize:none;">You are Vigyan Pro, an elite Sovereign STEM AI Engine by ExperimentLab. When presenting derivations or formulas, format with clean LaTeX ($$...$$). To illustrate concepts with interactive visualizers, emit standard code blocks:
-- For 3D CAD: ```cad3d\ngear\n``` (or dna, propeller, heatsink, truss, silicon, graphene, benzene, torus, spring)
-- For Semiconductor: ```semiconductor\nmosfet\n``` (or bandgap, pn)
-- For 2D Graphs: ```plot\nMath.sin(x)*Math.exp(-0.2*x)\n```
-- For Physics Simulations: ```simulate\norbit\n``` (or quantum, pn-junction, pendulum)
-- For Circuits: ```circuit\nfilter\n``` (or 555, rlc)
-- For Materials Science: ```material\nfcc\n``` (or bcc, hcp, diamond, perovskite, phase, xrd)
-- For Molecular Biology: ```biology\ndna\n``` (or membrane, protein, pathway)
-- For 3D/Vector Math: ```math_visual\nsaddle\n``` (or vector, taylor)
-- For Clinical Medicine: ```medical\nstemi\n``` (or sepsis, pe)
-Provide rigorous mathematical and scientific analysis. Never emit square brackets or workbench prefixes.</textarea>
-          </div>
-          <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:6px;">
-            <button class="btn-action" onclick="checkOllamaConnection()">Ping Active Backend</button>
-            <button class="btn-action" style="background:#ffffff; color:#000000; font-weight:600; padding:6px 16px;" onclick="saveSettings()">Save Preferences</button>
-          </div>
+        <!-- Hidden defaults so internal engine logic stays intact without UI clutter -->
+        <div style="display:none;">
+          <input type="text" id="setting-agent-host" value="http://127.0.0.1:8085">
+          <input type="password" id="setting-api-key" value="">
+          <input type="hidden" id="setting-keepalive" value="15m">
+          <input type="hidden" id="setting-ctx" value="8192">
+          <input type="hidden" id="setting-temp" value="0.05">
+          <input type="hidden" id="setting-topp" value="0.95">
+          <textarea id="setting-persona">You are Vigyan Pro, a helpful, clear, and accurate AI assistant for science, math, engineering, and everyday questions. Format equations with clean LaTeX ($$...$$). When helpful, include interactive visualizers using standard code blocks: ```cad3d\ngear\n```, ```semiconductor\nmosfet\n```, ```plot\nMath.sin(x)*Math.exp(-0.2*x)\n```, ```simulate\norbit\n```, ```circuit\nfilter\n```, ```material\nfcc\n```, ```biology\ndna\n```, ```math_visual\nsaddle\n```, or ```medical\nstemi\n```.</textarea>
         </div>
       </div>
     </div>
   </main>
-
-  <!-- RAYCAST-STYLE COMMAND PALETTE MODAL -->
-  <div class="cmd-overlay" id="cmd-palette-overlay" onclick="handleCmdOverlayClick(event)">
-    <div class="cmd-modal">
-      <div class="cmd-search-box">
-        <svg class="icon" viewBox="0 0 24 24" style="width:16px; height:16px; stroke:#a1a1aa;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        <input type="text" class="cmd-search-input" id="cmd-input" placeholder="Type a command or jump to workspace..." oninput="filterCommandPalette()" onkeydown="handleCmdKeyDown(event)">
-        <span class="cmd-kbd-badge">ESC</span>
-      </div>
-      <div class="cmd-results" id="cmd-results-list"></div>
-    </div>
-  </div>
-
-  <!-- 8-DOMAIN STEM TASK HUB MODAL -->
-  <div class="vigyan-modal-overlay" id="stem-hub-overlay" onclick="if(event.target===this)closeStemTaskHub()">
-    <div class="vigyan-modal-card">
-      <div class="vigyan-modal-header">
-        <div style="display:flex; align-items:center; gap:10px;">
-          <span style="font-size:13px; font-weight:700; color:#ffffff; letter-spacing:0.03em;">8-DOMAIN SOVEREIGN STEM TASK HUB</span>
-          <span class="ns-badge">20+ CURATED BENCHMARKS</span>
-        </div>
-        <button class="btn-action" onclick="closeStemTaskHub()" style="padding:3px 9px; font-size:11px;">ESC</button>
-      </div>
-      <div class="vigyan-modal-body">
-        <div style="display:flex; gap:10px; margin-bottom:12px; flex-wrap:wrap; align-items:center;">
-          <input type="text" id="stem-hub-search" class="setting-input" placeholder="Search tasks by formula, domain, or keyword..." oninput="renderStemTaskHub()" style="flex:1; min-width:220px;">
-          <div id="stem-hub-domain-pills" style="display:flex; gap:5px; flex-wrap:wrap;"></div>
-        </div>
-        <div id="stem-hub-grid" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap:10px;"></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- LATEX SYMBOL & FORMULA REFERENCE MODAL -->
-  <div class="vigyan-modal-overlay" id="latex-ref-overlay" onclick="if(event.target===this)closeLatexRefModal()">
-    <div class="vigyan-modal-card" style="max-width:820px;">
-      <div class="vigyan-modal-header">
-        <div style="display:flex; align-items:center; gap:10px;">
-          <span style="font-size:13px; font-weight:700; color:#ffffff; letter-spacing:0.03em;">&Sigma; LATEX SYMBOL &amp; STEM FORMULA VAULT</span>
-          <span class="ns-badge">CLICK TO INSERT OR COPY</span>
-        </div>
-        <button class="btn-action" onclick="closeLatexRefModal()" style="padding:3px 9px; font-size:11px;">ESC</button>
-      </div>
-      <div class="vigyan-modal-body">
-        <div style="display:flex; gap:10px; margin-bottom:12px; flex-wrap:wrap; align-items:center;">
-          <input type="text" id="latex-ref-search" class="setting-input" placeholder="Search Greek letters, operators, Maxwell, Schrödinger, Navier-Stokes..." oninput="renderLatexRefModal()" style="flex:1; min-width:220px;">
-          <div id="latex-ref-cat-pills" style="display:flex; gap:5px; flex-wrap:wrap;"></div>
-        </div>
-        <div id="latex-ref-grid" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap:8px;"></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- PUBLICATION VECTOR PDF & OVERLEAF .TEX EXPORT MODAL -->
-  <div class="vigyan-modal-overlay" id="export-pdf-overlay" onclick="if(event.target===this)closeExportPdfModal()">
-    <div class="vigyan-modal-card" style="max-width:920px;">
-      <div class="vigyan-modal-header">
-        <div style="display:flex; align-items:center; gap:10px;">
-          <span style="font-size:13px; font-weight:700; color:#ffffff; letter-spacing:0.03em;">PUBLICATION VECTOR PDF &amp; OVERLEAF .TEX EXPORT</span>
-          <span class="ns-badge">IEEE / ARXIV WHITE-PAPER EDITION</span>
-        </div>
-        <button class="btn-action" onclick="closeExportPdfModal()" style="padding:3px 9px; font-size:11px;">ESC</button>
-      </div>
-      <div class="vigyan-modal-body">
-        <div style="display:grid; grid-template-columns: 1.4fr 1fr 1fr; gap:8px; margin-bottom:8px;">
-          <input type="text" id="export-doc-title" class="setting-input" placeholder="Manuscript Title..." value="Sovereign Neuro-Symbolic STEM Research Dossier" oninput="renderExportPreview()" style="padding:5px 8px; font-size:11.5px;">
-          <input type="text" id="export-doc-author" class="setting-input" placeholder="Principal Author..." value="Principal Investigator" oninput="renderExportPreview()" style="padding:5px 8px; font-size:11.5px;">
-          <input type="text" id="export-doc-inst" class="setting-input" placeholder="Institution / Lab..." value="ExperimentLab Sovereign AI" oninput="renderExportPreview()" style="padding:5px 8px; font-size:11.5px;">
-        </div>
-        <div style="margin-bottom:10px;">
-          <input type="text" id="export-doc-abstract" class="setting-input" placeholder="Executive Abstract..." value="Analytical derivations, SymPy AST symbolic proofs, and KùzuDB GraphRAG verified physical laws." oninput="renderExportPreview()" style="padding:5px 8px; font-size:11px;">
-        </div>
-        <div style="display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:12px; flex-wrap:wrap;">
-          <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
-            <select id="export-paper-size" class="setting-input" style="width:115px; padding:5px 8px; font-size:11px;" onchange="renderExportPreview()">
-              <option value="A4">A4 Portrait</option>
-              <option value="Letter">US Letter</option>
-            </select>
-            <select id="export-col-mode" class="setting-input" style="width:155px; padding:5px 8px; font-size:11px;" onchange="renderExportPreview()">
-              <option value="1col">Single-Column Monograph</option>
-              <option value="2col">Two-Column IEEE Journal</option>
-            </select>
-            <select id="export-content-mode" class="setting-input" style="width:170px; padding:5px 8px; font-size:11px;" onchange="renderExportPreview()">
-              <option value="full">Full STEM Exchange</option>
-              <option value="solutions">Derivations &amp; Solutions Only</option>
-            </select>
-          </div>
-          <div style="display:flex; gap:8px;">
-            <button class="btn-action" onclick="copyOverleafTex()" style="padding:6px 12px; font-size:11.5px;">Copy Overleaf .tex</button>
-            <button class="btn-action" onclick="downloadOverleafTex()" style="padding:6px 12px; font-size:11.5px;">Download .tex</button>
-            <button class="btn-action" onclick="triggerVectorPdfPrint()" style="background:#ffffff; color:#000000; font-weight:700; padding:6px 14px; font-size:11.5px;">Print / Save Vector PDF</button>
-          </div>
-        </div>
-        <div id="export-whitepaper-preview" style="background:#ffffff; color:#111111; padding:28px 34px; border-radius:8px; max-height:50vh; overflow-y:auto; font-family:Georgia, 'Times New Roman', serif; line-height:1.65;"></div>
-      </div>
-    </div>
-  </div>
 
   <div id="toast">Notification</div>
 
@@ -2314,28 +1999,24 @@ Provide rigorous mathematical and scientific analysis. Never emit square bracket
     let cmdSelectedIndex = 0;
     let filteredCmds = [];
     const COMMAND_ITEMS = [
-      { id: 'cmd-hub', title: 'Open 8-Domain Sovereign STEM Task Hub', tag: 'Modal', run: () => openStemTaskHub() },
-      { id: 'cmd-latex', title: 'Open LaTeX Symbol & Formula Vault (Σ)', tag: 'Modal', run: () => openLatexRefModal() },
-      { id: 'cmd-export', title: 'Export Session to Vector PDF / Overleaf .tex', tag: 'Export', run: () => openExportPdfModal() },
+      { id: 'cmd-cad', title: '3D Models & CAD (/cad3d)', tag: 'Tool', run: () => quickFirePrompt('/cad3d gear') },
+      { id: 'cmd-mathvis', title: '3D Math Surfaces (/math_visual)', tag: 'Tool', run: () => quickFirePrompt('/math_visual saddle hyperbolic paraboloid and Taylor convergence') },
+      { id: 'cmd-plot', title: '2D Function Graph (/plot)', tag: 'Tool', run: () => quickFirePrompt('/plot Math.exp(-0.2*x)*Math.cos(2*x)') },
+      { id: 'cmd-derive', title: 'Step-by-Step Math Solver (/derive)', tag: 'Tool', run: () => quickFirePrompt('/derive Solve x^2 - 5*x + 6 = 0 and integrate sin(x)*exp(-x)') },
+      { id: 'cmd-sim', title: 'Physics Simulation (/simulate)', tag: 'Tool', run: () => quickFirePrompt('/simulate orbit Keplerian 2-body elliptic eccentricity 0.6') },
+      { id: 'cmd-circuit', title: 'Electronic Circuits (/circuit)', tag: 'Tool', run: () => quickFirePrompt('/circuit rlc series resonance and transient response') },
       { id: 'cmd-semi', title: 'Semiconductor Physics (/semiconductor)', tag: 'Tool', run: () => quickFirePrompt('/semiconductor GaAs band bending and carrier transport') },
-      { id: 'cmd-sim', title: 'Run 60 FPS Simulation in Chat (/simulate)', tag: 'Tool', run: () => quickFirePrompt('/simulate orbit Keplerian 2-body elliptic eccentricity 0.6') },
-      { id: 'cmd-cad', title: 'Render 3D CAD Assembly in Chat (/cad3d)', tag: 'Tool', run: () => quickFirePrompt('/cad3d gear') },
-      { id: 'cmd-circuit', title: 'Circuit Schematic, Oscilloscope & BOM (/circuit)', tag: 'Tool', run: () => quickFirePrompt('/circuit rlc series resonance and transient response') },
-      { id: 'cmd-material', title: 'Crystal Lattice, Phase Diagram & XRD (/material)', tag: 'Tool', run: () => quickFirePrompt('/material fcc crystal lattice Miller planes and Pb-Sn phase diagram') },
-      { id: 'cmd-biology', title: '3D B-DNA Helix, K+ Channel & ATP Pathway (/biology)', tag: 'Tool', run: () => quickFirePrompt('/biology dna double helix base pairing and ion channel gating') },
-      { id: 'cmd-mathvis', title: '3D Saddle Surface, Curl/Div & Taylor Series (/math_visual)', tag: 'Tool', run: () => quickFirePrompt('/math_visual saddle hyperbolic paraboloid and Taylor convergence') },
-      { id: 'cmd-medical', title: 'Clinical Biomarker Panel & Differential (/medical)', tag: 'Tool', run: () => quickFirePrompt('/medical stemi acute coronary syndrome biomarker panel') },
-      { id: 'cmd-plot', title: 'Plot 2D Function in Chat (/plot)', tag: 'Tool', run: () => quickFirePrompt('/plot Math.exp(-0.2*x)*Math.cos(2*x)') },
-      { id: 'cmd-derive', title: 'SymPy AST Verified Proof (/derive)', tag: 'Tool', run: () => quickFirePrompt('/derive Solve x^2 - 5*x + 6 = 0 and integrate sin(x)*exp(-x)') },
-      { id: 'compute-auto', title: 'Hybrid Compute: Auto Smart GPU+CPU Split', tag: 'Compute', run: () => setHybridComputeMode('auto') },
-      { id: 'compute-gpu', title: 'Hybrid Compute: Max GPU Offload (Flash Attention)', tag: 'Compute', run: () => setHybridComputeMode('max_gpu') },
-      { id: 'compute-bal', title: 'Hybrid Compute: Balanced GPU + Physical CPU Split', tag: 'Compute', run: () => setHybridComputeMode('balanced') },
-      { id: 'compute-eco', title: 'Hybrid Compute: CPU Eco / Battery Saver Mode', tag: 'Compute', run: () => setHybridComputeMode('cpu_eco') },
-      { id: 'new-session', title: 'Create New STEM Session', tag: 'Session', run: () => createNewSession() },
-      { id: 'clear-chat', title: 'Clear Current Chat History', tag: 'Session', run: () => clearCurrentChat() },
-      { id: 'tab-studio', title: 'Navigate to Studio', tag: 'Dock', run: () => switchTab('studio') },
-      { id: 'tab-settings', title: 'Navigate to Workstation Settings', tag: 'Dock', run: () => switchTab('settings') },
-      { id: 'toggle-sound', title: 'Toggle Haptic Sound Feedback', tag: 'Audio', run: () => toggleSoundHaptics() }
+      { id: 'cmd-material', title: 'Crystal & Materials (/material)', tag: 'Tool', run: () => quickFirePrompt('/material fcc crystal lattice Miller planes and Pb-Sn phase diagram') },
+      { id: 'cmd-biology', title: 'DNA & Biology (/biology)', tag: 'Tool', run: () => quickFirePrompt('/biology dna double helix base pairing and ion channel gating') },
+      { id: 'cmd-medical', title: 'Medical Lab Values (/medical)', tag: 'Tool', run: () => quickFirePrompt('/medical stemi acute coronary syndrome biomarker panel') },
+      { id: 'compute-auto', title: 'Performance: Smart Automatic (GPU + CPU)', tag: 'Performance', run: () => setHybridComputeMode('auto') },
+      { id: 'compute-gpu', title: 'Performance: Maximum Speed', tag: 'Performance', run: () => setHybridComputeMode('max_gpu') },
+      { id: 'compute-eco', title: 'Performance: Battery Saver', tag: 'Performance', run: () => setHybridComputeMode('cpu_eco') },
+      { id: 'new-session', title: 'Start New Chat', tag: 'Chat', run: () => createNewSession() },
+      { id: 'clear-chat', title: 'Clear Current Chat', tag: 'Chat', run: () => clearCurrentChat() },
+      { id: 'tab-studio', title: 'Go to Chat', tag: 'Navigate', run: () => switchTab('studio') },
+      { id: 'tab-settings', title: 'Go to Settings', tag: 'Navigate', run: () => switchTab('settings') },
+      { id: 'toggle-sound', title: 'Toggle Sound Effects', tag: 'Audio', run: () => toggleSoundHaptics() }
     ];
 
     function toggleSoundHaptics() {
@@ -2427,75 +2108,45 @@ Provide rigorous mathematical and scientific analysis. Never emit square bracket
         welcome.innerHTML = `
           <div class="welcome-badge">
             <span class="hud-radar"></span>
-            <span id="welcome-badge-decode">SOVEREIGN NEURO-SYMBOLIC STEM AI // HYBRID GPU+CPU // ZERO CLOUD EGRESS</span>
+            <span id="welcome-badge-decode">Offline &amp; Private • Ready</span>
           </div>
-          <h2 class="welcome-title">Private AI for Science &amp; Math.<br><span>SymPy AST + KùzuDB GraphRAG + 8-Domain Lab.</span></h2>
+          <h2 class="welcome-title">What would you like to explore today?</h2>
           <p class="welcome-desc">
-            Select an interactive STEM module below, open the <strong>STEM Hub</strong> for 20+ benchmark problems, or type <strong>/</strong> in the prompt bar.
+            Ask a question, solve math step-by-step, or interact with live 3D models and simulations.
           </p>
 
-          <div class="starter-prompts" style="grid-template-columns: repeat(4, 1fr);">
-            <div class="prompt-card" style="--i:0" onclick="quickFirePrompt('/semiconductor GaAs band bending and carrier transport')">
-              <div class="prompt-title">
-                <svg class="icon" viewBox="0 0 24 24" style="stroke:#ffffff;"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M9 9h6v6H9z"/></svg>
-                <span>Semiconductor Lab</span>
-              </div>
-              <div class="prompt-sub">/semiconductor // MOSFET IV &amp; PN Bandgap</div>
-            </div>
-            <div class="prompt-card" style="--i:1" onclick="quickFirePrompt('/simulate orbit Keplerian 2-body elliptic eccentricity 0.6')">
-              <div class="prompt-title">
-                <svg class="icon" viewBox="0 0 24 24" style="stroke:#ffffff;"><circle cx="12" cy="12" r="10"/><ellipse cx="12" cy="12" rx="10" ry="4"/></svg>
-                <span>60 FPS Physics Sim</span>
-              </div>
-              <div class="prompt-sub">/simulate // Kepler Orbits &amp; Quantum Wave</div>
-            </div>
-            <div class="prompt-card" style="--i:2" onclick="quickFirePrompt('/cad3d gear')">
+          <div class="starter-prompts" style="grid-template-columns: repeat(2, 1fr); max-width: 580px;">
+            <div class="prompt-card" style="--i:0" onclick="quickFirePrompt('/cad3d gear')">
               <div class="prompt-title">
                 <svg class="icon" viewBox="0 0 24 24" style="stroke:#ffffff;"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
-                <span>3D CAD &amp; Mesh</span>
+                <span>3D Models &amp; Design</span>
               </div>
-              <div class="prompt-sub">/cad3d // Planetary Gear, Silicon &amp; Torus</div>
+              <div class="prompt-sub">Explore interactive 3D gears, molecules, and structures</div>
             </div>
-            <div class="prompt-card" style="--i:3" onclick="quickFirePrompt('/circuit rlc series resonance and transient response')">
+            <div class="prompt-card" style="--i:1" onclick="quickFirePrompt('/plot Math.exp(-0.2*x)*Math.cos(2*x)')">
               <div class="prompt-title">
                 <svg class="icon" viewBox="0 0 24 24" style="stroke:#ffffff;"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-                <span>Circuit &amp; Scope</span>
+                <span>Math &amp; Graphs</span>
               </div>
-              <div class="prompt-sub">/circuit // Schematic, Live Scope &amp; BOM</div>
+              <div class="prompt-sub">Plot functions, solve equations, and visualize curves</div>
             </div>
-            <div class="prompt-card" style="--i:4" onclick="quickFirePrompt('/material fcc crystal unit cell Miller planes and Pb-Sn phase diagram')">
+            <div class="prompt-card" style="--i:2" onclick="quickFirePrompt('/simulate orbit')">
               <div class="prompt-title">
-                <svg class="icon" viewBox="0 0 24 24" style="stroke:#ffffff;"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
-                <span>Materials Science</span>
+                <svg class="icon" viewBox="0 0 24 24" style="stroke:#ffffff;"><circle cx="12" cy="12" r="10"/><ellipse cx="12" cy="12" rx="10" ry="4"/></svg>
+                <span>Physics &amp; Circuits</span>
               </div>
-              <div class="prompt-sub">/material // 3D Unit Cell, Lever Rule &amp; XRD</div>
+              <div class="prompt-sub">Run live motion, orbit, and electronic circuit simulations</div>
             </div>
-            <div class="prompt-card" style="--i:5" onclick="quickFirePrompt('/biology dna double helix base pairing and K+ channel')">
+            <div class="prompt-card" style="--i:3" onclick="quickFirePrompt('/biology dna')">
               <div class="prompt-title">
                 <svg class="icon" viewBox="0 0 24 24" style="stroke:#ffffff;"><path d="M2 15c6.667-6 13.333 0 20-6"/><path d="M9 22c1.798-1.998 2.518-3.995 2.807-5.993"/><path d="M15 2c-1.798 1.998-2.518 3.995-2.807 5.993"/></svg>
-                <span>Molecular Biology</span>
+                <span>Science &amp; Biology</span>
               </div>
-              <div class="prompt-sub">/biology // 3D B-DNA, Ion Channel &amp; ATP</div>
-            </div>
-            <div class="prompt-card" style="--i:6" onclick="quickFirePrompt('/math_visual saddle hyperbolic paraboloid and Taylor convergence')">
-              <div class="prompt-title">
-                <svg class="icon" viewBox="0 0 24 24" style="stroke:#ffffff;"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10"/></svg>
-                <span>3D &amp; Vector Math</span>
-              </div>
-              <div class="prompt-sub">/math_visual // Saddle Surface, Curl &amp; Taylor</div>
-            </div>
-            <div class="prompt-card" style="--i:7" onclick="quickFirePrompt('/medical stemi acute coronary syndrome biomarker panel')">
-              <div class="prompt-title">
-                <svg class="icon" viewBox="0 0 24 24" style="stroke:#ffffff;"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-                <span>Clinical Biomarkers</span>
-              </div>
-              <div class="prompt-sub">/medical // STEMI, Sepsis &amp; PE Triage</div>
+              <div class="prompt-sub">Inspect 3D DNA, crystal structures, and medical vitals</div>
             </div>
           </div>
         `;
         box.appendChild(welcome);
-        const badgeTextEl = welcome.querySelector('#welcome-badge-decode');
-        if (badgeTextEl) decodeLabel(badgeTextEl);
         return;
       }
 
@@ -2504,10 +2155,7 @@ Provide rigorous mathematical and scientific analysis. Never emit square bracket
         d.className = `msg ${m.role}`;
         const isLastAssistant = (idx === s.messages.length - 1 && m.role === 'assistant');
         const speedBadge = (isLastAssistant && isStreaming && tokPerSec) 
-          ? `<span class="stream-speed-badge"><svg style="width:10px; height:10px; stroke:currentColor; fill:none;" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>${tokPerSec} tok/s</span>` 
-          : (m.tokPerSec ? `<span class="stream-speed-badge">${m.tokPerSec} tok/s</span>` : '');
-        const computeBadge = (m.role === 'assistant' && m.computeBadge)
-          ? `<span class="ns-badge" style="font-size:9.5px; padding:1px 6px;">${escapeHtml(m.computeBadge)}</span>`
+          ? `<span class="stream-speed-badge">${tokPerSec} tok/s</span>` 
           : '';
         const isWaitingFirstToken = (isLastAssistant && isStreaming && !m.content);
         const typingDots = isWaitingFirstToken
@@ -2515,56 +2163,17 @@ Provide rigorous mathematical and scientific analysis. Never emit square bracket
           : '';
         const caret = (isLastAssistant && isStreaming && m.content) ? '<span class="streaming-caret"></span>' : '';
 
-        let neuroBadgesHtml = '';
-        if (m.role === 'assistant' && m.neuroMeta && (m.neuroMeta.sympy_verified || (m.neuroMeta.axioms && m.neuroMeta.axioms.length > 0))) {
-          const badges = [];
-          const detailsLines = [];
-          if (m.neuroMeta.sympy_verified) {
-            badges.push(`<span class="ns-badge verified">✓ SYMPY AST VERIFIED</span>`);
-            if (m.neuroMeta.sympy_result) {
-              detailsLines.push(`<div><strong style="color:#ffffff;">SymPy Symbolic AST:</strong> <code>${escapeHtml(m.neuroMeta.sympy_result)}</code></div>`);
-            }
-          }
-          if (m.neuroMeta.axioms && m.neuroMeta.axioms.length > 0) {
-            badges.push(`<span class="ns-badge">KÙZUDB GRAPHRAG: ${escapeHtml(m.neuroMeta.axioms.map(a => a.topic).join(', '))}</span>`);
-            m.neuroMeta.axioms.forEach(a => {
-              detailsLines.push(`<div><strong style="color:#ffffff;">${escapeHtml(a.domain)} (${escapeHtml(a.topic)}):</strong> $$${a.equation}$$</div>`);
-            });
-          }
-          neuroBadgesHtml = `<details style="margin-bottom:10px; background:#060709; border:1px solid rgba(255,255,255,0.14); border-radius:6px; padding:6px 10px;">
-            <summary style="cursor:pointer; display:flex; flex-wrap:wrap; gap:6px; align-items:center; list-style:none;">
-              ${badges.join('')}
-              <span style="font-size:10px; font-family:ui-monospace,monospace; color:#a1a1aa; margin-left:auto;">▾ Inspect Symbolic Proof &amp; Axioms</span>
-            </summary>
-            <div style="margin-top:8px; padding-top:8px; border-top:1px solid var(--border-subtle); font-size:11.5px; color:#d4d4d8; display:flex; flex-direction:column; gap:4px;">
-              ${detailsLines.join('')}
-            </div>
-          </details>`;
-        }
-        
         let assistantActions = '';
         if (m.role === 'assistant' && !isStreaming && m.content) {
           assistantActions = `
             <div class="stem-card-actions">
-              <button class="btn-stem-mini" onclick="copyRawMessage(${idx})" title="Copy Markdown">
+              <button class="btn-stem-mini" onclick="copyRawMessage(${idx})" title="Copy Response">
                 <svg class="icon" viewBox="0 0 24 24" style="width:10px; height:10px;"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
                 Copy
               </button>
-              <button class="btn-stem-mini" onclick="regenerateResponse(${idx})" title="Regenerate AI Response">
+              <button class="btn-stem-mini" onclick="regenerateResponse(${idx})" title="Retry Response">
                 <svg class="icon" viewBox="0 0 24 24" style="width:10px; height:10px;"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
-                Regenerate
-              </button>
-              <button class="btn-stem-mini" onclick="quickExtractPlot(${idx})" title="Send to 2D Plotter">
-                <svg class="icon" viewBox="0 0 24 24" style="width:10px; height:10px;"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-                Plotter
-              </button>
-              <button class="btn-stem-mini" onclick="quickExportLatex(${idx})" title="Export LaTeX Paper TeX">
-                <svg class="icon" viewBox="0 0 24 24" style="width:10px; height:10px;"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
-                Overleaf TeX
-              </button>
-              <button class="btn-stem-mini" onclick="openExportPdfModal()" title="Publication Vector PDF">
-                <svg class="icon" viewBox="0 0 24 24" style="width:10px; height:10px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
-                Vector PDF
+                Retry
               </button>
             </div>
           `;
@@ -2574,11 +2183,10 @@ Provide rigorous mathematical and scientific analysis. Never emit square bracket
           <div class="msg-header">
             ${m.role === 'assistant' ? '<img src="assets/micro_logo_v.png" class="msg-avatar-v" alt="V">' : ''}
             <span>${m.role === 'assistant' ? currentModel : 'You'}</span>
-            ${computeBadge}
             ${speedBadge}
           </div>
           <div class="msg-content" data-msg-idx="${idx}">
-            ${neuroBadgesHtml}${typingDots}<div class="msg-body-stream">${formatMessageContent(m.content, 'msg_' + idx)}${caret}</div>
+            ${typingDots}<div class="msg-body-stream">${formatMessageContent(m.content, 'msg_' + idx)}${caret}</div>
             ${assistantActions}
           </div>
         `;
@@ -4667,43 +4275,18 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
       latestHardwareTelemetry = Object.assign({}, latestHardwareTelemetry, stats);
       const gpuText = document.getElementById('hud-gpu-text');
       if (gpuText) {
-        const cpuPct = Math.round(stats.cpu_percent !== undefined ? stats.cpu_percent : (stats.cpu_pct || 0));
-        const ramPct = Math.round(stats.ram_percent !== undefined ? stats.ram_percent : (stats.ram_pct || 0));
-        const gpuPct = Math.round(stats.gpu_percent !== undefined ? stats.gpu_percent : 0);
-        const strat = stats.strategy_label || stats.gpu_info || 'HYBRID AUTO';
-        if (stats.gpu_available) {
-          gpuText.innerText = `${strat} • GPU ${gpuPct}% • CPU ${cpuPct}% • RAM ${ramPct}%`;
-        } else {
-          gpuText.innerText = `${strat} • CPU ${cpuPct}% • RAM ${ramPct}%`;
-        }
-      }
-      const sideCompute = document.getElementById('sidebar-compute-telemetry');
-      if (sideCompute && stats.strategy_label) {
-        sideCompute.innerText = stats.strategy_label;
+        gpuText.innerText = 'Ready';
       }
       const hwBadge = document.getElementById('hybrid-hardware-badge');
       if (hwBadge) {
-        hwBadge.innerText = `${stats.gpu_name || 'CPU'} + ${stats.cpu_cores_physical || 4}C/${stats.cpu_cores_logical || 8}T`;
+        const gLabel = stats.gpu_available ? (stats.gpu_name || 'GPU') : 'CPU';
+        hwBadge.innerText = `${gLabel} • ${stats.cpu_cores_physical || 4}-Core CPU`;
       }
-      const gName = document.getElementById('settings-gpu-name');
-      if (gName) gName.innerText = `${stats.gpu_name || 'Integrated/CPU'} (${stats.gpu_percent || 0}% busy)`;
-      const vInfo = document.getElementById('settings-vram-info');
-      if (vInfo) {
-        const vUsed = Math.round((stats.vram_used_mb || 0) + (stats.gtt_used_mb || 0));
-        const vTot = Math.round(stats.effective_vram_mb || stats.vram_total_mb || 0);
-        vInfo.innerText = `${vUsed} / ${vTot} MB (VRAM+GTT)`;
-      }
-      const cInfo = document.getElementById('settings-cpu-info');
-      if (cInfo) cInfo.innerText = `${stats.cpu_cores_physical || 4} Physical / ${stats.cpu_cores_logical || 8} Logical (${Math.round(stats.cpu_percent || 0)}%)`;
-      const pInfo = document.getElementById('settings-power-info');
-      if (pInfo) pInfo.innerText = stats.on_battery ? `Battery (${stats.battery_percent || 0}%)` : `AC Mains (${stats.battery_percent || 100}%)`;
     };
 
     window.setHybridComputeMode = function(mode) {
       HYBRID_COMPUTE_MODE = mode || 'auto';
       localStorage.setItem('vigyan_compute_mode', HYBRID_COMPUTE_MODE);
-      const sel = document.getElementById('hud-compute-mode-select');
-      if (sel && sel.value !== HYBRID_COMPUTE_MODE) sel.value = HYBRID_COMPUTE_MODE;
       ['auto', 'max_gpu', 'balanced', 'cpu_eco'].forEach(m => {
         const el = document.getElementById('compute-card-' + m);
         if (el) el.classList.toggle('active', m === HYBRID_COMPUTE_MODE);
@@ -4719,12 +4302,13 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
           }).then(r => r.json()).then(d => window.onNativeTelemetry(d)).catch(() => {});
         }
       } catch (e) {}
-      showToast(`Hybrid Compute Mode: ${HYBRID_COMPUTE_MODE.toUpperCase()}`);
+      const modeNames = { auto: 'Smart Automatic', max_gpu: 'Maximum Speed', balanced: 'Balanced', cpu_eco: 'Battery Saver' };
+      showToast(`Performance: ${modeNames[HYBRID_COMPUTE_MODE] || 'Automatic'}`);
       haptics.click();
     };
 
     window.cycleHybridComputeMode = function() {
-      const order = ['auto', 'max_gpu', 'balanced', 'cpu_eco'];
+      const order = ['auto', 'max_gpu', 'cpu_eco'];
       const next = order[(order.indexOf(HYBRID_COMPUTE_MODE) + 1) % order.length];
       window.setHybridComputeMode(next);
     };
@@ -4760,17 +4344,16 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
       if (sessions[activeSessionId]) sessions[activeSessionId].messages = [];
       saveSessions();
       renderChat();
-      showToast('Chat history cleared');
+      showToast('Chat cleared');
     }
 
     function createNewSession() {
       const id = 'sess_' + Date.now();
-      sessions[id] = { name: 'STEM Session ' + (Object.keys(sessions).length + 1), messages: [] };
+      sessions[id] = { name: 'New Chat', messages: [] };
       activeSessionId = id;
       saveSessions();
       updateSessionList();
       renderChat();
-      showToast('Created new session');
     }
 
     function switchSession(id) {
@@ -4784,12 +4367,11 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
     function renameSession(id, ev) {
       if (ev) ev.stopPropagation();
       if (!sessions[id]) return;
-      const next = prompt('Rename STEM Session:', sessions[id].name);
+      const next = prompt('Rename chat:', sessions[id].name);
       if (next && next.trim()) {
         sessions[id].name = next.trim();
         saveSessions();
         updateSessionList();
-        showToast('Session renamed');
       }
     }
 
@@ -4798,9 +4380,10 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
       const keys = Object.keys(sessions);
       if (keys.length <= 1) {
         sessions[id].messages = [];
+        sessions[id].name = 'New Chat';
         saveSessions();
+        updateSessionList();
         renderChat();
-        showToast('Cleared active session');
         return;
       }
       delete sessions[id];
@@ -4810,7 +4393,6 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
       saveSessions();
       updateSessionList();
       renderChat();
-      showToast('Session deleted');
     }
 
     function renderSidebarSessions() {
@@ -4821,10 +4403,7 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
       const container = document.getElementById('session-container');
       if (!container) return;
       container.innerHTML = '';
-      const q = (document.getElementById('session-search-input')?.value || '').toLowerCase().trim();
-      const ids = Object.keys(sessions).filter(id => !q || (sessions[id].name || '').toLowerCase().includes(q));
-      const badge = document.getElementById('session-count-badge');
-      if (badge) badge.innerText = String(Object.keys(sessions).length);
+      const ids = Object.keys(sessions);
 
       ids.forEach(id => {
         const row = document.createElement('div');
@@ -4832,7 +4411,8 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
         const item = document.createElement('div');
         item.className = `session-item ${id === activeSessionId ? 'active' : ''}`;
         item.style.flex = '1';
-        item.innerText = sessions[id].name;
+        const rawName = sessions[id].name || 'New Chat';
+        item.innerText = rawName.startsWith('STEM Session') ? 'New Chat' : rawName;
         item.onclick = () => switchSession(id);
 
         const renBtn = document.createElement('button');
@@ -4854,7 +4434,7 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
       });
     }
 
-    /* AGENTIC SLASH COMMAND PALETTE */
+    /* SLASH COMMAND MENU */
     function toggleSlashMenu() {
       document.getElementById('slash-menu').classList.toggle('show');
     }
@@ -4865,7 +4445,7 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
       document.getElementById('slash-menu').classList.remove('show');
     }
 
-    /* CLIENT-SIDE & BRIDGE NEURO-SYMBOLIC ENRICHMENT */
+    /* SILENT BACKGROUND MATH & SCIENCE ENRICHMENT */
     async function enrichQueryWithNeuroSymbolic(queryText) {
       try {
         const resp = await fetch(`${AGENT_HOST}/api/enrich`, {
@@ -4880,36 +4460,34 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
       const qLower = queryText.toLowerCase();
       const axioms = [];
       if (qLower.includes('mosfet') || qLower.includes('band') || qLower.includes('diode') || qLower.includes('gaas')) {
-        axioms.push({ domain: 'Semiconductor Physics', topic: 'MOSFET & Band Theory', equation: 'I_D = (1/2) μ_n C_ox (W/L) (V_GS - V_th)^2 (1 + λ V_DS)' });
+        axioms.push({ domain: 'Semiconductors', topic: 'Transistor Physics', equation: 'I_D = \\frac{1}{2} \\mu_n C_{ox} \\frac{W}{L} (V_{GS} - V_{th})^2' });
       }
       if (qLower.includes('orbit') || qLower.includes('kepler') || qLower.includes('quantum') || qLower.includes('wave')) {
-        axioms.push({ domain: 'Theoretical Physics', topic: 'Hamiltonian & Wave Mechanics', equation: 'iℏ ∂ψ/∂t = [-ℏ²/(2m)∇² + V(r)]ψ' });
+        axioms.push({ domain: 'Physics', topic: 'Motion & Waves', equation: 'v^2 = GM\\left(\\frac{2}{r} - \\frac{1}{a}\\right)' });
       }
       if (qLower.includes('fcc') || qLower.includes('bcc') || qLower.includes('xrd') || qLower.includes('bragg') || qLower.includes('phase')) {
-        axioms.push({ domain: 'Materials Science', topic: 'Bragg Crystallography & Phase Rule', equation: 'nλ = 2 d_{hkl} sin(θ), F = C - P + 2' });
+        axioms.push({ domain: 'Materials', topic: 'Crystal Structure', equation: 'n\\lambda = 2 d \\sin(\\theta)' });
       }
       if (qLower.includes('dna') || qLower.includes('channel') || qLower.includes('atp') || qLower.includes('nernst')) {
-        axioms.push({ domain: 'Molecular Biology', topic: 'Bioenergetics & Nernst Potential', equation: 'E_ion = (RT/zF) ln([C]_out / [C]_in)' });
-      }
-      if (qLower.includes('stemi') || qLower.includes('sepsis') || qLower.includes('troponin') || qLower.includes('medical')) {
-        axioms.push({ domain: 'Clinical Medicine', topic: 'Hemodynamic & PK/PD Triage', equation: 'C(t) = C_0 exp(-k_e t), CL = Dose / AUC' });
+        axioms.push({ domain: 'Biology', topic: 'Cell & Molecular Biology', equation: 'E = \\frac{RT}{zF} \\ln\\left(\\frac{[C]_{out}}{[C]_{in}}\\right)' });
       }
       return {
         sympy_verified: qLower.startsWith('/derive') || qLower.includes('solve') || qLower.includes('integrate'),
-        sympy_result: qLower.startsWith('/derive') ? 'Symbolic AST verification active' : '',
+        sympy_result: '',
         axioms,
-        enriched_system_suffix: axioms.length ? '\n[KùzuDB GraphRAG Axioms]: ' + axioms.map(a => `${a.topic}: ${a.equation}`).join('; ') : ''
+        enriched_system_suffix: axioms.length ? '\nRelevant reference formulas: ' + axioms.map(a => `${a.topic}: ${a.equation}`).join('; ') : ''
       };
     }
 
     function buildOfflineDeterministicSynthesis(queryText, neuroMeta) {
-      const axiomLines = (neuroMeta && neuroMeta.axioms && neuroMeta.axioms.length)
-        ? neuroMeta.axioms.map(a => `- **${a.domain} (${a.topic})**: $$${a.equation}$$`).join('\n')
-        : `- **Governing Conservation & Differential Law**: $$\\mathcal{H} = \\sum_i p_i \\dot{q}_i - \\mathcal{L}(q_i, \\dot{q}_i, t)$$`;
-      const sympyBlock = (neuroMeta && neuroMeta.sympy_result)
-        ? `\n### SymPy AST Symbolic Verification\n- **Verified Output**: \`${neuroMeta.sympy_result}\`\n`
-        : '';
-      return `${sympyBlock}\n### Sovereign Neuro-Symbolic Analytical Synthesis\n${axiomLines}\n\n1. **First-Principles Formulation**: The interactive STEM visualizer above is bound directly to the governing parametric equations. Adjust the live sliders or tabs to inspect real-time boundary conditions.\n2. **Hybrid Compute Status**: Executed via deterministic local Neuro-Symbolic engine (${latestHardwareTelemetry.strategy_label || 'HYBRID AUTO'}). Start \`ollama serve\` or select an active backend in **Settings** for full multi-turn neural token streaming.`;
+      if (neuroMeta && neuroMeta.sympy_result) {
+        return `\n**Result:** \`${neuroMeta.sympy_result}\`\n\nUse the interactive controls above to explore the model in real time.`;
+      }
+      if (neuroMeta && neuroMeta.axioms && neuroMeta.axioms.length) {
+        const eqs = neuroMeta.axioms.map(a => `- **${a.topic}:** $$${a.equation}$$`).join('\n');
+        return `\n${eqs}\n\nUse the interactive controls and sliders above to explore how changing parameters affects the model.`;
+      }
+      return `\nUse the interactive controls above to explore the visualization. *(Note: Local AI server is currently starting up or offline—check **Settings** if you want to switch models.)*`;
     }
 
     /* INFERENCE DISPATCH WITH ABORT CONTROLLER & MULTI-BACKEND ROUTER */
@@ -4920,7 +4498,7 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
         activeStreamController.abort();
         activeStreamController = null;
         setSendButtonState(false);
-        showToast('Generation cancelled');
+        showToast('Stopped');
       } else {
         sendPrompt();
       }
@@ -4932,11 +4510,11 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
       if (isStreaming) {
         btn.style.background = '#ef4444';
         btn.innerHTML = `<svg class="icon" viewBox="0 0 24 24" style="stroke:#ffffff; fill:#ffffff;"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>`;
-        btn.title = "Stop Generating";
+        btn.title = "Stop";
       } else {
         btn.style.background = '#ffffff';
         btn.innerHTML = `<svg class="icon" viewBox="0 0 24 24" style="stroke:#000000;"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>`;
-        btn.title = "Execute Prompt";
+        btn.title = "Send";
       }
     }
 
@@ -4947,9 +4525,9 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
       input.value = '';
       document.getElementById('slash-menu').classList.remove('show');
 
-      if (!sessions[activeSessionId]) sessions[activeSessionId] = { name: 'STEM Session', messages: [] };
-      if (sessions[activeSessionId].messages.length === 0 && sessions[activeSessionId].name.startsWith('STEM Session')) {
-        sessions[activeSessionId].name = text.replace(/^\/\w+\s*/, '').slice(0, 28) || 'STEM Session';
+      if (!sessions[activeSessionId]) sessions[activeSessionId] = { name: 'New Chat', messages: [] };
+      if (sessions[activeSessionId].messages.length === 0 && (sessions[activeSessionId].name.startsWith('STEM Session') || sessions[activeSessionId].name.startsWith('New Chat'))) {
+        sessions[activeSessionId].name = text.replace(/^\/\w+\s*/, '').slice(0, 28) || 'New Chat';
         updateSessionList();
       }
       sessions[activeSessionId].messages.push({ role: 'user', content: text });
@@ -4975,59 +4553,57 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
           const match = text.match(/\/cad3d?\s*(\w*)/i);
           if (match && match[1]) cadTarget = match[1].toLowerCase();
         }
-        initialAssistantPrefix = `\`\`\`cad3d\n${cadTarget}\n\`\`\`\n\n### 3D CAD Parametric Assembly • ${cadTarget.toUpperCase()}\n- **Rendering**: Real-time Plotly WebGL 3D Mesh\n- **Controls**: Interactive orbital rotation, ISO/Top/Front angles, wireframe toggle.\n\n`;
-        streamPromptOverride = `Provide a rigorous mechanical engineering, kinematic, and stress analysis of the 3D CAD ${cadTarget} model. Include governing equations, material recommendations, and parametric constraints.`;
+        initialAssistantPrefix = `\`\`\`cad3d\n${cadTarget}\n\`\`\`\n\n`;
+        streamPromptOverride = `Briefly and clearly explain how the ${cadTarget} 3D model works and its key design features.`;
       } else if (lowerText.startsWith('/semiconductor') || lowerText.startsWith('/semi')) {
         let semiTarget = 'mosfet';
         if (lowerText.includes('bandgap') || lowerText.includes('eg')) semiTarget = 'bandgap';
         else if (lowerText.includes('pn') || lowerText.includes('diode')) semiTarget = 'pn';
-        initialAssistantPrefix = `\`\`\`semiconductor\n${semiTarget}\n\`\`\`\n\n### Semiconductor Device Physics • ${semiTarget.toUpperCase()}\n- **Solid-State Architecture**: Advanced Sub-3nm GAA / Heterostructure\n- **Carrier Transport**: Active electron inversion and band bending with live bias sliders.\n\n`;
-        streamPromptOverride = `Provide a rigorous solid-state semiconductor physics breakdown for ${semiTarget}. Explain energy band alignment (Ec, Ev, Ef), carrier statistics, depletion dynamics, and subthreshold characteristics.`;
+        initialAssistantPrefix = `\`\`\`semiconductor\n${semiTarget}\n\`\`\`\n\n`;
+        streamPromptOverride = `Clearly explain how this ${semiTarget} semiconductor device works in simple terms.`;
       } else if (lowerText.startsWith('/plot')) {
         let expr = text.replace(/\/plot/i, '').trim() || 'Math.exp(-0.2*x)*Math.cos(2*x)';
-        initialAssistantPrefix = `\`\`\`plot\n${expr}\n\`\`\`\n\n### Dynamic Function Plotter • 2D Analytical Curve\n- **Function**: \`f(x) = ${expr}\`\n- **Features**: Real-time parameter tuning \(k\), derivative \(f'(x)\), and numerical integral \(\int f(x)dx\).\n\n`;
-        streamPromptOverride = `Analyze the mathematical function f(x) = ${expr}. Find critical points, inflection points, roots, series expansion, and asymptotic behavior.`;
+        initialAssistantPrefix = `\`\`\`plot\n${expr}\n\`\`\`\n\n`;
+        streamPromptOverride = `Briefly explain the shape and key features of the function f(x) = ${expr}.`;
       } else if (lowerText.startsWith('/circuit') || lowerText.startsWith('/electronic')) {
         let circTarget = 'filter';
         if (lowerText.includes('555') || lowerText.includes('timer')) circTarget = '555';
         else if (lowerText.includes('rlc') || lowerText.includes('tank')) circTarget = 'rlc';
-        initialAssistantPrefix = `\`\`\`circuit\n${circTarget}\n\`\`\`\n\n### Electronic Circuit Lab • ${circTarget.toUpperCase()}\n- **Interactive Tabs**: Switch between **Schematic**, **Oscilloscope Waveform**, and **BOM & Pins**.\n\n`;
-        streamPromptOverride = `Derive the transfer function H(s) for this ${circTarget} circuit, analyze its pole-zero constellation, Bode plot stability, and component tolerances.`;
+        initialAssistantPrefix = `\`\`\`circuit\n${circTarget}\n\`\`\`\n\n`;
+        streamPromptOverride = `Clearly explain how this ${circTarget} electronic circuit works and what the components do.`;
       } else if (lowerText.startsWith('/simulate') || lowerText.startsWith('/sim')) {
         let simTarget = 'pn-junction';
         if (lowerText.includes('quantum') || lowerText.includes('tunnel')) simTarget = 'quantum';
         else if (lowerText.includes('orbit') || lowerText.includes('kepler')) simTarget = 'orbit';
         else if (lowerText.includes('pendulum')) simTarget = 'pendulum';
-        initialAssistantPrefix = `\`\`\`simulate\n${simTarget}\n\`\`\`\n\n### 60 FPS Dynamic Simulation Engine • ${simTarget.toUpperCase()}\n- **Integrator**: Real-time Symplectic Verlet / Euler numerical solver.\n\n`;
-        streamPromptOverride = `Formulate the Hamiltonian and governing differential equations of motion for the ${simTarget} physical system. Discuss phase space invariants and conservation laws.`;
+        initialAssistantPrefix = `\`\`\`simulate\n${simTarget}\n\`\`\`\n\n`;
+        streamPromptOverride = `Clearly explain the physics behind the ${simTarget} simulation.`;
       } else if (lowerText.startsWith('/material') || lowerText.startsWith('/crystal')) {
         let matTarget = lowerText.includes('bcc') ? 'bcc' : lowerText.includes('phase') ? 'phase' : lowerText.includes('xrd') ? 'xrd' : 'fcc';
-        initialAssistantPrefix = `\`\`\`material\n${matTarget}\n\`\`\`\n\n### Materials Science & Crystallography • ${matTarget.toUpperCase()}\n- **Interactive Views**: 3D Crystal Unit Cell with Miller planes `(100)/(110)/(111)`, Pb-Sn Eutectic Lever Rule, and Powder XRD spectrum.\n\n`;
-        streamPromptOverride = `Derive the crystallography, Atomic Packing Factor (APF), Bragg diffraction condition n*lambda = 2*d*sin(theta), and binary eutectic phase equilibria for ${text}.`;
+        initialAssistantPrefix = `\`\`\`material\n${matTarget}\n\`\`\`\n\n`;
+        streamPromptOverride = `Clearly explain the ${matTarget} crystal structure and material properties.`;
       } else if (lowerText.startsWith('/biology') || lowerText.startsWith('/bio')) {
         let bioTarget = lowerText.includes('membrane') || lowerText.includes('channel') ? 'membrane' : lowerText.includes('pathway') || lowerText.includes('atp') ? 'pathway' : 'dna';
-        initialAssistantPrefix = `\`\`\`biology\n${bioTarget}\n\`\`\`\n\n### Molecular Biology & Bioenergetics • ${bioTarget.toUpperCase()}\n- **Interactive Views**: 3D B-DNA Double Helix, Voltage-Gated K⁺ Ion Channel, and Cellular Respiration ATP Pathway.\n\n`;
-        streamPromptOverride = `Analyze the molecular biophysics, Watson-Crick hydrogen bonding energetics, Nernst membrane potential, and ATP synthase chemiosmotic coupling for ${text}.`;
+        initialAssistantPrefix = `\`\`\`biology\n${bioTarget}\n\`\`\`\n\n`;
+        streamPromptOverride = `Clearly explain the biology of ${bioTarget} and how it functions in cells.`;
       } else if (lowerText.startsWith('/math_visual') || lowerText.startsWith('/surface')) {
         let mathTarget = lowerText.includes('vector') || lowerText.includes('curl') ? 'vector' : lowerText.includes('taylor') ? 'taylor' : 'saddle';
-        initialAssistantPrefix = `\`\`\`math_visual\n${mathTarget}\n\`\`\`\n\n### 3D Differential Geometry & Vector Calculus • ${mathTarget.toUpperCase()}\n- **Interactive Views**: Hyperbolic Paraboloid Saddle Surface, 2D Curl/Divergence Field, and Taylor Series Polynomial Convergence.\n\n`;
-        streamPromptOverride = `Derive the Gaussian and Mean curvatures, curl and divergence operators, and Taylor remainder bounds for ${text}.`;
+        initialAssistantPrefix = `\`\`\`math_visual\n${mathTarget}\n\`\`\`\n\n`;
+        streamPromptOverride = `Clearly explain the geometry and intuition behind the ${mathTarget} math visualization.`;
       } else if (lowerText.startsWith('/medical') || lowerText.startsWith('/clinical')) {
         let medTarget = lowerText.includes('sepsis') ? 'sepsis' : lowerText.includes('pe') || lowerText.includes('embolism') ? 'pe' : 'stemi';
-        initialAssistantPrefix = `\`\`\`medical\n${medTarget}\n\`\`\`\n\n### Clinical Decision Support & Biomarker Triage • ${medTarget.toUpperCase()}\n- **Interactive Panel**: Switch between **Anterior STEMI**, **Septic Shock**, and **Massive PE** biomarker profiles.\n\n`;
-        streamPromptOverride = `Provide a quantitative clinical pathophysiology, biomarker kinetics, and evidence-based hemodynamic intervention analysis for ${text}.`;
+        initialAssistantPrefix = `\`\`\`medical\n${medTarget}\n\`\`\`\n\n`;
+        streamPromptOverride = `Clearly explain the key vitals and ECG pattern shown in the ${medTarget} medical monitor.`;
       }
 
       const neuroMeta = await enrichQueryWithNeuroSymbolic(text);
       const ctx = parseInt(document.getElementById('setting-ctx')?.value) || 8192;
       const hybridOpts = computeEffectiveOllamaOptions(ctx);
-      const computeBadge = `${HYBRID_COMPUTE_MODE.toUpperCase()} • GPU:${hybridOpts.num_gpu === -1 ? 'AUTO' : hybridOpts.num_gpu} • CPU:${hybridOpts.num_thread}T`;
 
       const assistantMsg = {
         role: 'assistant',
         content: initialAssistantPrefix,
-        neuroMeta,
-        computeBadge
+        neuroMeta
       };
       sessions[activeSessionId].messages.push(assistantMsg);
       renderChat(true);
@@ -5419,27 +4995,15 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
        SETTINGS & DAEMON CONNECTION LOGIC
        ========================================================================= */
     function selectIntent(type, temp, ctx, title) {
-      document.querySelectorAll('.intent-card').forEach(c => c.classList.remove('active'));
-      const activeCard = document.getElementById('intent-' + type);
-      if (activeCard) activeCard.classList.add('active');
-
-      document.getElementById('setting-temp').value = temp;
-      document.getElementById('temp-val').innerText = temp;
-      document.getElementById('setting-ctx').value = ctx;
-      updateCtxLabel(ctx);
-      showToast(`Profile: ${title}`);
-    }
-
-    function deselectIntents() {
-      document.querySelectorAll('.intent-card').forEach(c => c.classList.remove('active'));
-    }
-
-    function updateCtxLabel(val) {
-      const v = parseInt(val);
-      const vramEst = (v * 0.0003).toFixed(1);
-      document.getElementById('ctx-label').innerText = `${v.toLocaleString()} tokens (~${vramEst} GB VRAM)`;
-      const pct = Math.min(100, Math.max(10, (v / 65536) * 100));
-      document.getElementById('vram-bar-fill').style.width = pct + '%';
+      ['precise', 'balanced', 'creative'].forEach(k => {
+        const el = document.getElementById('intent-' + k);
+        if (el) el.classList.toggle('active', k === type);
+      });
+      const tempEl = document.getElementById('setting-temp');
+      if (tempEl) tempEl.value = temp;
+      const ctxEl = document.getElementById('setting-ctx');
+      if (ctxEl) ctxEl.value = ctx;
+      showToast(`Style: ${title}`);
     }
 
     function onBackendTypeChange(type) {
@@ -5450,20 +5014,6 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
         if (BACKEND_TYPE === 'ollama' && hostEl.value.includes(':808')) hostEl.value = 'http://127.0.0.1:11434';
         else if (BACKEND_TYPE === 'llama_server' && hostEl.value.includes(':11434')) hostEl.value = 'http://127.0.0.1:8080/v1';
       }
-      const sideBackend = document.getElementById('sidebar-backend-telemetry');
-      if (sideBackend) {
-        const labels = {
-          ollama: 'OLLAMA + SYMPY',
-          agent_server: 'SYMPY + KÙZU :8085',
-          llama_server: 'LLAMA.CPP :8080',
-          cloud_api: 'OPENAI API'
-        };
-        sideBackend.innerText = labels[BACKEND_TYPE] || 'OLLAMA + SYMPY';
-      }
-      const egressEl = document.getElementById('sidebar-egress-telemetry');
-      if (egressEl) {
-        egressEl.innerHTML = BACKEND_TYPE === 'cloud_api' ? 'CUSTOM API' : 'NONE <span class="hud-radar"></span>';
-      }
       checkOllamaConnection();
     }
 
@@ -5471,12 +5021,11 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
       const hostInput = document.getElementById('setting-host');
       const host = hostInput ? hostInput.value : OLLAMA_HOST;
       const badge = document.getElementById('daemon-status-badge');
-      if (badge) badge.innerText = 'Pinging...';
+      const topText = document.getElementById('hud-gpu-text');
+      const topLed = document.getElementById('hud-compute-led');
       try {
-        const start = performance.now();
         const url = BACKEND_TYPE === 'agent_server' ? `${AGENT_HOST}/api/telemetry` : `${host}/api/tags`;
         const r = await fetch(url);
-        const lat = Math.round(performance.now() - start);
         if (r.ok) {
           const data = await r.json();
           if (data.models && data.models.length > 0) {
@@ -5490,12 +5039,15 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
           } else if (data.strategy_label) {
             window.onNativeTelemetry(data);
           }
-          if (badge) badge.innerText = `Connected (${BACKEND_TYPE.toUpperCase()} • ${lat}ms)`;
+          if (badge) badge.innerText = 'Connected';
+          if (topText) topText.innerText = 'Ready';
+          if (topLed) topLed.style.background = '#10b981';
         } else {
-          if (badge) badge.innerText = 'Standby (' + r.status + ')';
+          if (badge) badge.innerText = 'Standby';
         }
       } catch (e) {
-        if (badge) badge.innerText = 'Offline (Neuro-Symbolic Fallback Active)';
+        if (badge) badge.innerText = 'Offline Mode';
+        if (topText) topText.innerText = 'Offline';
       }
     }
 
@@ -5504,15 +5056,15 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
       const statusEl = document.getElementById('vault-pull-status');
       const tag = (inp ? inp.value : '').trim();
       if (!tag) {
-        showToast('Enter an Ollama model tag to pull');
+        showToast('Enter a model name to download');
         return;
       }
       if (statusEl) {
         statusEl.style.display = 'block';
-        statusEl.innerText = `Initiating pull for ${tag}...`;
+        statusEl.innerText = `Downloading ${tag}...`;
       }
       await downloadSovereignModel(tag);
-      if (statusEl) statusEl.innerText = `Finished pull request for ${tag}.`;
+      if (statusEl) statusEl.innerText = `Finished downloading ${tag}.`;
     }
 
     function updateModelDropdownUI() {
@@ -5528,20 +5080,16 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
       });
     }
 
-    function deleteLocalModel(name) {
-      showToast(`Cannot delete default active model`);
-    }
-
     function saveSettings() {
-      const temp = document.getElementById('setting-temp').value;
-      const ctx = document.getElementById('setting-ctx').value;
-      const topp = document.getElementById('setting-topp').value;
-      const url = document.getElementById('setting-host').value;
+      const temp = document.getElementById('setting-temp')?.value || '0.05';
+      const ctx = document.getElementById('setting-ctx')?.value || '8192';
+      const topp = document.getElementById('setting-topp')?.value || '0.95';
+      const url = document.getElementById('setting-host')?.value || 'http://127.0.0.1:11434';
       const agentUrl = document.getElementById('setting-agent-host')?.value || 'http://127.0.0.1:8085';
       const apiKey = document.getElementById('setting-api-key')?.value || '';
       const backendType = document.getElementById('setting-backend-type')?.value || 'ollama';
-      const keepalive = document.getElementById('setting-keepalive').value;
-      const persona = document.getElementById('setting-persona').value;
+      const keepalive = document.getElementById('setting-keepalive')?.value || '15m';
+      const persona = document.getElementById('setting-persona')?.value || '';
       OLLAMA_HOST = url;
       AGENT_HOST = agentUrl;
       API_KEY = apiKey;
@@ -5552,305 +5100,8 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
       localStorage.setItem('vigyan_backend_type', BACKEND_TYPE);
       localStorage.setItem('vigyan_v26_settings', JSON.stringify({ temp, ctx, topp, url, agentUrl, backendType, keepalive, persona }));
       onBackendTypeChange(BACKEND_TYPE);
-      showToast('Workstation & Hybrid Compute Preferences Saved');
+      showToast('Settings saved');
       haptics.success();
-    }
-
-    /* =========================================================================
-       8-DOMAIN STEM TASK HUB MODAL (20+ CURATED BENCHMARKS)
-       ========================================================================= */
-    const STEM_HUB_TASKS = [
-      { domain: 'Semiconductor', title: 'Sub-3nm GAA MOSFET Band Bending & DIBL', formula: 'I_D = \\frac{1}{2}\\mu_n C_{ox}\\frac{W}{L}(V_{GS}-V_{th})^2(1+\\lambda V_{DS})', prompt: '/semiconductor Derive sub-3nm Gate-All-Around MOSFET inversion charge and DIBL threshold roll-off' },
-      { domain: 'Semiconductor', title: 'GaAs / AlGaAs Heterojunction 2DEG', formula: '\\Delta E_c \\approx 0.67 \\Delta E_g, \\quad n_s = \\frac{\\epsilon}{q d}(V_g - V_{th})', prompt: '/semiconductor bandgap Analyze GaAs/AlGaAs 2D electron gas band offset and carrier mobility' },
-      { domain: 'Physics Sim', title: 'Keplerian 2-Body Elliptic Orbit & Vis-Viva', formula: 'v^2 = GM\\left(\\frac{2}{r} - \\frac{1}{a}\\right)', prompt: '/simulate orbit Derive Kepler third law and vis-viva orbital velocity for eccentricity e=0.4' },
-      { domain: 'Physics Sim', title: '1D Quantum Wavepacket Potential Tunneling', formula: 'T \\approx \\exp\\left(-\\frac{2w}{\\hbar}\\sqrt{2m(V_0 - E)}\\right)', prompt: '/simulate quantum Solve time-dependent Schrodinger wavepacket transmission across rectangular barrier V0' },
-      { domain: '3D CAD', title: 'Epicyclic Planetary Gear Train Kinematics', formula: 'i = 1 + \\frac{Z_{\\text{ring}}}{Z_{\\text{sun}}}', prompt: '/cad3d gear Calculate planetary gear transmission ratio, contact stress, and Lewis bending factor' },
-      { domain: '3D CAD', title: 'Extruded Pin-Fin Heat Sink Thermal Dissipation', formula: 'Q = \\sqrt{h P k A_c}\\,\\theta_b \\tanh(m L)', prompt: '/cad3d heatsink Derive fin efficiency and convective thermal resistance for aluminum pin-fin array' },
-      { domain: '3D CAD', title: 'Aerospace Space-Truss Axial Buckling', formula: 'P_{cr} = \\frac{\\pi^2 E I}{(K L)^2}', prompt: '/cad3d truss Evaluate Euler buckling load and von Mises nodal stress in 3D space truss' },
-      { domain: 'Circuits', title: 'Active Sallen-Key 2nd-Order Butterworth Filter', formula: 'H(s) = \\frac{\\omega_0^2}{s^2 + (\\omega_0/Q)s + \\omega_0^2}', prompt: '/circuit filter Derive Sallen-Key low-pass filter transfer function H(s), Q-factor, and phase margin' },
-      { domain: 'Circuits', title: 'Series RLC Resonant Tank & Transient Damping', formula: 'f_0 = \\frac{1}{2\\pi\\sqrt{LC}}, \\quad \\zeta = \\frac{R}{2}\\sqrt{\\frac{C}{L}}', prompt: '/circuit rlc Analyze underdamped ringing and quality factor Q in a series RLC resonant circuit' },
-      { domain: 'Materials', title: 'FCC vs BCC Crystal Packing & Miller Planes', formula: 'd_{hkl} = \\frac{a}{\\sqrt{h^2 + k^2 + l^2}}, \\quad n\\lambda = 2d\\sin\\theta', prompt: '/material fcc Derive Atomic Packing Factor (0.74 vs 0.68) and XRD Bragg reflection selection rules' },
-      { domain: 'Materials', title: 'Pb-Sn Binary Eutectic Phase Diagram & Lever Rule', formula: 'W_{\\alpha} = \\frac{C_L - C_0}{C_L - C_{\\alpha}}, \\quad F = C - P + 2', prompt: '/material phase Compute α and β lamellar phase fractions in Pb-Sn eutectic alloy at 183°C' },
-      { domain: 'Materials', title: 'Powder X-Ray Diffraction Peak Indexing', formula: '\\frac{\\sin^2\\theta}{h^2+k^2+l^2} = \\frac{\\lambda^2}{4a^2}', prompt: '/material xrd Index powder XRD peaks for Cu K-alpha radiation (1.5406 A) and compute lattice constant a' },
-      { domain: 'Biology', title: 'B-DNA Double Helix & Watson-Crick Energetics', formula: '\\Delta G^\\circ = \\Delta H^\\circ - T\\Delta S^\\circ', prompt: '/biology dna Analyze B-DNA helical pitch (3.4 nm), base stacking free energy, and melting temperature Tm' },
-      { domain: 'Biology', title: 'Voltage-Gated K+ Channel & Nernst-Goldman Equation', formula: 'E_K = \\frac{RT}{zF}\\ln\\frac{[K^+]_{out}}{[K^+]_{in}}', prompt: '/biology membrane Derive Nernst potassium equilibrium potential and Hodgkin-Huxley gating kinetics' },
-      { domain: 'Biology', title: 'Mitochondrial ATP Synthase & Chemiosmotic PMF', formula: '\\Delta p = \\Delta\\psi - \\frac{2.3RT}{F}\\Delta\\text{pH}', prompt: '/biology pathway Quantify proton-motive force and ATP yield across glycolysis, TCA, and oxidative phosphorylation' },
-      { domain: '3D Math', title: 'Hyperbolic Paraboloid Saddle Curvature', formula: 'K = \\frac{f_{xx}f_{yy} - f_{xy}^2}{(1 + f_x^2 + f_y^2)^2} < 0', prompt: '/math_visual saddle Derive Gaussian curvature K and principal curvatures of hyperbolic paraboloid z = x^2 - y^2' },
-      { domain: '3D Math', title: '2D Rotational Vector Field Curl & Stokes Theorem', formula: '\\oint_{\\partial\\Sigma} \\mathbf{F}\\cdot d\\mathbf{r} = \\iint_{\\Sigma} (\\nabla\\times\\mathbf{F})\\cdot d\\mathbf{S}', prompt: '/math_visual vector Verify Stokes theorem for rotational field F(x,y) = (-y, x) on the unit disk' },
-      { domain: '3D Math', title: 'Taylor Series Convergence & Lagrange Remainder', formula: 'R_n(x) = \\frac{f^{(n+1)}(c)}{(n+1)!}(x-a)^{n+1}', prompt: '/math_visual taylor Prove uniform convergence of Maclaurin series for sin(x) and bound order-9 truncation error' },
-      { domain: 'Medicine', title: 'Acute Anterior STEMI Troponin Kinetics & PCI Triage', formula: 'C(t) = C_0 e^{-k_e t}, \\quad \\text{MAP} = \\text{DBP} + \\frac{1}{3}(\\text{SBP}-\\text{DBP})', prompt: '/medical stemi Analyze hs-Troponin I release kinetics, ST-elevation localization, and door-to-balloon hemodynamics' },
-      { domain: 'Medicine', title: 'Septic Shock Lactate Clearance & Vasopressor Dosing', formula: '\\text{DO}_2 = \\text{CO} \\times (1.34 \\cdot \\text{Hb} \\cdot S_aO_2 + 0.003 P_aO_2)', prompt: '/medical sepsis Evaluate oxygen delivery DO2, serum lactate clearance, and norepinephrine SVR titration' },
-      { domain: 'Symbolic Proof', title: 'Damped Harmonic Oscillator Analytical Solution', formula: 'm\\ddot{x} + c\\dot{x} + kx = 0', prompt: '/plot Math.exp(-0.2*x)*Math.cos(2*x)' },
-      { domain: 'Symbolic Proof', title: 'SymPy AST Exact Algebraic & Calculus Verification', formula: '\\int_0^{\\infty} e^{-x}\\sin(x)\\,dx = \\frac{1}{2}', prompt: '/derive Solve x^2 - 5*x + 6 = 0 and integrate exp(-x)*sin(x)' }
-    ];
-    let activeHubDomain = 'All';
-
-    function openStemTaskHub() {
-      const ov = document.getElementById('stem-hub-overlay');
-      if (!ov) return;
-      ov.classList.add('open');
-      renderStemTaskHub();
-      haptics.click();
-    }
-
-    function closeStemTaskHub() {
-      const ov = document.getElementById('stem-hub-overlay');
-      if (ov) ov.classList.remove('open');
-      haptics.click();
-    }
-
-    function selectHubDomain(dom) {
-      activeHubDomain = dom;
-      renderStemTaskHub();
-      haptics.click();
-    }
-
-    function renderStemTaskHub() {
-      const pillsEl = document.getElementById('stem-hub-domain-pills');
-      const gridEl = document.getElementById('stem-hub-grid');
-      const q = (document.getElementById('stem-hub-search')?.value || '').toLowerCase().trim();
-      if (!pillsEl || !gridEl) return;
-
-      const domains = ['All', 'Semiconductor', 'Physics Sim', '3D CAD', 'Circuits', 'Materials', 'Biology', '3D Math', 'Medicine', 'Symbolic Proof'];
-      pillsEl.innerHTML = domains.map(d => `<button class="hub-pill ${d === activeHubDomain ? 'active' : ''}" onclick="selectHubDomain('${d}')">${d}</button>`).join('');
-
-      const filtered = STEM_HUB_TASKS.filter(t => {
-        const matchDom = activeHubDomain === 'All' || t.domain === activeHubDomain;
-        const matchQ = !q || t.title.toLowerCase().includes(q) || t.domain.toLowerCase().includes(q) || t.prompt.toLowerCase().includes(q);
-        return matchDom && matchQ;
-      });
-
-      gridEl.innerHTML = filtered.map((t, i) => `
-        <div style="background:#090b10; border:1px solid var(--border); border-radius:8px; padding:12px; display:flex; flex-direction:column; justify-content:space-between; gap:8px;">
-          <div>
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-              <span class="ns-badge">${escapeHtml(t.domain)}</span>
-            </div>
-            <div style="font-size:12.5px; font-weight:700; color:#ffffff; margin-bottom:6px;">${escapeHtml(t.title)}</div>
-            <div style="font-size:11px; color:#d4d4d8; background:#050608; padding:6px 8px; border-radius:5px; border:1px solid var(--border-subtle);">$$${t.formula}$$</div>
-          </div>
-          <div style="display:flex; gap:6px; margin-top:4px;">
-            <button class="btn-action" style="flex:1; font-size:11px; padding:5px 8px;" onclick="customizeHubTask(${i})">Customize</button>
-            <button class="btn-action" style="flex:1; font-size:11px; padding:5px 8px; background:#ffffff; color:#000000; font-weight:700;" onclick="executeHubTask(${i})">Execute AI</button>
-          </div>
-        </div>
-      `).join('');
-      renderLatex(gridEl);
-    }
-
-    function customizeHubTask(idx) {
-      const q = (document.getElementById('stem-hub-search')?.value || '').toLowerCase().trim();
-      const filtered = STEM_HUB_TASKS.filter(t => (activeHubDomain === 'All' || t.domain === activeHubDomain) && (!q || t.title.toLowerCase().includes(q) || t.domain.toLowerCase().includes(q) || t.prompt.toLowerCase().includes(q)));
-      const task = filtered[idx];
-      if (!task) return;
-      closeStemTaskHub();
-      switchTab('studio');
-      const inp = document.getElementById('chat-prompt');
-      if (inp) {
-        inp.value = task.prompt;
-        inp.focus();
-      }
-    }
-
-    function executeHubTask(idx) {
-      const q = (document.getElementById('stem-hub-search')?.value || '').toLowerCase().trim();
-      const filtered = STEM_HUB_TASKS.filter(t => (activeHubDomain === 'All' || t.domain === activeHubDomain) && (!q || t.title.toLowerCase().includes(q) || t.domain.toLowerCase().includes(q) || t.prompt.toLowerCase().includes(q)));
-      const task = filtered[idx];
-      if (!task) return;
-      closeStemTaskHub();
-      switchTab('studio');
-      quickFirePrompt(task.prompt);
-    }
-
-    /* =========================================================================
-       LATEX SYMBOL & STEM FORMULA VAULT MODAL
-       ========================================================================= */
-    const LATEX_REF_ITEMS = [
-      { cat: 'Calculus', name: 'Definite Integral', tex: '\\int_{a}^{b} f(x)\\,dx' },
-      { cat: 'Calculus', name: 'Partial Derivative', tex: '\\frac{\\partial^2 u}{\\partial t^2} = c^2 \\nabla^2 u' },
-      { cat: 'Calculus', name: 'Gradient / Curl / Div', tex: '\\nabla f, \\quad \\nabla \\cdot \\mathbf{F}, \\quad \\nabla \\times \\mathbf{F}' },
-      { cat: 'Calculus', name: 'Taylor Expansion', tex: '\\sum_{n=0}^{\\infty} \\frac{f^{(n)}(a)}{n!}(x-a)^n' },
-      { cat: 'Linear Algebra', name: 'Eigenvalue Equation', tex: '\\det(A - \\lambda I) = 0' },
-      { cat: 'Linear Algebra', name: 'Singular Value Decomp', tex: 'A = U \\Sigma V^T' },
-      { cat: 'Physics', name: 'Schrödinger Equation', tex: 'i\\hbar\\frac{\\partial}{\\partial t}\\Psi(\\mathbf{r},t) = \\hat{H}\\Psi(\\mathbf{r},t)' },
-      { cat: 'Physics', name: 'Maxwell-Ampère Law', tex: '\\nabla \\times \\mathbf{B} = \\mu_0\\mathbf{J} + \\mu_0\\varepsilon_0\\frac{\\partial \\mathbf{E}}{\\partial t}' },
-      { cat: 'Physics', name: 'Navier-Stokes Momentum', tex: '\\rho(\\partial_t \\mathbf{u} + \\mathbf{u}\\cdot\\nabla\\mathbf{u}) = -\\nabla p + \\mu\\nabla^2\\mathbf{u}' },
-      { cat: 'Physics', name: 'Einstein Field Eq', tex: 'R_{\\mu\\nu} - \\frac{1}{2}R g_{\\mu\\nu} + \\Lambda g_{\\mu\\nu} = \\frac{8\\pi G}{c^4}T_{\\mu\\nu}' },
-      { cat: 'Semiconductor', name: 'Shockley Diode Law', tex: 'I_D = I_S\\left(e^{\\frac{qV_D}{nk_BT}} - 1\\right)' },
-      { cat: 'Semiconductor', name: 'Fermi-Dirac Distribution', tex: 'f(E) = \\frac{1}{1 + e^{(E - E_F)/(k_B T)}}' },
-      { cat: 'Chemistry & Bio', name: 'Gibbs Free Energy', tex: '\\Delta G = \\Delta H - T\\Delta S = -RT\\ln K_{eq}' },
-      { cat: 'Chemistry & Bio', name: 'Michaelis-Menten Kinetics', tex: 'v_0 = \\frac{V_{\\max}[S]}{K_M + [S]}' },
-      { cat: 'Chemistry & Bio', name: 'Nernst Potential', tex: 'E = E^\\circ - \\frac{RT}{zF}\\ln Q' },
-      { cat: 'Greek & Ops', name: 'Greek Lowercase', tex: '\\alpha, \\beta, \\gamma, \\delta, \\epsilon, \\zeta, \\eta, \\theta, \\lambda, \\mu, \\rho, \\sigma, \\tau, \\phi, \\psi, \\omega' },
-      { cat: 'Greek & Ops', name: 'Greek Uppercase', tex: '\\Gamma, \\Delta, \\Theta, \\Lambda, \\Xi, \\Pi, \\Sigma, \\Phi, \\Psi, \\Omega' },
-      { cat: 'Greek & Ops', name: 'Set & Logic Operators', tex: '\\forall x \\in \\mathbb{R}, \\quad \\exists! y \\subset \\mathbb{C}, \\quad A \\implies B \\iff C' }
-    ];
-    let activeLatexCat = 'All';
-
-    function openLatexRefModal() {
-      const ov = document.getElementById('latex-ref-overlay');
-      if (!ov) return;
-      ov.classList.add('open');
-      renderLatexRefModal();
-      haptics.click();
-    }
-
-    function closeLatexRefModal() {
-      const ov = document.getElementById('latex-ref-overlay');
-      if (ov) ov.classList.remove('open');
-      haptics.click();
-    }
-
-    function selectLatexCat(cat) {
-      activeLatexCat = cat;
-      renderLatexRefModal();
-      haptics.click();
-    }
-
-    function renderLatexRefModal() {
-      const pillsEl = document.getElementById('latex-ref-cat-pills');
-      const gridEl = document.getElementById('latex-ref-grid');
-      const q = (document.getElementById('latex-ref-search')?.value || '').toLowerCase().trim();
-      if (!pillsEl || !gridEl) return;
-
-      const cats = ['All', 'Calculus', 'Linear Algebra', 'Physics', 'Semiconductor', 'Chemistry & Bio', 'Greek & Ops'];
-      pillsEl.innerHTML = cats.map(c => `<button class="hub-pill ${c === activeLatexCat ? 'active' : ''}" onclick="selectLatexCat('${c}')">${c}</button>`).join('');
-
-      const filtered = LATEX_REF_ITEMS.filter(it => (activeLatexCat === 'All' || it.cat === activeLatexCat) && (!q || it.name.toLowerCase().includes(q) || it.tex.toLowerCase().includes(q)));
-      gridEl.innerHTML = filtered.map((it, idx) => `
-        <div style="background:#090b10; border:1px solid var(--border); border-radius:7px; padding:10px; cursor:pointer; display:flex; flex-direction:column; justify-content:space-between; gap:6px;" onclick="insertLatexFormula(${idx})">
-          <div style="display:flex; justify-content:space-between; align-items:center;">
-            <span style="font-size:11px; font-weight:700; color:#ffffff;">${escapeHtml(it.name)}</span>
-            <span style="font-size:9.5px; color:#71717a;">${escapeHtml(it.cat)}</span>
-          </div>
-          <div style="padding:6px; background:#050608; border-radius:4px; text-align:center; color:#e4e4e7; font-size:11.5px;">$$${it.tex}$$</div>
-          <code style="font-size:9.5px; color:#a1a1aa; font-family:ui-monospace,monospace; word-break:break-all;">${escapeHtml(it.tex)}</code>
-        </div>
-      `).join('');
-      renderLatex(gridEl);
-    }
-
-    function insertLatexFormula(idx) {
-      const q = (document.getElementById('latex-ref-search')?.value || '').toLowerCase().trim();
-      const filtered = LATEX_REF_ITEMS.filter(it => (activeLatexCat === 'All' || it.cat === activeLatexCat) && (!q || it.name.toLowerCase().includes(q) || it.tex.toLowerCase().includes(q)));
-      const item = filtered[idx];
-      if (!item) return;
-      navigator.clipboard.writeText(item.tex);
-      const inp = document.getElementById('chat-prompt');
-      if (inp) {
-        inp.value = (inp.value ? inp.value + ' ' : '') + `$$${item.tex}$$`;
-        inp.focus();
-      }
-      closeLatexRefModal();
-      showToast(`Inserted & copied: ${item.name}`);
-      haptics.success();
-    }
-
-    /* =========================================================================
-       PUBLICATION VECTOR PDF & OVERLEAF .TEX EXPORT MODAL
-       ========================================================================= */
-    function openExportPdfModal() {
-      const ov = document.getElementById('export-pdf-overlay');
-      if (!ov) return;
-      ov.classList.add('open');
-      renderExportPreview();
-      haptics.click();
-    }
-
-    function closeExportPdfModal() {
-      const ov = document.getElementById('export-pdf-overlay');
-      if (ov) ov.classList.remove('open');
-      haptics.click();
-    }
-
-    function buildSessionOverleafTex() {
-      const s = sessions[activeSessionId] || { name: 'STEM Session', messages: [] };
-      const mode = document.getElementById('export-content-mode')?.value || 'full';
-      const paper = (document.getElementById('export-paper-size')?.value || 'A4').toLowerCase() + 'paper';
-      const msgs = s.messages.filter(m => mode === 'full' || m.role === 'assistant');
-      const bodyTex = msgs.map(m => {
-        const heading = m.role === 'user' ? '\\subsection*{Research Query}' : '\\subsection*{Vigyan Pro Analytical Derivation}';
-        const clean = (m.content || '').replace(/```[a-zA-Z0-9_-]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end{verbatim}');
-        return `${heading}\n${clean}\n`;
-      }).join('\n\\medskip\n');
-
-      return `\\documentclass[11pt,${paper}]{article}
-\\usepackage[utf8]{inputenc}
-\\usepackage{amsmath,amssymb,amsfonts}
-\\usepackage{geometry}
-\\geometry{margin=1in}
-\\title{${s.name || 'Vigyan Pro Sovereign STEM Research Dossier'}}
-\\author{Vigyan Pro Neuro-Symbolic Workstation (${currentModel})}
-\\date{\\today}
-
-\\begin{document}
-\\maketitle
-\\hrule
-\\bigskip
-
-${bodyTex || 'No derivations recorded in current session yet.'}
-
-\\end{document}`;
-    }
-
-    function renderExportPreview() {
-      const prev = document.getElementById('export-whitepaper-preview');
-      if (!prev) return;
-      const s = sessions[activeSessionId] || { name: 'STEM Session', messages: [] };
-      const mode = document.getElementById('export-content-mode')?.value || 'full';
-      const msgs = s.messages.filter(m => mode === 'full' || m.role === 'assistant');
-
-      let html = `
-        <div style="border-bottom:2px solid #111111; padding-bottom:12px; margin-bottom:18px; display:flex; justify-content:space-between; align-items:flex-end;">
-          <div>
-            <div style="font-size:10px; font-family:ui-monospace,monospace; letter-spacing:0.08em; color:#52525b;">VIGYAN PRO SOVEREIGN NEURO-SYMBOLIC DOSSIER</div>
-            <h1 style="font-size:20px; margin:4px 0 0 0; color:#000000;">${escapeHtml(s.name || 'STEM Research Session')}</h1>
-          </div>
-          <div style="text-align:right; font-size:10.5px; font-family:ui-monospace,monospace; color:#3f3f46;">
-            <div>Engine: ${escapeHtml(currentModel)}</div>
-            <div>Compute: ${escapeHtml(latestHardwareTelemetry.strategy_label || 'HYBRID AUTO')}</div>
-          </div>
-        </div>
-      `;
-
-      if (msgs.length === 0) {
-        html += `<p style="color:#52525b; font-style:italic;">Execute a prompt or STEM visualizer in the Studio first to populate the publication preview.</p>`;
-      } else {
-        msgs.forEach(m => {
-          const roleTitle = m.role === 'user' ? 'RESEARCH PROMPT' : 'ANALYTICAL DERIVATION & VERIFICATION';
-          const cleanBody = escapeHtml((m.content || '').replace(/```[a-zA-Z0-9_-]*\n?[\s\S]*?```/g, '[Interactive STEM Visualizer Figure]')).replace(/\n/g, '<br>');
-          html += `
-            <div style="margin-bottom:16px; padding-bottom:12px; border-bottom:1px solid #e4e4e7;">
-              <div style="font-size:10px; font-family:ui-monospace,monospace; font-weight:700; color:#3f3f46; margin-bottom:4px;">${roleTitle}</div>
-              <div style="font-size:13px; color:#111111;">${cleanBody}</div>
-            </div>
-          `;
-        });
-      }
-      prev.innerHTML = html;
-      renderLatex(prev);
-    }
-
-    function copyOverleafTex() {
-      navigator.clipboard.writeText(buildSessionOverleafTex());
-      showToast('Overleaf .tex source copied to clipboard');
-      haptics.success();
-    }
-
-    function downloadOverleafTex() {
-      const tex = buildSessionOverleafTex();
-      const blob = new Blob([tex], { type: 'text/plain;charset=utf-8' });
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = `vigyan_stem_${Date.now()}.tex`;
-      a.click();
-      showToast('Downloaded Overleaf .tex manuscript');
-      haptics.success();
-    }
-
-    function triggerVectorPdfPrint() {
-      closeExportPdfModal();
-      setTimeout(() => window.print(), 120);
     }
 
     // Auto-init on load with settings migration & Hybrid GPU+CPU Telemetry Polling
