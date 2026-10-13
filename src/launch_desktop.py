@@ -1124,7 +1124,7 @@ def main():
 
     webview.connect("load-changed", on_load_finished)
 
-    # Keyboard shortcuts: F11 Fullscreen, Ctrl+R Reload
+    # Keyboard shortcuts: F11 Fullscreen, Ctrl+R Reload, Ctrl + / - / 0 Zoom
     def on_key_press(widget, event):
         keyval = event.keyval
         state = event.state
@@ -1134,9 +1134,19 @@ def main():
             else:
                 win.fullscreen()
             return True
-        elif keyval in (Gdk.KEY_r, Gdk.KEY_R) and (state & Gdk.ModifierType.CONTROL_MASK):
-            webview.reload()
-            return True
+        elif state & Gdk.ModifierType.CONTROL_MASK:
+            if keyval in (Gdk.KEY_r, Gdk.KEY_R):
+                webview.reload()
+                return True
+            elif keyval in (Gdk.KEY_plus, Gdk.KEY_equal, Gdk.KEY_KP_Add):
+                _eval_js("window.applyUiZoom && window.applyUiZoom((window.uiZoomLevel || 1.0) + 0.1);")
+                return True
+            elif keyval in (Gdk.KEY_minus, Gdk.KEY_underscore, Gdk.KEY_KP_Subtract):
+                _eval_js("window.applyUiZoom && window.applyUiZoom((window.uiZoomLevel || 1.0) - 0.1);")
+                return True
+            elif keyval in (Gdk.KEY_0, Gdk.KEY_KP_0):
+                _eval_js("window.applyUiZoom && window.applyUiZoom(1.0);")
+                return True
         return False
 
     win.connect("key-press-event", on_key_press)
