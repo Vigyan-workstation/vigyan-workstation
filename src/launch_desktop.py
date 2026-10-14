@@ -265,8 +265,9 @@ def compute_hybrid_allocation(
         num_batch = 128
     elif ram_total_gb < 10.0:
         # 7-8 GB laptops (e.g., Ryzen 5 7520U with 6.95 GB usable RAM)
-        num_ctx = 2048 if (on_battery or mode == "cpu_eco") else 4096
-        num_batch = 256
+        # Lock to 2048 context and 128 batch to prevent swap thrashing
+        num_ctx = 2048
+        num_batch = 128
     elif ram_total_gb < 18.0:
         num_ctx = 8192
         num_batch = 512

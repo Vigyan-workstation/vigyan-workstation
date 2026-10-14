@@ -67,34 +67,16 @@
       animation: radarSpin 4s linear infinite;
     }
 
-    /* Orbiting HUD Conic Border Beam in Chat (Input Box, Welcome Badge, Active STEM Cards) */
+    /* Clean Satin Border for Input Box (No Shiny Rotating Animation) */
     .input-box-row {
       position: relative;
-      overflow: hidden;
-    }
-    .input-box-row::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      border-radius: inherit;
-      padding: 1px;
-      background: conic-gradient(from var(--hud-sweep),
-          transparent 0 70%,
-          rgba(255, 255, 255, 0.22) 82%,
-          rgba(255, 255, 255, 0.90) 90%,
-          transparent 96%);
-      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-      mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-      -webkit-mask-composite: xor;
-      mask-composite: exclude;
-      animation: hudSweepOrbit 5.5s linear infinite;
-      pointer-events: none;
-      z-index: 2;
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
     }
     .input-box-row:focus-within {
-      border-color: rgba(255, 255, 255, 0.45) !important;
-      box-shadow: 0 0 26px rgba(255, 255, 255, 0.14), 0 8px 30px rgba(0, 0, 0, 0.85) !important;
-      transform: translateY(-1px);
+      border-color: rgba(255, 255, 255, 0.35) !important;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6) !important;
     }
 
     /* Tactical HUD Corner Brackets on In-Chat STEM Cards (conic beam reserved for active prompt bar) */
@@ -1899,7 +1881,7 @@
     /* =========================================================================
        GLOBAL APPLICATION STATE
        ========================================================================= */
-    let currentModel = localStorage.getItem('vigyan_active_model') || 'olmoe:1b-7b';
+    let currentModel = localStorage.getItem('vigyan_active_model') || 'vigyan:1.5b';
     let OLLAMA_HOST = localStorage.getItem('vigyan_ollama_host') || 'http://127.0.0.1:11434';
     let BACKEND_TYPE = localStorage.getItem('vigyan_backend_type') || 'ollama';
     let AGENT_HOST = localStorage.getItem('vigyan_agent_host') || 'http://127.0.0.1:8085';
@@ -1927,7 +1909,7 @@
       ollama_options: { num_gpu: -1, num_thread: 4, num_ctx: 8192, num_batch: 512 },
       strategy_label: 'HYBRID AUTO'
     };
-    let availableModels = ['olmoe:1b-7b', 'qwen2.5-math:7b', 'deepseek-r1:7b', 'llama3.2:3b'];
+    let availableModels = ['vigyan:1.5b', 'olmoe:1b-7b', 'qwen2.5-math:7b', 'deepseek-r1:7b', 'llama3.2:3b'];
     let activeDomain = 'lab';
     let activeSessionId = localStorage.getItem('vigyan_active_session') || 'default';
     let sessions = {};
@@ -2132,16 +2114,12 @@
         const welcome = document.createElement('div');
         welcome.className = 'welcome-hero';
         welcome.innerHTML = `
-          <div class="welcome-badge">
-            <span class="hud-radar"></span>
-            <span id="welcome-badge-decode">Offline &amp; Private • Ready</span>
-          </div>
           <h2 class="welcome-title">What would you like to explore today?</h2>
           <p class="welcome-desc">
             Ask a question, solve math step-by-step, or interact with live 3D models and simulations.
           </p>
 
-          <div class="starter-prompts" style="grid-template-columns: repeat(2, 1fr); max-width: 580px;">
+          <div class="starter-prompts" style="grid-template-columns: repeat(2, 1fr); max-width: 720px;">
             <div class="prompt-card" style="--i:0" onclick="quickFirePrompt('/cad3d gear')">
               <div class="prompt-title">
                 <svg class="icon" viewBox="0 0 24 24" style="stroke:#ffffff;"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
@@ -5132,12 +5110,23 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
         if (r.ok) {
           const data = await r.json();
           if (data.models && data.models.length > 0) {
-            availableModels = data.models.map(m => m.name);
+            const rawNames = data.models.map(m => m.name);
+            rawNames.sort((a, b) => {
+              const aIsV = a.toLowerCase().includes('vigyan');
+              const bIsV = b.toLowerCase().includes('vigyan');
+              if (aIsV && !bIsV) return -1;
+              if (!aIsV && bIsV) return 1;
+              return a.localeCompare(b);
+            });
+            availableModels = rawNames;
             if (!availableModels.includes(currentModel) && availableModels.length > 0) {
               currentModel = availableModels[0];
-              const curLabel = document.getElementById('current-model-name');
-              if (curLabel) curLabel.innerText = currentModel;
+            } else if (availableModels.includes('vigyan:1.5b') && (!localStorage.getItem('vigyan_active_model') || currentModel === 'olmoe:1b-7b')) {
+              currentModel = 'vigyan:1.5b';
+              localStorage.setItem('vigyan_active_model', 'vigyan:1.5b');
             }
+            const curLabel = document.getElementById('current-model-name');
+            if (curLabel) curLabel.innerText = currentModel;
             updateModelDropdownUI();
           } else if (data.strategy_label) {
             window.onNativeTelemetry(data);
