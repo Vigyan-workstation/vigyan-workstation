@@ -1854,50 +1854,10 @@
             </div>
           </div>
           <div style="display:flex; gap:8px; align-items:center;">
-            <input type="text" id="vault-pull-input" class="setting-input" placeholder="Download a new AI model (e.g. qwen2.5-math:7b, llama3.2:3b)" style="flex:1;">
+            <input type="text" id="vault-pull-input" class="setting-input" placeholder="Download a new AI model (e.g. olmoe:1b-7b, vigyan:7b-quad-master)" style="flex:1;">
             <button class="btn-action" id="btn-vault-pull" onclick="pullOllamaModel()" style="padding:7px 14px; font-weight:600;">Download Model</button>
           </div>
           <div id="vault-pull-status" style="font-size:11px; color:#a1a1aa; margin-top:6px; display:none;"></div>
-        </div>
-
-        <!-- CARD: BYOK (BRING YOUR OWN KEY) CLOUD GATEWAY -->
-        <div class="settings-section-card">
-          <div class="section-card-header">
-            <span class="section-card-title">
-              <svg class="icon" viewBox="0 0 24 24"><path d="M21 2l-2 2m-1.5 1.5L16 7l-4 4-2-2-4 4 2 2-4 4 3 3 4-4 2 2 4-4-2-2 4-4 1.5-1.5L22 1l-1 1z"/></svg>
-              Bring Your Own Key (BYOK) Cloud Hub
-            </span>
-            <span class="section-card-badge" style="background:rgba(56,189,248,0.15); color:#38bdf8; border:1px solid rgba(56,189,248,0.3);">Private Local Keystore</span>
-          </div>
-          <div style="font-size:12px; color:#a1a1aa; margin-bottom:12px;">
-            Input your personal API keys to run cloud frontier models alongside local agent tools (SymPy, KùzuDB, Computer Automation). Keys never leave your machine.
-          </div>
-          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
-            <div class="setting-row">
-              <div class="setting-label"><span>Google Gemini API Key</span></div>
-              <input type="password" id="byok-gemini" class="setting-input" placeholder="AIzaSy...">
-            </div>
-            <div class="setting-row">
-              <div class="setting-label"><span>OpenAI API Key</span></div>
-              <input type="password" id="byok-openai" class="setting-input" placeholder="sk-proj-...">
-            </div>
-            <div class="setting-row">
-              <div class="setting-label"><span>Anthropic Claude API Key</span></div>
-              <input type="password" id="byok-anthropic" class="setting-input" placeholder="sk-ant-...">
-            </div>
-            <div class="setting-row">
-              <div class="setting-label"><span>Groq API Key (300 tok/s)</span></div>
-              <input type="password" id="byok-groq" class="setting-input" placeholder="gsk_...">
-            </div>
-            <div class="setting-row">
-              <div class="setting-label"><span>DeepSeek API Key</span></div>
-              <input type="password" id="byok-deepseek" class="setting-input" placeholder="sk-...">
-            </div>
-            <div class="setting-row">
-              <div class="setting-label"><span>OpenRouter API Key</span></div>
-              <input type="password" id="byok-openrouter" class="setting-input" placeholder="sk-or-...">
-            </div>
-          </div>
         </div>
 
         <!-- CARD 2: HARDWARE PERFORMANCE -->
@@ -1972,7 +1932,7 @@
     /* =========================================================================
        GLOBAL APPLICATION STATE
        ========================================================================= */
-    let currentModel = localStorage.getItem('vigyan_active_model') || 'vigyan:1.5b';
+    let currentModel = localStorage.getItem('vigyan_active_model') || 'olmoe:1b-7b';
     let OLLAMA_HOST = localStorage.getItem('vigyan_ollama_host') || 'http://127.0.0.1:11434';
     let BACKEND_TYPE = localStorage.getItem('vigyan_backend_type') || 'agent_server';
     let AGENT_HOST = localStorage.getItem('vigyan_agent_host') || 'http://127.0.0.1:8085';
@@ -2000,7 +1960,7 @@
       ollama_options: { num_gpu: -1, num_thread: 4, num_ctx: 8192, num_batch: 512 },
       strategy_label: 'HYBRID AUTO'
     };
-    let availableModels = ['vigyan:1.5b', 'olmoe:1b-7b', 'qwen2.5-math:7b', 'deepseek-r1:7b', 'llama3.2:3b'];
+    let availableModels = ['olmoe:1b-7b', 'vigyan:7b-quad-master'];
     let activeDomain = 'lab';
     let activeSessionId = localStorage.getItem('vigyan_active_session') || 'default';
     let sessions = {};
@@ -2100,28 +2060,18 @@
         }
       }
     });
-    let currentProvider = localStorage.getItem('vigyan_active_provider') || null;
-
-    function changeModel(m, provider = null) {
+    function changeModel(m) {
       currentModel = m;
-      currentProvider = provider;
       localStorage.setItem('vigyan_active_model', m);
-      localStorage.setItem('vigyan_active_provider', provider || '');
       const curNameEl = document.getElementById('current-model-name');
-      if (curNameEl) {
-        curNameEl.textContent = provider ? `${m} (${provider})` : m;
-        decodeLabel(curNameEl);
-      }
+      if (curNameEl) curNameEl.textContent = m;
       const sideTel = document.getElementById('sidebar-model-telemetry');
-      if (sideTel) {
-        sideTel.textContent = m.toUpperCase();
-        decodeLabel(sideTel);
-      }
+      if (sideTel) sideTel.textContent = m.toUpperCase();
       const wc = document.getElementById('welcome-companion-label');
       if (wc) wc.innerText = m;
-      document.getElementById('model-dropdown').classList.remove('show');
-      showToast(`Active model: ${m} ${provider ? '[' + provider + ']' : ''}`);
-      haptics.success();
+      const dd = document.getElementById('model-dropdown');
+      if (dd) dd.classList.remove('show');
+      showToast(`Active model: ${m}`);
     }
 
     /* CHAT RENDERING & PERSISTENCE */
@@ -2795,16 +2745,13 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
 
         let resp;
         try {
-          if (BACKEND_TYPE === 'agent_server' || currentProvider) {
-            const byokKey = currentProvider ? (localStorage.getItem('vigyan_byok_' + currentProvider) || API_KEY || '') : '';
+          if (BACKEND_TYPE === 'agent_server') {
             resp = await fetch(`${AGENT_HOST}/api/chat`, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               signal: activeStreamController.signal,
               body: JSON.stringify({
                 model: currentModel,
-                provider: currentProvider || null,
-                api_key: byokKey,
                 query: text,
                 messages: hist,
                 compute_mode: HYBRID_COMPUTE_MODE,
@@ -3369,11 +3316,11 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
               return a.localeCompare(b);
             });
             availableModels = rawNames;
-            if (!availableModels.includes(currentModel) && availableModels.length > 0) {
-              currentModel = availableModels[0];
-            } else if (availableModels.includes('vigyan:1.5b') && (!localStorage.getItem('vigyan_active_model') || currentModel === 'olmoe:1b-7b')) {
-              currentModel = 'vigyan:1.5b';
-              localStorage.setItem('vigyan_active_model', 'vigyan:1.5b');
+            // Filter only sovereign models, excluding old 1.5b or qwen
+            const filtered = rawNames.filter(name => !name.includes('1.5b') && !name.toLowerCase().includes('qwen'));
+            availableModels = filtered.length > 0 ? filtered : ['olmoe:1b-7b', 'vigyan:7b-quad-master'];
+            if (!availableModels.includes(currentModel)) {
+              currentModel = availableModels.includes('olmoe:1b-7b') ? 'olmoe:1b-7b' : availableModels[0];
             }
             const curLabel = document.getElementById('current-model-name');
             if (curLabel) curLabel.innerText = currentModel;
@@ -3409,58 +3356,23 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
       if (statusEl) statusEl.innerText = `Finished downloading ${tag}.`;
     }
 
-    const BYOK_MODELS = [
-      { id: 'gemini-1.5-flash', name: 'Gemini 1.5 Flash (Google)', provider: 'gemini', keyStore: 'vigyan_byok_gemini' },
-      { id: 'gemini-1.5-pro', name: 'Gemini 1.5 Pro (Google)', provider: 'gemini', keyStore: 'vigyan_byok_gemini' },
-      { id: 'gpt-4o', name: 'GPT-4o (OpenAI)', provider: 'openai', keyStore: 'vigyan_byok_openai' },
-      { id: 'gpt-4o-mini', name: 'GPT-4o Mini (OpenAI)', provider: 'openai', keyStore: 'vigyan_byok_openai' },
-      { id: 'claude-3-5-sonnet-20241022', name: 'Claude 3.5 Sonnet (Anthropic)', provider: 'anthropic', keyStore: 'vigyan_byok_anthropic' },
-      { id: 'llama-3.3-70b-versatile', name: 'Llama 3.3 70B (Groq • 300 t/s)', provider: 'groq', keyStore: 'vigyan_byok_groq' },
-      { id: 'deepseek-chat', name: 'DeepSeek V3 (DeepSeek)', provider: 'deepseek', keyStore: 'vigyan_byok_deepseek' },
-      { id: 'deepseek-reasoner', name: 'DeepSeek R1 (DeepSeek)', provider: 'deepseek', keyStore: 'vigyan_byok_deepseek' }
-    ];
-
     function updateModelDropdownUI() {
       const menu = document.getElementById('model-dropdown');
       if (!menu) return;
       menu.innerHTML = '';
 
-      // 1. Sovereign Offline Section
       const h1 = document.createElement('div');
-      h1.style.cssText = 'font-size: 10px; font-weight: 700; color: #a1a1aa; padding: 6px 10px 2px 10px; letter-spacing: 0.08em; text-transform: uppercase;';
+      h1.style.cssText = 'font-size: 10px; font-weight: 700; color: #a1a1aa; padding: 6px 10px 4px 10px; letter-spacing: 0.08em; text-transform: uppercase;';
       h1.innerText = 'Sovereign Offline Models';
       menu.appendChild(h1);
 
       availableModels.forEach(m => {
         const opt = document.createElement('div');
-        opt.className = `model-opt ${m === currentModel && !currentProvider ? 'active' : ''}`;
-        opt.innerText = m;
-        opt.onclick = () => changeModel(m, null);
-        menu.appendChild(opt);
-      });
-
-      // 2. BYOK Cloud Frontier Section
-      const h2 = document.createElement('div');
-      h2.style.cssText = 'font-size: 10px; font-weight: 700; color: #38bdf8; padding: 10px 10px 2px 10px; letter-spacing: 0.08em; text-transform: uppercase; border-top: 1px solid rgba(255,255,255,0.08); margin-top: 4px;';
-      h2.innerText = 'BYOK Cloud Frontier Models';
-      menu.appendChild(h2);
-
-      BYOK_MODELS.forEach(bm => {
-        const hasKey = !!localStorage.getItem(bm.keyStore);
-        const opt = document.createElement('div');
-        opt.className = `model-opt ${bm.id === currentModel && currentProvider === bm.provider ? 'active' : ''}`;
-        opt.style.display = 'flex';
-        opt.style.justifyContent = 'space-between';
-        opt.style.alignItems = 'center';
-        opt.innerHTML = `<span>${bm.name}</span><span style="font-size:9.5px; opacity:0.8; color:${hasKey ? '#10b981' : '#f59e0b'};">${hasKey ? '✓ Ready' : 'Key Needed'}</span>`;
-        opt.onclick = () => {
-          if (!hasKey) {
-            showToast(`Enter your ${bm.provider.toUpperCase()} key in Settings`);
-            openSettings();
-          } else {
-            changeModel(bm.id, bm.provider);
-          }
-        };
+        opt.className = `model-opt ${m === currentModel ? 'active' : ''}`;
+        const isMoe = m.includes('olmoe') || m.includes('moe');
+        const label = isMoe ? 'OLMoE 1B-7B Instruct (3.2 GB)' : 'Vigyan 7B Quad-Master (4.2 GB)';
+        opt.innerHTML = `<div style="font-weight:600; color:#ffffff;">${m}</div><div style="font-size:10px; color:#71717a;">${label}</div>`;
+        opt.onclick = () => changeModel(m);
         menu.appendChild(opt);
       });
     }
@@ -3537,19 +3449,7 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
       const keepalive = document.getElementById('setting-keepalive')?.value || '15m';
       const persona = document.getElementById('setting-persona')?.value || '';
 
-      const byokGemini = document.getElementById('byok-gemini')?.value || '';
-      const byokOpenAI = document.getElementById('byok-openai')?.value || '';
-      const byokClaude = document.getElementById('byok-anthropic')?.value || '';
-      const byokGroq = document.getElementById('byok-groq')?.value || '';
-      const byokDeepSeek = document.getElementById('byok-deepseek')?.value || '';
-      const byokOpenRouter = document.getElementById('byok-openrouter')?.value || '';
 
-      localStorage.setItem('vigyan_byok_gemini', byokGemini);
-      localStorage.setItem('vigyan_byok_openai', byokOpenAI);
-      localStorage.setItem('vigyan_byok_anthropic', byokClaude);
-      localStorage.setItem('vigyan_byok_groq', byokGroq);
-      localStorage.setItem('vigyan_byok_deepseek', byokDeepSeek);
-      localStorage.setItem('vigyan_byok_openrouter', byokOpenRouter);
 
       OLLAMA_HOST = url;
       AGENT_HOST = agentUrl;
@@ -3593,12 +3493,7 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
           }
         }
 
-        if (document.getElementById('byok-gemini')) document.getElementById('byok-gemini').value = localStorage.getItem('vigyan_byok_gemini') || '';
-        if (document.getElementById('byok-openai')) document.getElementById('byok-openai').value = localStorage.getItem('vigyan_byok_openai') || '';
-        if (document.getElementById('byok-anthropic')) document.getElementById('byok-anthropic').value = localStorage.getItem('vigyan_byok_anthropic') || '';
-        if (document.getElementById('byok-groq')) document.getElementById('byok-groq').value = localStorage.getItem('vigyan_byok_groq') || '';
-        if (document.getElementById('byok-deepseek')) document.getElementById('byok-deepseek').value = localStorage.getItem('vigyan_byok_deepseek') || '';
-        if (document.getElementById('byok-openrouter')) document.getElementById('byok-openrouter').value = localStorage.getItem('vigyan_byok_openrouter') || '';
+
       } catch (e) {}
 
       if (uiZoomLevel !== 1.0) applyUiZoom(uiZoomLevel, true);

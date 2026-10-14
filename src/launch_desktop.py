@@ -939,32 +939,32 @@ def select_cascade_model(requested_model: str, query: str) -> Dict[str, Any]:
     if ram_pct >= 80.0:
         return {
             "tier": 1,
-            "model": "vigyan:1.5b",
-            "reason": f"System RAM high ({ram_pct:.1f}% >= 80%) — locked to Tier 1 Sovereign SLM"
+            "model": "olmoe:1b-7b",
+            "reason": f"System RAM high ({ram_pct:.1f}% >= 80%) — locked to Tier 1 Sovereign MoE"
         }
         
     # 2. User explicit model choice
     if requested_model and requested_model != "auto":
-        if ("7b" in requested_model.lower() or "moe" in requested_model.lower()) and ram_pct > 80.0:
+        if ("quad" in requested_model.lower() or "7b" in requested_model.lower()) and ram_pct > 80.0:
             return {
                 "tier": 1,
-                "model": "vigyan:1.5b",
-                "reason": f"RAM at {ram_pct:.1f}% too high for {requested_model} — safely downgraded to Tier 1"
+                "model": "olmoe:1b-7b",
+                "reason": f"RAM at {ram_pct:.1f}% too high for 7B Quad-Master — safely downgraded to Tier 1"
             }
-        tier = 3 if "7b" in requested_model.lower() else (2 if "moe" in requested_model.lower() else 1)
+        tier = 2 if ("quad" in requested_model.lower() or "7b" in requested_model.lower()) else 1
         return {"tier": tier, "model": requested_model, "reason": "User explicit selection"}
         
     # 3. Auto cascade escalation
     if is_heavy_reasoning and ram_pct < 65.0:
         return {
             "tier": 2,
-            "model": "olmoe:1b-7b",
-            "reason": f"Escalated to Tier 2 MoE (RAM {ram_pct:.1f}% < 65% with deep STEM reasoning)"
+            "model": "vigyan:7b-quad-master",
+            "reason": f"Escalated to Tier 2 7B Quad-Master (RAM {ram_pct:.1f}% < 65% with deep STEM reasoning)"
         }
     return {
         "tier": 1,
-        "model": "vigyan:1.5b",
-        "reason": "Tier 1 Sovereign Fast SLM (instant response & tool orchestration)"
+        "model": "olmoe:1b-7b",
+        "reason": "Tier 1 Sovereign MoE (fast response & tool orchestration)"
     }
 
 
@@ -1250,78 +1250,7 @@ def grep_workspace_files(query: str, path: str = ".") -> Dict[str, Any]:
 
 
 # ==============================================================================
-# 3.3 UNIFIED BYOK (BRING YOUR OWN KEY) CLOUD GATEWAY
-# ==============================================================================
-def stream_byok_completion(provider: str, api_key: str, model: str, messages: List[Dict[str, Any]], options: Dict[str, Any]):
-    """Stream from cloud BYOK providers with uniform response chunks."""
-    endpoints = {
-        "openai": "https://api.openai.com/v1/chat/completions",
-        "groq": "https://api.groq.com/openai/v1/chat/completions",
-        "deepseek": "https://api.deepseek.com/chat/completions",
-        "openrouter": "https://openrouter.ai/api/v1/chat/completions"
-    }
-
-    if provider in endpoints:
-        headers = {
-            "Content-Type": "application/json",
-            "Authorization": f"Bearer {api_key}"
-        }
-        if provider == "openrouter":
-            headers["HTTP-Referer"] = "https://vigyan.ai"
-            headers["X-Title"] = "Vigyan Pro Desktop"
-
-        payload = {
-            "model": model,
-            "messages": messages,
-            "temperature": options.get("temperature", 0.7),
-            "stream": True
-        }
-        req = urllib.request.Request(endpoints[provider], headers=headers, data=json.dumps(payload).encode("utf-8"))
-        return urllib.request.urlopen(req, timeout=60)
-
-    elif provider == "gemini":
-        target_model = model or "gemini-1.5-flash"
-        url = f"https://generativelanguage.googleapis.com/v1beta/models/{target_model}:streamGenerateContent?key={api_key}&alt=sse"
-        contents = []
-        for m in messages:
-            if m.get("role") == "system":
-                continue
-            role = "user" if m.get("role") == "user" else "model"
-            contents.append({"role": role, "parts": [{"text": m.get("content", "")}]})
-        payload = {"contents": contents}
-        req = urllib.request.Request(url, headers={"Content-Type": "application/json"}, data=json.dumps(payload).encode("utf-8"))
-        return urllib.request.urlopen(req, timeout=60)
-
-    elif provider == "anthropic":
-        url = "https://api.anthropic.com/v1/messages"
-        headers = {
-            "Content-Type": "application/json",
-            "x-api-key": api_key,
-            "anthropic-version": "2023-06-01"
-        }
-        system_text = ""
-        user_msgs = []
-        for m in messages:
-            if m.get("role") == "system":
-                system_text = m.get("content", "")
-            else:
-                user_msgs.append({"role": m.get("role"), "content": m.get("content")})
-        payload = {
-            "model": model or "claude-3-5-sonnet-20241022",
-            "max_tokens": 4096,
-            "messages": user_msgs,
-            "stream": True
-        }
-        if system_text:
-            payload["system"] = system_text
-        req = urllib.request.Request(url, headers=headers, data=json.dumps(payload).encode("utf-8"))
-        return urllib.request.urlopen(req, timeout=60)
-
-    raise ValueError(f"Unsupported BYOK provider: {provider}")
-
-
-# ==============================================================================
-# 3.4 EMBEDDED LOCAL SOVEREIGN AGENT & NEURO-SYMBOLIC BRIDGE (PORT 8085)
+# 3.3 EMBEDDED LOCAL SOVEREIGN AGENT & NEURO-SYMBOLIC BRIDGE (PORT 8085)
 # ==============================================================================
 class _NeuroSymbolicHTTPHandler(BaseHTTPRequestHandler):
     def log_message(self, format, *args):
@@ -1464,8 +1393,6 @@ class _NeuroSymbolicHTTPHandler(BaseHTTPRequestHandler):
         if self.path.startswith("/api/chat") or self.path.startswith("/api/agent/stream"):
             user_query = (body.get("query") or body.get("message") or "").strip()
             requested_model = body.get("model") or "auto"
-            byok_provider = body.get("provider")
-            byok_api_key = body.get("api_key")
             
             enrichment = enrich_stem_query(user_query)
 
@@ -1506,53 +1433,7 @@ class _NeuroSymbolicHTTPHandler(BaseHTTPRequestHandler):
             if enrichment.get("prompt_injection"):
                 sys_prompt += "\n\n" + enrichment["prompt_injection"]
 
-            # Route 1: BYOK Cloud Provider
-            if byok_provider and byok_api_key:
-                _emit("cascade_tier", {"tier": "BYOK", "model": requested_model, "provider": byok_provider, "reason": f"BYOK Cloud Gateway ({byok_provider.upper()})"})
-                try:
-                    msgs = [{"role": "system", "content": sys_prompt}]
-                    for m in body.get("messages", []):
-                        if m.get("role") != "system":
-                            msgs.append(m)
-                    if not any(m.get("content") == user_query for m in msgs):
-                        msgs.append({"role": "user", "content": user_query})
-
-                    accumulated_text = ""
-                    with stream_byok_completion(byok_provider, byok_api_key, requested_model, msgs, body.get("options", {})) as resp:
-                        for line in resp:
-                            line_s = line.decode("utf-8").strip()
-                            if not line_s:
-                                continue
-                            if line_s.startswith("data:"):
-                                line_s = line_s[5:].strip()
-                            if line_s == "[DONE]":
-                                break
-                            try:
-                                chunk_json = json.loads(line_s)
-                                tok = ""
-                                if byok_provider == "gemini":
-                                    cand = chunk_json.get("candidates", [{}])[0]
-                                    parts = cand.get("content", {}).get("parts", [{}])
-                                    tok = parts[0].get("text", "")
-                                elif byok_provider == "anthropic":
-                                    if chunk_json.get("type") == "content_block_delta":
-                                        tok = chunk_json.get("delta", {}).get("text", "")
-                                else:
-                                    tok = chunk_json.get("choices", [{}])[0].get("delta", {}).get("content", "")
-                                if tok:
-                                    accumulated_text += tok
-                                    _emit("token", tok)
-                            except Exception:
-                                pass
-
-                    # Tool parsing on BYOK output
-                    self._parse_and_execute_tools(accumulated_text, _emit)
-                except Exception as exc:
-                    _emit("token", f"\n\n[BYOK Gateway Error: {exc}]")
-                _emit("done", {})
-                return
-
-            # Route 2: Sovereign Offline Ollama with RAM Governor
+            # Sovereign Offline Ollama with RAM Governor
             cascade = select_cascade_model(requested_model, user_query)
             active_model = cascade["model"]
             _emit("cascade_tier", cascade)
@@ -1582,7 +1463,7 @@ class _NeuroSymbolicHTTPHandler(BaseHTTPRequestHandler):
                         "ram_percent": pct,
                         "threshold": 88.0,
                         "evicted_model": active_model,
-                        "fallback": "vigyan:1.5b"
+                        "fallback": "olmoe:1b-7b"
                     })
                     _emit("token", f"\n\n⚠️ **[RAM Governor Safety Alert]**: Memory reached {pct:.1f}% (≥ 88% threshold). Model `{active_model}` was unloaded to prevent system lockup.")
 
