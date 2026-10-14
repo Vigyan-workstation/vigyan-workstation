@@ -681,6 +681,45 @@
       padding: 2px 4px;
     }
 
+    /* FLOATING BOTTOM STEM QUICK DOCK */
+    .stem-quick-dock {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 8px;
+      overflow-x: auto;
+      padding: 2px 2px 4px 2px;
+      scrollbar-width: none;
+    }
+    .stem-quick-dock::-webkit-scrollbar {
+      display: none;
+    }
+    .stem-dock-chip {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      color: #a1a1aa;
+      padding: 4px 10px;
+      border-radius: 9999px;
+      font-size: 11px;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.15s ease;
+      font-family: inherit;
+    }
+    .stem-dock-chip:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.2);
+      color: #ffffff;
+      transform: translateY(-1px);
+    }
+    .stem-dock-chip:active {
+      transform: translateY(0);
+    }
+
     /* AGENT AUTOMATION & TOOL CARDS */
     .agent-cmd-card {
       background: #0d0e14;
@@ -1879,6 +1918,29 @@
               </div>
             </div>
 
+            <div class="stem-quick-dock" id="stem-quick-dock">
+              <button class="stem-dock-chip" onclick="quickFirePrompt('Plot the function f(x) = sin(x)*exp(-0.2*x) from 0 to 20 with high resolution.')">
+                <svg style="width:11px; height:11px; stroke:#38bdf8; fill:none;" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3"/></svg>
+                <span>Plot f(x)</span>
+              </button>
+              <button class="stem-dock-chip" onclick="quickFirePrompt('Calculate an RC lowpass filter with R = 10000 ohms and C = 0.1 uF. Show cutoff frequency, time constant, and Bode magnitude plot.')">
+                <svg style="width:11px; height:11px; stroke:#10b981; fill:none;" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                <span>Circuit</span>
+              </button>
+              <button class="stem-dock-chip" onclick="quickFirePrompt('Simulate a Keplerian orbit for a satellite around Earth with semi-major axis a = 7000 km and eccentricity e = 0.05. Show velocities and 2D trajectory.')">
+                <svg style="width:11px; height:11px; stroke:#ec4899; fill:none;" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1 4-10z"/></svg>
+                <span>Orbit</span>
+              </button>
+              <button class="stem-dock-chip" onclick="quickFirePrompt('/derive integrate x**2 * exp(-x) dx from 0 to infinity')">
+                <svg style="width:11px; height:11px; stroke:#a855f7; fill:none;" viewBox="0 0 24 24"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
+                <span>Calculus</span>
+              </button>
+              <button class="stem-dock-chip" onclick="quickFirePrompt('/cmd git status && git log -n 3 --oneline')">
+                <svg style="width:11px; height:11px; stroke:#ffffff; fill:none;" viewBox="0 0 24 24"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+                <span>Terminal</span>
+              </button>
+            </div>
+
             <div class="input-box-row" id="prompt-box-wrapper">
               <button class="btn-slash-toggle" onclick="toggleSlashMenu()" title="Commands">/</button>
               <textarea id="chat-prompt" rows="1" class="main-chat-input" placeholder="Ask anything, write code, run commands, or type / for shortcuts..." onkeydown="handleKey(event)" oninput="handlePromptInput(event)"></textarea>
@@ -1891,41 +1953,10 @@
       </section>
     </div>
 
-    <!-- 2. SIMPLE 3-CARD SETTINGS TAB -->
+    <!-- 2. STREAMLINED HARDWARE & PREFERENCES SETTINGS TAB -->
     <div class="tab-content" id="tab-settings">
       <div class="settings-container">
-        <!-- CARD 1: AI MODEL & CONNECTION -->
-        <div class="settings-section-card">
-          <div class="section-card-header">
-            <span class="section-card-title">
-              <svg class="icon" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>
-              AI Model &amp; Connection
-            </span>
-            <span class="section-card-badge" id="daemon-status-badge">Connected</span>
-          </div>
-          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px; margin-bottom:14px;">
-            <div class="setting-row">
-              <div class="setting-label"><span>AI Provider</span></div>
-              <select id="setting-backend-type" class="setting-input" onchange="onBackendTypeChange(this.value)">
-                <option value="ollama">Local AI (Automatic • Recommended)</option>
-                <option value="agent_server">Local Science Server (:8085)</option>
-                <option value="llama_server">Local Fast Server (:8080)</option>
-                <option value="cloud_api">Custom / Cloud API</option>
-              </select>
-            </div>
-            <div class="setting-row">
-              <div class="setting-label"><span>Server Address</span></div>
-              <input type="text" id="setting-host" class="setting-input" value="http://127.0.0.1:11434">
-            </div>
-          </div>
-          <div style="display:flex; gap:8px; align-items:center;">
-            <input type="text" id="vault-pull-input" class="setting-input" placeholder="Download a new AI model (e.g. olmoe:1b-7b, vigyan:7b-quad-master)" style="flex:1;">
-            <button class="btn-action" id="btn-vault-pull" onclick="pullOllamaModel()" style="padding:7px 14px; font-weight:600;">Download Model</button>
-          </div>
-          <div id="vault-pull-status" style="font-size:11px; color:#a1a1aa; margin-top:6px; display:none;"></div>
-        </div>
-
-        <!-- CARD 2: HARDWARE PERFORMANCE -->
+        <!-- CARD 1: HARDWARE PERFORMANCE -->
         <div class="settings-section-card">
           <div class="section-card-header">
             <span class="section-card-title">
@@ -1950,7 +1981,7 @@
           </div>
         </div>
 
-        <!-- CARD 3: RESPONSE STYLE -->
+        <!-- CARD 2: RESPONSE STYLE -->
         <div class="settings-section-card">
           <div class="section-card-header">
             <span class="section-card-title">
@@ -1979,6 +2010,8 @@
 
         <!-- Hidden defaults so internal engine logic stays intact without UI clutter -->
         <div style="display:none;">
+          <input type="text" id="setting-host" value="http://127.0.0.1:11434">
+          <input type="text" id="setting-backend-type" value="ollama">
           <input type="text" id="setting-agent-host" value="http://127.0.0.1:8085">
           <input type="password" id="setting-api-key" value="">
           <input type="hidden" id="setting-keepalive" value="15m">
