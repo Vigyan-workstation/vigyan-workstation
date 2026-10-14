@@ -1000,7 +1000,7 @@ MODELS_CATALOG = {
         "size_formatted": "4.2 GB",
         "recommended_ram": "≥ 16 GB RAM / Dedicated GPU",
         "description": "Frontier Sovereign STEM & Reasoning model. Four-way post-trained DPO on advanced physics, math, and code.",
-        "hf_url": "https://huggingface.co/shreyansh12183/vigyan-7b-quad-master/resolve/main/vigyan-7b-quad-master-q4_k_m.gguf",
+        "hf_url": "https://huggingface.co/shreyansh12183/vigyan-olmo2-7b-quad-master/resolve/main/vigyan-7b-quad-master-q4_k_m.gguf",
         "local_candidates": [
             os.path.expanduser("~/.vigyan/models/vigyan-7b-quad-master-q4_k_m.gguf"),
             "/home/hello/Downloads/vigyan ai/models/vigyan-7b-quad-master-q4_k_m.gguf"
@@ -1057,13 +1057,8 @@ class ModelDownloadManager:
                         self.active_downloads[tag]["progress_pct"] = 100.0
                     target_dir = os.path.expanduser("~/.vigyan/models")
                     os.makedirs(target_dir, exist_ok=True)
-                    dest_file = os.path.join(target_dir, info["dest_filename"])
-                    if not os.path.exists(dest_file):
-                        try:
-                            shutil.copyfile(cand, dest_file)
-                        except Exception:
-                            dest_file = cand
-                    # Register into Ollama
+                    dest_file = cand
+                    # Register into Ollama directly
                     modelfile_path = os.path.join(target_dir, f"Modelfile.{tag.replace(':', '_')}")
                     with open(modelfile_path, "w", encoding="utf-8") as mf:
                         mf.write(f"FROM {dest_file}\nTEMPLATE \"\"\"{info['template']}\"\"\"\n")
@@ -1250,6 +1245,367 @@ def grep_workspace_files(query: str, path: str = ".") -> Dict[str, Any]:
 
 
 # ==============================================================================
+# 3.2.1 SOVEREIGN AGENTIC STEM & SCIENTIFIC COMPUTING TOOLS
+# ==============================================================================
+_SAFE_MATH_NODES = (
+    ast.Expression, ast.BinOp, ast.UnaryOp, ast.Call, ast.Name,
+    ast.Constant, ast.Add, ast.Sub, ast.Mult, ast.Div,
+    ast.Pow, ast.USub, ast.UAdd, ast.Mod, ast.FloorDiv, ast.Load
+)
+
+_SAFE_MATH_ENV = {
+    "sin": math.sin, "cos": math.cos, "tan": math.tan,
+    "asin": math.asin, "acos": math.acos, "atan": math.atan,
+    "sinh": math.sinh, "cosh": math.cosh, "tanh": math.tanh,
+    "exp": math.exp, "log": math.log, "log10": math.log10, "log2": math.log2,
+    "ln": math.log, "sqrt": math.sqrt, "abs": abs,
+    "pi": math.pi, "e": math.e, "tau": math.tau,
+}
+
+
+def evaluate_plot(
+    expression: str,
+    x_min: float = -10.0,
+    x_max: float = 10.0,
+    points: int = 200,
+    title: str = "",
+    x_label: str = "x",
+    y_label: str = "y"
+) -> Dict[str, Any]:
+    """Safely evaluates a continuous mathematical function f(x) and returns high-resolution (x, y) plot traces."""
+    clean_expr = expression.replace("^", "**").strip()
+    try:
+        tree = ast.parse(clean_expr, mode="eval")
+        for node in ast.walk(tree):
+            if not isinstance(node, _SAFE_MATH_NODES):
+                return {"tool": "plot_function", "success": False, "error": f"Disallowed mathematical syntax: {type(node).__name__}"}
+            if isinstance(node, ast.Name) and node.id != "x" and node.id not in _SAFE_MATH_ENV:
+                return {"tool": "plot_function", "success": False, "error": f"Unknown or disallowed symbol: {node.id}"}
+        compiled_code = compile(tree, "<plot_math>", "eval")
+    except Exception as exc:
+        return {"tool": "plot_function", "success": False, "error": f"Mathematical parse error: {exc}"}
+
+    x_min = float(x_min)
+    x_max = float(x_max)
+    points = max(10, min(1000, int(points)))
+    step = (x_max - x_min) / max(1, points - 1)
+    
+    x_vals: List[float] = []
+    y_vals: List[Optional[float]] = []
+    env = dict(_SAFE_MATH_ENV)
+
+    for i in range(points):
+        x = x_min + i * step
+        env["x"] = x
+        try:
+            val = eval(compiled_code, {"__builtins__": {}}, env)
+            if math.isnan(val) or math.isinf(val):
+                y_vals.append(None)
+            else:
+                y_vals.append(round(float(val), 5))
+        except Exception:
+            y_vals.append(None)
+        x_vals.append(round(x, 4))
+
+    return {
+        "tool": "plot_function",
+        "success": True,
+        "expression": expression,
+        "title": title or f"f(x) = {expression}",
+        "x_label": x_label,
+        "y_label": y_label,
+        "x_range": [x_min, x_max],
+        "points": points,
+        "plot": {
+            "title": title or f"f(x) = {expression}",
+            "x_label": x_label,
+            "y_label": y_label,
+            "traces": [
+                {
+                    "x": x_vals,
+                    "y": y_vals,
+                    "name": expression,
+                    "mode": "lines",
+                    "line": {"color": "#38bdf8", "width": 2}
+                }
+            ]
+        }
+    }
+
+
+def calc_circuit(circuit_type: str, params: Dict[str, Any]) -> Dict[str, Any]:
+    """Calculates electrical engineering circuits (RC Filter, RLC Resonator, 555 Timer) with real formulas & curves."""
+    ctype = (circuit_type or "rc_filter").lower()
+    
+    # 1. RC FILTER (Lowpass / Highpass)
+    if ctype in ("rc_filter", "rc", "filter"):
+        try:
+            r = float(params.get("r", 10000.0))
+            c = float(params.get("c", 1e-7))
+            ftype = str(params.get("filter_type", "lowpass")).lower()
+            if r <= 0 or c <= 0:
+                return {"tool": "circuit_calc", "success": False, "error": "Resistance and capacitance must be positive."}
+            
+            fc = 1.0 / (2.0 * math.pi * r * c)
+            tau = r * c
+            
+            # Bode plot frequency response (60 log-spaced points from 0.01*fc to 100*fc)
+            freqs = []
+            mags_db = []
+            for i in range(60):
+                exp = -2.0 + (4.0 * i / 59.0)
+                f = fc * (10.0 ** exp)
+                ratio = f / fc
+                freqs.append(round(f, 2))
+                if ftype == "highpass":
+                    mag = 20.0 * math.log10(ratio / math.sqrt(1.0 + ratio**2))
+                else:
+                    mag = -10.0 * math.log10(1.0 + ratio**2)
+                mags_db.append(round(mag, 2))
+                
+            return {
+                "tool": "circuit_calc",
+                "success": True,
+                "circuit_type": f"RC {ftype.capitalize()} Filter",
+                "metrics": [
+                    {"label": "Cutoff Frequency (fc)", "value": f"{fc:.2f} Hz"},
+                    {"label": "Time Constant (τ)", "value": f"{tau * 1e3:.2f} ms"},
+                    {"label": "Resistance (R)", "value": f"{r:g} Ω"},
+                    {"label": "Capacitance (C)", "value": f"{c:g} F"}
+                ],
+                "formula_latex": r"f_c = \frac{1}{2\pi R C}, \quad \tau = R \cdot C",
+                "plot": {
+                    "title": f"RC {ftype.capitalize()} Bode Magnitude (fc = {fc:.1f} Hz)",
+                    "x_label": "Frequency (Hz, log scale)",
+                    "y_label": "Magnitude (dB)",
+                    "x_log": True,
+                    "traces": [
+                        {"x": freqs, "y": mags_db, "name": "Magnitude (dB)", "line": {"color": "#38bdf8", "width": 2}}
+                    ]
+                }
+            }
+        except Exception as e:
+            return {"tool": "circuit_calc", "success": False, "error": str(e)}
+
+    # 2. RLC RESONATOR (Series / Parallel)
+    elif ctype in ("rlc_resonance", "rlc", "resonance"):
+        try:
+            r = float(params.get("r", 10.0))
+            l = float(params.get("l", 0.01))
+            c = float(params.get("c", 1e-6))
+            cfg = str(params.get("config", "series")).lower()
+            if r <= 0 or l <= 0 or c <= 0:
+                return {"tool": "circuit_calc", "success": False, "error": "R, L, and C must be positive."}
+
+            f0 = 1.0 / (2.0 * math.pi * math.sqrt(l * c))
+            omega0 = 2.0 * math.pi * f0
+            q = (1.0 / r) * math.sqrt(l / c) if cfg != "parallel" else r * math.sqrt(c / l)
+            bw = f0 / q if q > 0 else 0.0
+            zeta = 1.0 / (2.0 * q) if q > 0 else 0.0
+
+            freqs = []
+            resp_mag = []
+            for i in range(80):
+                f = f0 * (0.2 + 1.8 * (i / 79.0))
+                w = 2.0 * math.pi * f
+                ratio = w / omega0
+                denom = math.sqrt((1.0 - ratio**2)**2 + (ratio / q)**2)
+                mag = (1.0 / denom) if denom > 0 else 0.0
+                freqs.append(round(f, 2))
+                resp_mag.append(round(mag, 3))
+
+            return {
+                "tool": "circuit_calc",
+                "success": True,
+                "circuit_type": f"RLC {cfg.capitalize()} Resonator",
+                "metrics": [
+                    {"label": "Resonant Frequency (f0)", "value": f"{f0:.2f} Hz"},
+                    {"label": "Quality Factor (Q)", "value": f"{q:.2f}"},
+                    {"label": "Bandwidth (BW)", "value": f"{bw:.2f} Hz"},
+                    {"label": "Damping Factor (ζ)", "value": f"{zeta:.4f}"},
+                    {"label": "Inductance (L)", "value": f"{l:g} H"}
+                ],
+                "formula_latex": r"f_0 = \frac{1}{2\pi\sqrt{LC}}, \quad Q = \frac{1}{R}\sqrt{\frac{L}{C}}, \quad BW = \frac{f_0}{Q}",
+                "plot": {
+                    "title": f"RLC Resonance Curve (f0 = {f0:.1f} Hz, Q = {q:.1f})",
+                    "x_label": "Frequency (Hz)",
+                    "y_label": "Normalized Gain |H(f)|",
+                    "traces": [
+                        {"x": freqs, "y": resp_mag, "name": "Gain |H(f)|", "line": {"color": "#10b981", "width": 2}}
+                    ]
+                }
+            }
+        except Exception as e:
+            return {"tool": "circuit_calc", "success": False, "error": str(e)}
+
+    # 3. 555 ASTABLE TIMER
+    elif ctype in ("555_timer", "555", "astable"):
+        try:
+            r1 = float(params.get("r1", 10000.0))
+            r2 = float(params.get("r2", 47000.0))
+            c = float(params.get("c", 1e-6))
+            if r1 <= 0 or r2 <= 0 or c <= 0:
+                return {"tool": "circuit_calc", "success": False, "error": "R1, R2, and C must be positive."}
+
+            th = 0.69315 * (r1 + r2) * c
+            tl = 0.69315 * r2 * c
+            t_period = th + tl
+            freq = 1.0 / t_period if t_period > 0 else 0.0
+            duty = ((r1 + r2) / (r1 + 2.0 * r2)) * 100.0
+
+            ts = []
+            v_out = []
+            pts = 90
+            for i in range(pts):
+                t = (i / (pts - 1)) * (3.0 * t_period)
+                cycle_t = t % t_period
+                ts.append(round(t * 1e3, 2))  # ms
+                v_out.append(5.0 if cycle_t < th else 0.0)
+
+            return {
+                "tool": "circuit_calc",
+                "success": True,
+                "circuit_type": "NE555 Astable Multivibrator",
+                "metrics": [
+                    {"label": "Frequency (f)", "value": f"{freq:.2f} Hz"},
+                    {"label": "Duty Cycle (D)", "value": f"{duty:.1f}%"},
+                    {"label": "Period (T)", "value": f"{t_period * 1e3:.2f} ms"},
+                    {"label": "High Time (t_high)", "value": f"{th * 1e3:.2f} ms"},
+                    {"label": "Low Time (t_low)", "value": f"{tl * 1e3:.2f} ms"}
+                ],
+                "formula_latex": r"f = \frac{1.44}{(R_1 + 2R_2)C}, \quad D = \frac{R_1+R_2}{R_1+2R_2}\times 100\%",
+                "plot": {
+                    "title": f"555 Timer Square Wave (f = {freq:.1f} Hz, D = {duty:.1f}%)",
+                    "x_label": "Time (ms)",
+                    "y_label": "Output Voltage (V)",
+                    "traces": [
+                        {"x": ts, "y": v_out, "name": "V_out (5V Logic)", "line": {"color": "#a855f7", "width": 2, "shape": "hv"}}
+                    ]
+                }
+            }
+        except Exception as e:
+            return {"tool": "circuit_calc", "success": False, "error": str(e)}
+
+    return {"tool": "circuit_calc", "success": False, "error": f"Unknown circuit type: '{ctype}' (supported: rc_filter, rlc_resonance, 555_timer)"}
+
+
+def calc_physics(sim_type: str, params: Dict[str, Any]) -> Dict[str, Any]:
+    """Calculates orbital mechanics & projectile kinematics with Keplerian trajectory generation."""
+    stype = (sim_type or "kepler_orbit").lower()
+
+    # 1. KEPLERIAN ORBIT
+    if stype in ("kepler_orbit", "orbit", "kepler", "satellite"):
+        try:
+            a = float(params.get("semi_major_axis_km") or params.get("a") or 7000.0)
+            e = float(params.get("eccentricity") or params.get("e") or 0.05)
+            e = max(0.0, min(0.95, e))
+            body = str(params.get("body") or "earth").lower()
+            mu_map = {
+                "earth": 398600.4418,
+                "sun": 1.32712440018e11,
+                "moon": 4902.8,
+                "mars": 42828.3
+            }
+            mu = float(params.get("mu") or mu_map.get(body, 398600.4418))
+
+            period_sec = 2.0 * math.pi * math.sqrt((a**3) / mu)
+            rp = a * (1.0 - e)
+            ra = a * (1.0 + e)
+            vp = math.sqrt(mu * (1.0 + e) / (a * (1.0 - e)))
+            va = math.sqrt(mu * (1.0 - e) / (a * (1.0 + e)))
+
+            # Trajectory: 360 points around focus (0, 0)
+            xs = []
+            ys = []
+            p = a * (1.0 - e**2)
+            for deg in range(361):
+                theta = math.radians(deg)
+                r = p / (1.0 + e * math.cos(theta))
+                xs.append(round(r * math.cos(theta), 2))
+                ys.append(round(r * math.sin(theta), 2))
+
+            return {
+                "tool": "physics_sim",
+                "success": True,
+                "sim_type": f"Keplerian Orbit ({body.capitalize()})",
+                "metrics": [
+                    {"label": "Orbital Period (T)", "value": f"{period_sec / 60.0:.2f} min ({period_sec / 3600.0:.2f} h)"},
+                    {"label": "Periapsis (rp)", "value": f"{rp:,.1f} km"},
+                    {"label": "Apoapsis (ra)", "value": f"{ra:,.1f} km"},
+                    {"label": "Periapsis Speed (vp)", "value": f"{vp:.3f} km/s"},
+                    {"label": "Apoapsis Speed (va)", "value": f"{va:.3f} km/s"},
+                    {"label": "Semi-major Axis (a)", "value": f"{a:,.1f} km"},
+                    {"label": "Eccentricity (e)", "value": f"{e:.4f}"}
+                ],
+                "formula_latex": r"T = 2\pi\sqrt{\frac{a^3}{\mu}}, \quad r(\theta) = \frac{a(1-e^2)}{1+e\cos\theta}, \quad v_p = \sqrt{\frac{\mu(1+e)}{a(1-e)}}",
+                "plot": {
+                    "title": f"Keplerian 2D Orbit ({body.capitalize()}, a={a:,.0f}km, e={e:.2f})",
+                    "x_label": "X Distance (km)",
+                    "y_label": "Y Distance (km)",
+                    "traces": [
+                        {"x": xs, "y": ys, "name": "Trajectory", "line": {"color": "#38bdf8", "width": 2}},
+                        {"x": [0], "y": [0], "name": body.capitalize(), "mode": "markers", "marker": {"size": 12, "color": "#fbbf24"}}
+                    ]
+                }
+            }
+        except Exception as e:
+            return {"tool": "physics_sim", "success": False, "error": str(e)}
+
+    # 2. BALLISTIC PROJECTILE KINEMATICS
+    elif stype in ("projectile", "ballistics", "kinematics"):
+        try:
+            v0 = float(params.get("velocity") or params.get("v0") or 50.0)
+            angle = float(params.get("angle_deg") or params.get("theta") or 45.0)
+            h0 = float(params.get("height") or params.get("h0") or 0.0)
+            g = float(params.get("gravity") or params.get("g") or 9.80665)
+
+            rad = math.radians(angle)
+            v0x = v0 * math.cos(rad)
+            v0y = v0 * math.sin(rad)
+
+            disc = v0y**2 + 2.0 * g * h0
+            t_flight = (v0y + math.sqrt(max(0.0, disc))) / g
+            h_max = h0 + (v0y**2) / (2.0 * g)
+            r_max = v0x * t_flight
+
+            xs = []
+            ys = []
+            pts = 80
+            for i in range(pts):
+                t = (i / (pts - 1)) * t_flight
+                x = v0x * t
+                y = h0 + v0y * t - 0.5 * g * (t**2)
+                xs.append(round(x, 2))
+                ys.append(round(max(0.0, y), 2))
+
+            return {
+                "tool": "physics_sim",
+                "success": True,
+                "sim_type": "Ballistic Projectile Kinematics",
+                "metrics": [
+                    {"label": "Flight Time (t_f)", "value": f"{t_flight:.2f} s"},
+                    {"label": "Maximum Altitude (H)", "value": f"{h_max:.2f} m"},
+                    {"label": "Horizontal Range (R)", "value": f"{r_max:.2f} m"},
+                    {"label": "Launch Velocity (v0)", "value": f"{v0:.1f} m/s"},
+                    {"label": "Launch Angle (θ)", "value": f"{angle:.1f}°"}
+                ],
+                "formula_latex": r"t_f = \frac{v_0\sin\theta + \sqrt{(v_0\sin\theta)^2 + 2gh_0}}{g}, \quad R = v_0\cos\theta \cdot t_f",
+                "plot": {
+                    "title": f"Projectile Trajectory (v0 = {v0}m/s, θ = {angle}°, Range = {r_max:.1f}m)",
+                    "x_label": "Downrange Distance (m)",
+                    "y_label": "Altitude (m)",
+                    "traces": [
+                        {"x": xs, "y": ys, "name": "Trajectory", "line": {"color": "#ec4899", "width": 2}}
+                    ]
+                }
+            }
+        except Exception as e:
+            return {"tool": "physics_sim", "success": False, "error": str(e)}
+
+    return {"tool": "physics_sim", "success": False, "error": f"Unknown sim type: '{stype}' (supported: kepler_orbit, projectile)"}
+
+
+# ==============================================================================
 # 3.3 EMBEDDED LOCAL SOVEREIGN AGENT & NEURO-SYMBOLIC BRIDGE (PORT 8085)
 # ==============================================================================
 class _NeuroSymbolicHTTPHandler(BaseHTTPRequestHandler):
@@ -1420,15 +1776,21 @@ class _NeuroSymbolicHTTPHandler(BaseHTTPRequestHandler):
                 _emit("memory", "<br>• " + "<br>• ".join(cites))
 
             sys_prompt = (
-                "You are Vigyan Pro, a sovereign desktop STEM & coding assistant with real autonomous workspace capabilities. "
+                "You are Vigyan Pro, a sovereign desktop STEM & coding assistant with real autonomous workspace and mathematical capabilities. "
                 "Format formulas in clean LaTeX ($$...$$). Be concise, direct, and helpful. "
-                "When needed, you can autonomously inspect or operate on the user's workspace using JSON blocks:\n"
+                "When solving math, plotting curves, analyzing circuits, simulating physics, or inspecting files, call real tools using JSON blocks:\n"
+                "- <tool_call>{\"name\": \"sympy_eval\", \"arguments\": {\"expression\": \"integrate(x**2, x)\"}}</tool_call>\n"
+                "- <tool_call>{\"name\": \"plot_function\", \"arguments\": {\"expression\": \"sin(x)*exp(-0.2*x)\", \"x_min\": 0, \"x_max\": 20, \"title\": \"Damped Sine Wave\"}}</tool_call>\n"
+                "- <tool_call>{\"name\": \"circuit_calc\", \"arguments\": {\"circuit_type\": \"rc_filter\", \"params\": {\"r\": 10000, \"c\": 1e-7, \"filter_type\": \"lowpass\"}}</tool_call>\n"
+                "- <tool_call>{\"name\": \"circuit_calc\", \"arguments\": {\"circuit_type\": \"rlc_resonance\", \"params\": {\"r\": 10, \"l\": 0.01, \"c\": 1e-6, \"config\": \"series\"}}</tool_call>\n"
+                "- <tool_call>{\"name\": \"circuit_calc\", \"arguments\": {\"circuit_type\": \"555_timer\", \"params\": {\"r1\": 10000, \"r2\": 47000, \"c\": 1e-6}}</tool_call>\n"
+                "- <tool_call>{\"name\": \"physics_sim\", \"arguments\": {\"sim_type\": \"kepler_orbit\", \"params\": {\"a\": 7000, \"e\": 0.05, \"body\": \"earth\"}}</tool_call>\n"
+                "- <tool_call>{\"name\": \"physics_sim\", \"arguments\": {\"sim_type\": \"projectile\", \"params\": {\"velocity\": 50, \"angle_deg\": 45, \"height\": 0}}</tool_call>\n"
                 "- <tool_call>{\"name\": \"execute_cmd\", \"arguments\": {\"command\": \"ls -la\"}}</tool_call>\n"
                 "- <tool_call>{\"name\": \"list_dir\", \"arguments\": {\"path\": \".\"}}</tool_call>\n"
                 "- <tool_call>{\"name\": \"read_file\", \"arguments\": {\"path\": \"README.md\", \"start_line\": 1, \"end_line\": 100}}</tool_call>\n"
                 "- <tool_call>{\"name\": \"write_file\", \"arguments\": {\"path\": \"output.py\", \"content\": \"print('hello')\"}}</tool_call>\n"
-                "- <tool_call>{\"name\": \"grep_files\", \"arguments\": {\"query\": \"def main\", \"path\": \".\"}}</tool_call>\n"
-                "- <tool_call>{\"name\": \"sympy_eval\", \"arguments\": {\"expression\": \"integrate(x**2, x)\"}}</tool_call>"
+                "- <tool_call>{\"name\": \"grep_files\", \"arguments\": {\"query\": \"def main\", \"path\": \".\"}}</tool_call>"
             )
             if enrichment.get("prompt_injection"):
                 sys_prompt += "\n\n" + enrichment["prompt_injection"]
@@ -1548,10 +1910,39 @@ class _NeuroSymbolicHTTPHandler(BaseHTTPRequestHandler):
                         emit_fn("tool_result", {"tool": "write_file", "result": w_res})
                 elif t_name == "grep_files":
                     emit_fn("tool_result", {"tool": "grep_files", "result": grep_workspace_files(t_args.get("query", ""), t_args.get("path", "."))})
-                elif t_name == "sympy_eval" and _SYMPY_ENGINE:
+                elif t_name == "sympy_eval":
                     expr = t_args.get("expression", "")
-                    eval_res = _SYMPY_ENGINE.evaluate_expression(expr)
-                    emit_fn("sympy", f"$${eval_res.get('latex', eval_res.get('result'))}$$")
+                    if _SYMPY_ENGINE:
+                        eval_res = _SYMPY_ENGINE.evaluate_expression(expr)
+                        emit_fn("sympy", f"$${eval_res.get('latex', eval_res.get('result'))}$$")
+                        emit_fn("tool_result", {
+                            "tool": "sympy_eval",
+                            "success": True,
+                            "expression": expr,
+                            "result": eval_res.get("result", ""),
+                            "latex": eval_res.get("latex", ""),
+                            "numeric": eval_res.get("numeric_approx", "")
+                        })
+                elif t_name == "plot_function":
+                    expr = t_args.get("expression", "x**2")
+                    x_min = t_args.get("x_min", -10.0)
+                    x_max = t_args.get("x_max", 10.0)
+                    pts = t_args.get("points", 200)
+                    title = t_args.get("title", "")
+                    x_lbl = t_args.get("x_label", "x")
+                    y_lbl = t_args.get("y_label", "y")
+                    plot_res = evaluate_plot(expr, x_min, x_max, pts, title, x_lbl, y_lbl)
+                    emit_fn("tool_result", plot_res)
+                elif t_name == "circuit_calc":
+                    ctype = t_args.get("circuit_type", "rc_filter")
+                    cparams = t_args.get("params") if isinstance(t_args.get("params"), dict) else t_args
+                    circ_res = calc_circuit(ctype, cparams)
+                    emit_fn("tool_result", circ_res)
+                elif t_name == "physics_sim":
+                    stype = t_args.get("sim_type", "kepler_orbit")
+                    sparams = t_args.get("params") if isinstance(t_args.get("params"), dict) else t_args
+                    phys_res = calc_physics(stype, sparams)
+                    emit_fn("tool_result", phys_res)
             except Exception:
                 pass
 

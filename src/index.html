@@ -757,6 +757,71 @@
       color: #ffffff;
     }
 
+    /* AGENTIC STEM & SCIENTIFIC COMPUTING CARDS */
+    .agent-stem-card {
+      background: #0d0e14;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 9px;
+      margin: 12px 0;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.45);
+    }
+    .agent-stem-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 12px;
+      background: rgba(255, 255, 255, 0.03);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      font-size: 12px;
+    }
+    .agent-stem-body {
+      padding: 12px 14px;
+    }
+    .stem-metric-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 8px;
+      margin: 10px 0;
+    }
+    .stem-metric-box {
+      background: #050608;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 6px;
+      padding: 8px 10px;
+    }
+    .stem-metric-label {
+      font-size: 10px;
+      color: #71717a;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 3px;
+    }
+    .stem-metric-val {
+      font-size: 12.5px;
+      font-weight: 600;
+      color: #38bdf8;
+      font-family: ui-monospace, "JetBrains Mono", monospace;
+    }
+    .stem-formula-box {
+      background: #07080c;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 6px;
+      padding: 8px 12px;
+      margin: 8px 0;
+      text-align: center;
+      overflow-x: auto;
+    }
+    .stem-plotly-plot {
+      width: 100%;
+      min-height: 290px;
+      background: #07080c;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 6px;
+      margin-top: 10px;
+      overflow: hidden;
+    }
+
     /* ONBOARDING MODEL DOWNLOAD BANNER */
     .onboarding-model-banner {
       width: 100%;
@@ -2127,7 +2192,7 @@
             </div>
           </div>
 
-          <div class="starter-prompts" style="grid-template-columns: repeat(2, 1fr); max-width: 720px;">
+          <div class="starter-prompts" style="grid-template-columns: repeat(2, 1fr); max-width: 760px;">
             <div class="prompt-card" style="--i:0" onclick="quickFirePrompt('List the files in the current workspace directory and summarize this project.')">
               <div class="prompt-title">
                 <svg class="icon" viewBox="0 0 24 24" style="stroke:#ffffff;"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
@@ -2142,19 +2207,33 @@
               </div>
               <div class="prompt-sub">Run verified terminal commands with real-time output and safety gating</div>
             </div>
-            <div class="prompt-card" style="--i:2" onclick="quickFirePrompt('/derive integrate x**2 * exp(-x) dx from 0 to infinity')">
+            <div class="prompt-card" style="--i:2" onclick="quickFirePrompt('Plot the damped oscillation function f(x) = exp(-0.15*x)*cos(2*x) from 0 to 25 with high resolution.')">
               <div class="prompt-title">
-                <svg class="icon" viewBox="0 0 24 24" style="stroke:#ffffff;"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
+                <svg class="icon" viewBox="0 0 24 24" style="stroke:#38bdf8;"><path d="M3 3v18h18"/><path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3"/></svg>
+                <span>Curve Plotting &amp; Plotly</span>
+              </div>
+              <div class="prompt-sub">Real-time mathematical plotting with exact coordinates and dark obsidian styling</div>
+            </div>
+            <div class="prompt-card" style="--i:3" onclick="quickFirePrompt('Calculate an RC lowpass filter with R = 10000 ohms and C = 0.1 uF. Show the cutoff frequency, time constant, and Bode magnitude plot.')">
+              <div class="prompt-title">
+                <svg class="icon" viewBox="0 0 24 24" style="stroke:#10b981;"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                <span>Circuit Analysis</span>
+              </div>
+              <div class="prompt-sub">Compute cutoff frequency, time constant, and frequency response for RC, RLC, 555</div>
+            </div>
+            <div class="prompt-card" style="--i:4" onclick="quickFirePrompt('Simulate a Keplerian orbit for a satellite around Earth with semi-major axis a = 7000 km and eccentricity e = 0.05. Calculate velocities and plot the orbit trajectory.')">
+              <div class="prompt-title">
+                <svg class="icon" viewBox="0 0 24 24" style="stroke:#ec4899;"><circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1 4-10z"/></svg>
+                <span>Orbital Physics &amp; Kinematics</span>
+              </div>
+              <div class="prompt-sub">Keplerian orbits, periapsis/apoapsis speeds, periods, and projectile trajectories</div>
+            </div>
+            <div class="prompt-card" style="--i:5" onclick="quickFirePrompt('/derive integrate x**2 * exp(-x) dx from 0 to infinity')">
+              <div class="prompt-title">
+                <svg class="icon" viewBox="0 0 24 24" style="stroke:#a855f7;"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
                 <span>Exact Calculus &amp; SymPy</span>
               </div>
               <div class="prompt-sub">Solve differential equations, integrals, and proofs with zero hallucinations</div>
-            </div>
-            <div class="prompt-card" style="--i:3" onclick="quickFirePrompt('Write an optimized Python class for thread-safe LRU caching with typing and unit tests.')">
-              <div class="prompt-title">
-                <svg class="icon" viewBox="0 0 24 24" style="stroke:#ffffff;"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
-                <span>Code &amp; Architecture</span>
-              </div>
-              <div class="prompt-sub">Generate production Python, Rust, C++, and clean algorithmic solutions</div>
             </div>
           </div>
         `;
@@ -2207,6 +2286,7 @@
       if (!window._katexRaf) {
         window._katexRaf = requestAnimationFrame(() => {
           renderLatex(box);
+          initPendingPlots(box);
           window._katexRaf = null;
         });
       }
@@ -2262,9 +2342,17 @@
 
     function formatMessageContent(txt, msgKey = 'm0') {
       if (!txt) return '';
+      // Extract pre-rendered raw HTML cards (tool results, command approvals, Plotly graphs)
+      const vigyanCards = [];
+      let out = txt.replace(/<!--VIGYAN_CARD_START-->([\s\S]*?)<!--VIGYAN_CARD_END-->/g, (m, card) => {
+        const idx = vigyanCards.length;
+        vigyanCards.push(card);
+        return `__VIGYAN_CARD_${idx}__`;
+      });
+
       // Fenced code blocks extraction first (to prevent inner mangling)
       const codeBlocks = [];
-      let out = txt.replace(/```([a-zA-Z0-9_\-:]*)\n?([\s\S]*?)```/g, (m, lang, code) => {
+      out = out.replace(/```([a-zA-Z0-9_\-:]*)\n?([\s\S]*?)```/g, (m, lang, code) => {
         const idx = codeBlocks.length;
         codeBlocks.push({ lang, code: escapeHtml(code.trim()) });
         return `__CODE_BLOCK_${idx}__`;
@@ -2359,6 +2447,9 @@
           <pre style="padding:10px 12px; margin:0; overflow-x:auto; font-family:ui-monospace,monospace; font-size:12px; color:#f4f4f6; line-height:1.5;"><code>${b.code}</code></pre>
         </div>`;
       });
+
+      // Restore protected cards
+      out = out.replace(/__VIGYAN_CARD_(\d+)__/g, (m, idx) => vigyanCards[idx] || '');
 
       return out;
     }
@@ -2854,7 +2945,11 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
 
                 if (currentEvent === 'tool_result') {
                   assistantMsg.content += renderToolResultHtml(data);
-                  if (contentEl) contentEl.innerHTML = formatMessageContent(assistantMsg.content);
+                  if (contentEl) {
+                    contentEl.innerHTML = formatMessageContent(assistantMsg.content);
+                    renderLatex(contentEl);
+                    initPendingPlots(contentEl);
+                  }
                   continue;
                 }
 
@@ -2910,6 +3005,23 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
       }
     }
 
+    function initPendingPlots(root) {
+      if (!window.Plotly) return;
+      const container = root || document.getElementById('chat-box') || document.body;
+      const plots = container.querySelectorAll('.stem-plotly-plot:not([data-initialized])');
+      plots.forEach(el => {
+        try {
+          const raw = el.getAttribute('data-plot-spec');
+          if (!raw) return;
+          const spec = JSON.parse(decodeURIComponent(raw));
+          Plotly.newPlot(el, spec.data, spec.layout, spec.config || { responsive: true, displayModeBar: false });
+          el.setAttribute('data-initialized', 'true');
+        } catch (e) {
+          console.warn('Plotly render error:', e);
+        }
+      });
+    }
+
     function renderCommandApprovalCardHtml(data) {
       const id = 'cmd-' + Math.random().toString(36).substring(2, 9);
       const cmdEscaped = (data.command || '').replace(/"/g, '&quot;');
@@ -2917,7 +3029,7 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
       const risk = (data.risk || 'medium').toUpperCase();
       const riskColor = risk === 'HIGH' ? '#ef4444' : '#f59e0b';
       
-      return `\n\n<div class="agent-cmd-card" id="${id}">
+      return `\n\n<!--VIGYAN_CARD_START--><div class="agent-cmd-card" id="${id}">
         <div class="agent-cmd-header">
           <div style="display:flex; align-items:center; gap:8px;">
             <svg style="width:14px; height:14px; stroke:#10b981; fill:none;" viewBox="0 0 24 24"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
@@ -2936,25 +3048,252 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
             <button class="agent-btn-cancel" onclick="cancelPendingCommand('${id}')">Cancel</button>
           </div>
         </div>
-      </div>\n\n`;
+      </div><!--VIGYAN_CARD_END-->\n\n`;
     }
 
     function renderToolResultHtml(data) {
+      if (!data) return '';
+      const tool = data.tool || '';
+
+      // 1. PLOT FUNCTION (Mathematical Curve Visualization)
+      if (tool === 'plot_function' || (data.plot && tool !== 'circuit_calc' && tool !== 'physics_sim')) {
+        const id = 'plot-' + Math.random().toString(36).substring(2, 9);
+        const plotData = data.plot ? data.plot.traces : (data.data || []);
+        const title = data.title || (data.plot && data.plot.title) || `f(x) = ${data.expression || 'f(x)'}`;
+        const x_lbl = data.x_label || (data.plot && data.plot.x_label) || 'x';
+        const y_lbl = data.y_label || (data.plot && data.plot.y_label) || 'y';
+
+        const plotSpec = {
+          data: plotData,
+          layout: {
+            title: { text: title, font: { color: '#f4f4f6', size: 12, family: 'Inter, sans-serif' } },
+            paper_bgcolor: 'transparent',
+            plot_bgcolor: '#07080c',
+            margin: { l: 45, r: 20, t: 32, b: 32 },
+            xaxis: {
+              title: { text: x_lbl, font: { color: '#a1a1aa', size: 11 } },
+              gridcolor: '#1a1d27',
+              zerolinecolor: '#38bdf8',
+              tickfont: { color: '#71717a', size: 10 }
+            },
+            yaxis: {
+              title: { text: y_lbl, font: { color: '#a1a1aa', size: 11 } },
+              gridcolor: '#1a1d27',
+              zerolinecolor: '#38bdf8',
+              tickfont: { color: '#71717a', size: 10 }
+            },
+            showlegend: false
+          },
+          config: { responsive: true, displayModeBar: false }
+        };
+        const encodedSpec = encodeURIComponent(JSON.stringify(plotSpec));
+
+        return `\n\n<!--VIGYAN_CARD_START--><div class="agent-stem-card" id="${id}">
+          <div class="agent-stem-header">
+            <div style="display:flex; align-items:center; gap:8px;">
+              <svg style="width:14px; height:14px; stroke:#38bdf8; fill:none;" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3"/></svg>
+              <span style="font-weight:600; font-size:12px; color:#ffffff;">Function Plot: <code>${escapeHtml(data.expression || title)}</code></span>
+            </div>
+            <span style="font-size:10px; color:#38bdf8; background:rgba(56,189,248,0.1); border:1px solid rgba(56,189,248,0.2); padding:2px 6px; border-radius:4px;">Plotly Engine</span>
+          </div>
+          <div class="agent-stem-body">
+            <div class="stem-plotly-plot" id="plotly-${id}" data-plot-spec="${encodedSpec}"></div>
+          </div>
+        </div><!--VIGYAN_CARD_END-->\n\n`;
+      }
+
+      // 2. CIRCUIT CALCULATION
+      if (tool === 'circuit_calc') {
+        const id = 'circ-' + Math.random().toString(36).substring(2, 9);
+        let metricsHtml = '';
+        if (data.metrics && Array.isArray(data.metrics)) {
+          metricsHtml = '<div class="stem-metric-grid">' + data.metrics.map(m => `
+            <div class="stem-metric-box">
+              <div class="stem-metric-label">${escapeHtml(m.label)}</div>
+              <div class="stem-metric-val">${escapeHtml(m.value)}</div>
+            </div>
+          `).join('') + '</div>';
+        }
+        let formulaHtml = '';
+        if (data.formula_latex) {
+          formulaHtml = `<div class="stem-formula-box">$$${data.formula_latex}$$</div>`;
+        }
+        let plotHtml = '';
+        if (data.plot && data.plot.traces) {
+          const plotSpec = {
+            data: data.plot.traces,
+            layout: {
+              title: { text: data.plot.title || '', font: { color: '#f4f4f6', size: 12, family: 'Inter, sans-serif' } },
+              paper_bgcolor: 'transparent',
+              plot_bgcolor: '#07080c',
+              margin: { l: 48, r: 20, t: 32, b: 32 },
+              xaxis: {
+                title: { text: data.plot.x_label || 'x', font: { color: '#a1a1aa', size: 11 } },
+                gridcolor: '#1a1d27',
+                zerolinecolor: '#38bdf8',
+                tickfont: { color: '#71717a', size: 10 },
+                type: data.plot.x_log ? 'log' : 'linear'
+              },
+              yaxis: {
+                title: { text: data.plot.y_label || 'y', font: { color: '#a1a1aa', size: 11 } },
+                gridcolor: '#1a1d27',
+                zerolinecolor: '#38bdf8',
+                tickfont: { color: '#71717a', size: 10 }
+              },
+              showlegend: false
+            },
+            config: { responsive: true, displayModeBar: false }
+          };
+          plotHtml = `<div class="stem-plotly-plot" id="plotly-${id}" data-plot-spec="${encodeURIComponent(JSON.stringify(plotSpec))}"></div>`;
+        }
+
+        return `\n\n<!--VIGYAN_CARD_START--><div class="agent-stem-card" id="${id}">
+          <div class="agent-stem-header">
+            <div style="display:flex; align-items:center; gap:8px;">
+              <svg style="width:14px; height:14px; stroke:#10b981; fill:none;" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+              <span style="font-weight:600; font-size:12px; color:#ffffff;">Circuit Analysis: ${escapeHtml(data.circuit_type || 'Electrical Circuit')}</span>
+            </div>
+            <span style="font-size:10px; color:#10b981; background:rgba(16,185,129,0.1); border:1px solid rgba(16,185,129,0.2); padding:2px 6px; border-radius:4px;">Verified STEM</span>
+          </div>
+          <div class="agent-stem-body">
+            ${formulaHtml}
+            ${metricsHtml}
+            ${plotHtml}
+          </div>
+        </div><!--VIGYAN_CARD_END-->\n\n`;
+      }
+
+      // 3. PHYSICS SIMULATION
+      if (tool === 'physics_sim') {
+        const id = 'phys-' + Math.random().toString(36).substring(2, 9);
+        let metricsHtml = '';
+        if (data.metrics && Array.isArray(data.metrics)) {
+          metricsHtml = '<div class="stem-metric-grid">' + data.metrics.map(m => `
+            <div class="stem-metric-box">
+              <div class="stem-metric-label">${escapeHtml(m.label)}</div>
+              <div class="stem-metric-val">${escapeHtml(m.value)}</div>
+            </div>
+          `).join('') + '</div>';
+        }
+        let formulaHtml = '';
+        if (data.formula_latex) {
+          formulaHtml = `<div class="stem-formula-box">$$${data.formula_latex}$$</div>`;
+        }
+        let plotHtml = '';
+        if (data.plot && data.plot.traces) {
+          const plotSpec = {
+            data: data.plot.traces,
+            layout: {
+              title: { text: data.plot.title || '', font: { color: '#f4f4f6', size: 12, family: 'Inter, sans-serif' } },
+              paper_bgcolor: 'transparent',
+              plot_bgcolor: '#07080c',
+              margin: { l: 50, r: 20, t: 32, b: 32 },
+              xaxis: {
+                title: { text: data.plot.x_label || 'x', font: { color: '#a1a1aa', size: 11 } },
+                gridcolor: '#1a1d27',
+                zerolinecolor: '#38bdf8',
+                tickfont: { color: '#71717a', size: 10 }
+              },
+              yaxis: {
+                title: { text: data.plot.y_label || 'y', font: { color: '#a1a1aa', size: 11 } },
+                gridcolor: '#1a1d27',
+                zerolinecolor: '#38bdf8',
+                tickfont: { color: '#71717a', size: 10 }
+              },
+              showlegend: data.plot.traces.length > 1,
+              legend: { font: { color: '#e4e4e7', size: 10 } }
+            },
+            config: { responsive: true, displayModeBar: false }
+          };
+          plotHtml = `<div class="stem-plotly-plot" id="plotly-${id}" data-plot-spec="${encodeURIComponent(JSON.stringify(plotSpec))}"></div>`;
+        }
+
+        return `\n\n<!--VIGYAN_CARD_START--><div class="agent-stem-card" id="${id}">
+          <div class="agent-stem-header">
+            <div style="display:flex; align-items:center; gap:8px;">
+              <svg style="width:14px; height:14px; stroke:#ec4899; fill:none;" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+              <span style="font-weight:600; font-size:12px; color:#ffffff;">Physics Kinematics: ${escapeHtml(data.sim_type || 'Simulation')}</span>
+            </div>
+            <span style="font-size:10px; color:#ec4899; background:rgba(236,72,153,0.1); border:1px solid rgba(236,72,153,0.2); padding:2px 6px; border-radius:4px;">Keplerian / Ballistic</span>
+          </div>
+          <div class="agent-stem-body">
+            ${formulaHtml}
+            ${metricsHtml}
+            ${plotHtml}
+          </div>
+        </div><!--VIGYAN_CARD_END-->\n\n`;
+      }
+
+      // 4. SYMPY EVALUATION
+      if (tool === 'sympy_eval') {
+        const id = 'sympy-' + Math.random().toString(36).substring(2, 9);
+        return `\n\n<!--VIGYAN_CARD_START--><div class="agent-stem-card" id="${id}">
+          <div class="agent-stem-header">
+            <div style="display:flex; align-items:center; gap:8px;">
+              <svg style="width:14px; height:14px; stroke:#38bdf8; fill:none;" viewBox="0 0 24 24"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
+              <span style="font-weight:600; font-size:12px; color:#ffffff;">SymPy AST Verification: <code>${escapeHtml(data.expression)}</code></span>
+            </div>
+            <span style="font-size:10px; color:#38bdf8; background:rgba(56,189,248,0.1); border:1px solid rgba(56,189,248,0.2); padding:2px 6px; border-radius:4px;">Zero Hallucination</span>
+          </div>
+          <div class="agent-stem-body">
+            <div class="stem-formula-box">$$${data.latex || data.result}$$</div>
+            ${data.numeric ? `<div style="font-size:11px; color:#a1a1aa; text-align:center;">Numerical Approximation: <code>${escapeHtml(data.numeric)}</code></div>` : ''}
+          </div>
+        </div><!--VIGYAN_CARD_END-->\n\n`;
+      }
+
+      // 5. WORKSPACE READ FILE
+      if (tool === 'read_file' && data.result) {
+        const r = data.result;
+        return `\n\n<!--VIGYAN_CARD_START--><div class="agent-cmd-card executed">
+          <div class="agent-cmd-header">
+            <div style="display:flex; align-items:center; gap:8px;">
+              <svg style="width:14px; height:14px; stroke:#38bdf8; fill:none;" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              <span style="font-weight:600; font-size:12px; color:#ffffff;">File: <code>${escapeHtml(r.path || '')}</code></span>
+            </div>
+            <span style="font-size:10px; color:#a1a1aa;">Lines ${r.start_line}-${r.end_line} of ${r.total_lines}</span>
+          </div>
+          <div class="agent-cmd-body">
+            <pre class="agent-cmd-output"><code>${escapeHtml(r.content || '')}</code></pre>
+          </div>
+        </div><!--VIGYAN_CARD_END-->\n\n`;
+      }
+
+      // 6. WORKSPACE LIST DIR
+      if (tool === 'list_dir' && data.result) {
+        const r = data.result;
+        const items = (r.items || []).slice(0, 30);
+        const listText = items.map(it => `${it.is_dir ? '[DIR] ' : '      '}${it.name}${it.is_dir ? '/' : ' (' + it.size + ' B)'}`).join('\n');
+        return `\n\n<!--VIGYAN_CARD_START--><div class="agent-cmd-card executed">
+          <div class="agent-cmd-header">
+            <div style="display:flex; align-items:center; gap:8px;">
+              <svg style="width:14px; height:14px; stroke:#38bdf8; fill:none;" viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+              <span style="font-weight:600; font-size:12px; color:#ffffff;">Directory: <code>${escapeHtml(r.path || '')}</code></span>
+            </div>
+            <span style="font-size:10px; color:#a1a1aa;">${items.length} items</span>
+          </div>
+          <div class="agent-cmd-body">
+            <pre class="agent-cmd-output"><code>${escapeHtml(listText)}</code></pre>
+          </div>
+        </div><!--VIGYAN_CARD_END-->\n\n`;
+      }
+
+      // 7. DEFAULT SHELL COMMAND RESULT
       const isSuccess = data.success !== false;
       const statusColor = isSuccess ? '#10b981' : '#ef4444';
       const out = (data.stdout || data.stderr || (isSuccess ? 'Executed successfully.' : 'Command failed.')).trim();
-      return `\n\n<div class="agent-cmd-card executed">
+      return `\n\n<!--VIGYAN_CARD_START--><div class="agent-cmd-card executed">
         <div class="agent-cmd-header">
           <div style="display:flex; align-items:center; gap:8px;">
             <svg style="width:14px; height:14px; stroke:${statusColor}; fill:none;" viewBox="0 0 24 24"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
-            <span style="font-weight:600; font-size:12px; color:#ffffff;">Executed: <code>${data.command}</code></span>
+            <span style="font-weight:600; font-size:12px; color:#ffffff;">Executed: <code>${escapeHtml(data.command || 'terminal')}</code></span>
           </div>
           <span style="font-size:10px; color:${statusColor};">${isSuccess ? 'Exit 0' : 'Exit ' + (data.returncode || 1)}</span>
         </div>
         <div class="agent-cmd-body">
-          <pre class="agent-cmd-output"><code>${out}</code></pre>
+          <pre class="agent-cmd-output"><code>${escapeHtml(out)}</code></pre>
         </div>
-      </div>\n\n`;
+      </div><!--VIGYAN_CARD_END-->\n\n`;
     }
 
     async function executeApprovedCommand(cardId, command) {
