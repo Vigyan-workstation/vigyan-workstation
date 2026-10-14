@@ -31,6 +31,11 @@ os.environ.setdefault("OLLAMA_ORIGINS", "*")
 from ollama_supervisor import OllamaSupervisor
 
 try:
+    from version import __version__
+except Exception:
+    __version__ = "2.7.0-beta.1"
+
+try:
     import psutil
 except ImportError:
     psutil = None
@@ -255,8 +260,10 @@ def compute_hybrid_allocation(
     on_battery = bool(power.get("on_battery", False))
     battery_pct = int(power.get("battery_pct", 100))
 
-    # 1. Thread allocation: always bind to physical cores to prevent SMT cache thrashing
-    if mode == "cpu_eco" or (mode == "auto" and on_battery and battery_pct < 30):
+    # 1. Thread allocation: bind to physical cores; throttle on battery to prevent heat & drain
+    if mode == "cpu_eco" or (mode == "auto" and on_battery and battery_pct < 40):
+        num_thread = max(2, phys_cores - 2)
+    elif on_battery:
         num_thread = max(2, phys_cores - 1)
     else:
         num_thread = phys_cores
@@ -1630,6 +1637,112 @@ def calc_physics(sim_type: str, params: Dict[str, Any]) -> Dict[str, Any]:
     return {"tool": "physics_sim", "success": False, "error": f"Unknown sim type: '{stype}' (supported: kepler_orbit, projectile)"}
 
 
+def compress_conversation_history(messages: List[Dict[str, str]], max_tokens_est: int = 650) -> List[Dict[str, str]]:
+    """
+    Sliding Window + Micro-Summary Compressor.
+    Preserves system axioms & original user goal, condenses intermediate turns into
+    a compact bulleted memory summary, and streams the latest 4 turns verbatim.
+    Prevents overflowing the 1024-token budget on long sessions.
+    """
+    if not messages or len(messages) <= 5:
+        return messages
+
+    total_chars = sum(len(m.get("content", "")) for m in messages)
+    if total_chars < max_tokens_est * 4:
+        return messages
+
+    system_msg = messages[0] if messages[0].get("role") == "system" else None
+    rest = messages[1:] if system_msg else messages
+
+    if len(rest) <= 4:
+        return messages
+
+    initial_turn = rest[0]
+    latest_turns = rest[-4:]
+    middle_turns = rest[1:-4]
+
+    bullets = []
+    for m in middle_turns:
+        role = m.get("role", "user")
+        snippet = m.get("content", "").strip()[:70].replace("\n", " ")
+        if snippet:
+            bullets.append(f"{role.capitalize()}: {snippet}...")
+
+    summary_text = "[Conversation Memory Summary]: " + "; ".join(bullets[:5])
+    summary_msg = {"role": "system", "content": summary_text}
+
+    compressed = []
+    if system_msg:
+        compressed.append(system_msg)
+    compressed.append(initial_turn)
+    compressed.append(summary_msg)
+    compressed.extend(latest_turns)
+    return compressed
+
+
+def check_github_update() -> Dict[str, Any]:
+    """Check GitHub releases for the latest version tag."""
+    repo = "shreyansh001boy-tech/vigyan-pro-desktop"
+    url = f"https://api.github.com/repos/{repo}/releases/latest"
+    try:
+        req = urllib.request.Request(url, headers={"User-Agent": "Vigyan-Pro-Desktop"})
+        with urllib.request.urlopen(req, timeout=2.5) as resp:
+            if resp.status == 200:
+                data = json.loads(resp.read().decode("utf-8"))
+                tag = data.get("tag_name", "").lstrip("v")
+                body = data.get("body", "Performance enhancements and bug fixes.")
+                assets = data.get("assets", [])
+                hotpatch_url = next((a["browser_download_url"] for a in assets if "hotpatch" in a["name"].lower() or "src" in a["name"].lower()), "")
+                is_newer = False
+                if tag and tag != __version__:
+                    is_newer = tag > __version__
+                return {
+                    "current_version": __version__,
+                    "latest_version": tag or __version__,
+                    "update_available": is_newer,
+                    "release_notes": body[:200],
+                    "hotpatch_url": hotpatch_url
+                }
+    except Exception:
+        pass
+    return {
+        "current_version": __version__,
+        "latest_version": __version__,
+        "update_available": False,
+        "release_notes": "All systems up to date.",
+        "hotpatch_url": ""
+    }
+
+
+def apply_hotpatch_update(hotpatch_url: str) -> Dict[str, Any]:
+    """Download and unpack hotpatch archive into local runtime directory."""
+    if not hotpatch_url:
+        return {"success": False, "message": "No hotpatch archive specified"}
+    try:
+        import tarfile, zipfile, tempfile
+        req = urllib.request.Request(hotpatch_url, headers={"User-Agent": "Vigyan-Pro-Desktop"})
+        target_dir = os.path.expanduser("~/.vigyan/desktop/")
+        os.makedirs(target_dir, exist_ok=True)
+        with tempfile.NamedTemporaryFile(delete=False) as tmp:
+            with urllib.request.urlopen(req, timeout=15.0) as resp:
+                tmp.write(resp.read())
+            tmp_path = tmp.name
+
+        if hotpatch_url.endswith(".zip"):
+            with zipfile.ZipFile(tmp_path, "r") as zf:
+                zf.extractall(target_dir)
+        elif hotpatch_url.endswith((".tar.gz", ".tgz")):
+            with tarfile.open(tmp_path, "r:gz") as tf:
+                tf.extractall(target_dir)
+        try:
+            os.remove(tmp_path)
+        except Exception:
+            pass
+        return {"success": True, "message": "Hotpatch applied. Reloading UI...", "target_dir": target_dir}
+    except Exception as e:
+        return {"success": False, "message": f"Update failed: {str(e)}"}
+
+
 # ==============================================================================
 # 3.3 EMBEDDED LOCAL SOVEREIGN AGENT & NEURO-SYMBOLIC BRIDGE (PORT 8085)
 # ==============================================================================
@@ -1690,6 +1803,10 @@ class _NeuroSymbolicHTTPHandler(BaseHTTPRequestHandler):
             res = list_workspace_dir(p)
             self._send_cors(200)
             self.wfile.write(json.dumps(res).encode("utf-8"))
+        elif self.path.startswith("/api/system/update/check"):
+            res = check_github_update()
+            self._send_cors(200)
+            self.wfile.write(json.dumps(res).encode("utf-8"))
         else:
             self._send_cors(404)
             self.wfile.write(b'{"error":"not found"}')
@@ -1701,6 +1818,13 @@ class _NeuroSymbolicHTTPHandler(BaseHTTPRequestHandler):
             body = json.loads(raw)
         except Exception:
             body = {}
+
+        if self.path.startswith("/api/system/update/apply"):
+            url = body.get("hotpatch_url", "")
+            res = apply_hotpatch_update(url)
+            self._send_cors(200)
+            self.wfile.write(json.dumps(res).encode("utf-8"))
+            return
 
         if self.path.startswith("/api/enrich"):
             q = body.get("query") or body.get("message") or ""
@@ -1850,12 +1974,18 @@ class _NeuroSymbolicHTTPHandler(BaseHTTPRequestHandler):
 
             try:
                 hybrid = enrichment["hybrid"]
-                ollama_payload = {
-                    "model": active_model,
-                    "messages": [
+                raw_messages = body.get("messages") or []
+                if raw_messages:
+                    full_msgs = [{"role": "system", "content": sys_prompt}] + raw_messages
+                    model_messages = compress_conversation_history(full_msgs, max_tokens_est=650)
+                else:
+                    model_messages = [
                         {"role": "system", "content": sys_prompt},
                         {"role": "user", "content": user_query},
-                    ],
+                    ]
+                ollama_payload = {
+                    "model": active_model,
+                    "messages": model_messages,
                     "options": {
                         "num_gpu": hybrid["num_gpu"],
                         "num_thread": hybrid["num_thread"],
@@ -2066,6 +2196,12 @@ def _watch_ollama() -> bool:
 
 
 def main():
+    # Lower process priority to nice 10 to yield CPU cycles to foreground user apps
+    try:
+        os.nice(10)
+    except Exception:
+        pass
+
     import gi
     gi.require_version('Gtk', '3.0')
     gi.require_version('WebKit2', '4.1')

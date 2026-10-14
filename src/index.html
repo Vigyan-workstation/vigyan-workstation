@@ -1825,6 +1825,16 @@
 
       <!-- CHAT INTERFACE -->
       <section class="chat-section">
+        <div id="hotpatch-update-banner" style="display:none; align-items:center; justify-content:space-between; padding:8px 18px; background:rgba(56,189,248,0.06); border-bottom:1px solid rgba(56,189,248,0.2); font-size:12px; color:#38bdf8; z-index:100;">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:#38bdf8; box-shadow:0 0 6px #38bdf8;"></span>
+            <span>⚡ Vigyan Pro Update <strong id="hotpatch-version-tag"></strong> available</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <button onclick="applyHotpatchUpdate()" style="background:#0284c7; color:#fff; border:none; padding:3px 10px; border-radius:4px; font-size:11px; cursor:pointer; font-weight:600;">Update Now (Instant)</button>
+            <button onclick="document.getElementById('hotpatch-update-banner').style.display='none'" style="background:transparent; color:#71717a; border:none; cursor:pointer; font-size:14px; line-height:1;">✕</button>
+          </div>
+        </div>
         <div class="chat-scroll-wrapper">
           <div class="chat-container" id="chat-box"></div>
         </div>
@@ -2984,26 +2994,31 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
 
     function renderCommandApprovalCardHtml(data) {
       const id = 'cmd-' + Math.random().toString(36).substring(2, 9);
-      const cmdEscaped = (data.command || '').replace(/"/g, '&quot;');
+      const cmd = data.command || '';
+      const cmdEscaped = cmd.replace(/"/g, '&quot;');
       const reason = data.reason || 'Modifies system files or environment';
       const risk = (data.risk || 'medium').toUpperCase();
-      const riskColor = risk === 'HIGH' ? '#ef4444' : '#f59e0b';
+      const isReadOnly = risk === 'LOW' || /^(ls|dir|cat|head|tail|grep|rg|find|pwd|git status|git log|tree)\b/i.test(cmd.trim());
+      const headerTitle = isReadOnly ? 'Inspect Local Workspace' : 'Shell Operation Approval';
+      const shieldBadge = isReadOnly 
+        ? `<span style="font-size:10px; font-weight:700; padding:2px 8px; border-radius:4px; background:rgba(16,185,129,0.1); color:#10b981; border:1px solid rgba(16,185,129,0.3); display:inline-flex; align-items:center; gap:4px;">🛡️ Safe Read-Only</span>`
+        : `<span style="font-size:10px; font-weight:700; padding:2px 8px; border-radius:4px; background:rgba(245,158,11,0.1); color:#f59e0b; border:1px solid rgba(245,158,11,0.3); display:inline-flex; align-items:center; gap:4px;">⚠️ Action Required</span>`;
       
       return `\n\n<!--VIGYAN_CARD_START--><div class="agent-cmd-card" id="${id}">
         <div class="agent-cmd-header">
           <div style="display:flex; align-items:center; gap:8px;">
-            <svg style="width:14px; height:14px; stroke:#10b981; fill:none;" viewBox="0 0 24 24"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
-            <span style="font-weight:600; font-size:12px; color:#ffffff;">Computer Automation • Tool Execution</span>
+            <svg style="width:14px; height:14px; stroke:${isReadOnly ? '#10b981' : '#f59e0b'}; fill:none;" viewBox="0 0 24 24"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+            <span style="font-weight:600; font-size:12px; color:#ffffff;">${headerTitle}</span>
           </div>
-          <span style="font-size:10px; font-weight:700; padding:2px 8px; border-radius:4px; background:rgba(255,255,255,0.06); color:${riskColor}; border:1px solid ${riskColor}33;">${risk} RISK</span>
+          ${shieldBadge}
         </div>
         <div class="agent-cmd-body">
-          <div style="font-size:11.5px; color:#a1a1aa; margin-bottom:6px;">${reason}</div>
-          <div class="agent-cmd-code"><code>$ ${data.command}</code></div>
+          <div style="font-size:12px; color:#e4e4e7; font-weight:500; margin-bottom:4px;">${escapeHtml(reason)}</div>
+          <div class="agent-cmd-code"><code style="color:#a1a1aa;">$ ${escapeHtml(cmd)}</code></div>
           <div class="agent-cmd-actions" style="margin-top:10px; display:flex; gap:8px;">
             <button class="agent-btn-run" onclick="executeApprovedCommand('${id}', '${cmdEscaped}')">
               <svg style="width:12px; height:12px; stroke:currentColor; fill:none;" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-              Run Command
+              ${isReadOnly ? 'Allow Inspection' : 'Approve & Run'}
             </button>
             <button class="agent-btn-cancel" onclick="cancelPendingCommand('${id}')">Cancel</button>
           </div>
@@ -3314,6 +3329,74 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
       }
     }
     window.evictAndRetryModel = evictAndRetryModel;
+
+    /* 1-CLICK IN-APP HOTPATCH UPDATER */
+    let latestUpdateInfo = null;
+    async function checkForAppUpdates() {
+      try {
+        const resp = await fetch(`${AGENT_HOST}/api/system/update/check`);
+        if (resp.ok) {
+          const data = await resp.json();
+          if (data.update_available) {
+            latestUpdateInfo = data;
+            const banner = document.getElementById('hotpatch-update-banner');
+            const tagEl = document.getElementById('hotpatch-version-tag');
+            if (banner && tagEl) {
+              tagEl.innerText = 'v' + data.latest_version;
+              banner.style.display = 'flex';
+            }
+          }
+        }
+      } catch (e) {}
+    }
+
+    async function applyHotpatchUpdate() {
+      if (!latestUpdateInfo || !latestUpdateInfo.hotpatch_url) {
+        showToast("No hotpatch archive URL available");
+        return;
+      }
+      try {
+        showToast("Applying update delta...");
+        const resp = await fetch(`${AGENT_HOST}/api/system/update/apply`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ hotpatch_url: latestUpdateInfo.hotpatch_url })
+        });
+        const res = await resp.json();
+        if (res.success) {
+          showToast("Update applied successfully! Reloading...");
+          setTimeout(() => window.location.reload(), 1200);
+        } else {
+          showToast("Update error: " + res.message);
+        }
+      } catch (e) {
+        showToast("Update network error: " + e.message);
+      }
+    }
+    window.applyHotpatchUpdate = applyHotpatchUpdate;
+
+    /* SMART WINDOW FOCUS & IDLE MEMORY GOVERNOR */
+    let idleEvictionTimer = null;
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        // When user minimizes or switches away for 5 minutes, release model memory
+        idleEvictionTimer = setTimeout(async () => {
+          try {
+            await fetch(`${AGENT_HOST}/api/models/evict`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ model: '' })
+            });
+            console.log('[Memory Governor] Inactive model memory evicted during idle blur.');
+          } catch (e) {}
+        }, 5 * 60 * 1000);
+      } else {
+        if (idleEvictionTimer) {
+          clearTimeout(idleEvictionTimer);
+          idleEvictionTimer = null;
+        }
+      }
+    });
 
     function renderLatex(targetEl) {
       if (!window.renderMathInElement) return;
@@ -3784,6 +3867,7 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
       };
       pollTelemetry();
       setInterval(pollTelemetry, 3500);
+      setTimeout(checkForAppUpdates, 2500);
     });
   </script>
 </body>
