@@ -692,6 +692,82 @@
       padding: 2px 4px;
     }
 
+    /* AGENT AUTOMATION & TOOL CARDS */
+    .agent-cmd-card {
+      background: #0d0e14;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 9px;
+      margin: 12px 0;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.45);
+    }
+    .agent-cmd-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 12px;
+      background: rgba(255, 255, 255, 0.03);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      font-size: 12px;
+    }
+    .agent-cmd-body {
+      padding: 10px 12px;
+    }
+    .agent-cmd-code {
+      background: #050608;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 6px;
+      padding: 8px 10px;
+      font-family: ui-monospace, "JetBrains Mono", monospace;
+      font-size: 12px;
+      color: #38bdf8;
+      overflow-x: auto;
+    }
+    .agent-cmd-output {
+      background: #050608;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 6px;
+      padding: 8px 10px;
+      font-family: ui-monospace, "JetBrains Mono", monospace;
+      font-size: 11.5px;
+      color: #e4e4e7;
+      max-height: 220px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+      margin: 0;
+    }
+    .agent-btn-run {
+      background: #10b981;
+      color: #ffffff;
+      border: none;
+      padding: 6px 14px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.15s;
+    }
+    .agent-btn-run:hover {
+      background: #059669;
+    }
+    .agent-btn-cancel {
+      background: rgba(255, 255, 255, 0.08);
+      color: #a1a1aa;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .agent-btn-cancel:hover {
+      background: rgba(255, 255, 255, 0.14);
+      color: #ffffff;
+    }
+
     /* INLINE STEM INTERACTIVE CARDS */
     .stem-inline-card {
       background: #0a0b10;
@@ -1826,7 +1902,7 @@
        ========================================================================= */
     let currentModel = localStorage.getItem('vigyan_active_model') || 'vigyan:1.5b';
     let OLLAMA_HOST = localStorage.getItem('vigyan_ollama_host') || 'http://127.0.0.1:11434';
-    let BACKEND_TYPE = localStorage.getItem('vigyan_backend_type') || 'ollama';
+    let BACKEND_TYPE = localStorage.getItem('vigyan_backend_type') || 'agent_server';
     let AGENT_HOST = localStorage.getItem('vigyan_agent_host') || 'http://127.0.0.1:8085';
     let API_KEY = localStorage.getItem('vigyan_api_key') || '';
     let HYBRID_COMPUTE_MODE = localStorage.getItem('vigyan_compute_mode') || 'auto';
@@ -4620,49 +4696,57 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
         hist.unshift({ role: 'system', content: persona });
 
         let resp;
-        if (BACKEND_TYPE === 'agent_server') {
-          resp = await fetch(`${AGENT_HOST}/api/chat`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            signal: activeStreamController.signal,
-            body: JSON.stringify({
-              model: currentModel,
-              query: streamPromptOverride || text,
-              messages: hist,
-              compute_mode: HYBRID_COMPUTE_MODE,
-              options: Object.assign({ temperature: temp, top_p: topp }, hybridOpts)
-            })
-          });
-        } else if (BACKEND_TYPE === 'llama_server' || BACKEND_TYPE === 'cloud_api') {
-          const headers = { 'Content-Type': 'application/json' };
-          if (API_KEY) headers['Authorization'] = `Bearer ${API_KEY}`;
-          const baseUrl = OLLAMA_HOST.replace(/\/+$/, '');
-          const chatUrl = baseUrl.endsWith('/v1') ? `${baseUrl}/chat/completions` : `${baseUrl}/v1/chat/completions`;
-          resp = await fetch(chatUrl, {
-            method: 'POST',
-            headers,
-            signal: activeStreamController.signal,
-            body: JSON.stringify({
-              model: currentModel,
-              messages: hist,
-              temperature: temp,
-              top_p: topp,
-              stream: true
-            })
-          });
-        } else {
-          resp = await fetch(`${OLLAMA_HOST}/api/chat`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            signal: activeStreamController.signal,
-            body: JSON.stringify({
-              model: currentModel,
-              messages: hist,
-              keep_alive: keepalive,
-              options: Object.assign({ temperature: temp, top_p: topp }, hybridOpts),
-              stream: true
-            })
-          });
+        try {
+          if (BACKEND_TYPE === 'agent_server') {
+            resp = await fetch(`${AGENT_HOST}/api/chat`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              signal: activeStreamController.signal,
+              body: JSON.stringify({
+                model: currentModel,
+                query: streamPromptOverride || text,
+                messages: hist,
+                compute_mode: HYBRID_COMPUTE_MODE,
+                options: Object.assign({ temperature: temp, top_p: topp }, hybridOpts)
+              })
+            });
+          }
+        } catch (e) {
+          console.warn('Agent bridge not reached, falling back to direct Ollama:', e);
+        }
+
+        if (!resp || !resp.ok) {
+          if (BACKEND_TYPE === 'llama_server' || BACKEND_TYPE === 'cloud_api') {
+            const headers = { 'Content-Type': 'application/json' };
+            if (API_KEY) headers['Authorization'] = `Bearer ${API_KEY}`;
+            const baseUrl = OLLAMA_HOST.replace(/\/+$/, '');
+            const chatUrl = baseUrl.endsWith('/v1') ? `${baseUrl}/chat/completions` : `${baseUrl}/v1/chat/completions`;
+            resp = await fetch(chatUrl, {
+              method: 'POST',
+              headers,
+              signal: activeStreamController.signal,
+              body: JSON.stringify({
+                model: currentModel,
+                messages: hist,
+                temperature: temp,
+                top_p: topp,
+                stream: true
+              })
+            });
+          } else {
+            resp = await fetch(`${OLLAMA_HOST}/api/chat`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              signal: activeStreamController.signal,
+              body: JSON.stringify({
+                model: currentModel,
+                messages: hist,
+                keep_alive: keepalive,
+                options: Object.assign({ temperature: temp, top_p: topp }, hybridOpts),
+                stream: true
+              })
+            });
+          }
         }
 
         if (!resp.ok) throw new Error('Backend HTTP ' + resp.status);
@@ -4679,6 +4763,7 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
         const speedBadgeEl = lastMsgEl ? lastMsgEl.querySelector('.stream-speed-badge') : null;
         const scrollWrapper = document.querySelector('.chat-scroll-wrapper');
 
+        let currentEvent = 'token';
         while (true) {
           const { done, value } = await reader.read();
           if (done) break;
@@ -4689,30 +4774,73 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
           for (const line of lines) {
             const trimmed = line.trim();
             if (!trimmed) continue;
-            const jsonStr = trimmed.startsWith('data:') ? trimmed.slice(5).trim() : trimmed;
-            if (jsonStr === '[DONE]') continue;
-            try {
-              const data = JSON.parse(jsonStr);
-              const chunk = (data.message && data.message.content)
-                || (data.choices && data.choices[0] && data.choices[0].delta && data.choices[0].delta.content)
-                || data.token || '';
-              if (chunk) {
-                assistantMsg.content += chunk;
-                tokenCount++;
-                const elapsedSec = Math.max(0.1, (performance.now() - streamStartTime) / 1000);
-                const tokPerSec = (tokenCount / elapsedSec).toFixed(1);
-                assistantMsg.tokPerSec = tokPerSec;
-                if (contentEl) {
-                  contentEl.innerHTML = `${formatMessageContent(assistantMsg.content)}<span class="streaming-caret"></span>`;
+            if (trimmed.startsWith('event:')) {
+              currentEvent = trimmed.slice(6).trim();
+              continue;
+            }
+            if (trimmed.startsWith('data:')) {
+              const jsonStr = trimmed.slice(5).trim();
+              if (jsonStr === '[DONE]') continue;
+              try {
+                const data = JSON.parse(jsonStr);
+
+                // Handle Sovereign Agent SSE Events
+                if (currentEvent === 'cascade_tier') {
+                  if (data.tier && data.model) {
+                    const topText = document.getElementById('hud-gpu-text');
+                    if (topText) topText.innerText = `Tier ${data.tier}: ${data.model}`;
+                  }
+                  continue;
                 }
-                if (speedBadgeEl) {
-                  speedBadgeEl.innerHTML = `<svg style="width:10px; height:10px; stroke:currentColor; fill:none;" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>${tokPerSec} tok/s`;
+
+                if (currentEvent === 'ram_governor_trip') {
+                  showToast(`⚠️ RAM Governor reached 88% — model evicted. Switched to ${data.fallback}`);
+                  continue;
                 }
-                if (scrollWrapper) {
-                  scrollWrapper.scrollTop = scrollWrapper.scrollHeight;
+
+                if (currentEvent === 'requires_approval') {
+                  assistantMsg.content += renderCommandApprovalCardHtml(data);
+                  if (contentEl) contentEl.innerHTML = formatMessageContent(assistantMsg.content);
+                  continue;
                 }
-              }
-            } catch (e) {}
+
+                if (currentEvent === 'tool_result') {
+                  assistantMsg.content += renderToolResultHtml(data);
+                  if (contentEl) contentEl.innerHTML = formatMessageContent(assistantMsg.content);
+                  continue;
+                }
+
+                if (currentEvent === 'sympy') {
+                  neuroMeta.sympy = data;
+                  continue;
+                }
+
+                if (currentEvent === 'memory') {
+                  neuroMeta.axioms = data;
+                  continue;
+                }
+
+                const chunk = (data.message && data.message.content)
+                  || (data.choices && data.choices[0] && data.choices[0].delta && data.choices[0].delta.content)
+                  || data.token || (typeof data === 'string' ? data : '');
+                if (chunk) {
+                  assistantMsg.content += chunk;
+                  tokenCount++;
+                  const elapsedSec = Math.max(0.1, (performance.now() - streamStartTime) / 1000);
+                  const tokPerSec = (tokenCount / elapsedSec).toFixed(1);
+                  assistantMsg.tokPerSec = tokPerSec;
+                  if (contentEl) {
+                    contentEl.innerHTML = `${formatMessageContent(assistantMsg.content)}<span class="streaming-caret"></span>`;
+                  }
+                  if (speedBadgeEl) {
+                    speedBadgeEl.innerHTML = `<svg style="width:10px; height:10px; stroke:currentColor; fill:none;" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>${tokPerSec} tok/s`;
+                  }
+                  if (scrollWrapper) {
+                    scrollWrapper.scrollTop = scrollWrapper.scrollHeight;
+                  }
+                }
+              } catch (e) {}
+            }
           }
         }
 
@@ -4731,6 +4859,84 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
       } finally {
         activeStreamController = null;
         setSendButtonState(false);
+      }
+    }
+
+    function renderCommandApprovalCardHtml(data) {
+      const id = 'cmd-' + Math.random().toString(36).substring(2, 9);
+      const cmdEscaped = (data.command || '').replace(/"/g, '&quot;');
+      const reason = data.reason || 'Modifies system files or environment';
+      const risk = (data.risk || 'medium').toUpperCase();
+      const riskColor = risk === 'HIGH' ? '#ef4444' : '#f59e0b';
+      
+      return `\n\n<div class="agent-cmd-card" id="${id}">
+        <div class="agent-cmd-header">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <svg style="width:14px; height:14px; stroke:#10b981; fill:none;" viewBox="0 0 24 24"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+            <span style="font-weight:600; font-size:12px; color:#ffffff;">Computer Automation • Tool Execution</span>
+          </div>
+          <span style="font-size:10px; font-weight:700; padding:2px 8px; border-radius:4px; background:rgba(255,255,255,0.06); color:${riskColor}; border:1px solid ${riskColor}33;">${risk} RISK</span>
+        </div>
+        <div class="agent-cmd-body">
+          <div style="font-size:11.5px; color:#a1a1aa; margin-bottom:6px;">${reason}</div>
+          <div class="agent-cmd-code"><code>$ ${data.command}</code></div>
+          <div class="agent-cmd-actions" style="margin-top:10px; display:flex; gap:8px;">
+            <button class="agent-btn-run" onclick="executeApprovedCommand('${id}', '${cmdEscaped}')">
+              <svg style="width:12px; height:12px; stroke:currentColor; fill:none;" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+              Run Command
+            </button>
+            <button class="agent-btn-cancel" onclick="cancelPendingCommand('${id}')">Cancel</button>
+          </div>
+        </div>
+      </div>\n\n`;
+    }
+
+    function renderToolResultHtml(data) {
+      const isSuccess = data.success !== false;
+      const statusColor = isSuccess ? '#10b981' : '#ef4444';
+      const out = (data.stdout || data.stderr || (isSuccess ? 'Executed successfully.' : 'Command failed.')).trim();
+      return `\n\n<div class="agent-cmd-card executed">
+        <div class="agent-cmd-header">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <svg style="width:14px; height:14px; stroke:${statusColor}; fill:none;" viewBox="0 0 24 24"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+            <span style="font-weight:600; font-size:12px; color:#ffffff;">Executed: <code>${data.command}</code></span>
+          </div>
+          <span style="font-size:10px; color:${statusColor};">${isSuccess ? 'Exit 0' : 'Exit ' + (data.returncode || 1)}</span>
+        </div>
+        <div class="agent-cmd-body">
+          <pre class="agent-cmd-output"><code>${out}</code></pre>
+        </div>
+      </div>\n\n`;
+    }
+
+    async function executeApprovedCommand(cardId, command) {
+      const card = document.getElementById(cardId);
+      if (card) {
+        card.innerHTML = `<div style="padding:12px; font-size:12px; color:#a1a1aa; display:flex; align-items:center; gap:8px;">
+          <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#10b981;"></span> Running <code>${command}</code>...
+        </div>`;
+      }
+      try {
+        const r = await fetch(`${AGENT_HOST}/api/agent/execute_cmd`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ command, confirmed: true })
+        });
+        const res = await r.json();
+        if (card) {
+          card.outerHTML = renderToolResultHtml(res);
+        }
+      } catch (e) {
+        if (card) {
+          card.innerHTML = `<div style="padding:12px; color:#ef4444; font-size:12px;">Execution error: ${e.message}</div>`;
+        }
+      }
+    }
+
+    function cancelPendingCommand(cardId) {
+      const card = document.getElementById(cardId);
+      if (card) {
+        card.innerHTML = `<div style="padding:10px 12px; color:#71717a; font-size:11px; font-style:italic;">Command execution cancelled by user.</div>`;
       }
     }
 

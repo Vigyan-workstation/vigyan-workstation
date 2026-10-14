@@ -781,8 +781,193 @@ def enrich_stem_query(query: str) -> Dict[str, Any]:
 
 
 # ==============================================================================
-# 3. EMBEDDED LOCAL NEURO-SYMBOLIC HTTP BRIDGE (PORT 8085 FALLBACK)
+# 3. EMBEDDED LOCAL SOVEREIGN AGENT & NEURO-SYMBOLIC BRIDGE (PORT 8085)
 # ==============================================================================
+class RAMGovernor:
+    """Monitors system memory during model streaming inference.
+    If RAM usage reaches or exceeds threshold_pct (default 88.0%),
+    immediately triggers abort callback and issues keep_alive: 0 to Ollama.
+    """
+    def __init__(self, threshold_pct: float = 88.0, interval_sec: float = 0.1):
+        self.threshold_pct = threshold_pct
+        self.interval_sec = interval_sec
+        self.tripped = False
+        self.running = False
+        self._thread = None
+        self.peak_ram_pct = 0.0
+
+    def start(self, on_trip_cb, active_model: str):
+        self.tripped = False
+        self.running = True
+        self.peak_ram_pct = 0.0
+
+        def _watchdog():
+            while self.running:
+                try:
+                    pct = psutil.virtual_memory().percent if psutil else 0.0
+                    if pct > self.peak_ram_pct:
+                        self.peak_ram_pct = pct
+                    if pct >= self.threshold_pct and not self.tripped:
+                        self.tripped = True
+                        print(f"⚠️ [RAM GOVERNOR] CRITICAL TRIPWIRE: RAM reached {pct:.1f}% >= {self.threshold_pct}%. Aborting & evicting model {active_model}!")
+                        try:
+                            import urllib.request
+                            evict_req = urllib.request.Request(
+                                "http://127.0.0.1:11434/api/generate",
+                                headers={"Content-Type": "application/json"},
+                                data=json.dumps({"model": active_model, "keep_alive": 0}).encode("utf-8"),
+                            )
+                            urllib.request.urlopen(evict_req, timeout=1.5)
+                        except Exception:
+                            pass
+                        try:
+                            on_trip_cb(pct)
+                        except Exception:
+                            pass
+                        break
+                except Exception:
+                    pass
+                time.sleep(self.interval_sec)
+
+        self._thread = threading.Thread(target=_watchdog, daemon=True)
+        self._thread.start()
+
+    def stop(self):
+        self.running = False
+
+
+SAFE_READ_COMMANDS = {
+    "ls", "dir", "cat", "head", "tail", "grep", "rg", "find", "pwd",
+    "df", "free", "uptime", "uname", "whoami", "id", "which", "whereis",
+    "ps", "top", "env", "echo", "date", "cal", "tree"
+}
+
+DANGEROUS_PATTERNS = [
+    r"\brm\b", r"\bmv\b", r"\bcp\b", r"\bchmod\b", r"\bchown\b",
+    r"\bdd\b", r"\bmkfs\b", r"\bkill\b", r"\bpkill\b", r"\bshutdown\b",
+    r"\breboot\b", r"\bformat\b", r"\bsudo\b", r"\bsu\b", r"\bapt\b",
+    r"\bdpkg\b", r"\bpip install\b", r"\bnpm install\b", r"\bsystemctl\b",
+    r"\bcurl\b.*\|\s*(?:bash|sh)", r"\bwget\b.*\|\s*(?:bash|sh)",
+    r">\s*/dev/", r">\s*/etc/", r">\s*/bin/", r">\s*/usr/"
+]
+
+
+def classify_command_safety(command: str) -> Dict[str, Any]:
+    cmd_strip = command.strip()
+    cmd_lower = cmd_strip.lower()
+    for pat in DANGEROUS_PATTERNS:
+        if re.search(pat, cmd_lower):
+            return {
+                "safe": False,
+                "requires_approval": True,
+                "reason": f"Modifies filesystem or system state ({pat})",
+                "risk": "high" if ("rm" in pat or "sudo" in pat or "kill" in pat) else "medium"
+            }
+    first_word = cmd_lower.split()[0] if cmd_lower.split() else ""
+    if first_word in SAFE_READ_COMMANDS:
+        if ">" not in cmd_strip and "|" not in cmd_strip:
+            return {"safe": True, "requires_approval": False, "reason": "Read-only inspection command", "risk": "low"}
+    if cmd_lower.startswith("git ") and any(cmd_lower.startswith(f"git {sub}") for sub in ["status", "log", "branch", "diff", "show", "tag"]):
+        return {"safe": True, "requires_approval": False, "reason": "Git read-only inspection", "risk": "low"}
+    return {
+        "safe": False,
+        "requires_approval": True,
+        "reason": "Arbitrary command execution",
+        "risk": "medium"
+    }
+
+
+def execute_shell_command(command: str, confirmed: bool = False, cwd: Optional[str] = None) -> Dict[str, Any]:
+    safety = classify_command_safety(command)
+    if safety["requires_approval"] and not confirmed:
+        return {
+            "success": False,
+            "status": "requires_approval",
+            "command": command,
+            "risk": safety["risk"],
+            "reason": safety["reason"],
+            "cwd": cwd or os.getcwd()
+        }
+    work_dir = cwd if (cwd and os.path.isdir(cwd)) else os.getcwd()
+    try:
+        proc = subprocess.run(
+            command,
+            shell=True,
+            cwd=work_dir,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            timeout=15.0
+        )
+        return {
+            "success": proc.returncode == 0,
+            "status": "executed",
+            "command": command,
+            "returncode": proc.returncode,
+            "stdout": proc.stdout[:10000],
+            "stderr": proc.stderr[:5000],
+            "cwd": work_dir
+        }
+    except subprocess.TimeoutExpired:
+        return {
+            "success": False,
+            "status": "timeout",
+            "command": command,
+            "returncode": -1,
+            "stdout": "",
+            "stderr": "Command execution timed out after 15 seconds.",
+            "cwd": work_dir
+        }
+    except Exception as exc:
+        return {
+            "success": False,
+            "status": "error",
+            "command": command,
+            "returncode": -1,
+            "stdout": "",
+            "stderr": str(exc),
+            "cwd": work_dir
+        }
+
+
+def select_cascade_model(requested_model: str, query: str) -> Dict[str, Any]:
+    ram_pct = psutil.virtual_memory().percent if psutil else 50.0
+    q_lower = (query or "").lower()
+    is_heavy_reasoning = any(w in q_lower for w in ["prove", "theorem", "hamiltonian", "schrodinger", "einstein", "navier-stokes", "derivation", "tensor"])
+    
+    # 1. Critical RAM check (>80% RAM)
+    if ram_pct >= 80.0:
+        return {
+            "tier": 1,
+            "model": "vigyan:1.5b",
+            "reason": f"System RAM high ({ram_pct:.1f}% >= 80%) — locked to Tier 1 Sovereign SLM"
+        }
+        
+    # 2. User explicit model choice
+    if requested_model and requested_model != "auto":
+        if ("7b" in requested_model.lower() or "moe" in requested_model.lower()) and ram_pct > 80.0:
+            return {
+                "tier": 1,
+                "model": "vigyan:1.5b",
+                "reason": f"RAM at {ram_pct:.1f}% too high for {requested_model} — safely downgraded to Tier 1"
+            }
+        tier = 3 if "7b" in requested_model.lower() else (2 if "moe" in requested_model.lower() else 1)
+        return {"tier": tier, "model": requested_model, "reason": "User explicit selection"}
+        
+    # 3. Auto cascade escalation
+    if is_heavy_reasoning and ram_pct < 65.0:
+        return {
+            "tier": 2,
+            "model": "olmoe:1b-7b",
+            "reason": f"Escalated to Tier 2 MoE (RAM {ram_pct:.1f}% < 65% with deep STEM reasoning)"
+        }
+    return {
+        "tier": 1,
+        "model": "vigyan:1.5b",
+        "reason": "Tier 1 Sovereign Fast SLM (instant response & tool orchestration)"
+    }
+
+
 class _NeuroSymbolicHTTPHandler(BaseHTTPRequestHandler):
     def log_message(self, format, *args):
         pass  # Keep console clean
@@ -807,6 +992,7 @@ class _NeuroSymbolicHTTPHandler(BaseHTTPRequestHandler):
                 "agent": "Vigyan-Sovereign-Neuro-Symbolic-Bridge",
                 "sympy": _SYMPY_ENGINE is not None,
                 "kuzudb": True,
+                "ram_governor": {"active": True, "threshold_pct": 88.0},
                 "telemetry": tel,
             })
             self._send_cors(200)
@@ -837,9 +1023,23 @@ class _NeuroSymbolicHTTPHandler(BaseHTTPRequestHandler):
             self.wfile.write(json.dumps(stats).encode("utf-8"))
             return
 
-        if self.path.startswith("/api/chat"):
+        if self.path.startswith("/api/agent/execute_cmd"):
+            cmd = body.get("command", "")
+            confirmed = bool(body.get("confirmed", False))
+            cwd = body.get("cwd")
+            res = execute_shell_command(cmd, confirmed=confirmed, cwd=cwd)
+            self._send_cors(200)
+            self.wfile.write(json.dumps(res).encode("utf-8"))
+            return
+
+        if self.path.startswith("/api/chat") or self.path.startswith("/api/agent/stream"):
             user_query = (body.get("query") or body.get("message") or "").strip()
-            model = body.get("model") or "olmoe:1b-7b"
+            requested_model = body.get("model") or "auto"
+            
+            # Select model via 3-Tier Cascade
+            cascade = select_cascade_model(requested_model, user_query)
+            active_model = cascade["model"]
+            
             enrichment = enrich_stem_query(user_query)
 
             self.send_response(200)
@@ -850,8 +1050,14 @@ class _NeuroSymbolicHTTPHandler(BaseHTTPRequestHandler):
 
             def _emit(event: str, data_obj: Any):
                 chunk = f"event: {event}\ndata: {json.dumps(data_obj)}\n\n"
-                self.wfile.write(chunk.encode("utf-8"))
-                self.wfile.flush()
+                try:
+                    self.wfile.write(chunk.encode("utf-8"))
+                    self.wfile.flush()
+                except Exception:
+                    pass
+
+            # Inform client of active cascade tier
+            _emit("cascade_tier", cascade)
 
             try:
                 if enrichment.get("sympy"):
@@ -863,15 +1069,22 @@ class _NeuroSymbolicHTTPHandler(BaseHTTPRequestHandler):
                     _emit("memory", "<br>• " + "<br>• ".join(cites))
                     _emit("think", f"Retrieved {len(cites)} verified STEM axioms from KùzuDB GraphRAG.\n")
 
-                # Stream from local Ollama (:11434) with hybrid GPU+CPU options
                 import urllib.request
                 hybrid = enrichment["hybrid"]
-                sys_prompt = "You are Vigyan Pro, a deterministic Sovereign Neuro-Symbolic STEM AI Engine. Format formulas in clean LaTeX ($$...$$)."
+                sys_prompt = (
+                    "You are Vigyan Pro, an offline sovereign STEM agentic AI workstation. "
+                    "Format formulas in clean LaTeX ($$...$$). "
+                    "When solving problems or automating tasks, you can invoke tools using JSON blocks:\n"
+                    "- <tool_call>{\"name\": \"execute_cmd\", \"arguments\": {\"command\": \"ls -la\"}}</tool_call>\n"
+                    "- <tool_call>{\"name\": \"sympy_eval\", \"arguments\": {\"expression\": \"integrate(x**2, x)\"}}</tool_call>\n"
+                    "- <tool_call>{\"name\": \"kuzu_graph\", \"arguments\": {\"keywords\": [\"semiconductor\", \"fermi\"]}}</tool_call>\n"
+                    "- <tool_call>{\"name\": \"render_stem\", \"arguments\": {\"viewer\": \"biology\", \"params\": {\"type\": \"dna_helix\"}}}</tool_call>"
+                )
                 if enrichment.get("prompt_injection"):
                     sys_prompt += "\n\n" + enrichment["prompt_injection"]
 
                 ollama_payload = {
-                    "model": model,
+                    "model": active_model,
                     "messages": [
                         {"role": "system", "content": sys_prompt},
                         {"role": "user", "content": user_query},
@@ -885,22 +1098,67 @@ class _NeuroSymbolicHTTPHandler(BaseHTTPRequestHandler):
                     },
                     "stream": True,
                 }
+                
+                governor_tripped = [False]
+                def _on_ram_trip(pct):
+                    governor_tripped[0] = True
+                    _emit("ram_governor_trip", {
+                        "ram_percent": pct,
+                        "threshold": 88.0,
+                        "evicted_model": active_model,
+                        "fallback": "vigyan:1.5b"
+                    })
+                    _emit("token", f"\n\n⚠️ **[RAM Governor Safety Alert]**: Memory reached {pct:.1f}% (≥ 88% threshold). Model `{active_model}` was unloaded to prevent system lockup.")
+
+                governor = RAMGovernor(threshold_pct=88.0, interval_sec=0.1)
+                governor.start(_on_ram_trip, active_model)
+
                 req = urllib.request.Request(
                     "http://127.0.0.1:11434/api/chat",
                     headers={"Content-Type": "application/json"},
                     data=json.dumps(ollama_payload).encode("utf-8"),
                 )
+                
+                accumulated_text = ""
                 with urllib.request.urlopen(req, timeout=45) as resp:
                     for line in resp:
+                        if governor_tripped[0]:
+                            break
                         line_s = line.decode("utf-8").strip()
                         if not line_s:
                             continue
                         chunk = json.loads(line_s)
                         tok = chunk.get("message", {}).get("content", "")
                         if tok:
+                            accumulated_text += tok
                             _emit("token", tok)
+
+                governor.stop()
+
+                # Parse any tool calls emitted in output
+                tool_matches = re.findall(r"<tool_call>(.*?)</tool_call>", accumulated_text, re.DOTALL)
+                for t_str in tool_matches:
+                    try:
+                        t_data = json.loads(t_str.strip())
+                        t_name = t_data.get("name")
+                        t_args = t_data.get("arguments", {})
+                        if t_name == "execute_cmd":
+                            cmd = t_args.get("command", "")
+                            exec_res = execute_shell_command(cmd, confirmed=False)
+                            if exec_res.get("status") == "requires_approval":
+                                _emit("requires_approval", exec_res)
+                            else:
+                                _emit("tool_result", exec_res)
+                        elif t_name == "sympy_eval" and _SYMPY_ENGINE:
+                            expr = t_args.get("expression", "")
+                            eval_res = _SYMPY_ENGINE.evaluate_expression(expr)
+                            _emit("sympy", f"$${eval_res.get('latex', eval_res.get('result'))}$$")
+                        elif t_name == "render_stem":
+                            _emit("stem_viewer", t_args)
+                    except Exception:
+                        pass
+
             except Exception as exc:
-                # Fallback deterministic answer if daemon is offline or model not pulled
                 if enrichment.get("sympy"):
                     s = enrichment["sympy"]
                     fallback = (
