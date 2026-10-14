@@ -1491,20 +1491,17 @@ class _NeuroSymbolicHTTPHandler(BaseHTTPRequestHandler):
             if enrichment.get("graph_axioms"):
                 cites = [f"[{a['domain']}: {a['law']}] {a['equation']}" for a in enrichment["graph_axioms"]]
                 _emit("memory", "<br>• " + "<br>• ".join(cites))
-                _emit("think", f"Retrieved {len(cites)} verified STEM axioms from KùzuDB GraphRAG.\n")
 
             sys_prompt = (
-                "You are Vigyan Pro, an offline sovereign STEM agentic AI workstation. "
-                "Format formulas in clean LaTeX ($$...$$). "
-                "You have full autonomous access to the user's workspace and tools using JSON blocks:\n"
+                "You are Vigyan Pro, a sovereign desktop STEM & coding assistant with real autonomous workspace capabilities. "
+                "Format formulas in clean LaTeX ($$...$$). Be concise, direct, and helpful. "
+                "When needed, you can autonomously inspect or operate on the user's workspace using JSON blocks:\n"
                 "- <tool_call>{\"name\": \"execute_cmd\", \"arguments\": {\"command\": \"ls -la\"}}</tool_call>\n"
                 "- <tool_call>{\"name\": \"list_dir\", \"arguments\": {\"path\": \".\"}}</tool_call>\n"
                 "- <tool_call>{\"name\": \"read_file\", \"arguments\": {\"path\": \"README.md\", \"start_line\": 1, \"end_line\": 100}}</tool_call>\n"
                 "- <tool_call>{\"name\": \"write_file\", \"arguments\": {\"path\": \"output.py\", \"content\": \"print('hello')\"}}</tool_call>\n"
                 "- <tool_call>{\"name\": \"grep_files\", \"arguments\": {\"query\": \"def main\", \"path\": \".\"}}</tool_call>\n"
-                "- <tool_call>{\"name\": \"sympy_eval\", \"arguments\": {\"expression\": \"integrate(x**2, x)\"}}</tool_call>\n"
-                "- <tool_call>{\"name\": \"kuzu_graph\", \"arguments\": {\"keywords\": [\"semiconductor\", \"fermi\"]}}</tool_call>\n"
-                "- <tool_call>{\"name\": \"render_stem\", \"arguments\": {\"viewer\": \"biology\", \"params\": {\"type\": \"dna_helix\"}}}</tool_call>"
+                "- <tool_call>{\"name\": \"sympy_eval\", \"arguments\": {\"expression\": \"integrate(x**2, x)\"}}</tool_call>"
             )
             if enrichment.get("prompt_injection"):
                 sys_prompt += "\n\n" + enrichment["prompt_injection"]
@@ -1674,8 +1671,6 @@ class _NeuroSymbolicHTTPHandler(BaseHTTPRequestHandler):
                     expr = t_args.get("expression", "")
                     eval_res = _SYMPY_ENGINE.evaluate_expression(expr)
                     emit_fn("sympy", f"$${eval_res.get('latex', eval_res.get('result'))}$$")
-                elif t_name == "render_stem":
-                    emit_fn("stem_viewer", t_args)
             except Exception:
                 pass
 
