@@ -47,6 +47,8 @@ class OllamaSupervisor:
             "OLLAMA_FLASH_ATTENTION": "1",
             "OLLAMA_KV_CACHE_TYPE": "q8_0",
             "OLLAMA_NUM_PARALLEL": "1",
+            "OLLAMA_IGPU_ENABLE": "1",
+            "OLLAMA_ORIGINS": "*",
         }
         if extra_env:
             self._extra_env.update(extra_env)

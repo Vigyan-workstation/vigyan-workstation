@@ -2864,6 +2864,29 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
                   continue;
                 }
 
+                if (currentEvent === 'tier_downgrade') {
+                  const freeGb = data.ram_avail_gb || '2.4';
+                  const downgradeHtml = `<div class="ram-guard-pill" style="display:inline-flex; align-items:center; gap:8px; margin-bottom:10px; padding:4px 10px; background:rgba(245,158,11,0.1); border:1px solid rgba(245,158,11,0.25); border-radius:6px; font-size:11px; color:#fbbf24;">
+                    <span>⚡ RAM Guard: ${freeGb} GB free &bull; Auto-routed to Sovereign MoE</span>
+                    <button onclick="evictAndRetryModel('${data.target_model || 'vigyan:7b-quad-master'}')" style="background:rgba(245,158,11,0.2); border:1px solid rgba(245,158,11,0.4); color:#fff; border-radius:4px; padding:2px 7px; font-size:10px; cursor:pointer; font-weight:600;">Evict & Retry 7B</button>
+                  </div><br>`;
+                  assistantMsg.content = downgradeHtml + assistantMsg.content;
+                  if (contentEl) contentEl.innerHTML = formatMessageContent(assistantMsg.content);
+                  continue;
+                }
+
+                if (currentEvent === 'status' || currentEvent === 'heartbeat') {
+                  if (data.type === 'warmup') {
+                    if (contentEl && !assistantMsg.hasStartedGenerating) {
+                      contentEl.innerHTML = `<div class="warmup-pulse-card" style="display:flex; align-items:center; gap:10px; padding:8px 12px; background:rgba(56,189,248,0.06); border:1px solid rgba(56,189,248,0.2); border-radius:8px; font-size:12px; color:#38bdf8;">
+                        <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#38bdf8; box-shadow:0 0 8px #38bdf8;"></span>
+                        <span>${data.message || 'Warming up sovereign weights into memory...'}</span>
+                      </div>`;
+                    }
+                  }
+                  continue;
+                }
+
                 if (currentEvent === 'ram_governor_trip') {
                   showToast(`⚠️ RAM Governor reached 88% — model evicted. Switched to ${data.fallback}`);
                   continue;
@@ -2899,6 +2922,11 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
                   || (data.choices && data.choices[0] && data.choices[0].delta && data.choices[0].delta.content)
                   || data.token || (typeof data === 'string' ? data : '');
                 if (chunk) {
+                  if (!assistantMsg.hasStartedGenerating) {
+                    assistantMsg.hasStartedGenerating = true;
+                    const warmupEl = contentEl ? contentEl.querySelector('.warmup-pulse-card') : null;
+                    if (warmupEl) warmupEl.remove();
+                  }
                   assistantMsg.content += chunk;
                   tokenCount++;
                   const elapsedSec = Math.max(0.1, (performance.now() - streamStartTime) / 1000);
@@ -3258,6 +3286,34 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
         card.innerHTML = `<div style="padding:10px 12px; color:#71717a; font-size:11px; font-style:italic;">Command execution cancelled by user.</div>`;
       }
     }
+
+    async function evictAndRetryModel(targetModel) {
+      try {
+        showToast("Purging inactive model cache...");
+        const r = await fetch(`${AGENT_HOST}/api/models/evict`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ model: '' })
+        });
+        await r.json();
+        showToast("RAM cleared! Retrying 7B model...");
+        const sess = sessions[activeSessionId];
+        if (sess && sess.messages.length > 0) {
+          const lastUser = [...sess.messages].reverse().find(m => m.role === 'user');
+          if (lastUser) {
+            currentModel = targetModel || 'vigyan:7b-quad-master';
+            localStorage.setItem('vigyan_active_model', currentModel);
+            updateModelDropdownUI();
+            const input = document.getElementById('chat-input');
+            if (input) input.value = lastUser.content;
+            handleSendOrStop();
+          }
+        }
+      } catch (e) {
+        showToast("Eviction notice: " + e.message);
+      }
+    }
+    window.evictAndRetryModel = evictAndRetryModel;
 
     function renderLatex(targetEl) {
       if (!window.renderMathInElement) return;

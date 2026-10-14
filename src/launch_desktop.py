@@ -25,6 +25,8 @@ from typing import Dict, Any, List, Optional
 os.environ.setdefault("OLLAMA_FLASH_ATTENTION", "1")
 os.environ.setdefault("OLLAMA_KV_CACHE_TYPE", "q8_0")
 os.environ.setdefault("OLLAMA_NUM_PARALLEL", "1")
+os.environ.setdefault("OLLAMA_IGPU_ENABLE", "1")
+os.environ.setdefault("OLLAMA_ORIGINS", "*")
 
 from ollama_supervisor import OllamaSupervisor
 
@@ -259,20 +261,20 @@ def compute_hybrid_allocation(
     else:
         num_thread = phys_cores
 
-    # 2. Context window & batch scaling to prevent RAM/swap thrashing
-    if ram_total_gb < 6.0 or ram_avail_gb < 1.8:
-        num_ctx = 2048
-        num_batch = 128
+    # 2. Context window & batch scaling to prevent RAM/swap thrashing & OOM killer
+    if ram_total_gb < 6.0 or ram_avail_gb < 2.5:
+        num_ctx = 1024
+        num_batch = 64
     elif ram_total_gb < 10.0:
         # 7-8 GB laptops (e.g., Ryzen 5 7520U with 6.95 GB usable RAM)
-        # Lock to 2048 context and 128 batch to prevent swap thrashing
-        num_ctx = 2048
-        num_batch = 128
+        # Lock to 1024-1536 context to keep KV cache minimal (~200MB instead of 1.2GB)
+        num_ctx = 1024 if ram_avail_gb < 3.5 else 1536
+        num_batch = 64
     elif ram_total_gb < 18.0:
-        num_ctx = 8192
-        num_batch = 512
+        num_ctx = 4096
+        num_batch = 256
     else:
-        num_ctx = 16384
+        num_ctx = 8192
         num_batch = 512
 
     # 3. Hybrid GPU + CPU Layer Split (num_gpu)
@@ -931,39 +933,43 @@ def execute_shell_command(command: str, confirmed: bool = False, cwd: Optional[s
 
 
 def select_cascade_model(requested_model: str, query: str) -> Dict[str, Any]:
-    ram_pct = psutil.virtual_memory().percent if psutil else 50.0
+    ram = psutil.virtual_memory() if psutil else None
+    ram_pct = ram.percent if ram else 50.0
+    ram_avail_gb = (ram.available / (1024**3)) if ram else 4.0
     q_lower = (query or "").lower()
     is_heavy_reasoning = any(w in q_lower for w in ["prove", "theorem", "hamiltonian", "schrodinger", "einstein", "navier-stokes", "derivation", "tensor"])
     
-    # 1. Critical RAM check (>80% RAM)
-    if ram_pct >= 80.0:
-        return {
-            "tier": 1,
-            "model": "olmoe:1b-7b",
-            "reason": f"System RAM high ({ram_pct:.1f}% >= 80%) — locked to Tier 1 Sovereign MoE"
-        }
-        
-    # 2. User explicit model choice
-    if requested_model and requested_model != "auto":
-        if ("quad" in requested_model.lower() or "7b" in requested_model.lower()) and ram_pct > 80.0:
+    is_7b_target = ("quad" in (requested_model or "").lower() or "7b" in (requested_model or "").lower())
+    
+    # 1. 7B Request Memory Safety Gate
+    if is_7b_target:
+        if ram_avail_gb < 3.2 or ram_pct >= 78.0:
             return {
                 "tier": 1,
                 "model": "olmoe:1b-7b",
-                "reason": f"RAM at {ram_pct:.1f}% too high for 7B Quad-Master — safely downgraded to Tier 1"
+                "downgraded": True,
+                "target_model": "vigyan:7b-quad-master",
+                "ram_avail_gb": round(ram_avail_gb, 1),
+                "reason": f"RAM constrained ({ram_avail_gb:.1f} GB available < 3.2 GB threshold) — auto-routed to Sovereign MoE to prevent OS freeze"
             }
-        tier = 2 if ("quad" in requested_model.lower() or "7b" in requested_model.lower()) else 1
-        return {"tier": tier, "model": requested_model, "reason": "User explicit selection"}
+        return {"tier": 2, "model": "vigyan:7b-quad-master", "downgraded": False, "reason": "User explicit selection"}
+        
+    # 2. User explicit model choice (non-7B)
+    if requested_model and requested_model != "auto":
+        return {"tier": 1, "model": requested_model, "downgraded": False, "reason": "User explicit selection"}
         
     # 3. Auto cascade escalation
-    if is_heavy_reasoning and ram_pct < 65.0:
+    if is_heavy_reasoning and ram_avail_gb >= 3.5 and ram_pct < 65.0:
         return {
             "tier": 2,
             "model": "vigyan:7b-quad-master",
-            "reason": f"Escalated to Tier 2 7B Quad-Master (RAM {ram_pct:.1f}% < 65% with deep STEM reasoning)"
+            "downgraded": False,
+            "reason": f"Escalated to Tier 2 7B Quad-Master (RAM {ram_avail_gb:.1f} GB available with deep STEM reasoning)"
         }
     return {
         "tier": 1,
         "model": "olmoe:1b-7b",
+        "downgraded": False,
         "reason": "Tier 1 Sovereign MoE (fast response & tool orchestration)"
     }
 
@@ -1720,7 +1726,27 @@ class _NeuroSymbolicHTTPHandler(BaseHTTPRequestHandler):
             tag = body.get("model_id") or body.get("tag") or "olmoe:1b-7b"
             res = _DOWNLOAD_MGR.start_download(tag)
             self._send_cors(200)
-            self.wfile.write(json.dumps(res).encode("utf-8"))
+            return
+
+        if self.path.startswith("/api/models/evict"):
+            tag = body.get("model") or body.get("tag") or ""
+            targets = [tag] if tag else ["olmoe:1b-7b", "vigyan:7b-quad-master"]
+            evicted = []
+            for m in targets:
+                try:
+                    ev_req = urllib.request.Request(
+                        "http://127.0.0.1:11434/api/generate",
+                        data=json.dumps({"model": m, "prompt": "", "keep_alive": 0}).encode("utf-8"),
+                        headers={"Content-Type": "application/json"}
+                    )
+                    with urllib.request.urlopen(ev_req, timeout=2.5) as ev_resp:
+                        if ev_resp.status == 200:
+                            evicted.append(m)
+                except Exception:
+                    pass
+            stats = get_system_telemetry()
+            self._send_cors(200)
+            self.wfile.write(json.dumps({"success": True, "evicted": evicted, "telemetry": stats}).encode("utf-8"))
             return
 
         if self.path.startswith("/api/workspace/list"):
@@ -1818,6 +1844,9 @@ class _NeuroSymbolicHTTPHandler(BaseHTTPRequestHandler):
             cascade = select_cascade_model(requested_model, user_query)
             active_model = cascade["model"]
             _emit("cascade_tier", cascade)
+            if cascade.get("downgraded"):
+                _emit("tier_downgrade", cascade)
+                _emit("think", f"[RAM Guard]: System has {cascade.get('ram_avail_gb')} GB free (< 3.2 GB required for 7B). Safely routed to {active_model} MoE.\n")
 
             try:
                 hybrid = enrichment["hybrid"]
@@ -1857,19 +1886,45 @@ class _NeuroSymbolicHTTPHandler(BaseHTTPRequestHandler):
                     data=json.dumps(ollama_payload).encode("utf-8"),
                 )
 
-                accumulated_text = ""
-                with urllib.request.urlopen(req, timeout=45) as resp:
-                    for line in resp:
-                        if governor_tripped[0]:
+                # Keep-alive heartbeat thread during weight allocation to prevent socket drop
+                _emit("status", {"type": "warmup", "message": f"Allocating sovereign weights for {active_model} into memory...", "model": active_model})
+                hb_stop = threading.Event()
+                def _heartbeat_worker():
+                    step = 0
+                    while not hb_stop.is_set():
+                        time.sleep(1.2)
+                        if hb_stop.is_set():
                             break
-                        line_s = line.decode("utf-8").strip()
-                        if not line_s:
-                            continue
-                        chunk = json.loads(line_s)
-                        tok = chunk.get("message", {}).get("content", "")
-                        if tok:
-                            accumulated_text += tok
-                            _emit("token", tok)
+                        step += 1
+                        dots = "." * ((step % 3) + 1)
+                        _emit("heartbeat", {
+                            "type": "warmup",
+                            "step": step,
+                            "message": f"Warming up sovereign weights into memory ({dots})",
+                            "model": active_model
+                        })
+
+                hb_t = threading.Thread(target=_heartbeat_worker, daemon=True)
+                hb_t.start()
+
+                accumulated_text = ""
+                try:
+                    with urllib.request.urlopen(req, timeout=60) as resp:
+                        hb_stop.set()
+                        _emit("status", {"type": "ready", "message": "Inference stream active"})
+                        for line in resp:
+                            if governor_tripped[0]:
+                                break
+                            line_s = line.decode("utf-8").strip()
+                            if not line_s:
+                                continue
+                            chunk = json.loads(line_s)
+                            tok = chunk.get("message", {}).get("content", "")
+                            if tok:
+                                accumulated_text += tok
+                                _emit("token", tok)
+                finally:
+                    hb_stop.set()
 
                 governor.stop()
                 self._parse_and_execute_tools(accumulated_text, _emit)
@@ -2228,6 +2283,29 @@ def main():
     win.show_all()
     win.present()
     GLib.timeout_add_seconds(5, _watch_ollama)
+
+    # Low-priority background pre-warming for zero-latency first prompt
+    def _prewarm_moe():
+        time.sleep(3.0)  # Wait for UI window to finish layout
+        try:
+            pw_req = urllib.request.Request(
+                "http://127.0.0.1:11434/api/generate",
+                data=json.dumps({
+                    "model": "olmoe:1b-7b",
+                    "prompt": "",
+                    "keep_alive": "30m",
+                    "options": {"num_ctx": 1024, "num_batch": 64}
+                }).encode("utf-8"),
+                headers={"Content-Type": "application/json"}
+            )
+            with urllib.request.urlopen(pw_req, timeout=35.0) as pw_resp:
+                if pw_resp.status == 200:
+                    print("[INFO] Pre-warmed olmoe:1b-7b into memory.", file=sys.stderr)
+        except Exception:
+            pass
+
+    threading.Thread(target=_prewarm_moe, daemon=True).start()
+
     try:
         Gtk.main()
     finally:
