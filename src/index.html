@@ -861,69 +861,6 @@
       overflow: hidden;
     }
 
-    /* ONBOARDING MODEL DOWNLOAD BANNER */
-    .onboarding-model-banner {
-      width: 100%;
-      max-width: 720px;
-      margin-bottom: 22px;
-      padding: 14px 16px;
-      background: #0d0e14;
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: 10px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
-    }
-    .onboarding-card {
-      background: #06070a;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 8px;
-      padding: 10px 12px;
-      display: flex;
-      flex-direction: column;
-    }
-    .btn-onboarding-dl {
-      background: #181920;
-      color: #ffffff;
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      padding: 6px 12px;
-      border-radius: 6px;
-      font-size: 11.5px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.15s;
-    }
-    .btn-onboarding-dl:hover {
-      background: #272730;
-      border-color: rgba(255, 255, 255, 0.3);
-    }
-    .btn-onboarding-dl.installed {
-      background: rgba(16, 185, 129, 0.12);
-      color: #10b981;
-      border-color: rgba(16, 185, 129, 0.3);
-      cursor: default;
-    }
-    .dl-progress-box {
-      margin-top: 8px;
-    }
-    .dl-progress-bar {
-      height: 4px;
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 2px;
-      overflow: hidden;
-    }
-    .dl-progress-fill {
-      height: 100%;
-      width: 0%;
-      background: #10b981;
-      transition: width 0.3s;
-    }
-    .dl-progress-meta {
-      display: flex;
-      justify-content: space-between;
-      font-size: 10px;
-      color: #a1a1aa;
-      margin-top: 4px;
-    }
-
     /* INLINE STEM INTERACTIVE CARDS */
     .stem-inline-card {
       background: #0a0b10;
@@ -2186,44 +2123,6 @@
           <p class="welcome-desc">
             Ask a question, solve math step-by-step, or interact with live 3D models and simulations.
           </p>
-
-          <div class="onboarding-model-banner" id="onboarding-model-banner">
-            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
-              <span style="font-weight:600; font-size:12px; color:#ffffff; display:flex; align-items:center; gap:6px;">
-                <svg style="width:14px; height:14px; stroke:#10b981; fill:none;" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                Sovereign Offline Models (Hugging Face)
-              </span>
-              <span id="onboarding-rec-badge" style="font-size:10px; padding:2px 8px; border-radius:4px; background:rgba(16,185,129,0.15); color:#10b981; border:1px solid rgba(16,185,129,0.3);">
-                Recommended for your system: Allen OLMoE 1B-7B
-              </span>
-            </div>
-            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
-              <div class="onboarding-card" id="card-dl-olmoe">
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                  <span style="font-weight:600; font-size:12px; color:#fff;">Allen OLMoE 1B-7B</span>
-                  <span style="font-size:10.5px; color:#a1a1aa;">3.2 GB</span>
-                </div>
-                <div style="font-size:11px; color:#71717a; margin:4px 0 8px 0;">Ultra-fast MoE on laptops (&lt;16GB RAM). Active 1B/6.9B.</div>
-                <button class="btn-onboarding-dl" id="btn-dl-olmoe" onclick="triggerModelDownload('olmoe:1b-7b')">Install OLMoE</button>
-                <div class="dl-progress-box" id="progress-olmoe" style="display:none;">
-                  <div class="dl-progress-bar"><div class="dl-progress-fill" id="fill-olmoe"></div></div>
-                  <div class="dl-progress-meta"><span id="meta-olmoe">Downloading...</span><span id="speed-olmoe">0 MB/s</span></div>
-                </div>
-              </div>
-              <div class="onboarding-card" id="card-dl-vigyan7b">
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                  <span style="font-weight:600; font-size:12px; color:#fff;">Vigyan 7B Quad-Master</span>
-                  <span style="font-size:10.5px; color:#a1a1aa;">4.2 GB</span>
-                </div>
-                <div style="font-size:11px; color:#71717a; margin:4px 0 8px 0;">Frontier STEM &amp; reasoning (&ge;16GB RAM / GPU).</div>
-                <button class="btn-onboarding-dl" id="btn-dl-vigyan7b" onclick="triggerModelDownload('vigyan:7b-quad-master')">Install 7B Quad-Master</button>
-                <div class="dl-progress-box" id="progress-vigyan7b" style="display:none;">
-                  <div class="dl-progress-bar"><div class="dl-progress-fill" id="fill-vigyan7b"></div></div>
-                  <div class="dl-progress-meta"><span id="meta-vigyan7b">Downloading...</span><span id="speed-vigyan7b">0 MB/s</span></div>
-                </div>
-              </div>
-            </div>
-          </div>
 
           <div class="starter-prompts" style="grid-template-columns: repeat(2, 1fr); max-width: 760px;">
             <div class="prompt-card" style="--i:0" onclick="quickFirePrompt('List the files in the current workspace directory and summarize this project.')">
@@ -3747,67 +3646,6 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
         opt.onclick = () => changeModel(m);
         menu.appendChild(opt);
       });
-    }
-
-    async function triggerModelDownload(tag) {
-      const isOlmoe = tag === 'olmoe:1b-7b';
-      const btn = document.getElementById(isOlmoe ? 'btn-dl-olmoe' : 'btn-dl-vigyan7b');
-      const box = document.getElementById(isOlmoe ? 'progress-olmoe' : 'progress-vigyan7b');
-      if (btn) { btn.disabled = true; btn.innerText = 'Connecting...'; }
-      if (box) box.style.display = 'block';
-
-      try {
-        const r = await fetch(`${AGENT_HOST}/api/models/download`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ tag })
-        });
-        const res = await r.json();
-        showToast(res.message || 'Download initiated');
-        pollModelDownload(tag);
-      } catch (e) {
-        showToast('Error: ' + e.message);
-        if (btn) { btn.disabled = false; btn.innerText = 'Retry'; }
-      }
-    }
-
-    function pollModelDownload(tag) {
-      const isOlmoe = tag === 'olmoe:1b-7b';
-      const interval = setInterval(async () => {
-        try {
-          const r = await fetch(`${AGENT_HOST}/api/models/download/status?tag=${encodeURIComponent(tag)}`);
-          if (r.ok) {
-            const data = await r.json();
-            const fill = document.getElementById(isOlmoe ? 'fill-olmoe' : 'fill-vigyan7b');
-            const meta = document.getElementById(isOlmoe ? 'meta-olmoe' : 'meta-vigyan7b');
-            const speed = document.getElementById(isOlmoe ? 'speed-olmoe' : 'speed-vigyan7b');
-            const btn = document.getElementById(isOlmoe ? 'btn-dl-olmoe' : 'btn-dl-vigyan7b');
-
-            if (data.status === 'downloading' || data.status === 'registering') {
-              if (fill) fill.style.width = `${data.progress_pct}%`;
-              if (meta) meta.innerText = data.status === 'registering' ? 'Registering into Ollama...' : `${data.progress_pct}% (${(data.downloaded_bytes / 1e9).toFixed(2)} GB)`;
-              if (speed) speed.innerText = `${data.speed_mbps || 0} MB/s`;
-              if (btn) btn.innerText = data.status === 'registering' ? 'Registering...' : `${data.progress_pct}%`;
-            } else if (data.status === 'ready') {
-              clearInterval(interval);
-              if (fill) fill.style.width = '100%';
-              if (meta) meta.innerText = 'Installed & Ready';
-              if (speed) speed.innerText = '✓ In Ollama';
-              if (btn) {
-                btn.innerText = 'Installed';
-                btn.className = 'btn-onboarding-dl installed';
-                btn.disabled = true;
-              }
-              showToast(`✓ ${tag} successfully installed!`);
-              checkOllamaConnection();
-            } else if (data.status === 'error') {
-              clearInterval(interval);
-              if (meta) meta.innerText = 'Download failed: ' + (data.error || 'Network error');
-              if (btn) { btn.disabled = false; btn.innerText = 'Retry Download'; }
-            }
-          }
-        } catch (e) {}
-      }, 1000);
     }
 
     function saveSettings() {

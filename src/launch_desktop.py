@@ -1048,6 +1048,25 @@ class ModelDownloadManager:
                 "error": None
             }
 
+        # 0. Check if model already exists in Ollama
+        try:
+            check_proc = subprocess.run(["ollama", "show", tag], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=0.8)
+            if check_proc.returncode == 0:
+                with self._lock:
+                    self.active_downloads[tag] = {
+                        "tag": tag,
+                        "name": info["name"],
+                        "status": "ready",
+                        "progress_pct": 100.0,
+                        "downloaded_bytes": info["size_bytes"],
+                        "total_bytes": info["size_bytes"],
+                        "speed_mbps": 0.0,
+                        "error": None
+                    }
+                return {"success": True, "message": f"{tag} is already installed in Ollama", "status": "ready"}
+        except Exception:
+            pass
+
         # Check local candidate files first (instant local import)
         for cand in info.get("local_candidates", []):
             if os.path.isfile(cand) and os.path.getsize(cand) > 100_000_000:
@@ -2013,7 +2032,7 @@ def main():
     # Initialize hardware topology cache, Ollama daemon, and Neuro-Symbolic bridge
     _discover_static_hardware()
     ensure_ollama_daemon()
-    start_neuro_symbolic_bridge_server(8085)
+    bridge_port = start_neuro_symbolic_bridge_server(8085) or 8085
 
     win = Gtk.Window(type=Gtk.WindowType.TOPLEVEL)
     win.set_title("Vigyan Pro")
@@ -2137,9 +2156,10 @@ def main():
     index_path = next((p for p in index_candidates if os.path.exists(p)), index_candidates[0])
     webview.load_uri(f"file://{os.path.abspath(index_path)}")
 
-    # Push initial telemetry as soon as page finishes loading
+    # Push initial telemetry and sync bridge port as soon as page finishes loading
     def on_load_finished(view, event):
         if event == WebKit2.LoadEvent.FINISHED:
+            _eval_js(f"window.AGENT_HOST = 'http://127.0.0.1:{bridge_port}'; try {{ localStorage.setItem('vigyan_agent_host', 'http://127.0.0.1:{bridge_port}'); }} catch(e){{}}")
             GLib.timeout_add(300, lambda: (_push_telemetry() and False))
 
     webview.connect("load-changed", on_load_finished)
