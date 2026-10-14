@@ -768,6 +768,69 @@
       color: #ffffff;
     }
 
+    /* ONBOARDING MODEL DOWNLOAD BANNER */
+    .onboarding-model-banner {
+      width: 100%;
+      max-width: 720px;
+      margin-bottom: 22px;
+      padding: 14px 16px;
+      background: #0d0e14;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 10px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    }
+    .onboarding-card {
+      background: #06070a;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 8px;
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+    }
+    .btn-onboarding-dl {
+      background: #181920;
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 11.5px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .btn-onboarding-dl:hover {
+      background: #272730;
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+    .btn-onboarding-dl.installed {
+      background: rgba(16, 185, 129, 0.12);
+      color: #10b981;
+      border-color: rgba(16, 185, 129, 0.3);
+      cursor: default;
+    }
+    .dl-progress-box {
+      margin-top: 8px;
+    }
+    .dl-progress-bar {
+      height: 4px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .dl-progress-fill {
+      height: 100%;
+      width: 0%;
+      background: #10b981;
+      transition: width 0.3s;
+    }
+    .dl-progress-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 10px;
+      color: #a1a1aa;
+      margin-top: 4px;
+    }
+
     /* INLINE STEM INTERACTIVE CARDS */
     .stem-inline-card {
       background: #0a0b10;
@@ -1828,6 +1891,46 @@
           <div id="vault-pull-status" style="font-size:11px; color:#a1a1aa; margin-top:6px; display:none;"></div>
         </div>
 
+        <!-- CARD: BYOK (BRING YOUR OWN KEY) CLOUD GATEWAY -->
+        <div class="settings-section-card">
+          <div class="section-card-header">
+            <span class="section-card-title">
+              <svg class="icon" viewBox="0 0 24 24"><path d="M21 2l-2 2m-1.5 1.5L16 7l-4 4-2-2-4 4 2 2-4 4 3 3 4-4 2 2 4-4-2-2 4-4 1.5-1.5L22 1l-1 1z"/></svg>
+              Bring Your Own Key (BYOK) Cloud Hub
+            </span>
+            <span class="section-card-badge" style="background:rgba(56,189,248,0.15); color:#38bdf8; border:1px solid rgba(56,189,248,0.3);">Private Local Keystore</span>
+          </div>
+          <div style="font-size:12px; color:#a1a1aa; margin-bottom:12px;">
+            Input your personal API keys to run cloud frontier models alongside local agent tools (SymPy, KùzuDB, Computer Automation). Keys never leave your machine.
+          </div>
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
+            <div class="setting-row">
+              <div class="setting-label"><span>Google Gemini API Key</span></div>
+              <input type="password" id="byok-gemini" class="setting-input" placeholder="AIzaSy...">
+            </div>
+            <div class="setting-row">
+              <div class="setting-label"><span>OpenAI API Key</span></div>
+              <input type="password" id="byok-openai" class="setting-input" placeholder="sk-proj-...">
+            </div>
+            <div class="setting-row">
+              <div class="setting-label"><span>Anthropic Claude API Key</span></div>
+              <input type="password" id="byok-anthropic" class="setting-input" placeholder="sk-ant-...">
+            </div>
+            <div class="setting-row">
+              <div class="setting-label"><span>Groq API Key (300 tok/s)</span></div>
+              <input type="password" id="byok-groq" class="setting-input" placeholder="gsk_...">
+            </div>
+            <div class="setting-row">
+              <div class="setting-label"><span>DeepSeek API Key</span></div>
+              <input type="password" id="byok-deepseek" class="setting-input" placeholder="sk-...">
+            </div>
+            <div class="setting-row">
+              <div class="setting-label"><span>OpenRouter API Key</span></div>
+              <input type="password" id="byok-openrouter" class="setting-input" placeholder="sk-or-...">
+            </div>
+          </div>
+        </div>
+
         <!-- CARD 2: HARDWARE PERFORMANCE -->
         <div class="settings-section-card">
           <div class="section-card-header">
@@ -2103,12 +2206,16 @@
         }
       }
     });
-    function changeModel(m) {
+    let currentProvider = localStorage.getItem('vigyan_active_provider') || null;
+
+    function changeModel(m, provider = null) {
       currentModel = m;
+      currentProvider = provider;
       localStorage.setItem('vigyan_active_model', m);
+      localStorage.setItem('vigyan_active_provider', provider || '');
       const curNameEl = document.getElementById('current-model-name');
       if (curNameEl) {
-        curNameEl.textContent = m;
+        curNameEl.textContent = provider ? `${m} (${provider})` : m;
         decodeLabel(curNameEl);
       }
       const sideTel = document.getElementById('sidebar-model-telemetry');
@@ -2119,7 +2226,7 @@
       const wc = document.getElementById('welcome-companion-label');
       if (wc) wc.innerText = m;
       document.getElementById('model-dropdown').classList.remove('show');
-      showToast(`Active model: ${m}`);
+      showToast(`Active model: ${m} ${provider ? '[' + provider + ']' : ''}`);
       haptics.success();
     }
 
@@ -2137,6 +2244,44 @@
           <p class="welcome-desc">
             Ask a question, solve math step-by-step, or interact with live 3D models and simulations.
           </p>
+
+          <div class="onboarding-model-banner" id="onboarding-model-banner">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
+              <span style="font-weight:600; font-size:12px; color:#ffffff; display:flex; align-items:center; gap:6px;">
+                <svg style="width:14px; height:14px; stroke:#10b981; fill:none;" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Sovereign Offline Models (Hugging Face)
+              </span>
+              <span id="onboarding-rec-badge" style="font-size:10px; padding:2px 8px; border-radius:4px; background:rgba(16,185,129,0.15); color:#10b981; border:1px solid rgba(16,185,129,0.3);">
+                Recommended for your system: Allen OLMoE 1B-7B
+              </span>
+            </div>
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+              <div class="onboarding-card" id="card-dl-olmoe">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                  <span style="font-weight:600; font-size:12px; color:#fff;">Allen OLMoE 1B-7B</span>
+                  <span style="font-size:10.5px; color:#a1a1aa;">3.2 GB</span>
+                </div>
+                <div style="font-size:11px; color:#71717a; margin:4px 0 8px 0;">Ultra-fast MoE on laptops (&lt;16GB RAM). Active 1B/6.9B.</div>
+                <button class="btn-onboarding-dl" id="btn-dl-olmoe" onclick="triggerModelDownload('olmoe:1b-7b')">Install OLMoE</button>
+                <div class="dl-progress-box" id="progress-olmoe" style="display:none;">
+                  <div class="dl-progress-bar"><div class="dl-progress-fill" id="fill-olmoe"></div></div>
+                  <div class="dl-progress-meta"><span id="meta-olmoe">Downloading...</span><span id="speed-olmoe">0 MB/s</span></div>
+                </div>
+              </div>
+              <div class="onboarding-card" id="card-dl-vigyan7b">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                  <span style="font-weight:600; font-size:12px; color:#fff;">Vigyan 7B Quad-Master</span>
+                  <span style="font-size:10.5px; color:#a1a1aa;">4.2 GB</span>
+                </div>
+                <div style="font-size:11px; color:#71717a; margin:4px 0 8px 0;">Frontier STEM &amp; reasoning (&ge;16GB RAM / GPU).</div>
+                <button class="btn-onboarding-dl" id="btn-dl-vigyan7b" onclick="triggerModelDownload('vigyan:7b-quad-master')">Install 7B Quad-Master</button>
+                <div class="dl-progress-box" id="progress-vigyan7b" style="display:none;">
+                  <div class="dl-progress-bar"><div class="dl-progress-fill" id="fill-vigyan7b"></div></div>
+                  <div class="dl-progress-meta"><span id="meta-vigyan7b">Downloading...</span><span id="speed-vigyan7b">0 MB/s</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
 
           <div class="starter-prompts" style="grid-template-columns: repeat(2, 1fr); max-width: 720px;">
             <div class="prompt-card" style="--i:0" onclick="quickFirePrompt('/cad3d gear')">
@@ -4697,13 +4842,16 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
 
         let resp;
         try {
-          if (BACKEND_TYPE === 'agent_server') {
+          if (BACKEND_TYPE === 'agent_server' || currentProvider) {
+            const byokKey = currentProvider ? (localStorage.getItem('vigyan_byok_' + currentProvider) || API_KEY || '') : '';
             resp = await fetch(`${AGENT_HOST}/api/chat`, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               signal: activeStreamController.signal,
               body: JSON.stringify({
                 model: currentModel,
+                provider: currentProvider || null,
+                api_key: byokKey,
                 query: streamPromptOverride || text,
                 messages: hist,
                 compute_mode: HYBRID_COMPUTE_MODE,
@@ -5308,17 +5456,121 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
       if (statusEl) statusEl.innerText = `Finished downloading ${tag}.`;
     }
 
+    const BYOK_MODELS = [
+      { id: 'gemini-1.5-flash', name: 'Gemini 1.5 Flash (Google)', provider: 'gemini', keyStore: 'vigyan_byok_gemini' },
+      { id: 'gemini-1.5-pro', name: 'Gemini 1.5 Pro (Google)', provider: 'gemini', keyStore: 'vigyan_byok_gemini' },
+      { id: 'gpt-4o', name: 'GPT-4o (OpenAI)', provider: 'openai', keyStore: 'vigyan_byok_openai' },
+      { id: 'gpt-4o-mini', name: 'GPT-4o Mini (OpenAI)', provider: 'openai', keyStore: 'vigyan_byok_openai' },
+      { id: 'claude-3-5-sonnet-20241022', name: 'Claude 3.5 Sonnet (Anthropic)', provider: 'anthropic', keyStore: 'vigyan_byok_anthropic' },
+      { id: 'llama-3.3-70b-versatile', name: 'Llama 3.3 70B (Groq • 300 t/s)', provider: 'groq', keyStore: 'vigyan_byok_groq' },
+      { id: 'deepseek-chat', name: 'DeepSeek V3 (DeepSeek)', provider: 'deepseek', keyStore: 'vigyan_byok_deepseek' },
+      { id: 'deepseek-reasoner', name: 'DeepSeek R1 (DeepSeek)', provider: 'deepseek', keyStore: 'vigyan_byok_deepseek' }
+    ];
+
     function updateModelDropdownUI() {
       const menu = document.getElementById('model-dropdown');
       if (!menu) return;
       menu.innerHTML = '';
+
+      // 1. Sovereign Offline Section
+      const h1 = document.createElement('div');
+      h1.style.cssText = 'font-size: 10px; font-weight: 700; color: #a1a1aa; padding: 6px 10px 2px 10px; letter-spacing: 0.08em; text-transform: uppercase;';
+      h1.innerText = 'Sovereign Offline Models';
+      menu.appendChild(h1);
+
       availableModels.forEach(m => {
         const opt = document.createElement('div');
-        opt.className = `model-opt ${m === currentModel ? 'active' : ''}`;
+        opt.className = `model-opt ${m === currentModel && !currentProvider ? 'active' : ''}`;
         opt.innerText = m;
-        opt.onclick = () => changeModel(m);
+        opt.onclick = () => changeModel(m, null);
         menu.appendChild(opt);
       });
+
+      // 2. BYOK Cloud Frontier Section
+      const h2 = document.createElement('div');
+      h2.style.cssText = 'font-size: 10px; font-weight: 700; color: #38bdf8; padding: 10px 10px 2px 10px; letter-spacing: 0.08em; text-transform: uppercase; border-top: 1px solid rgba(255,255,255,0.08); margin-top: 4px;';
+      h2.innerText = 'BYOK Cloud Frontier Models';
+      menu.appendChild(h2);
+
+      BYOK_MODELS.forEach(bm => {
+        const hasKey = !!localStorage.getItem(bm.keyStore);
+        const opt = document.createElement('div');
+        opt.className = `model-opt ${bm.id === currentModel && currentProvider === bm.provider ? 'active' : ''}`;
+        opt.style.display = 'flex';
+        opt.style.justifyContent = 'space-between';
+        opt.style.alignItems = 'center';
+        opt.innerHTML = `<span>${bm.name}</span><span style="font-size:9.5px; opacity:0.8; color:${hasKey ? '#10b981' : '#f59e0b'};">${hasKey ? '✓ Ready' : 'Key Needed'}</span>`;
+        opt.onclick = () => {
+          if (!hasKey) {
+            showToast(`Enter your ${bm.provider.toUpperCase()} key in Settings`);
+            openSettings();
+          } else {
+            changeModel(bm.id, bm.provider);
+          }
+        };
+        menu.appendChild(opt);
+      });
+    }
+
+    async function triggerModelDownload(tag) {
+      const isOlmoe = tag === 'olmoe:1b-7b';
+      const btn = document.getElementById(isOlmoe ? 'btn-dl-olmoe' : 'btn-dl-vigyan7b');
+      const box = document.getElementById(isOlmoe ? 'progress-olmoe' : 'progress-vigyan7b');
+      if (btn) { btn.disabled = true; btn.innerText = 'Connecting...'; }
+      if (box) box.style.display = 'block';
+
+      try {
+        const r = await fetch(`${AGENT_HOST}/api/models/download`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ tag })
+        });
+        const res = await r.json();
+        showToast(res.message || 'Download initiated');
+        pollModelDownload(tag);
+      } catch (e) {
+        showToast('Error: ' + e.message);
+        if (btn) { btn.disabled = false; btn.innerText = 'Retry'; }
+      }
+    }
+
+    function pollModelDownload(tag) {
+      const isOlmoe = tag === 'olmoe:1b-7b';
+      const interval = setInterval(async () => {
+        try {
+          const r = await fetch(`${AGENT_HOST}/api/models/download/status?tag=${encodeURIComponent(tag)}`);
+          if (r.ok) {
+            const data = await r.json();
+            const fill = document.getElementById(isOlmoe ? 'fill-olmoe' : 'fill-vigyan7b');
+            const meta = document.getElementById(isOlmoe ? 'meta-olmoe' : 'meta-vigyan7b');
+            const speed = document.getElementById(isOlmoe ? 'speed-olmoe' : 'speed-vigyan7b');
+            const btn = document.getElementById(isOlmoe ? 'btn-dl-olmoe' : 'btn-dl-vigyan7b');
+
+            if (data.status === 'downloading' || data.status === 'registering') {
+              if (fill) fill.style.width = `${data.progress_pct}%`;
+              if (meta) meta.innerText = data.status === 'registering' ? 'Registering into Ollama...' : `${data.progress_pct}% (${(data.downloaded_bytes / 1e9).toFixed(2)} GB)`;
+              if (speed) speed.innerText = `${data.speed_mbps || 0} MB/s`;
+              if (btn) btn.innerText = data.status === 'registering' ? 'Registering...' : `${data.progress_pct}%`;
+            } else if (data.status === 'ready') {
+              clearInterval(interval);
+              if (fill) fill.style.width = '100%';
+              if (meta) meta.innerText = 'Installed & Ready';
+              if (speed) speed.innerText = '✓ In Ollama';
+              if (btn) {
+                btn.innerText = 'Installed';
+                btn.className = 'btn-onboarding-dl installed';
+                btn.disabled = true;
+              }
+              showToast(`✓ ${tag} successfully installed!`);
+              checkOllamaConnection();
+            } else if (data.status === 'error') {
+              clearInterval(interval);
+              if (meta) meta.innerText = 'Download failed: ' + (data.error || 'Network error');
+              if (btn) { btn.disabled = false; btn.innerText = 'Retry Download'; }
+            }
+          }
+        } catch (e) {}
+      }, 1000);
     }
 
     function saveSettings() {
@@ -5331,6 +5583,21 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
       const backendType = document.getElementById('setting-backend-type')?.value || 'ollama';
       const keepalive = document.getElementById('setting-keepalive')?.value || '15m';
       const persona = document.getElementById('setting-persona')?.value || '';
+
+      const byokGemini = document.getElementById('byok-gemini')?.value || '';
+      const byokOpenAI = document.getElementById('byok-openai')?.value || '';
+      const byokClaude = document.getElementById('byok-anthropic')?.value || '';
+      const byokGroq = document.getElementById('byok-groq')?.value || '';
+      const byokDeepSeek = document.getElementById('byok-deepseek')?.value || '';
+      const byokOpenRouter = document.getElementById('byok-openrouter')?.value || '';
+
+      localStorage.setItem('vigyan_byok_gemini', byokGemini);
+      localStorage.setItem('vigyan_byok_openai', byokOpenAI);
+      localStorage.setItem('vigyan_byok_anthropic', byokClaude);
+      localStorage.setItem('vigyan_byok_groq', byokGroq);
+      localStorage.setItem('vigyan_byok_deepseek', byokDeepSeek);
+      localStorage.setItem('vigyan_byok_openrouter', byokOpenRouter);
+
       OLLAMA_HOST = url;
       AGENT_HOST = agentUrl;
       API_KEY = apiKey;
@@ -5341,6 +5608,7 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
       localStorage.setItem('vigyan_backend_type', BACKEND_TYPE);
       localStorage.setItem('vigyan_v26_settings', JSON.stringify({ temp, ctx, topp, url, agentUrl, backendType, keepalive, persona }));
       onBackendTypeChange(BACKEND_TYPE);
+      updateModelDropdownUI();
       showToast('Settings saved');
       haptics.success();
     }
@@ -5371,6 +5639,13 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
             localStorage.setItem('vigyan_v26_settings', JSON.stringify(s));
           }
         }
+
+        if (document.getElementById('byok-gemini')) document.getElementById('byok-gemini').value = localStorage.getItem('vigyan_byok_gemini') || '';
+        if (document.getElementById('byok-openai')) document.getElementById('byok-openai').value = localStorage.getItem('vigyan_byok_openai') || '';
+        if (document.getElementById('byok-anthropic')) document.getElementById('byok-anthropic').value = localStorage.getItem('vigyan_byok_anthropic') || '';
+        if (document.getElementById('byok-groq')) document.getElementById('byok-groq').value = localStorage.getItem('vigyan_byok_groq') || '';
+        if (document.getElementById('byok-deepseek')) document.getElementById('byok-deepseek').value = localStorage.getItem('vigyan_byok_deepseek') || '';
+        if (document.getElementById('byok-openrouter')) document.getElementById('byok-openrouter').value = localStorage.getItem('vigyan_byok_openrouter') || '';
       } catch (e) {}
 
       if (uiZoomLevel !== 1.0) applyUiZoom(uiZoomLevel, true);

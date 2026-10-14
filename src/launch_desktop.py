@@ -968,6 +968,361 @@ def select_cascade_model(requested_model: str, query: str) -> Dict[str, Any]:
     }
 
 
+# ==============================================================================
+# 3.1 HUGGING FACE RESUMABLE MODEL DOWNLOADER & REGISTRY
+# ==============================================================================
+MODELS_CATALOG = {
+    "olmoe:1b-7b": {
+        "name": "Allen OLMoE 1B-7B Instruct",
+        "tag": "olmoe:1b-7b",
+        "size_bytes": 3435973836,
+        "size_formatted": "3.2 GB",
+        "recommended_ram": "< 16 GB RAM (Laptops & APUs)",
+        "description": "Sparse Mixture-of-Experts (6.9B total, 1B active). Blazing fast on laptops and integrated graphics.",
+        "hf_url": "https://huggingface.co/allenai/OLMoE-1B-7B-0924-Instruct-GGUF/resolve/main/olmoe-1b-7b-0924-instruct-q3_k_m.gguf",
+        "local_candidates": [
+            os.path.expanduser("~/.vigyan/models/olmoe-1b-7b-0924-instruct-q3_k_m.gguf"),
+            "/home/hello/Downloads/vigyan ai/models/olmoe-1b-7b-0924-instruct-q3_k_m.gguf"
+        ],
+        "dest_filename": "olmoe-1b-7b-0924-instruct-q3_k_m.gguf",
+        "template": """{{- if .System }}<|im_start|>system
+{{ .System }}<|im_end|>
+{{ end }}{{- range .Messages }}<|im_start|>{{ .Role }}
+{{ .Content }}<|im_end|>
+{{ end }}<|im_start|>assistant
+""",
+        "stop": ["<|im_start|>", "<|im_end|>", "<|endoftext|>"]
+    },
+    "vigyan:7b-quad-master": {
+        "name": "Vigyan 7B Quad-Master DPO",
+        "tag": "vigyan:7b-quad-master",
+        "size_bytes": 4509715660,
+        "size_formatted": "4.2 GB",
+        "recommended_ram": "≥ 16 GB RAM / Dedicated GPU",
+        "description": "Frontier Sovereign STEM & Reasoning model. Four-way post-trained DPO on advanced physics, math, and code.",
+        "hf_url": "https://huggingface.co/shreyansh12183/vigyan-7b-quad-master/resolve/main/vigyan-7b-quad-master-q4_k_m.gguf",
+        "local_candidates": [
+            os.path.expanduser("~/.vigyan/models/vigyan-7b-quad-master-q4_k_m.gguf"),
+            "/home/hello/Downloads/vigyan ai/models/vigyan-7b-quad-master-q4_k_m.gguf"
+        ],
+        "dest_filename": "vigyan-7b-quad-master-q4_k_m.gguf",
+        "template": """{{- if .System }}<|im_start|>system
+{{ .System }}<|im_end|>
+{{ end }}{{- range .Messages }}<|im_start|>{{ .Role }}
+{{ .Content }}<|im_end|>
+{{ end }}<|im_start|>assistant
+""",
+        "stop": ["<|im_start|>", "<|im_end|>", "<|endoftext|>"]
+    }
+}
+
+
+class ModelDownloadManager:
+    """Resumable chunked model downloader with speed tracking and Ollama auto-registration."""
+    def __init__(self):
+        self.active_downloads: Dict[str, Dict[str, Any]] = {}
+        self._lock = threading.Lock()
+
+    def get_status(self, tag: Optional[str] = None) -> Dict[str, Any]:
+        with self._lock:
+            if tag:
+                return self.active_downloads.get(tag, {"status": "idle"})
+            return dict(self.active_downloads)
+
+    def start_download(self, tag: str) -> Dict[str, Any]:
+        info = MODELS_CATALOG.get(tag)
+        if not info:
+            return {"success": False, "error": f"Unknown model: {tag}"}
+
+        with self._lock:
+            if tag in self.active_downloads and self.active_downloads[tag]["status"] in ("downloading", "registering"):
+                return {"success": True, "message": "Already downloading", "status": self.active_downloads[tag]}
+            self.active_downloads[tag] = {
+                "tag": tag,
+                "name": info["name"],
+                "status": "starting",
+                "progress_pct": 0.0,
+                "downloaded_bytes": 0,
+                "total_bytes": info["size_bytes"],
+                "speed_mbps": 0.0,
+                "error": None
+            }
+
+        # Check local candidate files first (instant local import)
+        for cand in info.get("local_candidates", []):
+            if os.path.isfile(cand) and os.path.getsize(cand) > 100_000_000:
+                def _instant_register():
+                    with self._lock:
+                        self.active_downloads[tag]["status"] = "registering"
+                        self.active_downloads[tag]["progress_pct"] = 100.0
+                    target_dir = os.path.expanduser("~/.vigyan/models")
+                    os.makedirs(target_dir, exist_ok=True)
+                    dest_file = os.path.join(target_dir, info["dest_filename"])
+                    if not os.path.exists(dest_file):
+                        try:
+                            shutil.copyfile(cand, dest_file)
+                        except Exception:
+                            dest_file = cand
+                    # Register into Ollama
+                    modelfile_path = os.path.join(target_dir, f"Modelfile.{tag.replace(':', '_')}")
+                    with open(modelfile_path, "w", encoding="utf-8") as mf:
+                        mf.write(f"FROM {dest_file}\nTEMPLATE \"\"\"{info['template']}\"\"\"\n")
+                        for s in info.get("stop", []):
+                            mf.write(f"PARAMETER stop \"{s}\"\n")
+                    subprocess.run(["ollama", "create", tag, "-f", modelfile_path], check=False)
+                    with self._lock:
+                        self.active_downloads[tag]["status"] = "ready"
+                threading.Thread(target=_instant_register, daemon=True).start()
+                return {"success": True, "message": "Found local weights, registering into Ollama...", "status": "registering"}
+
+        # Background resumable download thread
+        def _download_thread():
+            target_dir = os.path.expanduser("~/.vigyan/models")
+            os.makedirs(target_dir, exist_ok=True)
+            dest_file = os.path.join(target_dir, info["dest_filename"])
+            part_file = dest_file + ".part"
+
+            existing_bytes = os.path.getsize(part_file) if os.path.exists(part_file) else 0
+            headers = {"User-Agent": "Vigyan-Desktop-Sovereign-Downloader/1.0"}
+            if existing_bytes > 0:
+                headers["Range"] = f"bytes={existing_bytes}-"
+
+            try:
+                with self._lock:
+                    self.active_downloads[tag]["status"] = "downloading"
+                    self.active_downloads[tag]["downloaded_bytes"] = existing_bytes
+
+                req = urllib.request.Request(info["hf_url"], headers=headers)
+                start_time = time.time()
+                bytes_this_session = 0
+
+                with urllib.request.urlopen(req, timeout=30) as resp:
+                    total = info["size_bytes"]
+                    cr = resp.headers.get("Content-Range")
+                    if cr and "/" in cr:
+                        try:
+                            total = int(cr.split("/")[-1])
+                        except Exception:
+                            pass
+                    elif resp.headers.get("Content-Length") and existing_bytes == 0:
+                        total = int(resp.headers.get("Content-Length"))
+
+                    mode = "ab" if existing_bytes > 0 else "wb"
+                    with open(part_file, mode) as f:
+                        while True:
+                            with self._lock:
+                                if self.active_downloads.get(tag, {}).get("status") == "cancelled":
+                                    return
+                            chunk = resp.read(1024 * 256)
+                            if not chunk:
+                                break
+                            f.write(chunk)
+                            bytes_this_session += len(chunk)
+                            current_total = existing_bytes + bytes_this_session
+                            elapsed = max(0.1, time.time() - start_time)
+                            speed_mbps = (bytes_this_session / (1024 * 1024)) / elapsed
+                            pct = min(99.0, round((current_total / max(1, total)) * 100, 1))
+
+                            with self._lock:
+                                self.active_downloads[tag]["downloaded_bytes"] = current_total
+                                self.active_downloads[tag]["total_bytes"] = total
+                                self.active_downloads[tag]["progress_pct"] = pct
+                                self.active_downloads[tag]["speed_mbps"] = round(speed_mbps, 1)
+
+                os.rename(part_file, dest_file)
+                with self._lock:
+                    self.active_downloads[tag]["status"] = "registering"
+                    self.active_downloads[tag]["progress_pct"] = 100.0
+
+                modelfile_path = os.path.join(target_dir, f"Modelfile.{tag.replace(':', '_')}")
+                with open(modelfile_path, "w", encoding="utf-8") as mf:
+                    mf.write(f"FROM {dest_file}\nTEMPLATE \"\"\"{info['template']}\"\"\"\n")
+                    for s in info.get("stop", []):
+                        mf.write(f"PARAMETER stop \"{s}\"\n")
+                subprocess.run(["ollama", "create", tag, "-f", modelfile_path], check=False)
+
+                with self._lock:
+                    self.active_downloads[tag]["status"] = "ready"
+
+            except Exception as exc:
+                with self._lock:
+                    self.active_downloads[tag]["status"] = "error"
+                    self.active_downloads[tag]["error"] = str(exc)
+
+        threading.Thread(target=_download_thread, daemon=True).start()
+        return {"success": True, "message": "Download started", "tag": tag}
+
+    def cancel_download(self, tag: str) -> bool:
+        with self._lock:
+            if tag in self.active_downloads:
+                self.active_downloads[tag]["status"] = "cancelled"
+                return True
+            return False
+
+
+_DOWNLOAD_MGR = ModelDownloadManager()
+
+
+# ==============================================================================
+# 3.2 LOCAL WORKSPACE FILE AGENT TOOLS
+# ==============================================================================
+def list_workspace_dir(path: str = ".") -> Dict[str, Any]:
+    safe_path = os.path.abspath(path)
+    if not os.path.isdir(safe_path):
+        return {"success": False, "error": f"Directory not found: {path}"}
+    items = []
+    try:
+        for entry in os.scandir(safe_path):
+            try:
+                stat = entry.stat()
+                items.append({
+                    "name": entry.name,
+                    "is_dir": entry.is_dir(),
+                    "size": stat.st_size if not entry.is_dir() else 0,
+                    "mtime": stat.st_mtime
+                })
+            except Exception:
+                pass
+        items.sort(key=lambda x: (not x["is_dir"], x["name"].lower()))
+        return {"success": True, "path": safe_path, "items": items[:100]}
+    except Exception as e:
+        return {"success": False, "error": str(e)}
+
+
+def read_workspace_file(path: str, start_line: int = 1, end_line: int = 200) -> Dict[str, Any]:
+    safe_path = os.path.abspath(path)
+    if not os.path.isfile(safe_path):
+        return {"success": False, "error": f"File not found: {path}"}
+    try:
+        with open(safe_path, "r", encoding="utf-8", errors="replace") as f:
+            lines = f.readlines()
+        total_lines = len(lines)
+        s = max(1, start_line)
+        e = min(total_lines, max(s, end_line))
+        chunk = "".join(lines[s-1:e])
+        return {
+            "success": True,
+            "path": safe_path,
+            "total_lines": total_lines,
+            "start_line": s,
+            "end_line": e,
+            "content": chunk
+        }
+    except Exception as e:
+        return {"success": False, "error": str(e)}
+
+
+def write_workspace_file(path: str, content: str, overwrite: bool = False) -> Dict[str, Any]:
+    safe_path = os.path.abspath(path)
+    if os.path.exists(safe_path) and not overwrite:
+        return {
+            "success": False,
+            "status": "requires_approval",
+            "reason": f"File '{os.path.basename(path)}' already exists. Overwrite requires user confirmation.",
+            "path": safe_path,
+            "command": f"write_file({os.path.basename(path)})"
+        }
+    try:
+        os.makedirs(os.path.dirname(safe_path), exist_ok=True)
+        with open(safe_path, "w", encoding="utf-8") as f:
+            f.write(content)
+        return {"success": True, "status": "written", "path": safe_path, "bytes": len(content.encode("utf-8"))}
+    except Exception as e:
+        return {"success": False, "error": str(e)}
+
+
+def grep_workspace_files(query: str, path: str = ".") -> Dict[str, Any]:
+    safe_path = os.path.abspath(path)
+    matches = []
+    try:
+        proc = subprocess.run(
+            ["grep", "-rnI", "--exclude-dir=.git", "--exclude-dir=node_modules", "--exclude-dir=__pycache__", "-m", "50", query, safe_path],
+            stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, timeout=8.0
+        )
+        for line in proc.stdout.splitlines()[:50]:
+            parts = line.split(":", 2)
+            if len(parts) >= 3:
+                rel = os.path.relpath(parts[0], safe_path)
+                matches.append({"file": rel, "line": int(parts[1]) if parts[1].isdigit() else 0, "text": parts[2].strip()})
+        return {"success": True, "query": query, "matches": matches}
+    except Exception as e:
+        return {"success": False, "error": str(e)}
+
+
+# ==============================================================================
+# 3.3 UNIFIED BYOK (BRING YOUR OWN KEY) CLOUD GATEWAY
+# ==============================================================================
+def stream_byok_completion(provider: str, api_key: str, model: str, messages: List[Dict[str, Any]], options: Dict[str, Any]):
+    """Stream from cloud BYOK providers with uniform response chunks."""
+    endpoints = {
+        "openai": "https://api.openai.com/v1/chat/completions",
+        "groq": "https://api.groq.com/openai/v1/chat/completions",
+        "deepseek": "https://api.deepseek.com/chat/completions",
+        "openrouter": "https://openrouter.ai/api/v1/chat/completions"
+    }
+
+    if provider in endpoints:
+        headers = {
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {api_key}"
+        }
+        if provider == "openrouter":
+            headers["HTTP-Referer"] = "https://vigyan.ai"
+            headers["X-Title"] = "Vigyan Pro Desktop"
+
+        payload = {
+            "model": model,
+            "messages": messages,
+            "temperature": options.get("temperature", 0.7),
+            "stream": True
+        }
+        req = urllib.request.Request(endpoints[provider], headers=headers, data=json.dumps(payload).encode("utf-8"))
+        return urllib.request.urlopen(req, timeout=60)
+
+    elif provider == "gemini":
+        target_model = model or "gemini-1.5-flash"
+        url = f"https://generativelanguage.googleapis.com/v1beta/models/{target_model}:streamGenerateContent?key={api_key}&alt=sse"
+        contents = []
+        for m in messages:
+            if m.get("role") == "system":
+                continue
+            role = "user" if m.get("role") == "user" else "model"
+            contents.append({"role": role, "parts": [{"text": m.get("content", "")}]})
+        payload = {"contents": contents}
+        req = urllib.request.Request(url, headers={"Content-Type": "application/json"}, data=json.dumps(payload).encode("utf-8"))
+        return urllib.request.urlopen(req, timeout=60)
+
+    elif provider == "anthropic":
+        url = "https://api.anthropic.com/v1/messages"
+        headers = {
+            "Content-Type": "application/json",
+            "x-api-key": api_key,
+            "anthropic-version": "2023-06-01"
+        }
+        system_text = ""
+        user_msgs = []
+        for m in messages:
+            if m.get("role") == "system":
+                system_text = m.get("content", "")
+            else:
+                user_msgs.append({"role": m.get("role"), "content": m.get("content")})
+        payload = {
+            "model": model or "claude-3-5-sonnet-20241022",
+            "max_tokens": 4096,
+            "messages": user_msgs,
+            "stream": True
+        }
+        if system_text:
+            payload["system"] = system_text
+        req = urllib.request.Request(url, headers=headers, data=json.dumps(payload).encode("utf-8"))
+        return urllib.request.urlopen(req, timeout=60)
+
+    raise ValueError(f"Unsupported BYOK provider: {provider}")
+
+
+# ==============================================================================
+# 3.4 EMBEDDED LOCAL SOVEREIGN AGENT & NEURO-SYMBOLIC BRIDGE (PORT 8085)
+# ==============================================================================
 class _NeuroSymbolicHTTPHandler(BaseHTTPRequestHandler):
     def log_message(self, format, *args):
         pass  # Keep console clean
@@ -997,6 +1352,34 @@ class _NeuroSymbolicHTTPHandler(BaseHTTPRequestHandler):
             })
             self._send_cors(200)
             self.wfile.write(json.dumps(payload).encode("utf-8"))
+        elif self.path.startswith("/api/models/catalog"):
+            tel = get_system_telemetry()
+            ram_gb = tel.get("ram_total_gb", 8.0)
+            rec_tag = "olmoe:1b-7b" if ram_gb < 14.0 else "vigyan:7b-quad-master"
+            payload = {
+                "catalog": MODELS_CATALOG,
+                "recommended_tag": rec_tag,
+                "system_ram_gb": ram_gb,
+                "downloads": _DOWNLOAD_MGR.get_status()
+            }
+            self._send_cors(200)
+            self.wfile.write(json.dumps(payload).encode("utf-8"))
+        elif self.path.startswith("/api/models/download/status"):
+            query_tag = None
+            if "?" in self.path:
+                from urllib.parse import parse_qs, urlparse
+                qs = parse_qs(urlparse(self.path).query)
+                query_tag = qs.get("tag", [None])[0]
+            st = _DOWNLOAD_MGR.get_status(query_tag)
+            self._send_cors(200)
+            self.wfile.write(json.dumps(st).encode("utf-8"))
+        elif self.path.startswith("/api/workspace/list"):
+            from urllib.parse import parse_qs, urlparse
+            qs = parse_qs(urlparse(self.path).query)
+            p = qs.get("path", ["."])[0]
+            res = list_workspace_dir(p)
+            self._send_cors(200)
+            self.wfile.write(json.dumps(res).encode("utf-8"))
         else:
             self._send_cors(404)
             self.wfile.write(b'{"error":"not found"}')
@@ -1023,6 +1406,52 @@ class _NeuroSymbolicHTTPHandler(BaseHTTPRequestHandler):
             self.wfile.write(json.dumps(stats).encode("utf-8"))
             return
 
+        if self.path.startswith("/api/models/download"):
+            if self.path.endswith("/cancel"):
+                tag = body.get("tag", "")
+                cancelled = _DOWNLOAD_MGR.cancel_download(tag)
+                self._send_cors(200)
+                self.wfile.write(json.dumps({"success": cancelled, "tag": tag}).encode("utf-8"))
+                return
+            tag = body.get("model_id") or body.get("tag") or "olmoe:1b-7b"
+            res = _DOWNLOAD_MGR.start_download(tag)
+            self._send_cors(200)
+            self.wfile.write(json.dumps(res).encode("utf-8"))
+            return
+
+        if self.path.startswith("/api/workspace/list"):
+            p = body.get("path", ".")
+            res = list_workspace_dir(p)
+            self._send_cors(200)
+            self.wfile.write(json.dumps(res).encode("utf-8"))
+            return
+
+        if self.path.startswith("/api/workspace/read"):
+            p = body.get("path", "")
+            s = int(body.get("start_line", 1))
+            e = int(body.get("end_line", 200))
+            res = read_workspace_file(p, s, e)
+            self._send_cors(200)
+            self.wfile.write(json.dumps(res).encode("utf-8"))
+            return
+
+        if self.path.startswith("/api/workspace/write"):
+            p = body.get("path", "")
+            c = body.get("content", "")
+            ov = bool(body.get("overwrite", False))
+            res = write_workspace_file(p, c, ov)
+            self._send_cors(200)
+            self.wfile.write(json.dumps(res).encode("utf-8"))
+            return
+
+        if self.path.startswith("/api/workspace/grep"):
+            q = body.get("query", "")
+            p = body.get("path", ".")
+            res = grep_workspace_files(q, p)
+            self._send_cors(200)
+            self.wfile.write(json.dumps(res).encode("utf-8"))
+            return
+
         if self.path.startswith("/api/agent/execute_cmd"):
             cmd = body.get("command", "")
             confirmed = bool(body.get("confirmed", False))
@@ -1035,10 +1464,8 @@ class _NeuroSymbolicHTTPHandler(BaseHTTPRequestHandler):
         if self.path.startswith("/api/chat") or self.path.startswith("/api/agent/stream"):
             user_query = (body.get("query") or body.get("message") or "").strip()
             requested_model = body.get("model") or "auto"
-            
-            # Select model via 3-Tier Cascade
-            cascade = select_cascade_model(requested_model, user_query)
-            active_model = cascade["model"]
+            byok_provider = body.get("provider")
+            byok_api_key = body.get("api_key")
             
             enrichment = enrich_stem_query(user_query)
 
@@ -1056,33 +1483,85 @@ class _NeuroSymbolicHTTPHandler(BaseHTTPRequestHandler):
                 except Exception:
                     pass
 
-            # Inform client of active cascade tier
+            # Grounding and axioms
+            if enrichment.get("sympy"):
+                s = enrichment["sympy"]
+                _emit("sympy", f"$${s.get('latex', s.get('result'))}$$")
+                _emit("think", f"SymPy AST Verified: {s.get('expression')} => {s.get('result')}\n")
+            if enrichment.get("graph_axioms"):
+                cites = [f"[{a['domain']}: {a['law']}] {a['equation']}" for a in enrichment["graph_axioms"]]
+                _emit("memory", "<br>• " + "<br>• ".join(cites))
+                _emit("think", f"Retrieved {len(cites)} verified STEM axioms from KùzuDB GraphRAG.\n")
+
+            sys_prompt = (
+                "You are Vigyan Pro, an offline sovereign STEM agentic AI workstation. "
+                "Format formulas in clean LaTeX ($$...$$). "
+                "You have full autonomous access to the user's workspace and tools using JSON blocks:\n"
+                "- <tool_call>{\"name\": \"execute_cmd\", \"arguments\": {\"command\": \"ls -la\"}}</tool_call>\n"
+                "- <tool_call>{\"name\": \"list_dir\", \"arguments\": {\"path\": \".\"}}</tool_call>\n"
+                "- <tool_call>{\"name\": \"read_file\", \"arguments\": {\"path\": \"README.md\", \"start_line\": 1, \"end_line\": 100}}</tool_call>\n"
+                "- <tool_call>{\"name\": \"write_file\", \"arguments\": {\"path\": \"output.py\", \"content\": \"print('hello')\"}}</tool_call>\n"
+                "- <tool_call>{\"name\": \"grep_files\", \"arguments\": {\"query\": \"def main\", \"path\": \".\"}}</tool_call>\n"
+                "- <tool_call>{\"name\": \"sympy_eval\", \"arguments\": {\"expression\": \"integrate(x**2, x)\"}}</tool_call>\n"
+                "- <tool_call>{\"name\": \"kuzu_graph\", \"arguments\": {\"keywords\": [\"semiconductor\", \"fermi\"]}}</tool_call>\n"
+                "- <tool_call>{\"name\": \"render_stem\", \"arguments\": {\"viewer\": \"biology\", \"params\": {\"type\": \"dna_helix\"}}}</tool_call>"
+            )
+            if enrichment.get("prompt_injection"):
+                sys_prompt += "\n\n" + enrichment["prompt_injection"]
+
+            # Route 1: BYOK Cloud Provider
+            if byok_provider and byok_api_key:
+                _emit("cascade_tier", {"tier": "BYOK", "model": requested_model, "provider": byok_provider, "reason": f"BYOK Cloud Gateway ({byok_provider.upper()})"})
+                try:
+                    msgs = [{"role": "system", "content": sys_prompt}]
+                    for m in body.get("messages", []):
+                        if m.get("role") != "system":
+                            msgs.append(m)
+                    if not any(m.get("content") == user_query for m in msgs):
+                        msgs.append({"role": "user", "content": user_query})
+
+                    accumulated_text = ""
+                    with stream_byok_completion(byok_provider, byok_api_key, requested_model, msgs, body.get("options", {})) as resp:
+                        for line in resp:
+                            line_s = line.decode("utf-8").strip()
+                            if not line_s:
+                                continue
+                            if line_s.startswith("data:"):
+                                line_s = line_s[5:].strip()
+                            if line_s == "[DONE]":
+                                break
+                            try:
+                                chunk_json = json.loads(line_s)
+                                tok = ""
+                                if byok_provider == "gemini":
+                                    cand = chunk_json.get("candidates", [{}])[0]
+                                    parts = cand.get("content", {}).get("parts", [{}])
+                                    tok = parts[0].get("text", "")
+                                elif byok_provider == "anthropic":
+                                    if chunk_json.get("type") == "content_block_delta":
+                                        tok = chunk_json.get("delta", {}).get("text", "")
+                                else:
+                                    tok = chunk_json.get("choices", [{}])[0].get("delta", {}).get("content", "")
+                                if tok:
+                                    accumulated_text += tok
+                                    _emit("token", tok)
+                            except Exception:
+                                pass
+
+                    # Tool parsing on BYOK output
+                    self._parse_and_execute_tools(accumulated_text, _emit)
+                except Exception as exc:
+                    _emit("token", f"\n\n[BYOK Gateway Error: {exc}]")
+                _emit("done", {})
+                return
+
+            # Route 2: Sovereign Offline Ollama with RAM Governor
+            cascade = select_cascade_model(requested_model, user_query)
+            active_model = cascade["model"]
             _emit("cascade_tier", cascade)
 
             try:
-                if enrichment.get("sympy"):
-                    s = enrichment["sympy"]
-                    _emit("sympy", f"$${s.get('latex', s.get('result'))}$$")
-                    _emit("think", f"SymPy AST Verified: {s.get('expression')} => {s.get('result')}\n")
-                if enrichment.get("graph_axioms"):
-                    cites = [f"[{a['domain']}: {a['law']}] {a['equation']}" for a in enrichment["graph_axioms"]]
-                    _emit("memory", "<br>• " + "<br>• ".join(cites))
-                    _emit("think", f"Retrieved {len(cites)} verified STEM axioms from KùzuDB GraphRAG.\n")
-
-                import urllib.request
                 hybrid = enrichment["hybrid"]
-                sys_prompt = (
-                    "You are Vigyan Pro, an offline sovereign STEM agentic AI workstation. "
-                    "Format formulas in clean LaTeX ($$...$$). "
-                    "When solving problems or automating tasks, you can invoke tools using JSON blocks:\n"
-                    "- <tool_call>{\"name\": \"execute_cmd\", \"arguments\": {\"command\": \"ls -la\"}}</tool_call>\n"
-                    "- <tool_call>{\"name\": \"sympy_eval\", \"arguments\": {\"expression\": \"integrate(x**2, x)\"}}</tool_call>\n"
-                    "- <tool_call>{\"name\": \"kuzu_graph\", \"arguments\": {\"keywords\": [\"semiconductor\", \"fermi\"]}}</tool_call>\n"
-                    "- <tool_call>{\"name\": \"render_stem\", \"arguments\": {\"viewer\": \"biology\", \"params\": {\"type\": \"dna_helix\"}}}</tool_call>"
-                )
-                if enrichment.get("prompt_injection"):
-                    sys_prompt += "\n\n" + enrichment["prompt_injection"]
-
                 ollama_payload = {
                     "model": active_model,
                     "messages": [
@@ -1098,7 +1577,7 @@ class _NeuroSymbolicHTTPHandler(BaseHTTPRequestHandler):
                     },
                     "stream": True,
                 }
-                
+
                 governor_tripped = [False]
                 def _on_ram_trip(pct):
                     governor_tripped[0] = True
@@ -1118,7 +1597,7 @@ class _NeuroSymbolicHTTPHandler(BaseHTTPRequestHandler):
                     headers={"Content-Type": "application/json"},
                     data=json.dumps(ollama_payload).encode("utf-8"),
                 )
-                
+
                 accumulated_text = ""
                 with urllib.request.urlopen(req, timeout=45) as resp:
                     for line in resp:
@@ -1134,29 +1613,7 @@ class _NeuroSymbolicHTTPHandler(BaseHTTPRequestHandler):
                             _emit("token", tok)
 
                 governor.stop()
-
-                # Parse any tool calls emitted in output
-                tool_matches = re.findall(r"<tool_call>(.*?)</tool_call>", accumulated_text, re.DOTALL)
-                for t_str in tool_matches:
-                    try:
-                        t_data = json.loads(t_str.strip())
-                        t_name = t_data.get("name")
-                        t_args = t_data.get("arguments", {})
-                        if t_name == "execute_cmd":
-                            cmd = t_args.get("command", "")
-                            exec_res = execute_shell_command(cmd, confirmed=False)
-                            if exec_res.get("status") == "requires_approval":
-                                _emit("requires_approval", exec_res)
-                            else:
-                                _emit("tool_result", exec_res)
-                        elif t_name == "sympy_eval" and _SYMPY_ENGINE:
-                            expr = t_args.get("expression", "")
-                            eval_res = _SYMPY_ENGINE.evaluate_expression(expr)
-                            _emit("sympy", f"$${eval_res.get('latex', eval_res.get('result'))}$$")
-                        elif t_name == "render_stem":
-                            _emit("stem_viewer", t_args)
-                    except Exception:
-                        pass
+                self._parse_and_execute_tools(accumulated_text, _emit)
 
             except Exception as exc:
                 if enrichment.get("sympy"):
@@ -1184,6 +1641,43 @@ class _NeuroSymbolicHTTPHandler(BaseHTTPRequestHandler):
 
         self._send_cors(404)
         self.wfile.write(b'{"error":"unknown endpoint"}')
+
+    def _parse_and_execute_tools(self, text: str, emit_fn):
+        tool_matches = re.findall(r"<tool_call>(.*?)</tool_call>", text, re.DOTALL)
+        for t_str in tool_matches:
+            try:
+                t_data = json.loads(t_str.strip())
+                t_name = t_data.get("name")
+                t_args = t_data.get("arguments", {})
+                if t_name == "execute_cmd":
+                    cmd = t_args.get("command", "")
+                    exec_res = execute_shell_command(cmd, confirmed=False)
+                    if exec_res.get("status") == "requires_approval":
+                        emit_fn("requires_approval", exec_res)
+                    else:
+                        emit_fn("tool_result", exec_res)
+                elif t_name == "list_dir":
+                    emit_fn("tool_result", {"tool": "list_dir", "result": list_workspace_dir(t_args.get("path", "."))})
+                elif t_name == "read_file":
+                    emit_fn("tool_result", {"tool": "read_file", "result": read_workspace_file(t_args.get("path", ""), t_args.get("start_line", 1), t_args.get("end_line", 200))})
+                elif t_name == "write_file":
+                    p = t_args.get("path", "")
+                    c = t_args.get("content", "")
+                    w_res = write_workspace_file(p, c, overwrite=False)
+                    if w_res.get("status") == "requires_approval":
+                        emit_fn("requires_approval", w_res)
+                    else:
+                        emit_fn("tool_result", {"tool": "write_file", "result": w_res})
+                elif t_name == "grep_files":
+                    emit_fn("tool_result", {"tool": "grep_files", "result": grep_workspace_files(t_args.get("query", ""), t_args.get("path", "."))})
+                elif t_name == "sympy_eval" and _SYMPY_ENGINE:
+                    expr = t_args.get("expression", "")
+                    eval_res = _SYMPY_ENGINE.evaluate_expression(expr)
+                    emit_fn("sympy", f"$${eval_res.get('latex', eval_res.get('result'))}$$")
+                elif t_name == "render_stem":
+                    emit_fn("stem_viewer", t_args)
+            except Exception:
+                pass
 
 
 def start_neuro_symbolic_bridge_server(port: int = 8085) -> Optional[int]:
