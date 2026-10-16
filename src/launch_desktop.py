@@ -1266,16 +1266,46 @@ def write_workspace_file(path: str, content: str, overwrite: bool = False) -> Di
 def grep_workspace_files(query: str, path: str = ".") -> Dict[str, Any]:
     safe_path = os.path.abspath(path)
     matches = []
+    # Fast-path: use grep binary on Unix/Linux if available
+    if shutil.which("grep") and not sys.platform.startswith("win32"):
+        try:
+            proc = subprocess.run(
+                ["grep", "-rnI", "--exclude-dir=.git", "--exclude-dir=node_modules", "--exclude-dir=__pycache__", "-m", "50", query, safe_path],
+                stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, timeout=8.0
+            )
+            for line in proc.stdout.splitlines()[:50]:
+                parts = line.split(":", 2)
+                if len(parts) >= 3:
+                    rel = os.path.relpath(parts[0], safe_path)
+                    matches.append({"file": rel, "line": int(parts[1]) if parts[1].isdigit() else 0, "text": parts[2].strip()})
+            return {"success": True, "query": query, "matches": matches}
+        except Exception:
+            pass
+
+    # Universal cross-platform pure-Python search fallback (Windows / macOS / minimal environments)
     try:
-        proc = subprocess.run(
-            ["grep", "-rnI", "--exclude-dir=.git", "--exclude-dir=node_modules", "--exclude-dir=__pycache__", "-m", "50", query, safe_path],
-            stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, timeout=8.0
-        )
-        for line in proc.stdout.splitlines()[:50]:
-            parts = line.split(":", 2)
-            if len(parts) >= 3:
-                rel = os.path.relpath(parts[0], safe_path)
-                matches.append({"file": rel, "line": int(parts[1]) if parts[1].isdigit() else 0, "text": parts[2].strip()})
+        q_lower = query.lower()
+        count = 0
+        skip_dirs = {".git", "node_modules", "__pycache__", ".venv", "dist", "build"}
+        for root, dirs, files in os.walk(safe_path):
+            dirs[:] = [d for d in dirs if d not in skip_dirs]
+            for fname in files:
+                fpath = os.path.join(root, fname)
+                try:
+                    with open(fpath, "r", encoding="utf-8", errors="ignore") as f:
+                        for line_no, line in enumerate(f, 1):
+                            if q_lower in line.lower():
+                                rel = os.path.relpath(fpath, safe_path)
+                                matches.append({"file": rel, "line": line_no, "text": line.strip()})
+                                count += 1
+                                if count >= 50:
+                                    break
+                except Exception:
+                    pass
+                if count >= 50:
+                    break
+            if count >= 50:
+                break
         return {"success": True, "query": query, "matches": matches}
     except Exception as e:
         return {"success": False, "error": str(e)}
@@ -1813,6 +1843,36 @@ class _NeuroSymbolicHTTPHandler(BaseHTTPRequestHandler):
             self._send_cors(200)
             self.wfile.write(json.dumps(res).encode("utf-8"))
         else:
+            # Universal cross-platform static file serving (served from local src directory)
+            clean_path = self.path.split("?")[0]
+            if clean_path in ("/", "/index.html", "/chat"):
+                target_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), "index.html")
+                if os.path.isfile(target_file):
+                    self._send_cors(200, content_type="text/html; charset=utf-8")
+                    with open(target_file, "rb") as f:
+                        self.wfile.write(f.read())
+                    return
+            elif clean_path.startswith(("/vendor/", "/assets/")):
+                rel = clean_path.lstrip("/")
+                target_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), rel)
+                if os.path.isfile(target_file):
+                    ctype = "application/octet-stream"
+                    if clean_path.endswith(".js"):
+                        ctype = "application/javascript"
+                    elif clean_path.endswith(".css"):
+                        ctype = "text/css"
+                    elif clean_path.endswith(".woff2"):
+                        ctype = "font/woff2"
+                    elif clean_path.endswith(".png"):
+                        ctype = "image/png"
+                    elif clean_path.endswith((".jpg", ".jpeg")):
+                        ctype = "image/jpeg"
+                    elif clean_path.endswith(".svg"):
+                        ctype = "image/svg+xml"
+                    self._send_cors(200, content_type=ctype)
+                    with open(target_file, "rb") as f:
+                        self.wfile.write(f.read())
+                    return
             self._send_cors(404)
             self.wfile.write(b'{"error":"not found"}')
 
@@ -1855,6 +1915,7 @@ class _NeuroSymbolicHTTPHandler(BaseHTTPRequestHandler):
             tag = body.get("model_id") or body.get("tag") or "olmoe:1b-7b"
             res = _DOWNLOAD_MGR.start_download(tag)
             self._send_cors(200)
+            self.wfile.write(json.dumps(res).encode("utf-8"))
             return
 
         if self.path.startswith("/api/models/evict"):
@@ -1990,6 +2051,14 @@ class _NeuroSymbolicHTTPHandler(BaseHTTPRequestHandler):
                         {"role": "system", "content": sys_prompt},
                         {"role": "user", "content": user_query},
                     ]
+                user_temp = body.get("temperature")
+                if user_temp is None:
+                    user_temp = body.get("options", {}).get("temperature", 0.05)
+                try:
+                    user_temp = max(0.0, min(2.0, float(user_temp)))
+                except Exception:
+                    user_temp = 0.05
+
                 ollama_payload = {
                     "model": active_model,
                     "messages": model_messages,
@@ -1998,7 +2067,7 @@ class _NeuroSymbolicHTTPHandler(BaseHTTPRequestHandler):
                         "num_thread": hybrid["num_thread"],
                         "num_ctx": hybrid["num_ctx"],
                         "num_batch": hybrid["num_batch"],
-                        "temperature": 0.1,
+                        "temperature": user_temp,
                     },
                     "stream": True,
                 }

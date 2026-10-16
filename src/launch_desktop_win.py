@@ -144,18 +144,26 @@ def launch_webview2():
         icon_path = os.path.join(base_dir, "assets", "micro_logo_v.png")
 
     # Start embedded Neuro-Symbolic HTTP Bridge if available
+    bridge_port = 8085
+    bridge_started = False
     try:
         from launch_desktop import start_neuro_symbolic_bridge_server
-        start_neuro_symbolic_bridge_server(8085)
-    except Exception:
-        pass
+        p = start_neuro_symbolic_bridge_server(8085)
+        if p:
+            bridge_port = p
+            bridge_started = True
+    except Exception as exc:
+        print(f"[Vigyan Pro] Warning: Neuro-symbolic bridge notice: {exc}")
+
+    # Universal cross-platform URL: prefer local HTTP server to avoid Edge/Chromium file:// CORS restrictions
+    target_url = f"http://127.0.0.1:{bridge_port}/" if bridge_started else f"file:///{index_path.replace(os.sep, '/')}"
 
     # 1. Try pywebview with edgechromium (WebView2)
     try:
         import webview
         window = webview.create_window(
             title="Vigyan Pro",
-            url=f"file:///{index_path.replace(os.sep, '/')}",
+            url=target_url,
             width=1340,
             height=760,
             resizable=True,
@@ -177,10 +185,9 @@ def launch_webview2():
     ]
     edge_exe = next((p for p in edge_paths if os.path.exists(p)), "msedge.exe")
 
-    file_url = f"file:///{index_path.replace(os.sep, '/')}"
     cmd = [
         edge_exe,
-        f"--app={file_url}",
+        f"--app={target_url}",
         "--window-size=1340,760",
         "--enable-features=OverlayScrollbar",
         "--force-dark-mode"
@@ -192,7 +199,7 @@ def launch_webview2():
     except Exception as e:
         print(f"Failed to launch Edge app mode: {e}")
         import webbrowser
-        webbrowser.open(file_url)
+        webbrowser.open(target_url)
         return True
 
 
