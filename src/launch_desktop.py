@@ -945,32 +945,56 @@ def execute_shell_command(command: str, confirmed: bool = False, cwd: Optional[s
 
 
 def select_cascade_model(requested_model: str, query: str) -> Dict[str, Any]:
-    """Sovereign Sparse Mixture-of-Experts (MoE) execution router."""
+    """Sovereign Vigyan AI execution router."""
+    target = requested_model if requested_model in ("vigyan:1.5b", "vigyan:3b") else "vigyan:1.5b"
     return {
-        "tier": 1,
-        "model": "olmoe:1b-7b",
+        "tier": 1 if target == "vigyan:1.5b" else 2,
+        "model": target,
         "downgraded": False,
-        "reason": "Allen OLMoE 1B-7B Sparse MoE (6.9B total params, 1B active per token — instant response & light memory footprint)"
+        "reason": f"Vigyan AI {'1.5B STEM SLM' if target == 'vigyan:1.5b' else '3B Reasoning Master'} (Sovereign ChatML architecture)"
     }
 
 
 # ==============================================================================
-# 3.1 HUGGING FACE RESUMABLE MODEL DOWNLOADER & REGISTRY
+# 3.1 VIGYAN AI SOVEREIGN MODEL REGISTRY & DOWNLOAD MANAGER
 # ==============================================================================
 MODELS_CATALOG = {
-    "olmoe:1b-7b": {
-        "name": "Allen OLMoE 1B-7B Instruct",
-        "tag": "olmoe:1b-7b",
-        "size_bytes": 3435973836,
-        "size_formatted": "3.2 GB",
-        "recommended_ram": "4 GB+ RAM (Laptops, Desktops, APUs)",
-        "description": "State-of-the-Art Sparse Mixture-of-Experts (6.9B total, 1B active). Blazing fast responses on laptops, Apple Silicon, and workstations.",
-        "hf_url": "https://huggingface.co/allenai/OLMoE-1B-7B-0924-Instruct-GGUF/resolve/main/olmoe-1b-7b-0924-instruct-q3_k_m.gguf",
+    "vigyan:1.5b": {
+        "name": "Vigyan AI 1.5B STEM",
+        "tag": "vigyan:1.5b",
+        "size_bytes": 1181116006,
+        "size_formatted": "1.1 GB",
+        "recommended_ram": "2 GB+ RAM (Ultra-light, all laptops & APUs)",
+        "description": "Proprietary high-velocity STEM SLM with instant responses, ChatML formatting, and zero-hallucination calculus.",
+        "dest_filename": "vidhi-ai-1.5b-q4_k_m.gguf",
+        "hf_url": "https://huggingface.co/shreyansh12183/vigyan-1.5b-stem-gguf/resolve/main/vidhi-ai-1.5b-q4_k_m.gguf",
         "local_candidates": [
-            os.path.expanduser("~/.vigyan/models/olmoe-1b-7b-0924-instruct-q3_k_m.gguf"),
-            "/home/hello/Downloads/vigyan ai/models/olmoe-1b-7b-0924-instruct-q3_k_m.gguf"
+            os.path.expanduser("~/.vigyan/models/vidhi-ai-1.5b-q4_k_m.gguf"),
+            "/home/hello/Downloads/vigyan ai/models/vidhi-ai-1.5b-q4_k_m.gguf"
         ],
-        "dest_filename": "olmoe-1b-7b-0924-instruct-q3_k_m.gguf",
+        "template": """{{- if .System }}<|im_start|>system
+{{ .System }}<|im_end|>
+{{ end }}{{- range .Messages }}<|im_start|>{{ .Role }}
+{{ .Content }}<|im_end|>
+{{ end }}<|im_start|>assistant
+""",
+        "stop": ["<|im_start|>", "<|im_end|>", "<|endoftext|>"]
+    },
+    "vigyan:3b": {
+        "name": "Vigyan AI 3B Reasoning Master",
+        "tag": "vigyan:3b",
+        "size_bytes": 2254857830,
+        "size_formatted": "2.1 GB",
+        "recommended_ram": "4 GB+ RAM (Fast reasoning on laptops & workstations)",
+        "description": "Proprietary deep STEM reasoning model for advanced calculus, physics derivations, circuit graphs, and 3D CAD.",
+        "dest_filename": "vigyan-3b-stem-q4_k_m.gguf",
+        "hf_url": "https://huggingface.co/shreyansh12183/vigyan-3b-stem-gguf/resolve/main/vigyan-3b-stem-q4_k_m.gguf",
+        "local_candidates": [
+            os.path.expanduser("~/.vigyan/models/vigyan-3b-stem-q4_k_m.gguf"),
+            os.path.expanduser("~/models/vigyan-2b-reasoning-q8_0.gguf"),
+            os.path.expanduser("~/models/vigyan-2b-stem-q4_k_m.gguf"),
+            "/home/hello/Downloads/vigyan ai/models/vigyan-1.5b-4x-moe.Q4_K_M.gguf"
+        ],
         "template": """{{- if .System }}<|im_start|>system
 {{ .System }}<|im_end|>
 {{ end }}{{- range .Messages }}<|im_start|>{{ .Role }}
@@ -1760,7 +1784,7 @@ class _NeuroSymbolicHTTPHandler(BaseHTTPRequestHandler):
         elif self.path.startswith("/api/models/catalog"):
             tel = get_system_telemetry()
             ram_gb = tel.get("ram_total_gb", 8.0)
-            rec_tag = "olmoe:1b-7b"
+            rec_tag = "vigyan:1.5b"
             payload = {
                 "catalog": MODELS_CATALOG,
                 "recommended_tag": rec_tag,
@@ -1859,7 +1883,7 @@ class _NeuroSymbolicHTTPHandler(BaseHTTPRequestHandler):
                 self._send_cors(200)
                 self.wfile.write(json.dumps({"success": cancelled, "tag": tag}).encode("utf-8"))
                 return
-            tag = body.get("model_id") or body.get("tag") or "olmoe:1b-7b"
+            tag = body.get("model_id") or body.get("tag") or "vigyan:1.5b"
             res = _DOWNLOAD_MGR.start_download(tag)
             self._send_cors(200)
             self.wfile.write(json.dumps(res).encode("utf-8"))
@@ -1867,7 +1891,7 @@ class _NeuroSymbolicHTTPHandler(BaseHTTPRequestHandler):
 
         if self.path.startswith("/api/models/evict"):
             tag = body.get("model") or body.get("tag") or ""
-            targets = [tag] if tag else ["olmoe:1b-7b"]
+            targets = [tag] if tag else ["vigyan:1.5b", "vigyan:3b"]
             evicted = []
             for m in targets:
                 try:
@@ -2045,7 +2069,7 @@ class _NeuroSymbolicHTTPHandler(BaseHTTPRequestHandler):
                         "ram_percent": pct,
                         "threshold": gov_thresh,
                         "evicted_model": active_model,
-                        "fallback": "olmoe:1b-7b"
+                        "fallback": "vigyan:1.5b"
                     })
                     _emit("token", f"\n\n⚠️ **[RAM Governor Safety Alert]**: Memory reached {pct:.1f}% (≥ {gov_thresh:.0f}% threshold). Model `{active_model}` was unloaded to prevent system lockup.")
 
@@ -2472,7 +2496,7 @@ def main():
             pw_req = urllib.request.Request(
                 "http://127.0.0.1:11434/api/generate",
                 data=json.dumps({
-                    "model": "olmoe:1b-7b",
+                    "model": "vigyan:1.5b",
                     "prompt": "",
                     "keep_alive": "30m",
                     "options": {"num_ctx": 1024, "num_batch": 64}
@@ -2481,7 +2505,7 @@ def main():
             )
             with urllib.request.urlopen(pw_req, timeout=35.0) as pw_resp:
                 if pw_resp.status == 200:
-                    print("[INFO] Pre-warmed olmoe:1b-7b into memory.", file=sys.stderr)
+                    print("[INFO] Pre-warmed vigyan:1.5b into memory.", file=sys.stderr)
         except Exception:
             pass
 

@@ -2319,7 +2319,7 @@
       <div style="position:relative; margin-left:4px;">
         <button class="model-selector-btn" id="active-model-btn" onclick="toggleModelDropdown()" title="Choose AI Model">
           <img src="assets/micro_logo_v.png" class="msg-avatar-v" alt="V">
-          <span id="current-model-name">olmoe:1b-7b</span>
+          <span id="current-model-name">vigyan:1.5b</span>
           <svg class="icon" viewBox="0 0 24 24" style="width:11px; height:11px;"><polyline points="6 9 12 15 18 9"/></svg>
         </button>
         <div class="model-dropdown-menu" id="model-dropdown"></div>
@@ -2584,24 +2584,48 @@
           </div>
         </div>
 
-        <!-- GROUP 3: SOVEREIGN MOE MODEL -->
+        <!-- GROUP 3: VIGYAN AI SOVEREIGN SUITE -->
         <div class="settings-section-card">
           <div class="section-card-header">
             <span class="section-card-title">
               <svg class="icon" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-              Sovereign Sparse MoE Model
+              Vigyan AI Sovereign Suite
             </span>
             <span class="section-card-badge" id="settings-installed-count">Offline Ready</span>
           </div>
 
           <div class="settings-row-item">
             <div class="settings-row-left">
-              <div class="settings-row-title">Allen OLMoE 1B-7B Instruct</div>
-              <div class="settings-row-sub">3.2 GB GGUF Q3_K_M &bull; 6.9B params (1B active/token)</div>
+              <div class="settings-row-title">Vigyan AI 1.5B STEM</div>
+              <div class="settings-row-sub">1.1 GB GGUF Q4_K_M &bull; ChatML &bull; Ultra-fast Edge SLM</div>
             </div>
             <div class="settings-row-right">
-              <button class="btn-settings-action primary" onclick="openModelManagerModal()">
-                <svg class="icon" viewBox="0 0 24 24" style="width:12px; height:12px; stroke:#000000;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              <button class="btn-settings-action primary" onclick="changeModel('vigyan:1.5b')">
+                <span>Select 1.5B</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="settings-row-item">
+            <div class="settings-row-left">
+              <div class="settings-row-title">Vigyan AI 3B Reasoning Master</div>
+              <div class="settings-row-sub">2.1 GB GGUF &bull; ChatML &bull; Deep Calculus &amp; Physics</div>
+            </div>
+            <div class="settings-row-right">
+              <button class="btn-settings-action" onclick="changeModel('vigyan:3b')">
+                <span>Select 3B</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="settings-row-item" style="background:rgba(255,255,255,0.015);">
+            <div class="settings-row-left">
+              <div class="settings-row-title">Model Operations</div>
+              <div class="settings-row-sub">Manage local weights &amp; evict active memory cache</div>
+            </div>
+            <div class="settings-row-right">
+              <button class="btn-settings-action" onclick="openModelManagerModal()">
+                <svg class="icon" viewBox="0 0 24 24" style="width:12px; height:12px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                 <span>Model Vault</span>
               </button>
               <button class="btn-settings-action" onclick="purgeModelCache()">
@@ -2702,10 +2726,10 @@
     /* =========================================================================
        GLOBAL APPLICATION STATE
        ========================================================================= */
-    let currentModel = localStorage.getItem('vigyan_active_model') || 'olmoe:1b-7b';
-    if (!currentModel || currentModel.includes('vigyan') || currentModel === 'vigyan:7b-quad-master') {
-      currentModel = 'olmoe:1b-7b';
-      try { localStorage.setItem('vigyan_active_model', 'olmoe:1b-7b'); } catch (e) {}
+    let currentModel = localStorage.getItem('vigyan_active_model') || 'vigyan:1.5b';
+    if (!currentModel || currentModel === 'olmoe:1b-7b' || currentModel === 'vigyan:7b-quad-master') {
+      currentModel = 'vigyan:1.5b';
+      try { localStorage.setItem('vigyan_active_model', 'vigyan:1.5b'); } catch (e) {}
     }
     let OLLAMA_HOST = localStorage.getItem('vigyan_ollama_host') || 'http://127.0.0.1:11434';
     let BACKEND_TYPE = localStorage.getItem('vigyan_backend_type') || 'agent_server';
@@ -2734,7 +2758,7 @@
       ollama_options: { num_gpu: -1, num_thread: 4, num_ctx: 8192, num_batch: 512 },
       strategy_label: 'HYBRID AUTO'
     };
-    let availableModels = ['olmoe:1b-7b'];
+    let availableModels = ['vigyan:1.5b', 'vigyan:3b'];
     let activeDomain = 'lab';
     let activeSessionId = localStorage.getItem('vigyan_active_session') || 'default';
     let sessions = {};
@@ -2807,7 +2831,8 @@
       { id: 'cmd-exec', title: 'Run Shell Command (/cmd)', tag: 'Terminal', run: () => quickFirePrompt('/cmd ls -la') },
       { id: 'cmd-derive', title: 'Calculus & Proof Engine (/derive)', tag: 'Math', run: () => quickFirePrompt('/derive integrate x**3 * exp(-x**2) dx') },
       { id: 'cmd-workspace', title: 'Inspect Workspace Files', tag: 'Agent', run: () => quickFirePrompt('Inspect the files in current directory and summarize repository structure.') },
-      { id: 'cmd-model-olmoe', title: 'Active Model: Allen OLMoE 1B-7B (Sparse MoE)', tag: 'Model', run: () => changeModel('olmoe:1b-7b') },
+      { id: 'cmd-model-vigyan15b', title: 'Switch Model: Vigyan AI 1.5B STEM', tag: 'Model', run: () => changeModel('vigyan:1.5b') },
+      { id: 'cmd-model-vigyan3b', title: 'Switch Model: Vigyan AI 3B Reasoning Master', tag: 'Model', run: () => changeModel('vigyan:3b') },
       { id: 'cmd-manage-models', title: 'Open Model Manager & Downloader', tag: 'Model', run: () => openModelManagerModal() },
       { id: 'compute-auto', title: 'Performance: Smart Automatic (GPU + CPU)', tag: 'Performance', run: () => setHybridComputeMode('auto') },
       { id: 'compute-gpu', title: 'Performance: Maximum Speed', tag: 'Performance', run: () => setHybridComputeMode('max_gpu') },
@@ -2879,6 +2904,7 @@
       if (wc) wc.innerText = m;
       const dd = document.getElementById('model-dropdown');
       if (dd) dd.classList.remove('show');
+      updateModelDropdownUI();
       showToast(`Active model: ${m}`);
     }
 
@@ -3658,7 +3684,7 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
                   const freeGb = data.ram_avail_gb || '2.4';
                   const downgradeHtml = `<div class="ram-guard-pill" style="display:inline-flex; align-items:center; gap:8px; margin-bottom:10px; padding:4px 10px; background:rgba(245,158,11,0.1); border:1px solid rgba(245,158,11,0.25); border-radius:6px; font-size:11px; color:#fbbf24;">
                     <span>⚡ RAM Guard: ${freeGb} GB free &bull; Auto-routed to Sovereign MoE</span>
-                    <button onclick="evictAndRetryModel('${data.target_model || 'olmoe:1b-7b'}')" style="background:rgba(245,158,11,0.2); border:1px solid rgba(245,158,11,0.4); color:#fff; border-radius:4px; padding:2px 7px; font-size:10px; cursor:pointer; font-weight:600;">Purge &amp; Retry</button>
+                    <button onclick="evictAndRetryModel('${data.target_model || 'vigyan:1.5b'}')" style="background:rgba(245,158,11,0.2); border:1px solid rgba(245,158,11,0.4); color:#fff; border-radius:4px; padding:2px 7px; font-size:10px; cursor:pointer; font-weight:600;">Purge &amp; Retry</button>
                   </div><br>`;
                   assistantMsg.content = downgradeHtml + assistantMsg.content;
                   if (contentEl) contentEl.innerHTML = formatMessageContent(assistantMsg.content);
@@ -4461,13 +4487,12 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
           body: JSON.stringify({ model: '' })
         });
         await r.json();
-        showToast("RAM cleared! Retrying 7B model...");
+        showToast("RAM cleared! Retrying active model...");
         const sess = sessions[activeSessionId];
         if (sess && sess.messages.length > 0) {
           const lastUser = [...sess.messages].reverse().find(m => m.role === 'user');
           if (lastUser) {
-            currentModel = targetModel || 'olmoe:1b-7b';
-            if (currentModel.includes('vigyan')) currentModel = 'olmoe:1b-7b';
+            currentModel = (targetModel && (targetModel === 'vigyan:1.5b' || targetModel === 'vigyan:3b')) ? targetModel : 'vigyan:1.5b';
             localStorage.setItem('vigyan_active_model', currentModel);
             updateModelDropdownUI();
             const input = document.getElementById('chat-prompt') || document.getElementById('chat-input');
@@ -4707,7 +4732,7 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
     }
 
     async function startModelDownload(tag) {
-      const targetTag = tag || 'olmoe:1b-7b';
+      const targetTag = tag || 'vigyan:1.5b';
       showToast(`Initiating sovereign download of ${targetTag}...`);
       haptics.click();
       try {
@@ -4730,7 +4755,7 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
     }
 
     async function cancelModelDownload(tag) {
-      const targetTag = tag || 'olmoe:1b-7b';
+      const targetTag = tag || 'vigyan:1.5b';
       haptics.click();
       try {
         await fetch(`${AGENT_HOST}/api/models/download/cancel`, {
@@ -4750,7 +4775,7 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
     }
 
     function startPollingDownload(tag) {
-      const targetTag = tag || 'olmoe:1b-7b';
+      const targetTag = tag || 'vigyan:1.5b';
       if (modelDownloadPollers[targetTag]) return;
       modelDownloadPollers[targetTag] = setInterval(async () => {
         try {
@@ -4782,11 +4807,12 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
 
     async function purgeModelCache() {
       try {
-        showToast('Purging active model memory cache...');
+        const m = currentModel || 'vigyan:1.5b';
+        showToast(`Purging memory cache for ${m}...`);
         const resp = await fetch(`${AGENT_HOST}/api/models/evict`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ model: 'olmoe:1b-7b' })
+          body: JSON.stringify({ model: m })
         });
         if (resp.ok) {
           showToast('VRAM & RAM cache purged');
@@ -4799,7 +4825,7 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
     }
 
     async function downloadSovereignModel(name) {
-      await startModelDownload('olmoe:1b-7b');
+      await startModelDownload(name || 'vigyan:1.5b');
       openModelManagerModal();
     }
 
@@ -5159,17 +5185,17 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
             return a.localeCompare(b);
           });
           availableModels = detected;
-          if (!availableModels.includes(currentModel) || currentModel.includes('vigyan')) {
-            currentModel = availableModels.includes('olmoe:1b-7b') ? 'olmoe:1b-7b' : availableModels[0];
+          if (!availableModels.includes(currentModel)) {
+            currentModel = availableModels.includes('vigyan:1.5b') ? 'vigyan:1.5b' : (availableModels[0] || 'vigyan:1.5b');
           }
         } else {
           availableModels = [];
-          currentModel = 'olmoe:1b-7b';
+          currentModel = 'vigyan:1.5b';
         }
 
         const curLabel = document.getElementById('current-model-name');
         if (curLabel) {
-          curLabel.innerText = currentModel || 'olmoe:1b-7b';
+          curLabel.innerText = currentModel || 'vigyan:1.5b';
         }
 
         const badge = document.getElementById('settings-installed-count');
@@ -5201,29 +5227,52 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
 
       const h1 = document.createElement('div');
       h1.style.cssText = 'font-size: 10px; font-weight: 700; color: #a1a1aa; padding: 6px 10px 4px 10px; letter-spacing: 0.08em; text-transform: uppercase;';
-      h1.innerText = 'Sovereign Offline Model';
+      h1.innerText = 'Vigyan Sovereign Suite';
       menu.appendChild(h1);
 
-      const isInstalled = availableModels.includes('olmoe:1b-7b');
-      const opt = document.createElement('div');
-      opt.className = `model-opt ${isInstalled ? 'active' : ''}`;
-      opt.innerHTML = `
+      // 1. Vigyan AI 1.5B STEM
+      const is15Installed = availableModels.includes('vigyan:1.5b');
+      const opt15 = document.createElement('div');
+      opt15.className = `model-opt ${currentModel === 'vigyan:1.5b' ? 'active' : ''}`;
+      opt15.innerHTML = `
         <div style="display:flex; justify-content:space-between; align-items:center;">
-          <div style="font-weight:600; color:#ffffff;">olmoe:1b-7b</div>
-          <span style="font-size:10px; padding:1px 6px; border-radius:3px; background:${isInstalled ? 'rgba(16,185,129,0.15)' : 'rgba(245,158,11,0.15)'}; color:${isInstalled ? '#10b981' : '#fbbf24'}; font-weight:600;">
-            ${isInstalled ? 'Installed' : 'Download Needed'}
+          <div style="font-weight:600; color:#ffffff;">vigyan:1.5b</div>
+          <span style="font-size:10px; padding:1px 6px; border-radius:3px; background:${is15Installed ? 'rgba(16,185,129,0.15)' : 'rgba(245,158,11,0.15)'}; color:${is15Installed ? '#10b981' : '#fbbf24'}; font-weight:600;">
+            ${is15Installed ? 'Active' : 'Download Needed'}
           </span>
         </div>
-        <div style="font-size:10.5px; color:#71717a; margin-top:2px;">Allen OLMoE 1B-7B Instruct (3.2 GB Sparse MoE)</div>
+        <div style="font-size:10.5px; color:#71717a; margin-top:2px;">Vigyan AI 1.5B STEM (1.1 GB Edge SLM)</div>
       `;
-      opt.onclick = () => {
-        if (isInstalled) {
-          changeModel('olmoe:1b-7b');
+      opt15.onclick = () => {
+        if (is15Installed) {
+          changeModel('vigyan:1.5b');
         } else {
           openModelManagerModal();
         }
       };
-      menu.appendChild(opt);
+      menu.appendChild(opt15);
+
+      // 2. Vigyan AI 3B Reasoning Master
+      const is3Installed = availableModels.includes('vigyan:3b');
+      const opt3 = document.createElement('div');
+      opt3.className = `model-opt ${currentModel === 'vigyan:3b' ? 'active' : ''}`;
+      opt3.innerHTML = `
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <div style="font-weight:600; color:#ffffff;">vigyan:3b</div>
+          <span style="font-size:10px; padding:1px 6px; border-radius:3px; background:${is3Installed ? 'rgba(16,185,129,0.15)' : 'rgba(245,158,11,0.15)'}; color:${is3Installed ? '#10b981' : '#fbbf24'}; font-weight:600;">
+            ${is3Installed ? 'Active' : 'Link/Download'}
+          </span>
+        </div>
+        <div style="font-size:10.5px; color:#71717a; margin-top:2px;">Vigyan AI 3B Reasoning Master (2.1 GB SLM)</div>
+      `;
+      opt3.onclick = () => {
+        if (is3Installed) {
+          changeModel('vigyan:3b');
+        } else {
+          openModelManagerModal();
+        }
+      };
+      menu.appendChild(opt3);
 
       // Manage & Download Model Action Button
       const manageBtn = document.createElement('div');
