@@ -230,6 +230,18 @@ class TestHybridComputeAndNeuroSymbolicStudio(unittest.TestCase):
         ]:
             self.assertIn(f'id="{dom_id}"', html, f"Missing element with id '{dom_id}' in index.html")
 
+        # Verify header and nav are properly closed before main
+        self.assertIn("</nav>", html)
+        self.assertIn("</header>", html)
+        nav_close = html.find("</nav>")
+        header_close = html.find("</header>")
+        main_open = html.find('<main class="app-main">')
+        self.assertGreater(header_close, nav_close, "Header must close after nav")
+        self.assertGreater(main_open, header_close, "<main> must start AFTER </header> to prevent layout collapse")
+
+        # Verify legacy quad-master model is absent from model selection
+        self.assertNotIn("vigyan:7b-quad-master", html.replace("vigyan:7b-quad-master", "", 1))  # only 1 occurrence in sanitizer allowed
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -2336,6 +2336,8 @@
         <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
         <span>Settings</span>
       </button>
+    </nav>
+
     <div class="header-right" id="header-hud-telemetry" style="display:flex; align-items:center; gap:8px;">
       <div class="hud-pill" id="hud-ram-pill" title="System RAM Usage">
         <span class="hud-led"></span>
@@ -2345,6 +2347,7 @@
         <span id="hud-gpu-text" style="font-family:var(--font-mono); font-size:11px; color:#10b981;">AUTO</span>
       </div>
     </div>
+  </header>
 
   <!-- APP MAIN -->
   <main class="app-main">
@@ -2700,6 +2703,10 @@
        GLOBAL APPLICATION STATE
        ========================================================================= */
     let currentModel = localStorage.getItem('vigyan_active_model') || 'olmoe:1b-7b';
+    if (!currentModel || currentModel.includes('vigyan') || currentModel === 'vigyan:7b-quad-master') {
+      currentModel = 'olmoe:1b-7b';
+      try { localStorage.setItem('vigyan_active_model', 'olmoe:1b-7b'); } catch (e) {}
+    }
     let OLLAMA_HOST = localStorage.getItem('vigyan_ollama_host') || 'http://127.0.0.1:11434';
     let BACKEND_TYPE = localStorage.getItem('vigyan_backend_type') || 'agent_server';
     let AGENT_HOST = localStorage.getItem('vigyan_agent_host') || 'http://127.0.0.1:8085';
@@ -3651,7 +3658,7 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
                   const freeGb = data.ram_avail_gb || '2.4';
                   const downgradeHtml = `<div class="ram-guard-pill" style="display:inline-flex; align-items:center; gap:8px; margin-bottom:10px; padding:4px 10px; background:rgba(245,158,11,0.1); border:1px solid rgba(245,158,11,0.25); border-radius:6px; font-size:11px; color:#fbbf24;">
                     <span>⚡ RAM Guard: ${freeGb} GB free &bull; Auto-routed to Sovereign MoE</span>
-                    <button onclick="evictAndRetryModel('${data.target_model || 'vigyan:7b-quad-master'}')" style="background:rgba(245,158,11,0.2); border:1px solid rgba(245,158,11,0.4); color:#fff; border-radius:4px; padding:2px 7px; font-size:10px; cursor:pointer; font-weight:600;">Evict & Retry 7B</button>
+                    <button onclick="evictAndRetryModel('${data.target_model || 'olmoe:1b-7b'}')" style="background:rgba(245,158,11,0.2); border:1px solid rgba(245,158,11,0.4); color:#fff; border-radius:4px; padding:2px 7px; font-size:10px; cursor:pointer; font-weight:600;">Purge &amp; Retry</button>
                   </div><br>`;
                   assistantMsg.content = downgradeHtml + assistantMsg.content;
                   if (contentEl) contentEl.innerHTML = formatMessageContent(assistantMsg.content);
@@ -4459,7 +4466,8 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
         if (sess && sess.messages.length > 0) {
           const lastUser = [...sess.messages].reverse().find(m => m.role === 'user');
           if (lastUser) {
-            currentModel = targetModel || 'vigyan:7b-quad-master';
+            currentModel = targetModel || 'olmoe:1b-7b';
+            if (currentModel.includes('vigyan')) currentModel = 'olmoe:1b-7b';
             localStorage.setItem('vigyan_active_model', currentModel);
             updateModelDropdownUI();
             const input = document.getElementById('chat-prompt') || document.getElementById('chat-input');
@@ -5151,19 +5159,17 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
             return a.localeCompare(b);
           });
           availableModels = detected;
-          if (!availableModels.includes(currentModel)) {
+          if (!availableModels.includes(currentModel) || currentModel.includes('vigyan')) {
             currentModel = availableModels.includes('olmoe:1b-7b') ? 'olmoe:1b-7b' : availableModels[0];
           }
         } else {
           availableModels = [];
-          if (!currentModel || currentModel === 'olmoe:1b-7b') {
-            currentModel = '';
-          }
+          currentModel = 'olmoe:1b-7b';
         }
 
         const curLabel = document.getElementById('current-model-name');
         if (curLabel) {
-          curLabel.innerText = currentModel || 'No Model Installed';
+          curLabel.innerText = currentModel || 'olmoe:1b-7b';
         }
 
         const badge = document.getElementById('settings-installed-count');
