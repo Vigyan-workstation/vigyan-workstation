@@ -945,44 +945,12 @@ def execute_shell_command(command: str, confirmed: bool = False, cwd: Optional[s
 
 
 def select_cascade_model(requested_model: str, query: str) -> Dict[str, Any]:
-    ram = psutil.virtual_memory() if psutil else None
-    ram_pct = ram.percent if ram else 50.0
-    ram_avail_gb = (ram.available / (1024**3)) if ram else 4.0
-    q_lower = (query or "").lower()
-    is_heavy_reasoning = any(w in q_lower for w in ["prove", "theorem", "hamiltonian", "schrodinger", "einstein", "navier-stokes", "derivation", "tensor"])
-    
-    is_7b_target = ("quad" in (requested_model or "").lower() or "7b" in (requested_model or "").lower())
-    
-    # 1. 7B Request Memory Safety Gate
-    if is_7b_target:
-        if ram_avail_gb < 3.2 or ram_pct >= 78.0:
-            return {
-                "tier": 1,
-                "model": "olmoe:1b-7b",
-                "downgraded": True,
-                "target_model": "vigyan:7b-quad-master",
-                "ram_avail_gb": round(ram_avail_gb, 1),
-                "reason": f"RAM constrained ({ram_avail_gb:.1f} GB available < 3.2 GB threshold) — auto-routed to Sovereign MoE to prevent OS freeze"
-            }
-        return {"tier": 2, "model": "vigyan:7b-quad-master", "downgraded": False, "reason": "User explicit selection"}
-        
-    # 2. User explicit model choice (non-7B)
-    if requested_model and requested_model != "auto":
-        return {"tier": 1, "model": requested_model, "downgraded": False, "reason": "User explicit selection"}
-        
-    # 3. Auto cascade escalation
-    if is_heavy_reasoning and ram_avail_gb >= 3.5 and ram_pct < 65.0:
-        return {
-            "tier": 2,
-            "model": "vigyan:7b-quad-master",
-            "downgraded": False,
-            "reason": f"Escalated to Tier 2 7B Quad-Master (RAM {ram_avail_gb:.1f} GB available with deep STEM reasoning)"
-        }
+    """Sovereign Sparse Mixture-of-Experts (MoE) execution router."""
     return {
         "tier": 1,
         "model": "olmoe:1b-7b",
         "downgraded": False,
-        "reason": "Tier 1 Sovereign MoE (fast response & tool orchestration)"
+        "reason": "Allen OLMoE 1B-7B Sparse MoE (6.9B total params, 1B active per token — instant response & light memory footprint)"
     }
 
 
@@ -995,35 +963,14 @@ MODELS_CATALOG = {
         "tag": "olmoe:1b-7b",
         "size_bytes": 3435973836,
         "size_formatted": "3.2 GB",
-        "recommended_ram": "< 16 GB RAM (Laptops & APUs)",
-        "description": "Sparse Mixture-of-Experts (6.9B total, 1B active). Blazing fast on laptops and integrated graphics.",
+        "recommended_ram": "4 GB+ RAM (Laptops, Desktops, APUs)",
+        "description": "State-of-the-Art Sparse Mixture-of-Experts (6.9B total, 1B active). Blazing fast responses on laptops, Apple Silicon, and workstations.",
         "hf_url": "https://huggingface.co/allenai/OLMoE-1B-7B-0924-Instruct-GGUF/resolve/main/olmoe-1b-7b-0924-instruct-q3_k_m.gguf",
         "local_candidates": [
             os.path.expanduser("~/.vigyan/models/olmoe-1b-7b-0924-instruct-q3_k_m.gguf"),
             "/home/hello/Downloads/vigyan ai/models/olmoe-1b-7b-0924-instruct-q3_k_m.gguf"
         ],
         "dest_filename": "olmoe-1b-7b-0924-instruct-q3_k_m.gguf",
-        "template": """{{- if .System }}<|im_start|>system
-{{ .System }}<|im_end|>
-{{ end }}{{- range .Messages }}<|im_start|>{{ .Role }}
-{{ .Content }}<|im_end|>
-{{ end }}<|im_start|>assistant
-""",
-        "stop": ["<|im_start|>", "<|im_end|>", "<|endoftext|>"]
-    },
-    "vigyan:7b-quad-master": {
-        "name": "Vigyan 7B Quad-Master DPO",
-        "tag": "vigyan:7b-quad-master",
-        "size_bytes": 4509715660,
-        "size_formatted": "4.2 GB",
-        "recommended_ram": "≥ 16 GB RAM / Dedicated GPU",
-        "description": "Frontier Sovereign STEM & Reasoning model. Four-way post-trained DPO on advanced physics, math, and code.",
-        "hf_url": "https://huggingface.co/shreyansh12183/vigyan-olmo2-7b-quad-master/resolve/main/vigyan-7b-quad-master-q4_k_m.gguf",
-        "local_candidates": [
-            os.path.expanduser("~/.vigyan/models/vigyan-7b-quad-master-q4_k_m.gguf"),
-            "/home/hello/Downloads/vigyan ai/models/vigyan-7b-quad-master-q4_k_m.gguf"
-        ],
-        "dest_filename": "vigyan-7b-quad-master-q4_k_m.gguf",
         "template": """{{- if .System }}<|im_start|>system
 {{ .System }}<|im_end|>
 {{ end }}{{- range .Messages }}<|im_start|>{{ .Role }}
@@ -1813,7 +1760,7 @@ class _NeuroSymbolicHTTPHandler(BaseHTTPRequestHandler):
         elif self.path.startswith("/api/models/catalog"):
             tel = get_system_telemetry()
             ram_gb = tel.get("ram_total_gb", 8.0)
-            rec_tag = "olmoe:1b-7b" if ram_gb < 14.0 else "vigyan:7b-quad-master"
+            rec_tag = "olmoe:1b-7b"
             payload = {
                 "catalog": MODELS_CATALOG,
                 "recommended_tag": rec_tag,
@@ -1920,7 +1867,7 @@ class _NeuroSymbolicHTTPHandler(BaseHTTPRequestHandler):
 
         if self.path.startswith("/api/models/evict"):
             tag = body.get("model") or body.get("tag") or ""
-            targets = [tag] if tag else ["olmoe:1b-7b", "vigyan:7b-quad-master"]
+            targets = [tag] if tag else ["olmoe:1b-7b"]
             evicted = []
             for m in targets:
                 try:

@@ -2252,92 +2252,115 @@
       </section>
     </div>
 
-    <!-- 2. STREAMLINED HARDWARE & PREFERENCES SETTINGS TAB -->
+    <!-- 2. STREAMLINED ENTERPRISE SETTINGS TAB -->
     <div class="tab-content" id="tab-settings">
       <div class="settings-container">
-        <!-- CARD 1: HARDWARE PERFORMANCE -->
+        <!-- CARD 1: HARDWARE & COMPUTE ACCELERATION -->
         <div class="settings-section-card">
           <div class="section-card-header">
             <span class="section-card-title">
               <svg class="icon" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/></svg>
-              Hardware Performance (GPU + CPU)
+              Hardware &amp; Compute Acceleration
             </span>
-            <span class="section-card-badge" id="hybrid-hardware-badge">Automatic</span>
+            <span class="section-card-badge" id="hybrid-hardware-badge">Auto (GPU + CPU)</span>
           </div>
           <div class="intent-grid" style="grid-template-columns: repeat(3, 1fr);">
             <div class="intent-card active" id="compute-card-auto" onclick="setHybridComputeMode('auto')">
               <div class="intent-card-title">Smart Automatic (Recommended)</div>
-              <div class="intent-card-desc">Automatically combines your GPU and CPU for the fastest, smoothest responses.</div>
+              <div class="intent-card-desc">Dynamically balances GPU VRAM and physical CPU cores for fastest token streaming.</div>
             </div>
             <div class="intent-card" id="compute-card-max_gpu" onclick="setHybridComputeMode('max_gpu')">
-              <div class="intent-card-title">Maximum Speed</div>
-              <div class="intent-card-desc">Uses maximum graphics card power when plugged in.</div>
+              <div class="intent-card-title">Maximum Speed (Dedicated GPU)</div>
+              <div class="intent-card-desc">Offloads maximum model layers to Apple Metal, NVIDIA CUDA, or DirectML.</div>
             </div>
             <div class="intent-card" id="compute-card-cpu_eco" onclick="setHybridComputeMode('cpu_eco')">
-              <div class="intent-card-title">Battery Saver</div>
-              <div class="intent-card-desc">Quiet, low-power mode to save laptop battery life.</div>
+              <div class="intent-card-title">Battery Saver (CPU Eco)</div>
+              <div class="intent-card-desc">Energy-efficient execution optimized for unplugged laptop battery endurance.</div>
             </div>
           </div>
         </div>
 
-        <!-- CARD 2: RESPONSE STYLE -->
+        <!-- CARD 2: REASONING & RESPONSE PROFILE -->
         <div class="settings-section-card">
           <div class="section-card-header">
             <span class="section-card-title">
               <svg class="icon" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-              Response Style
+              Reasoning &amp; Temperature Profile
             </span>
           </div>
-          <div class="intent-grid" style="margin-bottom:14px;">
-            <div class="intent-card active" id="intent-precise" onclick="selectIntent('precise', 0.05, 8192, 'Accurate & Step-by-Step')">
-              <div class="intent-card-title">Accurate &amp; Step-by-Step</div>
-              <div class="intent-card-desc">Best for math, science, and clear step-by-step problem solving.</div>
+          <div class="intent-grid" style="grid-template-columns: repeat(3, 1fr);">
+            <div class="intent-card active" id="intent-precise" onclick="selectIntent('precise', 0.05, 8192, 'Deterministic & Step-by-Step')">
+              <div class="intent-card-title">Deterministic &amp; Precise (0.05)</div>
+              <div class="intent-card-desc">Zero-hallucination configuration for mathematical proofs, circuit analysis, and verified code.</div>
             </div>
             <div class="intent-card" id="intent-balanced" onclick="selectIntent('balanced', 0.3, 4096, 'Balanced & Clear')">
-              <div class="intent-card-title">Balanced &amp; Clear</div>
-              <div class="intent-card-desc">Great for everyday questions, summaries, and explanations.</div>
+              <div class="intent-card-title">Balanced &amp; Clear (0.30)</div>
+              <div class="intent-card-desc">Optimal for everyday technical explanations, architecture design, and STEM summaries.</div>
             </div>
             <div class="intent-card" id="intent-creative" onclick="selectIntent('creative', 0.7, 4096, 'Creative & Exploratory')">
-              <div class="intent-card-title">Creative &amp; Exploratory</div>
-              <div class="intent-card-desc">Best for brainstorming new ideas and open-ended exploration.</div>
+              <div class="intent-card-title">Creative &amp; Exploratory (0.70)</div>
+              <div class="intent-card-desc">Expanded sampling entropy for open-ended brainstorming and speculative hypotheses.</div>
             </div>
-          </div>
-          <div style="display:flex; justify-content:flex-end; gap:8px;">
-            <button class="btn-action" style="background:#ffffff; color:#000000; font-weight:600; padding:7px 18px;" onclick="saveSettings()">Save Settings</button>
           </div>
         </div>
 
-        <!-- CARD 3: SOVEREIGN AI MODELS & ENGINE -->
+        <!-- CARD 3: SOVEREIGN MOE MODEL ENGINE -->
         <div class="settings-section-card">
           <div class="section-card-header">
             <span class="section-card-title">
               <svg class="icon" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-              Sovereign AI Models &amp; Model Downloader
+              Sovereign Sparse MoE Engine (Allen OLMoE 1B-7B)
             </span>
             <span class="section-card-badge" id="settings-installed-count">Offline Ready</span>
           </div>
-          <div style="font-size:12px; color:#94a3b8; margin-bottom:12px; line-height:1.5;">
-            Manage and download verified sovereign AI weights. Models are downloaded directly from verified Hugging Face repositories with chunked resumable downloads, and registered automatically into your local Ollama engine for 100% offline, air-gapped execution.
+          <div style="font-size:12.5px; color:#a1a1aa; line-height:1.5; margin-bottom:12px;">
+            Powered exclusively by <strong>Allen OLMoE 1B-7B Instruct</strong> (6.9B total parameters, 1B active per token). Instant response latency, deep STEM reasoning capabilities, and an ultra-lightweight memory footprint.
           </div>
-          <div style="display:flex; justify-content:flex-start; gap:10px;">
-            <button class="btn-action" style="background:var(--accent); color:#ffffff; font-weight:600; padding:7px 16px; border:none; border-radius:6px; cursor:pointer; display:inline-flex; align-items:center; gap:6px;" onclick="openModelManagerModal()">
-              <svg class="icon" viewBox="0 0 24 24" style="width:13px; height:13px; stroke:#ffffff;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-              Open Model Manager &amp; Downloader
+          <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.08); border-radius:8px; padding:12px 16px;">
+            <div>
+              <div style="font-size:13px; font-weight:600; color:#ffffff;">olmoe:1b-7b-instruct-q3_k_m.gguf</div>
+              <div style="font-size:11.5px; color:#71717a; margin-top:2px;">Size: 3.2 GB &bull; Recommended RAM: &ge; 4 GB &bull; Verified Hugging Face Weights</div>
+            </div>
+            <div>
+              <button class="btn-action" style="background:var(--accent); color:#ffffff; font-weight:600; padding:7px 16px; border:none; border-radius:6px; cursor:pointer;" onclick="openModelManagerModal()">
+                Model Vault &amp; Downloader
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- CARD 4: ENTERPRISE AIR-GAP PRIVACY & TELEMETRY -->
+        <div class="settings-section-card">
+          <div class="section-card-header">
+            <span class="section-card-title">
+              <svg class="icon" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              Air-Gapped Sovereign Infrastructure
+            </span>
+            <span class="section-card-badge" style="background:rgba(16,185,129,0.15); color:#10b981; border:1px solid rgba(16,185,129,0.3);">100% Offline Loopback</span>
+          </div>
+          <div style="display:grid; grid-template-columns: repeat(2, 1fr); gap:12px; font-size:12px; color:#a1a1aa;">
+            <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06); border-radius:8px; padding:10px 14px;">
+              <div style="color:#ffffff; font-weight:600; margin-bottom:3px;">Zero Cloud Leaks</div>
+              <div>Inference, math evaluation, and tool operations execute strictly on 127.0.0.1 loopback.</div>
+            </div>
+            <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06); border-radius:8px; padding:10px 14px;">
+              <div style="color:#ffffff; font-weight:600; margin-bottom:3px;">Neuro-Symbolic Core</div>
+              <div>SymPy AST Engine + C++ KùzuDB GraphRAG + WebGL STEM Plugin Engine.</div>
+            </div>
+          </div>
+          <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:14px;">
+            <button class="btn-action" style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); color:#d4d4d8; font-size:11.5px; padding:6px 14px; cursor:pointer;" onclick="purgeModelCache()">
+              Purge Model Cache
             </button>
           </div>
         </div>
 
-        <!-- Hidden defaults so internal engine logic stays intact without UI clutter -->
+        <!-- Essential runtime bindings -->
         <div style="display:none;">
           <input type="text" id="setting-host" value="http://127.0.0.1:11434">
-          <input type="text" id="setting-backend-type" value="ollama">
           <input type="text" id="setting-agent-host" value="http://127.0.0.1:8085">
-          <input type="password" id="setting-api-key" value="">
-          <input type="hidden" id="setting-keepalive" value="15m">
           <input type="hidden" id="setting-ctx" value="8192">
           <input type="hidden" id="setting-temp" value="0.05">
-          <input type="hidden" id="setting-topp" value="0.95">
-          <textarea id="setting-persona">You are Vigyan Pro, a sovereign offline AI workstation assistant for science, math, software engineering, and workspace automation. Format mathematical formulas with clean LaTeX ($$...$$). Provide precise, direct, and well-structured responses with clear code blocks.</textarea>
         </div>
       </div>
     </div>
@@ -2405,7 +2428,7 @@
       ollama_options: { num_gpu: -1, num_thread: 4, num_ctx: 8192, num_batch: 512 },
       strategy_label: 'HYBRID AUTO'
     };
-    let availableModels = ['olmoe:1b-7b', 'vigyan:7b-quad-master'];
+    let availableModels = ['olmoe:1b-7b'];
     let activeDomain = 'lab';
     let activeSessionId = localStorage.getItem('vigyan_active_session') || 'default';
     let sessions = {};
@@ -2444,8 +2467,7 @@
       { id: 'cmd-exec', title: 'Run Shell Command (/cmd)', tag: 'Terminal', run: () => quickFirePrompt('/cmd ls -la') },
       { id: 'cmd-derive', title: 'Calculus & Proof Engine (/derive)', tag: 'Math', run: () => quickFirePrompt('/derive integrate x**3 * exp(-x**2) dx') },
       { id: 'cmd-workspace', title: 'Inspect Workspace Files', tag: 'Agent', run: () => quickFirePrompt('Inspect the files in current directory and summarize repository structure.') },
-      { id: 'cmd-model-olmoe', title: 'Switch Model: OLMoE 1B-7B (Sovereign MoE)', tag: 'Model', run: () => changeModel('olmoe:1b-7b') },
-      { id: 'cmd-model-quad', title: 'Switch Model: 7B Quad-Master (Frontier Math)', tag: 'Model', run: () => changeModel('vigyan:7b-quad-master') },
+      { id: 'cmd-model-olmoe', title: 'Active Model: Allen OLMoE 1B-7B (Sparse MoE)', tag: 'Model', run: () => changeModel('olmoe:1b-7b') },
       { id: 'cmd-manage-models', title: 'Open Model Manager & Downloader', tag: 'Model', run: () => openModelManagerModal() },
       { id: 'compute-auto', title: 'Performance: Smart Automatic (GPU + CPU)', tag: 'Performance', run: () => setHybridComputeMode('auto') },
       { id: 'compute-gpu', title: 'Performance: Maximum Speed', tag: 'Performance', run: () => setHybridComputeMode('max_gpu') },
@@ -4317,18 +4339,6 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
           html += `</div>`;
         });
 
-        html += `
-          <div style="margin-top:10px; padding:14px 16px; background:rgba(255,255,255,0.015); border:1px dashed rgba(255,255,255,0.12); border-radius:10px;">
-            <div style="font-size:12.5px; font-weight:600; color:#d4d4d8; margin-bottom:4px;">Install Custom Ollama Model</div>
-            <div style="font-size:11.5px; color:#71717a; margin-bottom:8px;">Enter any official public model from ollama.com (e.g. llama3.2, mistral, deepseek-r1:1.5b):</div>
-            <div style="display:flex; gap:8px;">
-              <input type="text" id="custom-ollama-tag-input" placeholder="model:tag (e.g. llama3.2)" style="flex:1; background:#090a0f; border:1px solid rgba(255,255,255,0.14); border-radius:6px; color:#ffffff; padding:6px 10px; font-size:12px; outline:none;">
-              <button class="btn-action" style="background:rgba(255,255,255,0.1); color:#ffffff; font-size:12px; padding:6px 14px;" onclick="pullCustomOllamaModel()">Pull</button>
-            </div>
-            <div id="custom-ollama-status" style="font-size:11px; color:#a1a1aa; margin-top:6px; display:none;"></div>
-          </div>
-        `;
-
         container.innerHTML = html;
       } catch (err) {
         container.innerHTML = `<div style="padding:20px; text-align:center; color:#ef4444; font-size:12px;">Failed to load catalog: ${err.message}</div>`;
@@ -4336,18 +4346,19 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
     }
 
     async function startModelDownload(tag) {
-      showToast(`Initiating sovereign download of ${tag}...`);
+      const targetTag = tag || 'olmoe:1b-7b';
+      showToast(`Initiating sovereign download of ${targetTag}...`);
       haptics.click();
       try {
         const resp = await fetch(`${AGENT_HOST}/api/models/download`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ model_id: tag })
+          body: JSON.stringify({ model_id: targetTag })
         });
         const res = await resp.json();
         if (res.success) {
-          showToast(`Download started for ${tag}`);
-          startPollingDownload(tag);
+          showToast(`Download started for ${targetTag}`);
+          startPollingDownload(targetTag);
           refreshModelCatalogUI();
         } else {
           showToast(`Download notice: ${res.error || res.message}`);
@@ -4358,18 +4369,19 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
     }
 
     async function cancelModelDownload(tag) {
+      const targetTag = tag || 'olmoe:1b-7b';
       haptics.click();
       try {
         await fetch(`${AGENT_HOST}/api/models/download/cancel`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ tag: tag })
+          body: JSON.stringify({ tag: targetTag })
         });
-        if (modelDownloadPollers[tag]) {
-          clearInterval(modelDownloadPollers[tag]);
-          delete modelDownloadPollers[tag];
+        if (modelDownloadPollers[targetTag]) {
+          clearInterval(modelDownloadPollers[targetTag]);
+          delete modelDownloadPollers[targetTag];
         }
-        showToast(`Download cancelled for ${tag}`);
+        showToast(`Download cancelled for ${targetTag}`);
         refreshModelCatalogUI();
       } catch (err) {
         showToast(`Cancel notice: ${err.message}`);
@@ -4377,26 +4389,27 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
     }
 
     function startPollingDownload(tag) {
-      if (modelDownloadPollers[tag]) return;
-      modelDownloadPollers[tag] = setInterval(async () => {
+      const targetTag = tag || 'olmoe:1b-7b';
+      if (modelDownloadPollers[targetTag]) return;
+      modelDownloadPollers[targetTag] = setInterval(async () => {
         try {
-          const resp = await fetch(`${AGENT_HOST}/api/models/download/status?tag=${encodeURIComponent(tag)}`);
+          const resp = await fetch(`${AGENT_HOST}/api/models/download/status?tag=${encodeURIComponent(targetTag)}`);
           if (!resp.ok) return;
           const st = await resp.json();
           if (st.status === 'ready') {
-            clearInterval(modelDownloadPollers[tag]);
-            delete modelDownloadPollers[tag];
-            showToast(`Model ${tag} installed and ready!`);
+            clearInterval(modelDownloadPollers[targetTag]);
+            delete modelDownloadPollers[targetTag];
+            showToast(`Model ${targetTag} installed and ready!`);
             haptics.success();
             await checkOllamaConnection();
             refreshModelCatalogUI();
           } else if (st.status === 'cancelled' || st.status === 'error') {
-            clearInterval(modelDownloadPollers[tag]);
-            delete modelDownloadPollers[tag];
+            clearInterval(modelDownloadPollers[targetTag]);
+            delete modelDownloadPollers[targetTag];
             if (st.status === 'error') showToast(`Error: ${st.error}`);
             refreshModelCatalogUI();
           } else {
-            const card = document.getElementById(`card-model-${tag.replace(/[^a-zA-Z0-9]/g, '_')}`);
+            const card = document.getElementById(`card-model-${targetTag.replace(/[^a-zA-Z0-9]/g, '_')}`);
             if (card) {
               const fill = card.querySelector('.model-progress-bar-fill');
               if (fill) fill.style.width = `${Math.round(st.progress_pct || 0)}%`;
@@ -4406,67 +4419,27 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
       }, 1200);
     }
 
-    async function pullCustomOllamaModel() {
-      const inp = document.getElementById('custom-ollama-tag-input');
-      const st = document.getElementById('custom-ollama-status');
-      const name = (inp ? inp.value : '').trim();
-      if (!name) {
-        showToast('Enter a model name to pull');
-        return;
-      }
-      if (st) {
-        st.style.display = 'block';
-        st.innerText = `Connecting to Ollama to pull ${name}...`;
-      }
+    async function purgeModelCache() {
       try {
-        const resp = await fetch(`${OLLAMA_HOST}/api/pull`, {
+        showToast('Purging active model memory cache...');
+        const resp = await fetch(`${AGENT_HOST}/api/models/evict`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name: name, stream: true })
+          body: JSON.stringify({ model: 'olmoe:1b-7b' })
         });
-        if (!resp.ok) throw new Error(`Ollama returned status ${resp.status}`);
-        const reader = resp.body.getReader();
-        const decoder = new TextDecoder();
-        let buffer = '';
-        while (true) {
-          const { done, value } = await reader.read();
-          if (done) break;
-          buffer += decoder.decode(value, { stream: true });
-          const lines = buffer.split('\n');
-          buffer = lines.pop();
-          for (const line of lines) {
-            if (!line.trim()) continue;
-            try {
-              const d = JSON.parse(line);
-              if (st) {
-                if (d.total && d.completed) {
-                  const pct = Math.round((d.completed / d.total) * 100);
-                  st.innerText = `Downloading ${name}: ${pct}%`;
-                } else if (d.status) {
-                  st.innerText = `${name}: ${d.status}`;
-                }
-              }
-            } catch (e) {}
-          }
+        if (resp.ok) {
+          showToast('VRAM & RAM cache purged');
+          haptics.success();
+          checkOllamaConnection();
         }
-        if (st) st.innerText = `${name} installed successfully!`;
-        showToast(`Model ${name} ready!`);
-        await checkOllamaConnection();
-        refreshModelCatalogUI();
       } catch (err) {
-        if (st) st.innerText = `Pull failed: ${err.message}`;
-        showToast(`Failed: ${err.message}`);
+        showToast('Purge notice: ' + err.message);
       }
     }
 
     async function downloadSovereignModel(name) {
-      if (!name) return;
-      if (name.includes('vigyan:') || name.includes('olmoe:')) {
-        await startModelDownload(name);
-        openModelManagerModal();
-      } else {
-        await pullCustomOllamaModel();
-      }
+      await startModelDownload('olmoe:1b-7b');
+      openModelManagerModal();
     }
 
     /* =========================================================================
@@ -4683,17 +4656,14 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
       if (tempEl) tempEl.value = temp;
       const ctxEl = document.getElementById('setting-ctx');
       if (ctxEl) ctxEl.value = ctx;
-      showToast(`Style: ${title}`);
+      try {
+        localStorage.setItem('vigyan_intent_style', JSON.stringify({ type, temp, ctx, title }));
+      } catch (e) {}
+      showToast(`Reasoning Profile: ${title}`);
+      haptics.click();
     }
 
     function onBackendTypeChange(type) {
-      BACKEND_TYPE = type || 'ollama';
-      localStorage.setItem('vigyan_backend_type', BACKEND_TYPE);
-      const hostEl = document.getElementById('setting-host');
-      if (hostEl) {
-        if (BACKEND_TYPE === 'ollama' && hostEl.value.includes(':808')) hostEl.value = 'http://127.0.0.1:11434';
-        else if (BACKEND_TYPE === 'llama_server' && hostEl.value.includes(':11434')) hostEl.value = 'http://127.0.0.1:8080/v1';
-      }
       checkOllamaConnection();
     }
 
@@ -4773,33 +4743,37 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
 
       const h1 = document.createElement('div');
       h1.style.cssText = 'font-size: 10px; font-weight: 700; color: #a1a1aa; padding: 6px 10px 4px 10px; letter-spacing: 0.08em; text-transform: uppercase;';
-      h1.innerText = availableModels.length > 0 ? 'Installed Offline Models' : 'No Models Installed';
+      h1.innerText = 'Sovereign Offline Model';
       menu.appendChild(h1);
 
-      if (availableModels.length === 0) {
-        const emptyMsg = document.createElement('div');
-        emptyMsg.style.cssText = 'padding: 8px 10px; font-size: 11.5px; color: #71717a; line-height: 1.4;';
-        emptyMsg.innerText = 'No offline weights detected on disk. Open the Downloader to install sovereign models.';
-        menu.appendChild(emptyMsg);
-      } else {
-        availableModels.forEach(m => {
-          const opt = document.createElement('div');
-          opt.className = `model-opt ${m === currentModel ? 'active' : ''}`;
-          const isMoe = m.includes('olmoe') || m.includes('moe');
-          const label = isMoe ? 'OLMoE 1B-7B Instruct (3.2 GB)' : (m.includes('7b') ? 'Vigyan 7B Quad-Master (4.2 GB)' : m);
-          opt.innerHTML = `<div style="font-weight:600; color:#ffffff;">${m}</div><div style="font-size:10px; color:#71717a;">${label}</div>`;
-          opt.onclick = () => changeModel(m);
-          menu.appendChild(opt);
-        });
-      }
+      const isInstalled = availableModels.includes('olmoe:1b-7b');
+      const opt = document.createElement('div');
+      opt.className = `model-opt ${isInstalled ? 'active' : ''}`;
+      opt.innerHTML = `
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <div style="font-weight:600; color:#ffffff;">olmoe:1b-7b</div>
+          <span style="font-size:10px; padding:1px 6px; border-radius:3px; background:${isInstalled ? 'rgba(16,185,129,0.15)' : 'rgba(245,158,11,0.15)'}; color:${isInstalled ? '#10b981' : '#fbbf24'}; font-weight:600;">
+            ${isInstalled ? 'Installed' : 'Download Needed'}
+          </span>
+        </div>
+        <div style="font-size:10.5px; color:#71717a; margin-top:2px;">Allen OLMoE 1B-7B Instruct (3.2 GB Sparse MoE)</div>
+      `;
+      opt.onclick = () => {
+        if (isInstalled) {
+          changeModel('olmoe:1b-7b');
+        } else {
+          openModelManagerModal();
+        }
+      };
+      menu.appendChild(opt);
 
-      // Manage & Download Models Action Button
+      // Manage & Download Model Action Button
       const manageBtn = document.createElement('div');
       manageBtn.className = 'model-opt';
-      manageBtn.style.cssText = 'border-top: 1px solid rgba(255,255,255,0.08); color: var(--accent); font-weight: 600; display: flex; align-items: center; gap: 8px; margin-top: 4px; padding-top: 8px; cursor: pointer;';
+      manageBtn.style.cssText = 'border-top: 1px solid rgba(255,255,255,0.08); color: var(--accent); font-weight: 600; display: flex; align-items: center; gap: 8px; margin-top: 6px; padding-top: 8px; cursor: pointer;';
       manageBtn.innerHTML = `
         <svg class="icon" viewBox="0 0 24 24" style="width:13px; height:13px; stroke:var(--accent);"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-        <span>Manage &amp; Download Models...</span>
+        <span>Model Vault &amp; Downloader...</span>
       `;
       manageBtn.onclick = () => {
         const dd = document.getElementById('model-dropdown');
@@ -4812,66 +4786,41 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
     function saveSettings() {
       const temp = document.getElementById('setting-temp')?.value || '0.05';
       const ctx = document.getElementById('setting-ctx')?.value || '8192';
-      const topp = document.getElementById('setting-topp')?.value || '0.95';
       const url = document.getElementById('setting-host')?.value || 'http://127.0.0.1:11434';
       const agentUrl = document.getElementById('setting-agent-host')?.value || 'http://127.0.0.1:8085';
-      const apiKey = document.getElementById('setting-api-key')?.value || '';
-      const backendType = document.getElementById('setting-backend-type')?.value || 'ollama';
-      const keepalive = document.getElementById('setting-keepalive')?.value || '15m';
-      const persona = document.getElementById('setting-persona')?.value || '';
-
-
 
       OLLAMA_HOST = url;
       AGENT_HOST = agentUrl;
-      API_KEY = apiKey;
-      BACKEND_TYPE = backendType;
       localStorage.setItem('vigyan_ollama_host', OLLAMA_HOST);
       localStorage.setItem('vigyan_agent_host', AGENT_HOST);
-      localStorage.setItem('vigyan_api_key', API_KEY);
-      localStorage.setItem('vigyan_backend_type', BACKEND_TYPE);
-      localStorage.setItem('vigyan_v26_settings', JSON.stringify({ temp, ctx, topp, url, agentUrl, backendType, keepalive, persona }));
-      onBackendTypeChange(BACKEND_TYPE);
+      localStorage.setItem('vigyan_enterprise_settings', JSON.stringify({ temp, ctx, url, agentUrl }));
       updateModelDropdownUI();
-      showToast('Settings saved');
+      showToast('Preferences saved');
       haptics.success();
     }
 
-    // Auto-init on load with settings migration & Hybrid GPU+CPU Telemetry Polling
+    // Enterprise auto-init on load with settings migration & Hybrid GPU+CPU Telemetry Polling
     window.addEventListener('DOMContentLoaded', () => {
       try {
-        const raw = localStorage.getItem('vigyan_v26_settings');
-        if (raw) {
-          const s = JSON.parse(raw);
-          if (s.temp) document.getElementById('setting-temp').value = s.temp;
-          if (s.ctx) document.getElementById('setting-ctx').value = s.ctx;
-          if (s.topp) document.getElementById('setting-topp').value = s.topp;
-          if (s.url) { document.getElementById('setting-host').value = s.url; OLLAMA_HOST = s.url; }
-          if (s.agentUrl && document.getElementById('setting-agent-host')) {
-            document.getElementById('setting-agent-host').value = s.agentUrl;
-            AGENT_HOST = s.agentUrl;
-          }
-          if (s.backendType && document.getElementById('setting-backend-type')) {
-            document.getElementById('setting-backend-type').value = s.backendType;
-            BACKEND_TYPE = s.backendType;
-          }
-          if (s.keepalive) document.getElementById('setting-keepalive').value = s.keepalive;
-          if (s.persona && !s.persona.includes('workbench:3d')) {
-            document.getElementById('setting-persona').value = s.persona;
-          } else {
-            s.persona = document.getElementById('setting-persona').value;
-            localStorage.setItem('vigyan_v26_settings', JSON.stringify(s));
-          }
+        const rawIntent = localStorage.getItem('vigyan_intent_style');
+        if (rawIntent) {
+          const it = JSON.parse(rawIntent);
+          selectIntent(it.type, it.temp, it.ctx, it.title);
         }
-
-
+        const rawSettings = localStorage.getItem('vigyan_enterprise_settings');
+        if (rawSettings) {
+          const s = JSON.parse(rawSettings);
+          if (s.temp && document.getElementById('setting-temp')) document.getElementById('setting-temp').value = s.temp;
+          if (s.ctx && document.getElementById('setting-ctx')) document.getElementById('setting-ctx').value = s.ctx;
+          if (s.url) OLLAMA_HOST = s.url;
+          if (s.agentUrl) AGENT_HOST = s.agentUrl;
+        }
       } catch (e) {}
 
       if (uiZoomLevel !== 1.0) applyUiZoom(uiZoomLevel, true);
       updateSessionList();
       updateModelDropdownUI();
       setHybridComputeMode(HYBRID_COMPUTE_MODE);
-      onBackendTypeChange(BACKEND_TYPE);
       renderChat();
       checkOllamaConnection();
       renderLatex(document.body);
