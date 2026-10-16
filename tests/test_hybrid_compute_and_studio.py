@@ -196,6 +196,40 @@ class TestHybridComputeAndNeuroSymbolicStudio(unittest.TestCase):
         proc = subprocess.run(["node", "--check", str(tmp_js)], capture_output=True, text=True)
         self.assertEqual(proc.returncode, 0, f"JS syntax check failed: {proc.stderr}")
 
+    def test_enterprise_settings_rows_and_functions(self):
+        html_path = SRC / "index.html"
+        html = html_path.read_text(encoding="utf-8")
+
+        # Verify all newly implemented executive settings functions exist
+        for fn in [
+            "setContextLength",
+            "setGovernorThreshold",
+            "toggleTelemetryHUD",
+            "setCodeFont",
+            "toggleSmartScroll",
+            "toggleHaptics",
+            "exportAllChats",
+            "clearAllChatHistory",
+            "purgeModelCache"
+        ]:
+            self.assertIn(fn, html, f"Missing executive settings function {fn} in index.html")
+
+        # Verify essential DOM elements exist
+        for dom_id in [
+            "header-hud-telemetry",
+            "hud-ram-text",
+            "hud-gpu-text",
+            "setting-ctx-select",
+            "setting-font-select",
+            "toggle-hud-switch",
+            "toggle-scroll-switch",
+            "toggle-haptics-switch",
+            "gov-btn-80",
+            "gov-btn-85",
+            "gov-btn-90"
+        ]:
+            self.assertIn(f'id="{dom_id}"', html, f"Missing element with id '{dom_id}' in index.html")
+
 
 if __name__ == "__main__":
     unittest.main()

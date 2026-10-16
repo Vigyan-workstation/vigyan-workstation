@@ -296,6 +296,7 @@
       --accent: #ffffff;
       --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
       --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+      --font-mono: "JetBrains Mono", "Fira Code", "Cascadia Code", "SF Mono", ui-monospace, monospace;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -1335,39 +1336,225 @@
     }
     .settings-section-card {
       background: #090a0f;
-      border: 1px solid var(--border);
+      border: 1px solid var(--border-subtle);
       border-radius: 10px;
-      padding: 16px 20px;
+      padding: 0;
+      overflow: hidden;
       display: flex;
       flex-direction: column;
-      gap: 14px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.35);
     }
     .section-card-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding-bottom: 10px;
+      padding: 12px 18px;
       border-bottom: 1px solid var(--border-subtle);
+      background: rgba(255, 255, 255, 0.015);
     }
     .section-card-title {
-      font-size: 12.5px;
+      font-size: 11.5px;
       font-weight: 600;
       text-transform: uppercase;
-      letter-spacing: 0.6px;
-      color: #ffffff;
+      letter-spacing: 0.7px;
+      color: #a1a1aa;
       display: flex;
       align-items: center;
       gap: 8px;
     }
     .section-card-badge {
-      font-size: 11.5px;
+      font-size: 11px;
       color: #e4e4e7;
-      font-family: ui-monospace, monospace;
-      background: rgba(255, 255, 255, 0.08);
+      font-family: var(--font-mono, monospace);
+      background: rgba(255, 255, 255, 0.06);
       padding: 2px 7px;
       border-radius: 4px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    /* EXECUTIVE SETTINGS ROW SYSTEM */
+    .settings-row-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 18px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      gap: 16px;
+      transition: background 0.12s ease;
+    }
+    .settings-row-item:last-child {
+      border-bottom: none;
+    }
+    .settings-row-item:hover {
+      background: rgba(255, 255, 255, 0.018);
+    }
+    .settings-row-left {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      min-width: 0;
+    }
+    .settings-row-title {
+      font-size: 13px;
+      font-weight: 500;
+      color: #f4f4f6;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .settings-row-sub {
+      font-size: 11.5px;
+      color: #71717a;
+      line-height: 1.35;
+    }
+    .settings-row-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+
+    /* SEGMENTED CONTROL (Raycast / Linear style) */
+    .segmented-control {
+      display: inline-flex;
+      background: #11131c;
+      border: 1px solid var(--border-subtle);
+      border-radius: 7px;
+      padding: 2px;
+      gap: 2px;
+    }
+    .segment-btn {
+      background: transparent;
+      border: none;
+      border-radius: 5px;
+      color: #a1a1aa;
+      font-size: 11.5px;
+      font-weight: 500;
+      padding: 4px 10px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      font-family: inherit;
+      white-space: nowrap;
+    }
+    .segment-btn:hover {
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.04);
+    }
+    .segment-btn.active {
+      background: #1c2030;
+      color: #ffffff;
+      font-weight: 600;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.5), inset 0 0 0 1px rgba(255, 255, 255, 0.15);
+    }
+
+    /* COMPACT SELECT */
+    .compact-select {
+      appearance: none !important;
+      -webkit-appearance: none !important;
+      background-color: #11131c !important;
+      border: 1px solid var(--border-subtle) !important;
+      border-radius: 6px;
+      color: #f4f4f6 !important;
+      padding: 4px 26px 4px 9px;
+      font-size: 12px;
+      font-weight: 500;
+      font-family: inherit;
+      outline: none;
+      cursor: pointer;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%23a1a1aa' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 8px center;
+      background-size: 10px;
+      transition: border-color 0.15s;
+    }
+    .compact-select:hover {
+      border-color: rgba(255, 255, 255, 0.25) !important;
+    }
+    .compact-select:focus {
+      border-color: #ffffff !important;
+      box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.2);
+    }
+    .compact-select option {
+      background-color: #11131c;
+      color: #f4f4f6;
+    }
+
+    /* SMOOTH TOGGLE SWITCH */
+    .toggle-switch {
+      position: relative;
+      display: inline-block;
+      width: 36px;
+      height: 20px;
+      cursor: pointer;
+    }
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .toggle-slider {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: #1a1e2c;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 20px;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .toggle-slider:before {
+      position: absolute;
+      content: "";
+      height: 14px;
+      width: 14px;
+      left: 2px;
+      bottom: 2px;
+      background-color: #71717a;
+      border-radius: 50%;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .toggle-switch input:checked + .toggle-slider {
+      background-color: #10b981;
+      border-color: #10b981;
+    }
+    .toggle-switch input:checked + .toggle-slider:before {
+      transform: translateX(16px);
+      background-color: #ffffff;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+    }
+
+    /* ACTION BUTTONS */
+    .btn-settings-action {
+      background: rgba(255, 255, 255, 0.05);
       border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #e4e4e7;
+      border-radius: 6px;
+      font-size: 11.5px;
+      font-weight: 500;
+      padding: 5px 12px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+      font-family: inherit;
+    }
+    .btn-settings-action:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.25);
+      color: #ffffff;
+    }
+    .btn-settings-action.primary {
+      background: #ffffff;
+      color: #000000;
+      border-color: #ffffff;
+      font-weight: 600;
+    }
+    .btn-settings-action.primary:hover {
+      background: #e4e4e7;
+    }
+    .btn-settings-action.danger:hover {
+      background: rgba(239, 68, 68, 0.15);
+      border-color: rgba(239, 68, 68, 0.4);
+      color: #ef4444;
     }
 
     .intent-grid {
@@ -2149,10 +2336,15 @@
         <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
         <span>Settings</span>
       </button>
-    </nav>
-
-    <div style="width:120px;"></div>
-  </header>
+    <div class="header-right" id="header-hud-telemetry" style="display:flex; align-items:center; gap:8px;">
+      <div class="hud-pill" id="hud-ram-pill" title="System RAM Usage">
+        <span class="hud-led"></span>
+        <span id="hud-ram-text" style="font-family:var(--font-mono); font-size:11px; color:#a1a1aa;">RAM --%</span>
+      </div>
+      <div class="hud-pill" id="hud-compute-pill" title="Hardware Acceleration (Click to cycle)" onclick="cycleHybridComputeMode()" style="cursor:pointer;">
+        <span id="hud-gpu-text" style="font-family:var(--font-mono); font-size:11px; color:#10b981;">AUTO</span>
+      </div>
+    </div>
 
   <!-- APP MAIN -->
   <main class="app-main">
@@ -2255,103 +2447,210 @@
     <!-- 2. STREAMLINED ENTERPRISE SETTINGS TAB -->
     <div class="tab-content" id="tab-settings">
       <div class="settings-container">
-        <!-- CARD 1: HARDWARE & COMPUTE ACCELERATION -->
+
+        <!-- GROUP 1: COMPUTE & INFERENCE ENGINE -->
         <div class="settings-section-card">
           <div class="section-card-header">
             <span class="section-card-title">
               <svg class="icon" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/></svg>
-              Hardware &amp; Compute Acceleration
+              Compute &amp; Inference
             </span>
             <span class="section-card-badge" id="hybrid-hardware-badge">Auto (GPU + CPU)</span>
           </div>
-          <div class="intent-grid" style="grid-template-columns: repeat(3, 1fr);">
-            <div class="intent-card active" id="compute-card-auto" onclick="setHybridComputeMode('auto')">
-              <div class="intent-card-title">Smart Automatic (Recommended)</div>
-              <div class="intent-card-desc">Dynamically balances GPU VRAM and physical CPU cores for fastest token streaming.</div>
+
+          <div class="settings-row-item">
+            <div class="settings-row-left">
+              <div class="settings-row-title">Compute Acceleration</div>
+              <div class="settings-row-sub">Hardware layer offloading &amp; streaming</div>
             </div>
-            <div class="intent-card" id="compute-card-max_gpu" onclick="setHybridComputeMode('max_gpu')">
-              <div class="intent-card-title">Maximum Speed (Dedicated GPU)</div>
-              <div class="intent-card-desc">Offloads maximum model layers to Apple Metal, NVIDIA CUDA, or DirectML.</div>
+            <div class="settings-row-right">
+              <div class="segmented-control">
+                <button class="segment-btn active" id="compute-card-auto" onclick="setHybridComputeMode('auto')">Auto-Hybrid</button>
+                <button class="segment-btn" id="compute-card-max_gpu" onclick="setHybridComputeMode('max_gpu')">Max GPU</button>
+                <button class="segment-btn" id="compute-card-cpu_eco" onclick="setHybridComputeMode('cpu_eco')">Battery Eco</button>
+              </div>
             </div>
-            <div class="intent-card" id="compute-card-cpu_eco" onclick="setHybridComputeMode('cpu_eco')">
-              <div class="intent-card-title">Battery Saver (CPU Eco)</div>
-              <div class="intent-card-desc">Energy-efficient execution optimized for unplugged laptop battery endurance.</div>
+          </div>
+
+          <div class="settings-row-item">
+            <div class="settings-row-left">
+              <div class="settings-row-title">Reasoning Profile</div>
+              <div class="settings-row-sub">Sampling temperature &amp; determinism</div>
+            </div>
+            <div class="settings-row-right">
+              <div class="segmented-control">
+                <button class="segment-btn active" id="intent-precise" onclick="selectIntent('precise', 0.05, 8192, 'Deterministic & Step-by-Step')">Precise (0.05)</button>
+                <button class="segment-btn" id="intent-balanced" onclick="selectIntent('balanced', 0.3, 4096, 'Balanced & Clear')">Balanced (0.3)</button>
+                <button class="segment-btn" id="intent-creative" onclick="selectIntent('creative', 0.7, 4096, 'Creative & Exploratory')">Creative (0.7)</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="settings-row-item">
+            <div class="settings-row-left">
+              <div class="settings-row-title">Context Window</div>
+              <div class="settings-row-sub">Token memory buffer</div>
+            </div>
+            <div class="settings-row-right">
+              <select class="compact-select" id="setting-ctx-select" onchange="setContextLength(this.value)">
+                <option value="4096">4,096 Tokens</option>
+                <option value="8192" selected>8,192 Tokens</option>
+                <option value="16384">16,384 Tokens</option>
+                <option value="32768">32,768 Tokens</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="settings-row-item">
+            <div class="settings-row-left">
+              <div class="settings-row-title">RAM Governor Tripwire</div>
+              <div class="settings-row-sub">Auto-evict threshold to prevent freeze</div>
+            </div>
+            <div class="settings-row-right">
+              <div class="segmented-control">
+                <button class="segment-btn" id="gov-btn-80" onclick="setGovernorThreshold(80)">80%</button>
+                <button class="segment-btn active" id="gov-btn-85" onclick="setGovernorThreshold(85)">85%</button>
+                <button class="segment-btn" id="gov-btn-90" onclick="setGovernorThreshold(90)">90%</button>
+              </div>
             </div>
           </div>
         </div>
 
-        <!-- CARD 2: REASONING & RESPONSE PROFILE -->
+        <!-- GROUP 2: STUDIO ERGONOMICS & DISPLAY -->
         <div class="settings-section-card">
           <div class="section-card-header">
             <span class="section-card-title">
               <svg class="icon" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-              Reasoning &amp; Temperature Profile
+              Studio Ergonomics
             </span>
           </div>
-          <div class="intent-grid" style="grid-template-columns: repeat(3, 1fr);">
-            <div class="intent-card active" id="intent-precise" onclick="selectIntent('precise', 0.05, 8192, 'Deterministic & Step-by-Step')">
-              <div class="intent-card-title">Deterministic &amp; Precise (0.05)</div>
-              <div class="intent-card-desc">Zero-hallucination configuration for mathematical proofs, circuit analysis, and verified code.</div>
+
+          <div class="settings-row-item">
+            <div class="settings-row-left">
+              <div class="settings-row-title">Hardware Telemetry HUD</div>
+              <div class="settings-row-sub">Show live RAM and GPU pill in header</div>
             </div>
-            <div class="intent-card" id="intent-balanced" onclick="selectIntent('balanced', 0.3, 4096, 'Balanced & Clear')">
-              <div class="intent-card-title">Balanced &amp; Clear (0.30)</div>
-              <div class="intent-card-desc">Optimal for everyday technical explanations, architecture design, and STEM summaries.</div>
+            <div class="settings-row-right">
+              <label class="toggle-switch">
+                <input type="checkbox" id="toggle-hud-switch" checked onchange="toggleTelemetryHUD(this.checked)">
+                <span class="toggle-slider"></span>
+              </label>
             </div>
-            <div class="intent-card" id="intent-creative" onclick="selectIntent('creative', 0.7, 4096, 'Creative & Exploratory')">
-              <div class="intent-card-title">Creative &amp; Exploratory (0.70)</div>
-              <div class="intent-card-desc">Expanded sampling entropy for open-ended brainstorming and speculative hypotheses.</div>
+          </div>
+
+          <div class="settings-row-item">
+            <div class="settings-row-left">
+              <div class="settings-row-title">Editor Monospace Font</div>
+              <div class="settings-row-sub">Typography for equations &amp; code blocks</div>
+            </div>
+            <div class="settings-row-right">
+              <select class="compact-select" id="setting-font-select" onchange="setCodeFont(this.value)">
+                <option value="jetbrains" selected>JetBrains Mono</option>
+                <option value="fira">Fira Code</option>
+                <option value="cascadia">Cascadia Code</option>
+                <option value="sf">SF Mono</option>
+                <option value="system">System Mono</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="settings-row-item">
+            <div class="settings-row-left">
+              <div class="settings-row-title">Smart Stream Scroll</div>
+              <div class="settings-row-sub">Pin viewport to streaming tokens</div>
+            </div>
+            <div class="settings-row-right">
+              <label class="toggle-switch">
+                <input type="checkbox" id="toggle-scroll-switch" checked onchange="toggleSmartScroll(this.checked)">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+
+          <div class="settings-row-item">
+            <div class="settings-row-left">
+              <div class="settings-row-title">Tactile Audio Feedback</div>
+              <div class="settings-row-sub">Subtle acoustic micro-clicks on actions</div>
+            </div>
+            <div class="settings-row-right">
+              <label class="toggle-switch">
+                <input type="checkbox" id="toggle-haptics-switch" checked onchange="toggleHaptics(this.checked)">
+                <span class="toggle-slider"></span>
+              </label>
             </div>
           </div>
         </div>
 
-        <!-- CARD 3: SOVEREIGN MOE MODEL ENGINE -->
+        <!-- GROUP 3: SOVEREIGN MOE MODEL -->
         <div class="settings-section-card">
           <div class="section-card-header">
             <span class="section-card-title">
               <svg class="icon" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-              Sovereign Sparse MoE Engine (Allen OLMoE 1B-7B)
+              Sovereign Sparse MoE Model
             </span>
             <span class="section-card-badge" id="settings-installed-count">Offline Ready</span>
           </div>
-          <div style="font-size:12.5px; color:#a1a1aa; line-height:1.5; margin-bottom:12px;">
-            Powered exclusively by <strong>Allen OLMoE 1B-7B Instruct</strong> (6.9B total parameters, 1B active per token). Instant response latency, deep STEM reasoning capabilities, and an ultra-lightweight memory footprint.
-          </div>
-          <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.08); border-radius:8px; padding:12px 16px;">
-            <div>
-              <div style="font-size:13px; font-weight:600; color:#ffffff;">olmoe:1b-7b-instruct-q3_k_m.gguf</div>
-              <div style="font-size:11.5px; color:#71717a; margin-top:2px;">Size: 3.2 GB &bull; Recommended RAM: &ge; 4 GB &bull; Verified Hugging Face Weights</div>
+
+          <div class="settings-row-item">
+            <div class="settings-row-left">
+              <div class="settings-row-title">Allen OLMoE 1B-7B Instruct</div>
+              <div class="settings-row-sub">3.2 GB GGUF Q3_K_M &bull; 6.9B params (1B active/token)</div>
             </div>
-            <div>
-              <button class="btn-action" style="background:var(--accent); color:#ffffff; font-weight:600; padding:7px 16px; border:none; border-radius:6px; cursor:pointer;" onclick="openModelManagerModal()">
-                Model Vault &amp; Downloader
+            <div class="settings-row-right">
+              <button class="btn-settings-action primary" onclick="openModelManagerModal()">
+                <svg class="icon" viewBox="0 0 24 24" style="width:12px; height:12px; stroke:#000000;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                <span>Model Vault</span>
+              </button>
+              <button class="btn-settings-action" onclick="purgeModelCache()">
+                <span>Purge Cache</span>
               </button>
             </div>
           </div>
         </div>
 
-        <!-- CARD 4: ENTERPRISE AIR-GAP PRIVACY & TELEMETRY -->
+        <!-- GROUP 4: AIR-GAP PRIVACY & DATA -->
         <div class="settings-section-card">
           <div class="section-card-header">
             <span class="section-card-title">
               <svg class="icon" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-              Air-Gapped Sovereign Infrastructure
+              Air-Gap Privacy &amp; Data
             </span>
             <span class="section-card-badge" style="background:rgba(16,185,129,0.15); color:#10b981; border:1px solid rgba(16,185,129,0.3);">100% Offline Loopback</span>
           </div>
-          <div style="display:grid; grid-template-columns: repeat(2, 1fr); gap:12px; font-size:12px; color:#a1a1aa;">
-            <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06); border-radius:8px; padding:10px 14px;">
-              <div style="color:#ffffff; font-weight:600; margin-bottom:3px;">Zero Cloud Leaks</div>
-              <div>Inference, math evaluation, and tool operations execute strictly on 127.0.0.1 loopback.</div>
+
+          <div class="settings-row-item">
+            <div class="settings-row-left">
+              <div class="settings-row-title">Local Engine Host</div>
+              <div class="settings-row-sub">Isolated on 127.0.0.1:8085 (SymPy + KùzuDB)</div>
             </div>
-            <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06); border-radius:8px; padding:10px 14px;">
-              <div style="color:#ffffff; font-weight:600; margin-bottom:3px;">Neuro-Symbolic Core</div>
-              <div>SymPy AST Engine + C++ KùzuDB GraphRAG + WebGL STEM Plugin Engine.</div>
+            <div class="settings-row-right">
+              <span class="section-card-badge" style="color:#10b981;">Air-Gapped</span>
             </div>
           </div>
-          <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:14px;">
-            <button class="btn-action" style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); color:#d4d4d8; font-size:11.5px; padding:6px 14px; cursor:pointer;" onclick="purgeModelCache()">
-              Purge Model Cache
-            </button>
+
+          <div class="settings-row-item">
+            <div class="settings-row-left">
+              <div class="settings-row-title">Export Transcripts</div>
+              <div class="settings-row-sub">Backup all conversations to JSON</div>
+            </div>
+            <div class="settings-row-right">
+              <button class="btn-settings-action" onclick="exportAllChats()">
+                <svg class="icon" viewBox="0 0 24 24" style="width:12px; height:12px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                <span>Export JSON</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="settings-row-item">
+            <div class="settings-row-left">
+              <div class="settings-row-title">Chat Storage</div>
+              <div class="settings-row-sub">Reset local session database</div>
+            </div>
+            <div class="settings-row-right">
+              <button class="btn-settings-action danger" onclick="clearAllChatHistory()">
+                <span>Clear All Chats</span>
+              </button>
+            </div>
           </div>
         </div>
 
@@ -2456,8 +2755,42 @@
     let simBiasVal = 0.0;
     let simParamExtra = 1.0;
 
-    /* CLEAN HAPTICS & RENDERING (SILENT & INSTANT) */
-    const haptics = { click: () => {}, send: () => {}, tab: () => {}, success: () => {} };
+    /* LUXURY TACTILE MICRO-CLICK ENGINE (WEB AUDIO SYNTHESIS) */
+    let hapticsEnabled = localStorage.getItem('vigyan_haptics') !== 'false';
+    let _audioCtx = null;
+    function playMicroClick(freq = 800, duration = 0.012, gain = 0.02) {
+      if (!hapticsEnabled) return;
+      try {
+        if (!_audioCtx) {
+          const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+          if (AudioContextClass) _audioCtx = new AudioContextClass();
+        }
+        if (_audioCtx && _audioCtx.state === 'suspended') {
+          _audioCtx.resume().catch(() => {});
+        }
+        if (_audioCtx) {
+          const osc = _audioCtx.createOscillator();
+          const g = _audioCtx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(freq, _audioCtx.currentTime);
+          g.gain.setValueAtTime(gain, _audioCtx.currentTime);
+          g.gain.exponentialRampToValueAtTime(0.0001, _audioCtx.currentTime + duration);
+          osc.connect(g);
+          g.connect(_audioCtx.destination);
+          osc.start();
+          osc.stop(_audioCtx.currentTime + duration);
+        }
+      } catch (e) {}
+    }
+    const haptics = {
+      click: () => playMicroClick(800, 0.012, 0.02),
+      send: () => playMicroClick(1100, 0.018, 0.03),
+      tab: () => playMicroClick(650, 0.012, 0.02),
+      success: () => {
+        playMicroClick(880, 0.015, 0.025);
+        setTimeout(() => playMicroClick(1320, 0.025, 0.025), 35);
+      }
+    };
     function decodeLabel(el) { /* instant clean text display without scramble glitch */ }
 
     /* COMMAND CENTER REGISTRY */
@@ -2876,7 +3209,12 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
       latestHardwareTelemetry = Object.assign({}, latestHardwareTelemetry, stats);
       const gpuText = document.getElementById('hud-gpu-text');
       if (gpuText) {
-        gpuText.innerText = 'Ready';
+        const modeShort = { auto: 'AUTO', max_gpu: 'MAX GPU', cpu_eco: 'ECO', balanced: 'BALANCED' };
+        gpuText.innerText = modeShort[HYBRID_COMPUTE_MODE] || 'AUTO';
+      }
+      const ramText = document.getElementById('hud-ram-text');
+      if (ramText && stats.ram_pct !== undefined) {
+        ramText.innerText = `RAM ${Math.round(stats.ram_pct)}%`;
       }
       const hwBadge = document.getElementById('hybrid-hardware-badge');
       if (hwBadge) {
@@ -2885,13 +3223,18 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
       }
     };
 
-    window.setHybridComputeMode = function(mode) {
+    window.setHybridComputeMode = function(mode, silent = false) {
       HYBRID_COMPUTE_MODE = mode || 'auto';
       localStorage.setItem('vigyan_compute_mode', HYBRID_COMPUTE_MODE);
       ['auto', 'max_gpu', 'balanced', 'cpu_eco'].forEach(m => {
         const el = document.getElementById('compute-card-' + m);
         if (el) el.classList.toggle('active', m === HYBRID_COMPUTE_MODE);
       });
+      const gpuText = document.getElementById('hud-gpu-text');
+      if (gpuText) {
+        const modeShort = { auto: 'AUTO', max_gpu: 'MAX GPU', cpu_eco: 'ECO', balanced: 'BALANCED' };
+        gpuText.innerText = modeShort[HYBRID_COMPUTE_MODE] || 'AUTO';
+      }
       try {
         if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.nativeHost) {
           window.webkit.messageHandlers.nativeHost.postMessage(JSON.stringify({ cmd: 'set_compute_mode', mode: HYBRID_COMPUTE_MODE }));
@@ -2903,9 +3246,11 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
           }).then(r => r.json()).then(d => window.onNativeTelemetry(d)).catch(() => {});
         }
       } catch (e) {}
-      const modeNames = { auto: 'Smart Automatic', max_gpu: 'Maximum Speed', balanced: 'Balanced', cpu_eco: 'Battery Saver' };
-      showToast(`Performance: ${modeNames[HYBRID_COMPUTE_MODE] || 'Automatic'}`);
-      haptics.click();
+      if (!silent) {
+        const modeNames = { auto: 'Auto-Hybrid', max_gpu: 'Max GPU', cpu_eco: 'Battery Eco', balanced: 'Balanced' };
+        showToast(`Compute: ${modeNames[HYBRID_COMPUTE_MODE] || 'Auto-Hybrid'}`);
+        haptics.click();
+      }
     };
 
     window.cycleHybridComputeMode = function() {
@@ -3204,6 +3549,7 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
         let resp;
         try {
           if (BACKEND_TYPE === 'agent_server') {
+            const govThresh = parseFloat(localStorage.getItem('vigyan_governor_threshold') || '85');
             resp = await fetch(`${AGENT_HOST}/api/chat`, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
@@ -3213,7 +3559,9 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
                 query: text,
                 messages: hist,
                 compute_mode: HYBRID_COMPUTE_MODE,
-                options: Object.assign({ temperature: temp, top_p: topp }, hybridOpts)
+                num_ctx: ctx,
+                governor_threshold_pct: govThresh,
+                options: Object.assign({ temperature: temp, top_p: topp, num_ctx: ctx, governor_threshold_pct: govThresh }, hybridOpts)
               })
             });
           }
@@ -3376,7 +3724,12 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
                     speedBadgeEl.innerHTML = `<svg style="width:10px; height:10px; stroke:currentColor; fill:none;" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>${tokPerSec} tok/s`;
                   }
                   if (scrollWrapper) {
-                    scrollWrapper.scrollTop = scrollWrapper.scrollHeight;
+                    if (smartScrollEnabled) {
+                      const isNearBottom = (scrollWrapper.scrollHeight - scrollWrapper.scrollTop - scrollWrapper.clientHeight) < 140;
+                      if (isNearBottom) scrollWrapper.scrollTop = scrollWrapper.scrollHeight;
+                    } else {
+                      scrollWrapper.scrollTop = scrollWrapper.scrollHeight;
+                    }
                   }
                 }
               } catch (e) {}
@@ -4647,7 +5000,7 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
     /* =========================================================================
        SETTINGS & DAEMON CONNECTION LOGIC
        ========================================================================= */
-    function selectIntent(type, temp, ctx, title) {
+    function selectIntent(type, temp, ctx, title, silent = false) {
       ['precise', 'balanced', 'creative'].forEach(k => {
         const el = document.getElementById('intent-' + k);
         if (el) el.classList.toggle('active', k === type);
@@ -4656,10 +5009,109 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
       if (tempEl) tempEl.value = temp;
       const ctxEl = document.getElementById('setting-ctx');
       if (ctxEl) ctxEl.value = ctx;
+      const ctxSelect = document.getElementById('setting-ctx-select');
+      if (ctxSelect && ctx) ctxSelect.value = String(ctx);
       try {
         localStorage.setItem('vigyan_intent_style', JSON.stringify({ type, temp, ctx, title }));
       } catch (e) {}
-      showToast(`Reasoning Profile: ${title}`);
+      if (!silent) {
+        showToast(`Reasoning: ${title}`);
+        haptics.click();
+      }
+    }
+
+    /* FULLY FUNCTIONAL SETTINGS CONTROLS & ERGONOMICS */
+    function setContextLength(val) {
+      const ctx = parseInt(val) || 8192;
+      const ctxEl = document.getElementById('setting-ctx');
+      if (ctxEl) ctxEl.value = ctx;
+      const sel = document.getElementById('setting-ctx-select');
+      if (sel) sel.value = String(ctx);
+      localStorage.setItem('vigyan_ctx_len', String(ctx));
+      showToast(`Context: ${ctx.toLocaleString()} tokens`);
+      haptics.click();
+    }
+
+    function setGovernorThreshold(pct) {
+      const val = parseInt(pct) || 85;
+      ['80', '85', '90'].forEach(p => {
+        const el = document.getElementById('gov-btn-' + p);
+        if (el) el.classList.toggle('active', p === String(val));
+      });
+      localStorage.setItem('vigyan_governor_threshold', String(val));
+      showToast(`RAM Tripwire: ${val}%`);
+      haptics.click();
+    }
+
+    function toggleTelemetryHUD(enabled) {
+      const hud = document.getElementById('header-hud-telemetry');
+      if (hud) hud.style.display = enabled ? 'flex' : 'none';
+      const sw = document.getElementById('toggle-hud-switch');
+      if (sw) sw.checked = enabled;
+      localStorage.setItem('vigyan_hud_enabled', enabled ? 'true' : 'false');
+      showToast(`HUD: ${enabled ? 'Enabled' : 'Disabled'}`);
+      haptics.click();
+    }
+
+    function setCodeFont(fontFamily) {
+      const fontMap = {
+        'jetbrains': '"JetBrains Mono", ui-monospace, monospace',
+        'fira': '"Fira Code", ui-monospace, monospace',
+        'cascadia': '"Cascadia Code", ui-monospace, monospace',
+        'sf': '"SF Mono", ui-monospace, monospace',
+        'system': 'ui-monospace, monospace'
+      };
+      const resolved = fontMap[fontFamily] || fontMap['jetbrains'];
+      document.documentElement.style.setProperty('--font-mono', resolved);
+      localStorage.setItem('vigyan_code_font', fontFamily);
+      const sel = document.getElementById('setting-font-select');
+      if (sel) sel.value = fontFamily;
+      showToast(`Font: ${fontFamily.toUpperCase()}`);
+      haptics.click();
+    }
+
+    function toggleSmartScroll(enabled) {
+      smartScrollEnabled = !!enabled;
+      const sw = document.getElementById('toggle-scroll-switch');
+      if (sw) sw.checked = smartScrollEnabled;
+      localStorage.setItem('vigyan_smart_scroll', smartScrollEnabled ? 'true' : 'false');
+      showToast(`Auto-Scroll: ${smartScrollEnabled ? 'On' : 'Off'}`);
+      haptics.click();
+    }
+
+    function toggleHaptics(enabled) {
+      hapticsEnabled = !!enabled;
+      const sw = document.getElementById('toggle-haptics-switch');
+      if (sw) sw.checked = hapticsEnabled;
+      localStorage.setItem('vigyan_haptics', hapticsEnabled ? 'true' : 'false');
+      if (hapticsEnabled) playMicroClick(900, 0.02, 0.04);
+      showToast(`Audio Clicks: ${hapticsEnabled ? 'On' : 'Off'}`);
+    }
+
+    function exportAllChats() {
+      try {
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(sessions, null, 2));
+        const dlAnchor = document.createElement('a');
+        dlAnchor.setAttribute("href", dataStr);
+        dlAnchor.setAttribute("download", `vigyan_chats_${new Date().toISOString().slice(0, 10)}.json`);
+        document.body.appendChild(dlAnchor);
+        dlAnchor.click();
+        document.body.removeChild(dlAnchor);
+        showToast('Chats exported to JSON');
+        haptics.success();
+      } catch (e) {
+        showToast('Export failed: ' + e.message);
+      }
+    }
+
+    function clearAllChatHistory() {
+      if (!confirm('Are you sure you want to clear all chat sessions? This cannot be undone.')) return;
+      sessions = { 'default': { name: 'New Chat', messages: [] } };
+      activeSessionId = 'default';
+      localStorage.setItem('vigyan_sessions_data', JSON.stringify(sessions));
+      updateSessionList();
+      renderChat();
+      showToast('Chat history cleared');
       haptics.click();
     }
 
@@ -4805,8 +5257,51 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
         const rawIntent = localStorage.getItem('vigyan_intent_style');
         if (rawIntent) {
           const it = JSON.parse(rawIntent);
-          selectIntent(it.type, it.temp, it.ctx, it.title);
+          selectIntent(it.type, it.temp, it.ctx, it.title, true);
         }
+
+        const savedCtx = localStorage.getItem('vigyan_ctx_len');
+        if (savedCtx) {
+          const ctxEl = document.getElementById('setting-ctx');
+          if (ctxEl) ctxEl.value = savedCtx;
+          const sel = document.getElementById('setting-ctx-select');
+          if (sel) sel.value = savedCtx;
+        }
+
+        const savedGov = localStorage.getItem('vigyan_governor_threshold') || '85';
+        ['80', '85', '90'].forEach(p => {
+          const el = document.getElementById('gov-btn-' + p);
+          if (el) el.classList.toggle('active', p === String(savedGov));
+        });
+
+        const hudOn = localStorage.getItem('vigyan_hud_enabled') !== 'false';
+        const hud = document.getElementById('header-hud-telemetry');
+        if (hud) hud.style.display = hudOn ? 'flex' : 'none';
+        const hudSw = document.getElementById('toggle-hud-switch');
+        if (hudSw) hudSw.checked = hudOn;
+
+        const savedFont = localStorage.getItem('vigyan_code_font') || 'jetbrains';
+        const fontMap = {
+          'jetbrains': '"JetBrains Mono", ui-monospace, monospace',
+          'fira': '"Fira Code", ui-monospace, monospace',
+          'cascadia': '"Cascadia Code", ui-monospace, monospace',
+          'sf': '"SF Mono", ui-monospace, monospace',
+          'system': 'ui-monospace, monospace'
+        };
+        document.documentElement.style.setProperty('--font-mono', fontMap[savedFont] || fontMap['jetbrains']);
+        const fontSel = document.getElementById('setting-font-select');
+        if (fontSel) fontSel.value = savedFont;
+
+        const scrollOn = localStorage.getItem('vigyan_smart_scroll') !== 'false';
+        smartScrollEnabled = scrollOn;
+        const scrollSw = document.getElementById('toggle-scroll-switch');
+        if (scrollSw) scrollSw.checked = scrollOn;
+
+        const hapticsOn = localStorage.getItem('vigyan_haptics') !== 'false';
+        hapticsEnabled = hapticsOn;
+        const hapticsSw = document.getElementById('toggle-haptics-switch');
+        if (hapticsSw) hapticsSw.checked = hapticsOn;
+
         const rawSettings = localStorage.getItem('vigyan_enterprise_settings');
         if (rawSettings) {
           const s = JSON.parse(rawSettings);
@@ -4820,7 +5315,7 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
       if (uiZoomLevel !== 1.0) applyUiZoom(uiZoomLevel, true);
       updateSessionList();
       updateModelDropdownUI();
-      setHybridComputeMode(HYBRID_COMPUTE_MODE);
+      setHybridComputeMode(HYBRID_COMPUTE_MODE, true);
       renderChat();
       checkOllamaConnection();
       renderLatex(document.body);

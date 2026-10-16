@@ -2006,31 +2006,50 @@ class _NeuroSymbolicHTTPHandler(BaseHTTPRequestHandler):
                 except Exception:
                     user_temp = 0.05
 
+                user_ctx = None
+                try:
+                    if body.get("num_ctx"):
+                        user_ctx = int(body.get("num_ctx"))
+                    elif body.get("options", {}).get("num_ctx"):
+                        user_ctx = int(body.get("options", {}).get("num_ctx"))
+                except Exception:
+                    user_ctx = None
+
                 ollama_payload = {
                     "model": active_model,
                     "messages": model_messages,
                     "options": {
                         "num_gpu": hybrid["num_gpu"],
                         "num_thread": hybrid["num_thread"],
-                        "num_ctx": hybrid["num_ctx"],
+                        "num_ctx": user_ctx or hybrid["num_ctx"],
                         "num_batch": hybrid["num_batch"],
                         "temperature": user_temp,
                     },
                     "stream": True,
                 }
 
+                gov_thresh = 88.0
+                try:
+                    if body.get("governor_threshold_pct"):
+                        gov_thresh = float(body.get("governor_threshold_pct"))
+                    elif body.get("options", {}).get("governor_threshold_pct"):
+                        gov_thresh = float(body.get("options", {}).get("governor_threshold_pct"))
+                except Exception:
+                    gov_thresh = 88.0
+                gov_thresh = max(60.0, min(95.0, gov_thresh))
+
                 governor_tripped = [False]
                 def _on_ram_trip(pct):
                     governor_tripped[0] = True
                     _emit("ram_governor_trip", {
                         "ram_percent": pct,
-                        "threshold": 88.0,
+                        "threshold": gov_thresh,
                         "evicted_model": active_model,
                         "fallback": "olmoe:1b-7b"
                     })
-                    _emit("token", f"\n\n⚠️ **[RAM Governor Safety Alert]**: Memory reached {pct:.1f}% (≥ 88% threshold). Model `{active_model}` was unloaded to prevent system lockup.")
+                    _emit("token", f"\n\n⚠️ **[RAM Governor Safety Alert]**: Memory reached {pct:.1f}% (≥ {gov_thresh:.0f}% threshold). Model `{active_model}` was unloaded to prevent system lockup.")
 
-                governor = RAMGovernor(threshold_pct=88.0, interval_sec=0.1)
+                governor = RAMGovernor(threshold_pct=gov_thresh, interval_sec=0.1)
                 governor.start(_on_ram_trip, active_model)
 
                 req = urllib.request.Request(
