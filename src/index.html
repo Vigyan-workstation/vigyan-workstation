@@ -13,6 +13,12 @@
   <script src="vendor/auto-render.min.js"></script>
   <!-- Offline Plotly -->
   <script src="vendor/plotly.min.js"></script>
+  <!-- Offline Three.js 3D CAD Engine -->
+  <script src="vendor/three.min.js"></script>
+  <script src="vendor/OrbitControls.js"></script>
+  <!-- Offline WaveDrom Digital Bus Engine -->
+  <script src="vendor/wavedrom.min.js"></script>
+  <script src="vendor/wavedrom-skin-default.js"></script>
   <style>
   
     /* =========================================================================
@@ -859,6 +865,124 @@
       border-radius: 6px;
       margin-top: 10px;
       overflow: hidden;
+    }
+
+    /* 3D CAD & THREE.JS LUXURY WORKSTATION VIEWER */
+    .stem-threejs-canvas-wrapper {
+      width: 100%;
+      height: 340px;
+      background: #07080c;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 6px;
+      margin-top: 10px;
+      position: relative;
+      overflow: hidden;
+    }
+    .stem-threejs-canvas-wrapper canvas {
+      width: 100% !important;
+      height: 100% !important;
+      display: block;
+      cursor: grab;
+    }
+    .stem-threejs-canvas-wrapper canvas:active {
+      cursor: grabbing;
+    }
+    .stem-threejs-toolbar {
+      position: absolute;
+      bottom: 12px;
+      left: 12px;
+      display: flex;
+      gap: 6px;
+      z-index: 10;
+      background: rgba(12, 14, 20, 0.85);
+      backdrop-filter: blur(8px);
+      padding: 4px 6px;
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .stem-cad-btn {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #e4e4e7;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.2s ease;
+    }
+    .stem-cad-btn:hover {
+      background: rgba(255, 255, 255, 0.14);
+      color: #ffffff;
+      border-color: rgba(255, 255, 255, 0.25);
+    }
+    .stem-cad-btn-primary {
+      background: #10b981;
+      border-color: #10b981;
+      color: #000000;
+      font-weight: 600;
+    }
+    .stem-cad-btn-primary:hover {
+      background: #34d399;
+      color: #000000;
+    }
+
+    /* PCB DUAL-TAB CIRCUIT SCHEMATIC & NETLIST */
+    .circuit-tabs-nav {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 10px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding-bottom: 8px;
+    }
+    .circuit-tab-btn {
+      background: transparent;
+      border: 1px solid transparent;
+      color: #9ca3af;
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 11.5px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .circuit-tab-btn:hover {
+      color: #ffffff;
+    }
+    .circuit-tab-btn.active {
+      background: rgba(56, 189, 248, 0.12);
+      border-color: rgba(56, 189, 248, 0.3);
+      color: #38bdf8;
+      font-weight: 600;
+    }
+    .circuit-code-box {
+      background: #050608;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 6px;
+      padding: 10px;
+      font-family: ui-monospace, "JetBrains Mono", monospace;
+      font-size: 11px;
+      color: #cbd5e1;
+      max-height: 260px;
+      overflow-y: auto;
+      white-space: pre;
+    }
+
+    /* WAVEDROM TIMING CARDS */
+    .stem-wavedrom-card {
+      background: #07080c;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 6px;
+      padding: 12px;
+      margin-top: 10px;
+      overflow-x: auto;
+    }
+    .stem-wavedrom-card svg {
+      max-width: 100%;
+      height: auto;
+      display: block;
+      margin: 0 auto;
     }
 
     /* INLINE STEM INTERACTIVE CARDS */
@@ -2229,6 +2353,8 @@
         window._katexRaf = requestAnimationFrame(() => {
           renderLatex(box);
           initPendingPlots(box);
+          initPendingCadModels(box);
+          initPendingWaveDrom(box);
           window._katexRaf = null;
         });
       }
@@ -2914,6 +3040,8 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
                     contentEl.innerHTML = formatMessageContent(assistantMsg.content);
                     renderLatex(contentEl);
                     initPendingPlots(contentEl);
+                    initPendingCadModels(contentEl);
+                    initPendingWaveDrom(contentEl);
                   }
                   continue;
                 }
@@ -2992,6 +3120,187 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
       });
     }
 
+    // Backward-compatible studio hooks
+    function initInChatCAD(root) { return initPendingCadModels(root); }
+    function initInChatPlot(root) { return initPendingPlots(root); }
+    function initInChatCircuit() {}
+    function initInChatSemi() {}
+    function initInChatSim() {}
+    function initInChatMaterial() {}
+    function initInChatBiology() {}
+    function initInChatMathVisual() {}
+    function initInChatMedical() {}
+
+    function initPendingCadModels(root) {
+      if (!window.THREE) return;
+      const container = root || document.getElementById('chat-box') || document.body;
+      const cadElements = container.querySelectorAll('.stem-threejs-canvas-wrapper:not([data-initialized])');
+      cadElements.forEach(wrapper => {
+        try {
+          const raw = wrapper.getAttribute('data-mesh-spec');
+          if (!raw) return;
+          const meshSpec = JSON.parse(decodeURIComponent(raw));
+          const canvasEl = wrapper.querySelector('canvas');
+          if (!canvasEl) return;
+
+          const width = wrapper.clientWidth || 640;
+          const height = wrapper.clientHeight || 340;
+
+          const scene = new THREE.Scene();
+          scene.background = new THREE.Color(0x07080c);
+
+          const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 2000);
+          const renderer = new THREE.WebGLRenderer({ canvas: canvasEl, antialias: true, alpha: false });
+          renderer.setSize(width, height);
+          renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+
+          // Lights
+          const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+          scene.add(ambientLight);
+          const dirLight1 = new THREE.DirectionalLight(0xffffff, 0.8);
+          dirLight1.position.set(120, 200, 160);
+          scene.add(dirLight1);
+          const dirLight2 = new THREE.DirectionalLight(0x38bdf8, 0.4);
+          dirLight2.position.set(-100, -80, -100);
+          scene.add(dirLight2);
+
+          // Grid helper on floor
+          const grid = new THREE.GridHelper(260, 26, 0x222530, 0x13151b);
+          grid.position.y = -0.5;
+          scene.add(grid);
+
+          // BufferGeometry
+          const geometry = new THREE.BufferGeometry();
+          geometry.setAttribute('position', new THREE.Float32BufferAttribute(meshSpec.positions, 3));
+          if (meshSpec.normals && meshSpec.normals.length) {
+            geometry.setAttribute('normal', new THREE.Float32BufferAttribute(meshSpec.normals, 3));
+          } else {
+            geometry.computeVertexNormals();
+          }
+          geometry.center();
+
+          // Obsidian Titanium Satin Material
+          const material = new THREE.MeshStandardMaterial({
+            color: 0x94a3b8,
+            metalness: 0.75,
+            roughness: 0.3,
+            wireframe: false
+          });
+          const mesh = new THREE.Mesh(geometry, material);
+          scene.add(mesh);
+
+          // Subtle wireframe edge definition
+          const wireGeo = new THREE.WireframeGeometry(geometry);
+          const wireMat = new THREE.LineBasicMaterial({ color: 0x38bdf8, opacity: 0.25, transparent: true });
+          const wireframe = new THREE.LineSegments(wireGeo, wireMat);
+          mesh.add(wireframe);
+
+          // OrbitControls
+          let controls = null;
+          if (window.THREE.OrbitControls) {
+            controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.05;
+          }
+
+          // Camera framing
+          geometry.computeBoundingSphere();
+          const radius = geometry.boundingSphere ? geometry.boundingSphere.radius : 60;
+          camera.position.set(radius * 1.8, radius * 1.5, radius * 2.0);
+          camera.lookAt(0, 0, 0);
+          if (controls) controls.target.set(0, 0, 0);
+
+          let animId = null;
+          function animate() {
+            animId = requestAnimationFrame(animate);
+            if (controls) controls.update();
+            renderer.render(scene, camera);
+          }
+          animate();
+
+          wrapper._threeScene = { scene, camera, renderer, material, wireframe, animId, radius };
+          wrapper.setAttribute('data-initialized', 'true');
+
+        } catch (e) {
+          console.warn('Three.js initialization error:', e);
+        }
+      });
+    }
+
+    function initPendingWaveDrom(root) {
+      if (!window.WaveDrom) return;
+      const container = root || document.getElementById('chat-box') || document.body;
+      const waveElements = container.querySelectorAll('.stem-wavedrom-card:not([data-initialized])');
+      waveElements.forEach((el, idx) => {
+        try {
+          const raw = el.getAttribute('data-wave-spec');
+          if (!raw) return;
+          const spec = JSON.parse(decodeURIComponent(raw));
+          const targetDiv = el.querySelector('.wavedrom-target');
+          if (!targetDiv) return;
+          targetDiv.innerHTML = '';
+          const uniqueId = 'wd_gen_' + Math.random().toString(36).substring(2, 9);
+          targetDiv.id = uniqueId;
+          WaveDrom.RenderWaveForm(idx, spec, uniqueId);
+          el.setAttribute('data-initialized', 'true');
+        } catch (e) {
+          console.warn('WaveDrom render error:', e);
+        }
+      });
+    }
+
+    function toggleCadWireframe(cardId) {
+      const card = document.getElementById(cardId);
+      if (!card) return;
+      const wrapper = card.querySelector('.stem-threejs-canvas-wrapper');
+      if (!wrapper || !wrapper._threeScene) return;
+      const s = wrapper._threeScene;
+      s.material.wireframe = !s.material.wireframe;
+      s.wireframe.visible = !s.material.wireframe;
+    }
+
+    function resetCadCamera(cardId) {
+      const card = document.getElementById(cardId);
+      if (!card) return;
+      const wrapper = card.querySelector('.stem-threejs-canvas-wrapper');
+      if (!wrapper || !wrapper._threeScene) return;
+      const s = wrapper._threeScene;
+      const r = s.radius || 60;
+      s.camera.position.set(r * 1.8, r * 1.5, r * 2.0);
+      s.camera.lookAt(0, 0, 0);
+    }
+
+    function downloadStlFile(filename, b64Data) {
+      try {
+        const link = document.createElement('a');
+        link.href = 'data:application/sla;base64,' + b64Data;
+        link.download = filename || 'model.stl';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      } catch (e) {
+        console.error('Download error:', e);
+      }
+    }
+
+    function switchCircuitTab(cardId, tabName) {
+      const card = document.getElementById(cardId);
+      if (!card) return;
+      const tabs = card.querySelectorAll('.circuit-tab-btn');
+      tabs.forEach(t => t.classList.toggle('active', t.getAttribute('data-tab') === tabName));
+      const panes = card.querySelectorAll('.circuit-tab-pane');
+      panes.forEach(p => p.style.display = (p.getAttribute('data-pane') === tabName ? 'block' : 'none'));
+    }
+
+    function copyNetlistToClipboard(btn, text) {
+      if (!navigator.clipboard) return;
+      navigator.clipboard.writeText(text).then(() => {
+        const orig = btn.innerHTML;
+        btn.innerHTML = '✓ Copied';
+        setTimeout(() => { btn.innerHTML = orig; }, 1800);
+      });
+    }
+
     function renderCommandApprovalCardHtml(data) {
       const id = 'cmd-' + Math.random().toString(36).substring(2, 9);
       const cmd = data.command || '';
@@ -3029,6 +3338,188 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
     function renderToolResultHtml(data) {
       if (!data) return '';
       const tool = data.tool || '';
+
+      // 0.1 3D CAD MODEL (Three.js WebGL Interactive Orbit Viewer)
+      if (tool === 'cad_model_generate' || data.render_type === 'threejs_cad') {
+        const id = 'cad-' + Math.random().toString(36).substring(2, 9);
+        const encodedMesh = encodeURIComponent(JSON.stringify(data.mesh || {}));
+        const stlB64 = data.stl_base64 || '';
+        const filename = data.filename || 'model.stl';
+
+        let metricsHtml = '';
+        if (data.metrics && Array.isArray(data.metrics)) {
+          metricsHtml = '<div class="stem-metric-grid">' + data.metrics.map(m => `
+            <div class="stem-metric-box">
+              <div class="stem-metric-label">${escapeHtml(m.label)}</div>
+              <div class="stem-metric-val">${escapeHtml(m.value)}</div>
+            </div>
+          `).join('') + '</div>';
+        }
+
+        return `\n\n<!--VIGYAN_CARD_START--><div class="agent-stem-card" id="${id}">
+          <div class="agent-stem-header">
+            <div style="display:flex; align-items:center; gap:8px;">
+              <svg style="width:14px; height:14px; stroke:#38bdf8; fill:none;" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+              <span style="font-weight:600; font-size:12px; color:#ffffff;">3D CAD: ${escapeHtml(data.title || 'Parametric Solid')}</span>
+            </div>
+            <span style="font-size:10px; color:#38bdf8; background:rgba(56,189,248,0.1); border:1px solid rgba(56,189,248,0.2); padding:2px 6px; border-radius:4px;">WebGL 3D Studio</span>
+          </div>
+          <div class="agent-stem-body">
+            ${metricsHtml}
+            <div class="stem-threejs-canvas-wrapper" id="three-${id}" data-mesh-spec="${encodedMesh}">
+              <canvas></canvas>
+              <div class="stem-threejs-toolbar">
+                <button class="stem-cad-btn" onclick="toggleCadWireframe('${id}')" title="Toggle wireframe">
+                  <svg style="width:11px; height:11px; stroke:currentColor; fill:none;" viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg> Wireframe
+                </button>
+                <button class="stem-cad-btn" onclick="resetCadCamera('${id}')" title="Reset View">
+                  <svg style="width:11px; height:11px; stroke:currentColor; fill:none;" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg> Reset
+                </button>
+                <button class="stem-cad-btn stem-cad-btn-primary" onclick="downloadStlFile('${filename}', '${stlB64}')" title="Download STL file">
+                  <svg style="width:11px; height:11px; stroke:currentColor; fill:none;" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Download .STL
+                </button>
+              </div>
+            </div>
+          </div>
+        </div><!--VIGYAN_CARD_END-->\n\n`;
+      }
+
+      // 0.2 DIGITAL BUS TIMING (WaveDrom Engine)
+      if (tool === 'wavedrom_generate' || data.render_type === 'wavedrom') {
+        const id = 'wave-' + Math.random().toString(36).substring(2, 9);
+        const encodedWave = encodeURIComponent(JSON.stringify(data.wavedrom_spec || {}));
+
+        let metricsHtml = '';
+        if (data.metrics && Array.isArray(data.metrics)) {
+          metricsHtml = '<div class="stem-metric-grid">' + data.metrics.map(m => `
+            <div class="stem-metric-box">
+              <div class="stem-metric-label">${escapeHtml(m.label)}</div>
+              <div class="stem-metric-val">${escapeHtml(m.value)}</div>
+            </div>
+          `).join('') + '</div>';
+        }
+
+        return `\n\n<!--VIGYAN_CARD_START--><div class="agent-stem-card" id="${id}">
+          <div class="agent-stem-header">
+            <div style="display:flex; align-items:center; gap:8px;">
+              <svg style="width:14px; height:14px; stroke:#10b981; fill:none;" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+              <span style="font-weight:600; font-size:12px; color:#ffffff;">Digital Bus Timing: ${escapeHtml(data.title || 'Waveform')}</span>
+            </div>
+            <span style="font-size:10px; color:#10b981; background:rgba(16,185,129,0.1); border:1px solid rgba(16,185,129,0.2); padding:2px 6px; border-radius:4px;">WaveDrom Engine</span>
+          </div>
+          <div class="agent-stem-body">
+            ${metricsHtml}
+            <div class="stem-wavedrom-card" id="wd-card-${id}" data-wave-spec="${encodedWave}">
+              <div class="wavedrom-target" style="overflow-x:auto;"></div>
+            </div>
+          </div>
+        </div><!--VIGYAN_CARD_END-->\n\n`;
+      }
+
+      // 0.3 PCB & CIRCUIT SCHEMATIC (SKiDL / KiCad / SPICE Deck)
+      if (tool === 'pcb_netlist_generate' || data.render_type === 'pcb_circuit') {
+        const id = 'pcb-' + Math.random().toString(36).substring(2, 9);
+        let metricsHtml = '';
+        if (data.metrics && Array.isArray(data.metrics)) {
+          metricsHtml = '<div class="stem-metric-grid">' + data.metrics.map(m => `
+            <div class="stem-metric-box">
+              <div class="stem-metric-label">${escapeHtml(m.label)}</div>
+              <div class="stem-metric-val">${escapeHtml(m.value)}</div>
+            </div>
+          `).join('') + '</div>';
+        }
+
+        const kicadNet = data.kicad_netlist || '';
+        const spiceNet = data.spice_netlist || '';
+        const svgContent = data.schematic_svg || '';
+
+        return `\n\n<!--VIGYAN_CARD_START--><div class="agent-stem-card" id="${id}">
+          <div class="agent-stem-header">
+            <div style="display:flex; align-items:center; gap:8px;">
+              <svg style="width:14px; height:14px; stroke:#f59e0b; fill:none;" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+              <span style="font-weight:600; font-size:12px; color:#ffffff;">Circuit Design: ${escapeHtml(data.title || 'Schematic & Netlist')}</span>
+            </div>
+            <span style="font-size:10px; color:#f59e0b; background:rgba(245,158,11,0.1); border:1px solid rgba(245,158,11,0.2); padding:2px 6px; border-radius:4px;">SKiDL / KiCad</span>
+          </div>
+          <div class="agent-stem-body">
+            ${metricsHtml}
+            <div class="circuit-tabs-nav">
+              <button class="circuit-tab-btn active" data-tab="schematic" onclick="switchCircuitTab('${id}', 'schematic')">Schematic Diagram</button>
+              <button class="circuit-tab-btn" data-tab="kicad" onclick="switchCircuitTab('${id}', 'kicad')">KiCad 8 Netlist</button>
+              <button class="circuit-tab-btn" data-tab="spice" onclick="switchCircuitTab('${id}', 'spice')">SPICE Deck</button>
+            </div>
+            <div class="circuit-tab-pane" data-pane="schematic" style="display:block;">
+              <div style="background:#07080c; border:1px solid rgba(255,255,255,0.06); border-radius:6px; padding:8px; overflow-x:auto;">
+                ${svgContent}
+              </div>
+            </div>
+            <div class="circuit-tab-pane" data-pane="kicad" style="display:none;">
+              <div style="display:flex; justify-content:flex-end; margin-bottom:6px;">
+                <button class="stem-cad-btn" onclick="copyNetlistToClipboard(this, \`${escapeHtml(kicadNet)}\`)">Copy KiCad Netlist</button>
+              </div>
+              <div class="circuit-code-box"><code>${escapeHtml(kicadNet)}</code></div>
+            </div>
+            <div class="circuit-tab-pane" data-pane="spice" style="display:none;">
+              <div style="display:flex; justify-content:flex-end; margin-bottom:6px;">
+                <button class="stem-cad-btn" onclick="copyNetlistToClipboard(this, \`${escapeHtml(spiceNet)}\`)">Copy SPICE Deck</button>
+              </div>
+              <div class="circuit-code-box"><code>${escapeHtml(spiceNet)}</code></div>
+            </div>
+          </div>
+        </div><!--VIGYAN_CARD_END-->\n\n`;
+      }
+
+      // 0.4 SILICON EDA (Verilog RTL Analysis)
+      if (tool === 'verilog_analyze' || data.render_type === 'silicon_eda') {
+        const id = 'eda-' + Math.random().toString(36).substring(2, 9);
+        let metricsHtml = '';
+        if (data.metrics && Array.isArray(data.metrics)) {
+          metricsHtml = '<div class="stem-metric-grid">' + data.metrics.map(m => `
+            <div class="stem-metric-box">
+              <div class="stem-metric-label">${escapeHtml(m.label)}</div>
+              <div class="stem-metric-val">${escapeHtml(m.value)}</div>
+            </div>
+          `).join('') + '</div>';
+        }
+        return `\n\n<!--VIGYAN_CARD_START--><div class="agent-stem-card" id="${id}">
+          <div class="agent-stem-header">
+            <div style="display:flex; align-items:center; gap:8px;">
+              <svg style="width:14px; height:14px; stroke:#8b5cf6; fill:none;" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+              <span style="font-weight:600; font-size:12px; color:#ffffff;">Silicon EDA: ${escapeHtml(data.module_name || 'RTL Module')}</span>
+            </div>
+            <span style="font-size:10px; color:#8b5cf6; background:rgba(139,92,246,0.1); border:1px solid rgba(139,92,246,0.2); padding:2px 6px; border-radius:4px;">Synthesis Analysis</span>
+          </div>
+          <div class="agent-stem-body">
+            ${metricsHtml}
+          </div>
+        </div><!--VIGYAN_CARD_END-->\n\n`;
+      }
+
+      // 0.5 ROBOTICS KINEMATICS (6-DoF Forward Kinematics)
+      if (tool === 'robotics_kinematics' || data.render_type === 'robotics') {
+        const id = 'rob-' + Math.random().toString(36).substring(2, 9);
+        let metricsHtml = '';
+        if (data.metrics && Array.isArray(data.metrics)) {
+          metricsHtml = '<div class="stem-metric-grid">' + data.metrics.map(m => `
+            <div class="stem-metric-box">
+              <div class="stem-metric-label">${escapeHtml(m.label)}</div>
+              <div class="stem-metric-val">${escapeHtml(m.value)}</div>
+            </div>
+          `).join('') + '</div>';
+        }
+        return `\n\n<!--VIGYAN_CARD_START--><div class="agent-stem-card" id="${id}">
+          <div class="agent-stem-header">
+            <div style="display:flex; align-items:center; gap:8px;">
+              <svg style="width:14px; height:14px; stroke:#ec4899; fill:none;" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+              <span style="font-weight:600; font-size:12px; color:#ffffff;">Robotics Kinematics: ${escapeHtml(data.arm_type || 'Arm Model')}</span>
+            </div>
+            <span style="font-size:10px; color:#ec4899; background:rgba(236,72,153,0.1); border:1px solid rgba(236,72,153,0.2); padding:2px 6px; border-radius:4px;">DH 6-DoF FK/IK</span>
+          </div>
+          <div class="agent-stem-body">
+            ${metricsHtml}
+          </div>
+        </div><!--VIGYAN_CARD_END-->\n\n`;
+      }
 
       // 1. PLOT FUNCTION (Mathematical Curve Visualization)
       if (tool === 'plot_function' || (data.plot && tool !== 'circuit_calc' && tool !== 'physics_sim')) {

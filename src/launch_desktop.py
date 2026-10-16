@@ -31,6 +31,11 @@ os.environ.setdefault("OLLAMA_ORIGINS", "*")
 from ollama_supervisor import OllamaSupervisor
 
 try:
+    import tools
+except Exception:
+    tools = None
+
+try:
     from version import __version__
 except Exception:
     __version__ = "2.7.0-beta.1"
@@ -281,7 +286,7 @@ def compute_hybrid_allocation(
         num_ctx = 4096
         num_batch = 256
     else:
-        num_ctx = 8192
+        num_ctx = 16384 if mode == "max_gpu" and ram_total_gb >= 24.0 else 8192
         num_batch = 512
 
     # 3. Hybrid GPU + CPU Layer Split (num_gpu)
@@ -1961,6 +1966,8 @@ class _NeuroSymbolicHTTPHandler(BaseHTTPRequestHandler):
                 "- <tool_call>{\"name\": \"write_file\", \"arguments\": {\"path\": \"output.py\", \"content\": \"print('hello')\"}}</tool_call>\n"
                 "- <tool_call>{\"name\": \"grep_files\", \"arguments\": {\"query\": \"def main\", \"path\": \".\"}}</tool_call>"
             )
+            if tools:
+                sys_prompt += "\n" + tools.get_tool_schemas_prompt()
             if enrichment.get("prompt_injection"):
                 sys_prompt += "\n\n" + enrichment["prompt_injection"]
 
@@ -2147,6 +2154,9 @@ class _NeuroSymbolicHTTPHandler(BaseHTTPRequestHandler):
                     sparams = t_args.get("params") if isinstance(t_args.get("params"), dict) else t_args
                     phys_res = calc_physics(stype, sparams)
                     emit_fn("tool_result", phys_res)
+                elif tools and t_name in tools.get_all_tools():
+                    tool_res = tools.dispatch_tool(t_name, t_args)
+                    emit_fn("tool_result", tool_res)
             except Exception:
                 pass
 
