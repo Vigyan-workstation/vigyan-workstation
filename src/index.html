@@ -2893,7 +2893,12 @@
       try { localStorage.setItem('vigyan_active_model', 'vigyan:3b'); } catch (e) {}
     }
     let OLLAMA_HOST = localStorage.getItem('vigyan_ollama_host') || 'http://127.0.0.1:11434';
+    let API_KEY = localStorage.getItem('vigyan_api_key') || '';
     let BACKEND_TYPE = localStorage.getItem('vigyan_backend_type') || 'agent_server';
+    if (BACKEND_TYPE === 'cloud_api' && !API_KEY) {
+      BACKEND_TYPE = 'agent_server';
+      try { localStorage.setItem('vigyan_backend_type', 'agent_server'); } catch (e) {}
+    }
     let AGENT_HOST = 'http://127.0.0.1:8085';
     try {
       const storedHost = localStorage.getItem('vigyan_agent_host');
@@ -2901,7 +2906,6 @@
         AGENT_HOST = storedHost;
       }
     } catch (e) {}
-    let API_KEY = localStorage.getItem('vigyan_api_key') || '';
     let HYBRID_COMPUTE_MODE = localStorage.getItem('vigyan_compute_mode') || 'auto';
     let latestHardwareTelemetry = {
       cpu_percent: 0,
@@ -3742,6 +3746,7 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
       try {
         const keepalive = document.getElementById('setting-keepalive')?.value || '15m';
         const temp = parseFloat(document.getElementById('setting-temp')?.value) || 0.05;
+        const topp = parseFloat(document.getElementById('setting-topp')?.value) || 0.95;
         const defaultPersona = "You are Vigyan AI 3B Quad Master, a sovereign STEM, mathematical, and physical engineering intelligence system architected by Shreyansh Singh. You solve complex calculus, circuit engineering, physics, and 3D CAD modeling with mathematical rigor and zero hallucinations.";
         const userPersona = document.getElementById('setting-persona')?.value?.trim() || defaultPersona;
         const persona = userPersona + (neuroMeta.enriched_system_suffix || '');
