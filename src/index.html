@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self' file: data: blob: http://127.0.0.1:11434 http://localhost:11434 http://127.0.0.1:8085 http://localhost:8085 http://127.0.0.1:8080 http://localhost:8080; script-src 'self' 'unsafe-inline' 'unsafe-eval' file: blob:; style-src 'self' 'unsafe-inline' file:; font-src 'self' file: data:; img-src 'self' file: data: blob:; connect-src 'self' http://127.0.0.1:11434 http://localhost:11434 http://127.0.0.1:8085 http://localhost:8085 http://127.0.0.1:8080 http://localhost:8080 https://*; object-src 'none'; frame-src 'none'; base-uri 'self'; form-action 'none';">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' file: data: blob: http://127.0.0.1:* http://localhost:* http://127.0.0.1:11434 http://localhost:11434 http://127.0.0.1:8085 http://localhost:8085 http://127.0.0.1:8086 http://localhost:8086 http://127.0.0.1:8080 http://localhost:8080; script-src 'self' 'unsafe-inline' 'unsafe-eval' file: blob:; style-src 'self' 'unsafe-inline' file:; font-src 'self' file: data:; img-src 'self' file: data: blob:; connect-src 'self' http://127.0.0.1:* http://localhost:* http://127.0.0.1:11434 http://localhost:11434 http://127.0.0.1:8085 http://localhost:8085 http://127.0.0.1:8086 http://localhost:8086 http://127.0.0.1:8080 http://localhost:8080 https://*; object-src 'none'; frame-src 'none'; base-uri 'self'; form-action 'none';">
   <meta http-equiv="X-Content-Type-Options" content="nosniff">
   <meta name="referrer" content="no-referrer">
   <title>Vigyan Pro</title>
@@ -2721,7 +2721,13 @@
     }
     let OLLAMA_HOST = localStorage.getItem('vigyan_ollama_host') || 'http://127.0.0.1:11434';
     let BACKEND_TYPE = localStorage.getItem('vigyan_backend_type') || 'agent_server';
-    let AGENT_HOST = localStorage.getItem('vigyan_agent_host') || 'http://127.0.0.1:8085';
+    let AGENT_HOST = 'http://127.0.0.1:8085';
+    try {
+      const storedHost = localStorage.getItem('vigyan_agent_host');
+      if (storedHost && (storedHost.includes(':8085') || storedHost.includes(':8086'))) {
+        AGENT_HOST = storedHost;
+      }
+    } catch (e) {}
     let API_KEY = localStorage.getItem('vigyan_api_key') || '';
     let HYBRID_COMPUTE_MODE = localStorage.getItem('vigyan_compute_mode') || 'auto';
     let latestHardwareTelemetry = {
