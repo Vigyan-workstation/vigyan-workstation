@@ -26,9 +26,8 @@ from launch_desktop import (
 
 def test_models_catalog_integrity():
     """Verify that models catalog entries contain valid URLs, tags, and reasonable sizes."""
-    assert "vigyan:1.5b" in MODELS_CATALOG
     assert "vigyan:3b" in MODELS_CATALOG
-    assert len(MODELS_CATALOG) >= 2
+    assert len(MODELS_CATALOG) >= 1
 
     for tag, info in MODELS_CATALOG.items():
         assert info["tag"] == tag
@@ -51,11 +50,11 @@ def test_model_download_manager_lifecycle():
     assert "Unknown model" in res["error"]
 
     # Valid tag status initialization
-    initial = mgr.get_status("vigyan:1.5b")
-    assert initial.get("status") == "idle"
+    initial = mgr.get_status("vigyan:3b")
+    assert initial.get("status") in ("idle", "ready")
 
-    # Cancel download on idle tag
-    cancelled = mgr.cancel_download("vigyan:1.5b")
+    # Cancel download on idle/ready tag
+    cancelled = mgr.cancel_download("vigyan:3b")
     assert cancelled is False
 
 
@@ -96,12 +95,11 @@ def test_http_bridge_static_serving_and_catalog():
         assert resp.status == 200
         data = json.loads(resp.read().decode("utf-8"))
         assert "catalog" in data
-        assert "vigyan:1.5b" in data["catalog"]
         assert "vigyan:3b" in data["catalog"]
         assert "system_ram_gb" in data
 
     # 3. Test /api/models/download/status endpoint
-    req_st = urllib.request.Request(f"http://127.0.0.1:{port}/api/models/download/status?tag=vigyan:1.5b")
+    req_st = urllib.request.Request(f"http://127.0.0.1:{port}/api/models/download/status?tag=vigyan:3b")
     with urllib.request.urlopen(req_st, timeout=3.0) as resp:
         assert resp.status == 200
         st = json.loads(resp.read().decode("utf-8"))

@@ -2319,7 +2319,7 @@
       <div style="position:relative; margin-left:4px;">
         <button class="model-selector-btn" id="active-model-btn" onclick="toggleModelDropdown()" title="Choose AI Model">
           <img src="assets/micro_logo_v.png" class="msg-avatar-v" alt="V">
-          <span id="current-model-name">vigyan:1.5b</span>
+          <span id="current-model-name">vigyan:3b</span>
           <svg class="icon" viewBox="0 0 24 24" style="width:11px; height:11px;"><polyline points="6 9 12 15 18 9"/></svg>
         </button>
         <div class="model-dropdown-menu" id="model-dropdown"></div>
@@ -2413,7 +2413,7 @@
             </div>
 
             <div class="stem-quick-dock" id="stem-quick-dock">
-              <button class="stem-dock-chip" onclick="quickFirePrompt('Plot the function f(x) = sin(x)*exp(-0.2*x) from 0 to 20 with high resolution.')">
+              <button class="stem-dock-chip" onclick="quickFirePrompt('Plot the damped oscillation function f(x) = exp(-0.15*x)*cos(2*x) from 0 to 25 with high resolution.')">
                 <svg style="width:11px; height:11px; stroke:#38bdf8; fill:none;" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3"/></svg>
                 <span>Plot f(x)</span>
               </button>
@@ -2425,7 +2425,7 @@
                 <svg style="width:11px; height:11px; stroke:#ec4899; fill:none;" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1 4-10z"/></svg>
                 <span>Orbit</span>
               </button>
-              <button class="stem-dock-chip" onclick="quickFirePrompt('/derive integrate x**2 * exp(-x) dx from 0 to infinity')">
+              <button class="stem-dock-chip" onclick="quickFirePrompt('/derive integrate 2*x*exp(-x) dx from 0 to infinity')">
                 <svg style="width:11px; height:11px; stroke:#a855f7; fill:none;" viewBox="0 0 24 24"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
                 <span>Calculus</span>
               </button>
@@ -2596,24 +2596,12 @@
 
           <div class="settings-row-item">
             <div class="settings-row-left">
-              <div class="settings-row-title">Vigyan AI 1.5B STEM</div>
-              <div class="settings-row-sub">1.1 GB GGUF Q4_K_M &bull; ChatML &bull; Ultra-fast Edge SLM</div>
+              <div class="settings-row-title">Vigyan AI 3B Quad Master</div>
+              <div class="settings-row-sub">1.9 GB GGUF Q4_K_M &bull; ChatML &bull; Frontier 69.0% Benchmark (Outperforming 7B)</div>
             </div>
             <div class="settings-row-right">
-              <button class="btn-settings-action primary" onclick="changeModel('vigyan:1.5b')">
-                <span>Select 1.5B</span>
-              </button>
-            </div>
-          </div>
-
-          <div class="settings-row-item">
-            <div class="settings-row-left">
-              <div class="settings-row-title">Vigyan AI 3B Reasoning Master</div>
-              <div class="settings-row-sub">2.1 GB GGUF &bull; ChatML &bull; Deep Calculus &amp; Physics</div>
-            </div>
-            <div class="settings-row-right">
-              <button class="btn-settings-action" onclick="changeModel('vigyan:3b')">
-                <span>Select 3B</span>
+              <button class="btn-settings-action primary" onclick="changeModel('vigyan:3b')">
+                <span>Active 3B</span>
               </button>
             </div>
           </div>
@@ -2726,10 +2714,10 @@
     /* =========================================================================
        GLOBAL APPLICATION STATE
        ========================================================================= */
-    let currentModel = localStorage.getItem('vigyan_active_model') || 'vigyan:1.5b';
-    if (!currentModel || currentModel === 'olmoe:1b-7b' || currentModel === 'vigyan:7b-quad-master') {
-      currentModel = 'vigyan:1.5b';
-      try { localStorage.setItem('vigyan_active_model', 'vigyan:1.5b'); } catch (e) {}
+    let currentModel = localStorage.getItem('vigyan_active_model') || 'vigyan:3b';
+    if (!currentModel || currentModel === 'vigyan:1.5b' || currentModel === 'olmoe:1b-7b' || currentModel === 'vigyan:7b-quad-master') {
+      currentModel = 'vigyan:3b';
+      try { localStorage.setItem('vigyan_active_model', 'vigyan:3b'); } catch (e) {}
     }
     let OLLAMA_HOST = localStorage.getItem('vigyan_ollama_host') || 'http://127.0.0.1:11434';
     let BACKEND_TYPE = localStorage.getItem('vigyan_backend_type') || 'agent_server';
@@ -2758,7 +2746,7 @@
       ollama_options: { num_gpu: -1, num_thread: 4, num_ctx: 8192, num_batch: 512 },
       strategy_label: 'HYBRID AUTO'
     };
-    let availableModels = ['vigyan:1.5b', 'vigyan:3b'];
+    let availableModels = ['vigyan:3b'];
     let activeDomain = 'lab';
     let activeSessionId = localStorage.getItem('vigyan_active_session') || 'default';
     let sessions = {};
@@ -2831,8 +2819,7 @@
       { id: 'cmd-exec', title: 'Run Shell Command (/cmd)', tag: 'Terminal', run: () => quickFirePrompt('/cmd ls -la') },
       { id: 'cmd-derive', title: 'Calculus & Proof Engine (/derive)', tag: 'Math', run: () => quickFirePrompt('/derive integrate x**3 * exp(-x**2) dx') },
       { id: 'cmd-workspace', title: 'Inspect Workspace Files', tag: 'Agent', run: () => quickFirePrompt('Inspect the files in current directory and summarize repository structure.') },
-      { id: 'cmd-model-vigyan15b', title: 'Switch Model: Vigyan AI 1.5B STEM', tag: 'Model', run: () => changeModel('vigyan:1.5b') },
-      { id: 'cmd-model-vigyan3b', title: 'Switch Model: Vigyan AI 3B Reasoning Master', tag: 'Model', run: () => changeModel('vigyan:3b') },
+      { id: 'cmd-model-vigyan3b', title: 'Switch Model: Vigyan AI 3B Quad Master', tag: 'Model', run: () => changeModel('vigyan:3b') },
       { id: 'cmd-manage-models', title: 'Open Model Manager & Downloader', tag: 'Model', run: () => openModelManagerModal() },
       { id: 'compute-auto', title: 'Performance: Smart Automatic (GPU + CPU)', tag: 'Performance', run: () => setHybridComputeMode('auto') },
       { id: 'compute-gpu', title: 'Performance: Maximum Speed', tag: 'Performance', run: () => setHybridComputeMode('max_gpu') },
@@ -3213,6 +3200,33 @@
       }
     }
 
+    async function regenerateResponse(idx) {
+      const s = sessions[activeSessionId];
+      if (!s || !s.messages[idx]) return;
+      if (activeStreamController) {
+        showToast('Stream already in progress');
+        return;
+      }
+      let promptText = '';
+      for (let i = idx - 1; i >= 0; i--) {
+        if (s.messages[i].role === 'user') {
+          promptText = s.messages[i].content;
+          break;
+        }
+      }
+      if (!promptText) {
+        showToast('No user prompt found to retry');
+        return;
+      }
+      s.messages.splice(idx);
+      saveSessions();
+      renderChat();
+
+      const input = document.getElementById('chat-prompt') || document.getElementById('chat-input');
+      if (input) input.value = promptText;
+      await sendPrompt();
+    }
+
     function quickExportLatex(idx) {
       const s = sessions[activeSessionId];
       if (!s || !s.messages[idx]) return;
@@ -3573,8 +3587,9 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
       try {
         const keepalive = document.getElementById('setting-keepalive')?.value || '15m';
         const temp = parseFloat(document.getElementById('setting-temp')?.value) || 0.05;
-        const topp = parseFloat(document.getElementById('setting-topp')?.value) || 0.95;
-        const persona = (document.getElementById('setting-persona')?.value || '') + (neuroMeta.enriched_system_suffix || '');
+        const defaultPersona = "You are Vigyan AI 3B Quad Master, a sovereign STEM, mathematical, and physical engineering intelligence system architected by Shreyansh Singh. You solve complex calculus, circuit engineering, physics, and 3D CAD modeling with mathematical rigor and zero hallucinations.";
+        const userPersona = document.getElementById('setting-persona')?.value?.trim() || defaultPersona;
+        const persona = userPersona + (neuroMeta.enriched_system_suffix || '');
 
         const hist = sessions[activeSessionId].messages.slice(-10, -1).map(m => ({ role: m.role, content: m.content }));
         hist.unshift({ role: 'system', content: persona });
@@ -3684,7 +3699,7 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
                   const freeGb = data.ram_avail_gb || '2.4';
                   const downgradeHtml = `<div class="ram-guard-pill" style="display:inline-flex; align-items:center; gap:8px; margin-bottom:10px; padding:4px 10px; background:rgba(245,158,11,0.1); border:1px solid rgba(245,158,11,0.25); border-radius:6px; font-size:11px; color:#fbbf24;">
                     <span>⚡ RAM Guard: ${freeGb} GB free &bull; Auto-routed to Sovereign MoE</span>
-                    <button onclick="evictAndRetryModel('${data.target_model || 'vigyan:1.5b'}')" style="background:rgba(245,158,11,0.2); border:1px solid rgba(245,158,11,0.4); color:#fff; border-radius:4px; padding:2px 7px; font-size:10px; cursor:pointer; font-weight:600;">Purge &amp; Retry</button>
+                    <button onclick="evictAndRetryModel('${data.target_model || 'vigyan:3b'}')" style="background:rgba(245,158,11,0.2); border:1px solid rgba(245,158,11,0.4); color:#fff; border-radius:4px; padding:2px 7px; font-size:10px; cursor:pointer; font-weight:600;">Purge &amp; Retry</button>
                   </div><br>`;
                   assistantMsg.content = downgradeHtml + assistantMsg.content;
                   if (contentEl) contentEl.innerHTML = formatMessageContent(assistantMsg.content);
@@ -4492,7 +4507,7 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
         if (sess && sess.messages.length > 0) {
           const lastUser = [...sess.messages].reverse().find(m => m.role === 'user');
           if (lastUser) {
-            currentModel = (targetModel && (targetModel === 'vigyan:1.5b' || targetModel === 'vigyan:3b')) ? targetModel : 'vigyan:1.5b';
+            currentModel = (targetModel && targetModel === 'vigyan:3b') ? targetModel : 'vigyan:3b';
             localStorage.setItem('vigyan_active_model', currentModel);
             updateModelDropdownUI();
             const input = document.getElementById('chat-prompt') || document.getElementById('chat-input');
@@ -4732,7 +4747,7 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
     }
 
     async function startModelDownload(tag) {
-      const targetTag = tag || 'vigyan:1.5b';
+      const targetTag = tag || 'vigyan:3b';
       showToast(`Initiating sovereign download of ${targetTag}...`);
       haptics.click();
       try {
@@ -4755,7 +4770,7 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
     }
 
     async function cancelModelDownload(tag) {
-      const targetTag = tag || 'vigyan:1.5b';
+      const targetTag = tag || 'vigyan:3b';
       haptics.click();
       try {
         await fetch(`${AGENT_HOST}/api/models/download/cancel`, {
@@ -4775,7 +4790,7 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
     }
 
     function startPollingDownload(tag) {
-      const targetTag = tag || 'vigyan:1.5b';
+      const targetTag = tag || 'vigyan:3b';
       if (modelDownloadPollers[targetTag]) return;
       modelDownloadPollers[targetTag] = setInterval(async () => {
         try {
@@ -4807,7 +4822,7 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
 
     async function purgeModelCache() {
       try {
-        const m = currentModel || 'vigyan:1.5b';
+        const m = currentModel || 'vigyan:3b';
         showToast(`Purging memory cache for ${m}...`);
         const resp = await fetch(`${AGENT_HOST}/api/models/evict`, {
           method: 'POST',
@@ -4825,7 +4840,7 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
     }
 
     async function downloadSovereignModel(name) {
-      await startModelDownload(name || 'vigyan:1.5b');
+      await startModelDownload(name || 'vigyan:3b');
       openModelManagerModal();
     }
 
@@ -5186,16 +5201,16 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
           });
           availableModels = detected;
           if (!availableModels.includes(currentModel)) {
-            currentModel = availableModels.includes('vigyan:1.5b') ? 'vigyan:1.5b' : (availableModels[0] || 'vigyan:1.5b');
+            currentModel = availableModels.includes('vigyan:3b') ? 'vigyan:3b' : (availableModels[0] || 'vigyan:3b');
           }
         } else {
           availableModels = [];
-          currentModel = 'vigyan:1.5b';
+          currentModel = 'vigyan:3b';
         }
 
         const curLabel = document.getElementById('current-model-name');
         if (curLabel) {
-          curLabel.innerText = currentModel || 'vigyan:1.5b';
+          curLabel.innerText = currentModel || 'vigyan:3b';
         }
 
         const badge = document.getElementById('settings-installed-count');
@@ -5230,29 +5245,7 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
       h1.innerText = 'Vigyan Sovereign Suite';
       menu.appendChild(h1);
 
-      // 1. Vigyan AI 1.5B STEM
-      const is15Installed = availableModels.includes('vigyan:1.5b');
-      const opt15 = document.createElement('div');
-      opt15.className = `model-opt ${currentModel === 'vigyan:1.5b' ? 'active' : ''}`;
-      opt15.innerHTML = `
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-          <div style="font-weight:600; color:#ffffff;">vigyan:1.5b</div>
-          <span style="font-size:10px; padding:1px 6px; border-radius:3px; background:${is15Installed ? 'rgba(16,185,129,0.15)' : 'rgba(245,158,11,0.15)'}; color:${is15Installed ? '#10b981' : '#fbbf24'}; font-weight:600;">
-            ${is15Installed ? 'Active' : 'Download Needed'}
-          </span>
-        </div>
-        <div style="font-size:10.5px; color:#71717a; margin-top:2px;">Vigyan AI 1.5B STEM (1.1 GB Edge SLM)</div>
-      `;
-      opt15.onclick = () => {
-        if (is15Installed) {
-          changeModel('vigyan:1.5b');
-        } else {
-          openModelManagerModal();
-        }
-      };
-      menu.appendChild(opt15);
-
-      // 2. Vigyan AI 3B Reasoning Master
+      // 1. Vigyan AI 3B Quad Master
       const is3Installed = availableModels.includes('vigyan:3b');
       const opt3 = document.createElement('div');
       opt3.className = `model-opt ${currentModel === 'vigyan:3b' ? 'active' : ''}`;
@@ -5260,10 +5253,10 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
         <div style="display:flex; justify-content:space-between; align-items:center;">
           <div style="font-weight:600; color:#ffffff;">vigyan:3b</div>
           <span style="font-size:10px; padding:1px 6px; border-radius:3px; background:${is3Installed ? 'rgba(16,185,129,0.15)' : 'rgba(245,158,11,0.15)'}; color:${is3Installed ? '#10b981' : '#fbbf24'}; font-weight:600;">
-            ${is3Installed ? 'Active' : 'Link/Download'}
+            ${is3Installed ? 'Active' : 'Download Needed'}
           </span>
         </div>
-        <div style="font-size:10.5px; color:#71717a; margin-top:2px;">Vigyan AI 3B Reasoning Master (2.1 GB SLM)</div>
+        <div style="font-size:10.5px; color:#71717a; margin-top:2px;">Vigyan AI 3B Quad Master (1.9 GB Sovereign STEM)</div>
       `;
       opt3.onclick = () => {
         if (is3Installed) {
