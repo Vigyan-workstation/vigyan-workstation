@@ -1013,6 +1013,70 @@ MODELS_CATALOG = {
 }
 
 
+def ensure_vigyan_3b_registered() -> bool:
+    """Autonomous verifier and auto-repair for Vigyan AI 3B Quad Master in Ollama."""
+    try:
+        check = subprocess.run(["ollama", "show", "vigyan:3b"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=2.0)
+        if check.returncode == 0:
+            return True
+    except Exception:
+        pass
+
+    target_dir = os.path.expanduser("~/.vigyan/models")
+    os.makedirs(target_dir, exist_ok=True)
+    gguf_path = os.path.join(target_dir, "vigyan-3b-quad-master-q4_k_m.gguf")
+
+    if not os.path.isfile(gguf_path) or os.path.getsize(gguf_path) < 1_000_000_000:
+        token_path = os.path.expanduser("~/.cache/huggingface/token")
+        hf_token = ""
+        if os.path.isfile(token_path):
+            try:
+                with open(token_path, "r", encoding="utf-8") as f:
+                    hf_token = f.read().strip()
+            except Exception:
+                pass
+        try:
+            from huggingface_hub import hf_hub_download
+            print("[INFO] Auto-repair: Downloading vigyan-3b-quad-master from Hugging Face...", file=sys.stderr)
+            hf_hub_download(
+                repo_id="shreyansh12183/vigyan-3b-quad-master",
+                filename="vigyan-3b-quad-master-q4_k_m.gguf",
+                token=hf_token or None,
+                local_dir=target_dir
+            )
+        except Exception as e:
+            print(f"[WARN] HF auto-repair download error: {e}", file=sys.stderr)
+            return False
+
+    modelfile_path = os.path.join(target_dir, "Modelfile.vigyan-3b")
+    modelfile_content = (
+        f"FROM {gguf_path}\n"
+        'TEMPLATE """{{- if .System }}<|im_start|>system\n'
+        "{{ .System }}<|im_end|>\n"
+        '{{ end }}{{- range .Messages }}<|im_start|>{{ .Role }}\n'
+        "{{ .Content }}<|im_end|>\n"
+        '{{ end }}<|im_start|>assistant\n'
+        '"""\n'
+        'SYSTEM """You are Vigyan AI 3B Quad Master, a sovereign STEM, mathematical, and physical engineering intelligence system architected by Shreyansh Singh. You solve complex calculus, circuit engineering, physics, and 3D CAD modeling with mathematical rigor and zero hallucinations."""\n'
+        'PARAMETER stop "<|im_start|>"\n'
+        'PARAMETER stop "<|im_end|>"\n'
+        'PARAMETER stop "<|endoftext|>"\n'
+        "PARAMETER num_gpu 0\n"
+        "PARAMETER temperature 0.2\n"
+        "PARAMETER top_p 0.95\n"
+    )
+    with open(modelfile_path, "w", encoding="utf-8") as mf:
+        mf.write(modelfile_content)
+
+    try:
+        print("[INFO] Auto-repair: Registering vigyan:3b into Ollama...", file=sys.stderr)
+        res = subprocess.run(["ollama", "create", "vigyan:3b", "-f", modelfile_path], capture_output=True, timeout=120)
+        return res.returncode == 0
+    except Exception as e:
+        print(f"[WARN] Ollama registration error: {e}", file=sys.stderr)
+        return False
+
+
 class ModelDownloadManager:
     """Resumable chunked model downloader with speed tracking and Ollama auto-registration."""
     def __init__(self):
@@ -2074,6 +2138,94 @@ class _NeuroSymbolicHTTPHandler(BaseHTTPRequestHandler):
                     _emit("tool_result", phys_res)
                     deterministic_executed = True
 
+            # 4. Material Science Intent
+            if not deterministic_executed and any(w in q_lower for w in ("/material", "crystallography", "unit cell", "bragg", "fcc", "bcc", "hcp", "perovskite", "eutectic", "lever rule")):
+                mat_type = "crystal_lattice"
+                lat_type = "FCC"
+                if "phase" in q_lower or "eutectic" in q_lower or "lever" in q_lower:
+                    mat_type = "phase_diagram"
+                elif "xrd" in q_lower or "bragg" in q_lower or "diffraction" in q_lower:
+                    mat_type = "xrd"
+                elif "bcc" in q_lower:
+                    lat_type = "BCC"
+                elif "hcp" in q_lower:
+                    lat_type = "HCP"
+                elif "diamond" in q_lower:
+                    lat_type = "Diamond"
+                elif "perovskite" in q_lower:
+                    lat_type = "Perovskite"
+                
+                mat_res = {
+                    "tool": "material_science",
+                    "render_type": "material_science",
+                    "success": True,
+                    "title": f"Crystallographic Analysis ({lat_type if mat_type == 'crystal_lattice' else mat_type.title()})",
+                    "type": mat_type,
+                    "latticeType": lat_type,
+                    "materialName": f"{lat_type} Crystal Matrix",
+                    "parameters": {"temperature": 220, "composition": 40}
+                }
+                _emit("tool_result", mat_res)
+                deterministic_executed = True
+
+            # 5. Molecular Biology Intent
+            if not deterministic_executed and any(w in q_lower for w in ("/biology", "dna", "double helix", "bilayer", "membrane", "glycolysis", "krebs", "tca")):
+                bio_type = "dna_helix"
+                if "membrane" in q_lower or "lipid" in q_lower or "channel" in q_lower:
+                    bio_type = "cell_membrane"
+                elif "protein" in q_lower or "folding" in q_lower or "sheet" in q_lower:
+                    bio_type = "protein_folding"
+                elif "respiration" in q_lower or "glycolysis" in q_lower or "krebs" in q_lower or "tca" in q_lower:
+                    bio_type = "metabolic_pathway"
+                
+                bio_res = {
+                    "tool": "biology_viewer",
+                    "render_type": "biology_viewer",
+                    "success": True,
+                    "title": f"Biological System: {bio_type.replace('_', ' ').title()}",
+                    "type": bio_type,
+                    "parameters": {"channelOpen": True, "atpYield": 32}
+                }
+                _emit("tool_result", bio_res)
+                deterministic_executed = True
+
+            # 6. Advanced 3D Math Intent
+            if not deterministic_executed and any(w in q_lower for w in ("/math3d", "saddle", "hyperbolic paraboloid", "vector field", "curl", "divergence", "taylor series")):
+                m_type = "saddle"
+                if "vector" in q_lower or "curl" in q_lower or "div" in q_lower:
+                    m_type = "vector_field"
+                elif "taylor" in q_lower or "series" in q_lower:
+                    m_type = "taylor_series"
+                
+                math_res = {
+                    "tool": "math_visualizer",
+                    "render_type": "math_visualizer",
+                    "success": True,
+                    "title": f"Higher Mathematics: {m_type.replace('_', ' ').title()}",
+                    "type": m_type,
+                    "parameters": {"a": 2.0, "b": 2.0, "degree": 5}
+                }
+                _emit("tool_result", math_res)
+                deterministic_executed = True
+
+            # 7. Clinical Decision Support Intent
+            if not deterministic_executed and any(w in q_lower for w in ("/medical", "stemi", "ecg", "septic shock", "pulmonary embolism", "differential diagnosis")):
+                med_condition = "stemi"
+                if "shock" in q_lower or "sepsis" in q_lower:
+                    med_condition = "septic_shock"
+                elif "embolism" in q_lower or "pe" in q_lower:
+                    med_condition = "pulmonary_embolism"
+                
+                med_res = {
+                    "tool": "medical_viewer",
+                    "render_type": "medical_viewer",
+                    "success": True,
+                    "title": f"Clinical Protocol: {med_condition.replace('_', ' ').upper()}",
+                    "condition": med_condition
+                }
+                _emit("tool_result", med_res)
+                deterministic_executed = True
+
             sys_prompt = (
                 "You are Vigyan Pro, a sovereign desktop STEM & coding assistant with real autonomous workspace and mathematical capabilities. "
                 "Format formulas in clean LaTeX ($$...$$). Be concise, direct, and helpful. "
@@ -2584,21 +2736,22 @@ def main():
 
     # Low-priority background pre-warming for zero-latency first prompt
     def _prewarm_moe():
-        time.sleep(3.0)  # Wait for UI window to finish layout
+        time.sleep(2.0)  # Wait for UI window to finish layout
+        ensure_vigyan_3b_registered()
         try:
             pw_req = urllib.request.Request(
                 "http://127.0.0.1:11434/api/generate",
                 data=json.dumps({
                     "model": "vigyan:3b",
                     "prompt": "",
-                    "keep_alive": "30m",
-                    "options": {"num_ctx": 1024, "num_batch": 64}
+                    "keep_alive": "60m",
+                    "options": {"num_ctx": 2048, "num_batch": 128}
                 }).encode("utf-8"),
                 headers={"Content-Type": "application/json"}
             )
             with urllib.request.urlopen(pw_req, timeout=35.0) as pw_resp:
                 if pw_resp.status == 200:
-                    print("[INFO] Pre-warmed vigyan:3b into memory.", file=sys.stderr)
+                    print("[INFO] Pre-warmed vigyan:3b Quad Master into memory.", file=sys.stderr)
         except Exception:
             pass
 

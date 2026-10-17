@@ -1917,6 +1917,74 @@
       color: #000000;
       border-color: #ffffff;
     }
+    .active-sovereign-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 4px 10px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 6px;
+      cursor: default;
+      user-select: none;
+    }
+    .status-pulse-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #10b981;
+      box-shadow: 0 0 8px rgba(16, 185, 129, 0.6);
+      flex-shrink: 0;
+    }
+    .model-badge-sub {
+      font-size: 10px;
+      font-weight: 600;
+      color: #10b981;
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      border-radius: 4px;
+      padding: 1px 5px;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+    .task-card-item {
+      background: #090b10;
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      border-radius: 8px;
+      padding: 12px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .task-card-item:hover {
+      background: #121520;
+      border-color: rgba(255, 255, 255, 0.2);
+      transform: translateY(-1px);
+    }
+    .task-domain-pill {
+      font-size: 9.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 2px 6px;
+      border-radius: 4px;
+      letter-spacing: 0.04em;
+    }
+    .latex-sym-btn {
+      background: #090b10;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 6px;
+      padding: 8px 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      transition: all 0.12s;
+    }
+    .latex-sym-btn:hover {
+      background: #181c28;
+      border-color: #38bdf8;
+    }
+
 
     #toast {
       position: fixed;
@@ -2316,13 +2384,24 @@
         <img src="assets/micro_logo_v.png" class="brand-logo-img" alt="V">
         <span>Vigyan Pro</span>
       </div>
-      <div style="position:relative; margin-left:4px;">
-        <button class="model-selector-btn" id="active-model-btn" onclick="toggleModelDropdown()" title="Choose AI Model">
-          <img src="assets/micro_logo_v.png" class="msg-avatar-v" alt="V">
-          <span id="current-model-name">vigyan:3b</span>
-          <svg class="icon" viewBox="0 0 24 24" style="width:11px; height:11px;"><polyline points="6 9 12 15 18 9"/></svg>
+      <div class="active-sovereign-badge" id="sovereign-badge-pill" title="Vigyan AI 3B Quad Master • Sovereign Engine Online">
+        <span class="status-pulse-dot"></span>
+        <span id="current-model-name" style="font-weight:600; font-size:12px; color:#ffffff;">Vigyan AI 3B Quad Master</span>
+        <span class="model-badge-sub">Online</span>
+      </div>
+      <div class="header-quick-tools" style="display:flex; align-items:center; gap:6px; margin-left:8px;">
+        <button class="btn-stem-mini" onclick="toggleTaskCatalog()" title="STEM Tasks Explorer (Ctrl+T / Alt+S)">
+          <svg class="icon" viewBox="0 0 24 24" style="width:11px; height:11px;"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          <span>Tasks</span>
         </button>
-        <div class="model-dropdown-menu" id="model-dropdown"></div>
+        <button class="btn-stem-mini" onclick="toggleLatexSheet()" title="LaTeX Symbol Reference (Alt+L)">
+          <svg class="icon" viewBox="0 0 24 24" style="width:11px; height:11px;"><path d="M4 7V4h16v3"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
+          <span>LaTeX</span>
+        </button>
+        <button class="btn-stem-mini" onclick="exportAcademicPdf()" title="Export Research PDF Report">
+          <svg class="icon" viewBox="0 0 24 24" style="width:11px; height:11px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          <span>PDF</span>
+        </button>
       </div>
     </div>
 
@@ -2339,12 +2418,16 @@
     </nav>
 
     <div class="header-right" id="header-hud-telemetry" style="display:flex; align-items:center; gap:8px;">
+      <div class="hud-pill" id="hud-backend-pill" title="Inference Backend Router (Click to cycle Sovereign Agent / Ollama / Studio Web)" onclick="cycleBackendMode()" style="cursor:pointer;">
+        <svg class="icon" viewBox="0 0 24 24" style="width:11px; height:11px; stroke:#10b981;"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
+        <span id="hud-backend-text" style="font-family:var(--font-mono); font-size:11px; color:#10b981;">Agent :8085</span>
+      </div>
       <div class="hud-pill" id="hud-ram-pill" title="System RAM Usage">
         <span class="hud-led"></span>
         <span id="hud-ram-text" style="font-family:var(--font-mono); font-size:11px; color:#a1a1aa;">RAM --%</span>
       </div>
-      <div class="hud-pill" id="hud-compute-pill" title="Hardware Acceleration (Click to cycle)" onclick="cycleHybridComputeMode()" style="cursor:pointer;">
-        <span id="hud-gpu-text" style="font-family:var(--font-mono); font-size:11px; color:#10b981;">AUTO</span>
+      <div class="hud-pill" id="hud-compute-pill" title="Hardware Acceleration (Click to cycle Auto / Max GPU / Balanced / CPU Eco)" onclick="cycleHybridComputeMode()" style="cursor:pointer;">
+        <span id="hud-gpu-text" style="font-family:var(--font-mono); font-size:11px; color:#10b981;">⚡ AUTO</span>
       </div>
     </div>
   </header>
@@ -2401,6 +2484,34 @@
               <div class="slash-item" data-cmd="/derive " onclick="applySlashCommand('/derive ')">
                 <span class="slash-cmd">/derive</span>
                 <span class="slash-desc">SymPy Exact Calculus, Proofs &amp; Algebra</span>
+              </div>
+              <div class="slash-item" data-cmd="/material " onclick="applySlashCommand('/material ')">
+                <span class="slash-cmd">/material</span>
+                <span class="slash-desc">Crystallography, Unit Cells &amp; Phase Diagrams</span>
+              </div>
+              <div class="slash-item" data-cmd="/biology " onclick="applySlashCommand('/biology ')">
+                <span class="slash-cmd">/biology</span>
+                <span class="slash-desc">Molecular Biology, B-DNA &amp; Cell Membranes</span>
+              </div>
+              <div class="slash-item" data-cmd="/math3d " onclick="applySlashCommand('/math3d ')">
+                <span class="slash-cmd">/math3d</span>
+                <span class="slash-desc">3D Saddle Surface, Curl/Div &amp; Taylor Series</span>
+              </div>
+              <div class="slash-item" data-cmd="/medical " onclick="applySlashCommand('/medical ')">
+                <span class="slash-cmd">/medical</span>
+                <span class="slash-desc">Clinical Decision Support &amp; 12-Lead ECG</span>
+              </div>
+              <div class="slash-item" data-cmd="/tasks" onclick="toggleTaskCatalog(); document.getElementById('slash-menu').classList.remove('show');">
+                <span class="slash-cmd">/tasks</span>
+                <span class="slash-desc">STEM Tasks Explorer &bull; 20 Curated Accelerators</span>
+              </div>
+              <div class="slash-item" data-cmd="/latex" onclick="toggleLatexSheet(); document.getElementById('slash-menu').classList.remove('show');">
+                <span class="slash-cmd">/latex</span>
+                <span class="slash-desc">LaTeX Symbol Reference &bull; 1-Click Insert</span>
+              </div>
+              <div class="slash-item" data-cmd="/pdf" onclick="exportAcademicPdf(); document.getElementById('slash-menu').classList.remove('show');">
+                <span class="slash-cmd">/pdf</span>
+                <span class="slash-desc">Export Academic Research PDF Report</span>
               </div>
               <div class="slash-item" data-cmd="/workspace " onclick="applySlashCommand('/workspace ')">
                 <span class="slash-cmd">/workspace</span>
@@ -2572,24 +2683,25 @@
 
           <div class="settings-row-item">
             <div class="settings-row-left">
-              <div class="settings-row-title">Tactile Audio Feedback</div>
-              <div class="settings-row-sub">Subtle acoustic micro-clicks on actions</div>
+              <div class="settings-row-title">Sensory Haptics</div>
+              <div class="settings-row-sub">Tactile feedback on actions</div>
             </div>
             <div class="settings-row-right">
               <label class="toggle-switch">
-                <input type="checkbox" id="toggle-haptics-switch" checked onchange="toggleHaptics(this.checked)">
+                <input type="checkbox" id="toggle-haptics-switch" onchange="toggleHaptics(this.checked)">
                 <span class="toggle-slider"></span>
               </label>
             </div>
           </div>
+
         </div>
 
-        <!-- GROUP 3: VIGYAN AI SOVEREIGN SUITE -->
+        <!-- GROUP 3: VIGYAN AI SOVEREIGN ENGINE -->
         <div class="settings-section-card">
           <div class="section-card-header">
             <span class="section-card-title">
               <svg class="icon" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-              Vigyan AI Sovereign Suite
+              Vigyan AI 3B Quad Master Engine
             </span>
             <span class="section-card-badge" id="settings-installed-count">Offline Ready</span>
           </div>
@@ -2600,22 +2712,16 @@
               <div class="settings-row-sub">1.9 GB GGUF Q4_K_M &bull; ChatML &bull; Frontier 69.0% Benchmark (Outperforming 7B)</div>
             </div>
             <div class="settings-row-right">
-              <button class="btn-settings-action primary" onclick="changeModel('vigyan:3b')">
-                <span>Active 3B</span>
-              </button>
+              <span class="section-card-badge" style="background:rgba(16,185,129,0.15); color:#10b981; border:1px solid rgba(16,185,129,0.3); font-weight:600;">Dedicated Engine</span>
             </div>
           </div>
 
           <div class="settings-row-item" style="background:rgba(255,255,255,0.015);">
             <div class="settings-row-left">
-              <div class="settings-row-title">Model Operations</div>
-              <div class="settings-row-sub">Manage local weights &amp; evict active memory cache</div>
+              <div class="settings-row-title">VRAM &amp; RAM Cache</div>
+              <div class="settings-row-sub">Evict active weights from memory buffer</div>
             </div>
             <div class="settings-row-right">
-              <button class="btn-settings-action" onclick="openModelManagerModal()">
-                <svg class="icon" viewBox="0 0 24 24" style="width:12px; height:12px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                <span>Model Vault</span>
-              </button>
               <button class="btn-settings-action" onclick="purgeModelCache()">
                 <span>Purge Cache</span>
               </button>
@@ -2693,6 +2799,73 @@
       <div class="modal-body" id="model-catalog-container">
         <div style="padding:24px; text-align:center; color:#71717a; font-size:12.5px;">Loading catalog &amp; local models...</div>
       </div>
+    </div>
+  </div>
+
+  <!-- STEM TASK HUB MODAL -->
+  <div id="task-catalog-modal" class="modal-backdrop" onclick="if(event.target.id==='task-catalog-modal') toggleTaskCatalog()" style="display:none;">
+    <div class="modal-card" style="max-width:760px; max-height:85vh; display:flex; flex-direction:column;">
+      <div class="modal-header">
+        <div class="modal-header-left">
+          <svg class="icon" viewBox="0 0 24 24" style="stroke:#38bdf8; width:18px; height:18px;"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          <span class="modal-title">STEM Tasks Explorer &bull; 20 Curated Accelerators</span>
+        </div>
+        <button class="modal-close-btn" onclick="toggleTaskCatalog()">&times;</button>
+      </div>
+      <div style="padding:10px 16px; border-bottom:1px solid rgba(255,255,255,0.06); display:flex; gap:6px; overflow-x:auto;">
+        <button class="btn-stem-mini active" onclick="filterTaskCatalog('all', this)">All (20)</button>
+        <button class="btn-stem-mini" onclick="filterTaskCatalog('Electronics', this)">Electronics</button>
+        <button class="btn-stem-mini" onclick="filterTaskCatalog('Semiconductors', this)">Semiconductors</button>
+        <button class="btn-stem-mini" onclick="filterTaskCatalog('Materials', this)">Materials</button>
+        <button class="btn-stem-mini" onclick="filterTaskCatalog('Biology', this)">Biology</button>
+        <button class="btn-stem-mini" onclick="filterTaskCatalog('Math', this)">Math</button>
+        <button class="btn-stem-mini" onclick="filterTaskCatalog('Physics', this)">Physics</button>
+        <button class="btn-stem-mini" onclick="filterTaskCatalog('CAD', this)">CAD</button>
+      </div>
+      <div class="modal-body" id="task-catalog-grid" style="padding:16px; display:grid; grid-template-columns:repeat(auto-fill, minmax(320px, 1fr)); gap:12px; overflow-y:auto; flex:1;"></div>
+    </div>
+  </div>
+
+  <!-- LATEX SYMBOL REFERENCE MODAL -->
+  <div id="latex-sheet-modal" class="modal-backdrop" onclick="if(event.target.id==='latex-sheet-modal') toggleLatexSheet()" style="display:none;">
+    <div class="modal-card" style="max-width:740px; max-height:85vh; display:flex; flex-direction:column;">
+      <div class="modal-header">
+        <div class="modal-header-left">
+          <svg class="icon" viewBox="0 0 24 24" style="stroke:#a855f7; width:18px; height:18px;"><path d="M4 7V4h16v3"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
+          <span class="modal-title">LaTeX Symbol Reference &bull; 1-Click Insert</span>
+        </div>
+        <button class="modal-close-btn" onclick="toggleLatexSheet()">&times;</button>
+      </div>
+      <div style="padding:10px 16px; border-bottom:1px solid rgba(255,255,255,0.06); display:flex; gap:6px; overflow-x:auto;">
+        <button class="btn-stem-mini active" onclick="filterLatexCategory('greek', this)">Greek</button>
+        <button class="btn-stem-mini" onclick="filterLatexCategory('calculus', this)">Calculus</button>
+        <button class="btn-stem-mini" onclick="filterLatexCategory('linear_algebra', this)">Linear Algebra</button>
+        <button class="btn-stem-mini" onclick="filterLatexCategory('physics', this)">Physics &amp; Quantum</button>
+        <button class="btn-stem-mini" onclick="filterLatexCategory('relations', this)">Relations</button>
+      </div>
+      <div class="modal-body" id="latex-sheet-grid" style="padding:16px; display:grid; grid-template-columns:repeat(auto-fill, minmax(90px, 1fr)); gap:8px; overflow-y:auto; flex:1;"></div>
+    </div>
+  </div>
+
+  <!-- ACADEMIC RESEARCH PDF EXPORT MODAL -->
+  <div id="pdf-export-modal" class="modal-backdrop" onclick="if(event.target.id==='pdf-export-modal') togglePdfModal()" style="display:none;">
+    <div class="modal-card" style="max-width:800px; max-height:88vh; display:flex; flex-direction:column;">
+      <div class="modal-header">
+        <div class="modal-header-left">
+          <svg class="icon" viewBox="0 0 24 24" style="stroke:#10b981; width:18px; height:18px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          <span class="modal-title">Academic Research Paper &amp; STEM Report Export</span>
+        </div>
+        <button class="modal-close-btn" onclick="togglePdfModal()">&times;</button>
+      </div>
+      <div style="padding:12px 16px; border-bottom:1px solid rgba(255,255,255,0.06); display:flex; justify-content:space-between; align-items:center;">
+        <div style="display:flex; gap:8px; align-items:center;">
+          <input type="text" id="pdf-doc-title" value="Vigyan Pro &bull; Sovereign STEM Investigation Report" class="compact-select" style="font-size:12px; width:340px;">
+        </div>
+        <div style="display:flex; gap:8px;">
+          <button class="btn-settings-action primary" onclick="printFormattedPdfReport()">Print / Save PDF</button>
+        </div>
+      </div>
+      <div class="modal-body" id="pdf-preview-container" style="padding:20px; background:#07080c; overflow-y:auto; flex:1;"></div>
     </div>
   </div>
 
@@ -2780,41 +2953,12 @@
     let simBiasVal = 0.0;
     let simParamExtra = 1.0;
 
-    /* LUXURY TACTILE MICRO-CLICK ENGINE (WEB AUDIO SYNTHESIS) */
-    let hapticsEnabled = localStorage.getItem('vigyan_haptics') !== 'false';
-    let _audioCtx = null;
-    function playMicroClick(freq = 800, duration = 0.012, gain = 0.02) {
-      if (!hapticsEnabled) return;
-      try {
-        if (!_audioCtx) {
-          const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-          if (AudioContextClass) _audioCtx = new AudioContextClass();
-        }
-        if (_audioCtx && _audioCtx.state === 'suspended') {
-          _audioCtx.resume().catch(() => {});
-        }
-        if (_audioCtx) {
-          const osc = _audioCtx.createOscillator();
-          const g = _audioCtx.createGain();
-          osc.type = 'sine';
-          osc.frequency.setValueAtTime(freq, _audioCtx.currentTime);
-          g.gain.setValueAtTime(gain, _audioCtx.currentTime);
-          g.gain.exponentialRampToValueAtTime(0.0001, _audioCtx.currentTime + duration);
-          osc.connect(g);
-          g.connect(_audioCtx.destination);
-          osc.start();
-          osc.stop(_audioCtx.currentTime + duration);
-        }
-      } catch (e) {}
-    }
+    /* LUXURY OBSIDIAN SILENT HAPTICS ENGINE */
     const haptics = {
-      click: () => playMicroClick(800, 0.012, 0.02),
-      send: () => playMicroClick(1100, 0.018, 0.03),
-      tab: () => playMicroClick(650, 0.012, 0.02),
-      success: () => {
-        playMicroClick(880, 0.015, 0.025);
-        setTimeout(() => playMicroClick(1320, 0.025, 0.025), 35);
-      }
+      click: () => {},
+      send: () => {},
+      tab: () => {},
+      success: () => {}
     };
     function decodeLabel(el) { /* instant clean text display without scramble glitch */ }
 
@@ -3013,6 +3157,10 @@
           initPendingPlots(box);
           initPendingCadModels(box);
           initPendingWaveDrom(box);
+          initInChatMaterial(box);
+          initInChatBiology(box);
+          initInChatMathVisual(box);
+          initInChatMedical(box);
           window._katexRaf = null;
         });
       }
@@ -3564,6 +3712,7 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
       const text = input.value.trim();
       if (!text) return;
       input.value = '';
+      input.style.height = 'auto';
       document.getElementById('slash-menu').classList.remove('show');
 
       if (!sessions[activeSessionId]) sessions[activeSessionId] = { name: 'New Chat', messages: [] };
@@ -3743,6 +3892,10 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
                     initPendingPlots(contentEl);
                     initPendingCadModels(contentEl);
                     initPendingWaveDrom(contentEl);
+                    initInChatMaterial(contentEl);
+                    initInChatBiology(contentEl);
+                    initInChatMathVisual(contentEl);
+                    initInChatMedical(contentEl);
                   }
                   continue;
                 }
@@ -3829,13 +3982,398 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
     // Backward-compatible studio hooks
     function initInChatCAD(root) { return initPendingCadModels(root); }
     function initInChatPlot(root) { return initPendingPlots(root); }
-    function initInChatCircuit() {}
-    function initInChatSemi() {}
-    function initInChatSim() {}
-    function initInChatMaterial() {}
-    function initInChatBiology() {}
-    function initInChatMathVisual() {}
-    function initInChatMedical() {}
+    function initInChatCircuit(root) {}
+    function initInChatSemi(root) {}
+    function initInChatSim(root) {}
+
+    function initInChatMaterial(root) {
+      const container = root || document.getElementById('chat-box') || document.body;
+      const cards = container.querySelectorAll('.stem-material-card:not([data-initialized])');
+      cards.forEach(card => {
+        try {
+          const raw = card.getAttribute('data-material-spec');
+          const spec = raw ? JSON.parse(decodeURIComponent(raw)) : {};
+          const uid = 'mat_' + Math.random().toString(36).substring(2, 9);
+          const currentLat = spec.latticeType || 'FCC';
+
+          const latticeInfo = {
+            'FCC': { name: 'Face-Centered Cubic (FCC)', apf: '0.74', cn: '12', atoms: '4', a: '3.61 Å' },
+            'BCC': { name: 'Body-Centered Cubic (BCC)', apf: '0.68', cn: '8', atoms: '2', a: '2.87 Å' },
+            'HCP': { name: 'Hexagonal Close-Packed (HCP)', apf: '0.74', cn: '12', atoms: '6', a: '2.95 Å' },
+            'Diamond': { name: 'Diamond Cubic (sp³)', apf: '0.34', cn: '4', atoms: '8', a: '5.43 Å' },
+            'Perovskite': { name: 'Perovskite ABX3', apf: '0.69', cn: '12', atoms: '5', a: '3.90 Å' }
+          };
+          const info = latticeInfo[currentLat] || latticeInfo['FCC'];
+
+          card.innerHTML = `
+            <div class="agent-stem-card" style="margin:12px 0;">
+              <div class="agent-stem-header">
+                <div style="display:flex; align-items:center; gap:8px;">
+                  <svg style="width:14px; height:14px; stroke:#f59e0b; fill:none;" viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+                  <span style="font-weight:600; font-size:12px; color:#ffffff;">Materials Science: <span id="${uid}-title">${info.name}</span></span>
+                </div>
+                <div style="display:flex; gap:6px;">
+                  <button class="btn-stem-mini active" id="${uid}-tab-unit" onclick="window.switchMatTab('${uid}', 'unit')">Unit Cell</button>
+                  <button class="btn-stem-mini" id="${uid}-tab-phase" onclick="window.switchMatTab('${uid}', 'phase')">Pb-Sn Phase</button>
+                  <button class="btn-stem-mini" id="${uid}-tab-xrd" onclick="window.switchMatTab('${uid}', 'xrd')">XRD Bragg</button>
+                </div>
+              </div>
+              <div class="agent-stem-body" style="padding:12px;">
+                <div id="${uid}-pane-unit" style="display:block;">
+                  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                    <div style="display:flex; gap:6px;">
+                      <select class="compact-select" style="font-size:11px;" onchange="window.updateMatLattice('${uid}', this.value)">
+                        <option value="FCC" ${currentLat==='FCC'?'selected':''}>FCC (Copper/Aluminium)</option>
+                        <option value="BCC" ${currentLat==='BCC'?'selected':''}>BCC (Iron/Tungsten)</option>
+                        <option value="HCP" ${currentLat==='HCP'?'selected':''}>HCP (Titanium/Zinc)</option>
+                        <option value="Diamond" ${currentLat==='Diamond'?'selected':''}>Diamond Cubic (Si/Ge)</option>
+                        <option value="Perovskite" ${currentLat==='Perovskite'?'selected':''}>Perovskite (MAPbI3)</option>
+                      </select>
+                    </div>
+                    <div style="display:flex; gap:4px; align-items:center;">
+                      <span style="font-size:11px; color:#71717a;">Miller Plane:</span>
+                      <button class="btn-stem-mini" id="${uid}-plane-100" onclick="window.setMatPlane('${uid}', '100')">(100)</button>
+                      <button class="btn-stem-mini" id="${uid}-plane-110" onclick="window.setMatPlane('${uid}', '110')">(110)</button>
+                      <button class="btn-stem-mini active" id="${uid}-plane-111" onclick="window.setMatPlane('${uid}', '111')">(111)</button>
+                    </div>
+                  </div>
+                  <div id="${uid}-unit-svg-wrap" style="background:#07080c; border:1px solid #1a1d27; border-radius:6px; height:240px; display:flex; align-items:center; justify-content:center;"></div>
+                  <div class="stem-metric-grid" style="margin-top:10px;">
+                    <div class="stem-metric-box"><div class="stem-metric-label">Packing Factor (APF)</div><div class="stem-metric-val" id="${uid}-stat-apf">${info.apf}</div></div>
+                    <div class="stem-metric-box"><div class="stem-metric-label">Coordination No.</div><div class="stem-metric-val" id="${uid}-stat-cn">${info.cn}</div></div>
+                    <div class="stem-metric-box"><div class="stem-metric-label">Atoms / Cell</div><div class="stem-metric-val" id="${uid}-stat-atoms">${info.atoms}</div></div>
+                    <div class="stem-metric-box"><div class="stem-metric-label">Lattice Param (a)</div><div class="stem-metric-val" id="${uid}-stat-a">${info.a}</div></div>
+                  </div>
+                </div>
+
+                <div id="${uid}-pane-phase" style="display:none;">
+                  <div style="background:#07080c; border:1px solid #1a1d27; border-radius:6px; padding:10px;">
+                    <div style="font-size:11.5px; color:#a1a1aa; margin-bottom:6px;">Pb-Sn Equilibrium Phase Diagram with Dynamic Lever Rule:</div>
+                    <svg id="${uid}-phase-svg" viewBox="0 0 500 220" style="width:100%; height:200px;"></svg>
+                    <div style="display:flex; gap:16px; margin-top:10px;">
+                      <div style="flex:1;">
+                        <div style="display:flex; justify-content:space-between; font-size:11px; color:#a1a1aa; margin-bottom:4px;">
+                          <span>Temperature (T)</span><span id="${uid}-temp-val">183 °C</span>
+                        </div>
+                        <input type="range" min="50" max="350" value="183" style="width:100%;" oninput="window.updatePhaseState('${uid}')" id="${uid}-temp-slider">
+                      </div>
+                      <div style="flex:1;">
+                        <div style="display:flex; justify-content:space-between; font-size:11px; color:#a1a1aa; margin-bottom:4px;">
+                          <span>Composition (wt% Sn)</span><span id="${uid}-comp-val">61.9% Sn</span>
+                        </div>
+                        <input type="range" min="0" max="100" value="61.9" step="0.5" style="width:100%;" oninput="window.updatePhaseState('${uid}')" id="${uid}-comp-slider">
+                      </div>
+                    </div>
+                    <div class="stem-formula-box" id="${uid}-lever-hud" style="margin-top:10px; font-size:11.5px;"></div>
+                  </div>
+                </div>
+
+                <div id="${uid}-pane-xrd" style="display:none;">
+                  <div id="${uid}-xrd-plot" style="height:240px; background:#07080c; border:1px solid #1a1d27; border-radius:6px;"></div>
+                </div>
+              </div>
+            </div>
+          `;
+
+          window.renderMatUnitSvg(uid, currentLat, '111');
+          window.renderPhaseDiagram(uid);
+          window.updatePhaseState(uid);
+          card.setAttribute('data-initialized', 'true');
+        } catch (e) {
+          console.warn('initInChatMaterial error:', e);
+        }
+      });
+    }
+
+    function initInChatBiology(root) {
+      const container = root || document.getElementById('chat-box') || document.body;
+      const cards = container.querySelectorAll('.stem-biology-card:not([data-initialized])');
+      cards.forEach(card => {
+        try {
+          const raw = card.getAttribute('data-biology-spec');
+          const spec = raw ? JSON.parse(decodeURIComponent(raw)) : {};
+          const uid = 'bio_' + Math.random().toString(36).substring(2, 9);
+
+          card.innerHTML = `
+            <div class="agent-stem-card" style="margin:12px 0;">
+              <div class="agent-stem-header">
+                <div style="display:flex; align-items:center; gap:8px;">
+                  <svg style="width:14px; height:14px; stroke:#10b981; fill:none;" viewBox="0 0 24 24"><path d="M2 15c6.667-6 13.333 0 20-6"/><path d="M9 22c1.798-1.998 2.518-3.995 2.807-5.993"/><path d="M15 2c-1.798 1.998-2.518 3.995-2.807 5.993"/><path d="M17 6l2.5-2.5"/><path d="M14 8l1-1"/><path d="M7 18l-2.5 2.5"/><path d="M3.5 14.5l.5-.5"/><path d="M20 9l.5-.5"/><path d="M6.5 12.5l1-1"/><path d="M16.5 10.5l1-1"/><path d="M10 16l1.5-1.5"/></svg>
+                  <span style="font-weight:600; font-size:12px; color:#ffffff;">Molecular Biology: ${escapeHtml(spec.title || 'B-DNA & Cellular Architecture')}</span>
+                </div>
+                <div style="display:flex; gap:6px;">
+                  <button class="btn-stem-mini active" id="${uid}-tab-dna" onclick="window.switchBioTab('${uid}', 'dna')">B-DNA Helix</button>
+                  <button class="btn-stem-mini" id="${uid}-tab-membrane" onclick="window.switchBioTab('${uid}', 'membrane')">Membrane &amp; K+</button>
+                  <button class="btn-stem-mini" id="${uid}-tab-protein" onclick="window.switchBioTab('${uid}', 'protein')">Protein Structure</button>
+                  <button class="btn-stem-mini" id="${uid}-tab-pathway" onclick="window.switchBioTab('${uid}', 'pathway')">Respiration</button>
+                </div>
+              </div>
+              <div class="agent-stem-body" style="padding:12px;">
+                <div id="${uid}-pane-dna" style="display:block;">
+                  <div style="position:relative; background:#07080c; border:1px solid #1a1d27; border-radius:6px; height:240px; overflow:hidden;">
+                    <canvas id="${uid}-dna-canvas" width="600" height="240" style="width:100%; height:100%;"></canvas>
+                    <div style="position:absolute; bottom:8px; left:8px; display:flex; gap:6px;">
+                      <button class="btn-stem-mini" onclick="window.toggleBioRotation('${uid}')">Pause / Rotate</button>
+                    </div>
+                    <div style="position:absolute; top:8px; right:8px; font-size:10px; color:#a1a1aa; background:rgba(0,0,0,0.6); padding:4px 8px; border-radius:4px;">
+                      <span style="color:#38bdf8;">■ A</span> - <span style="color:#ef4444;">■ T</span> (2 H-Bonds) &bull; <span style="color:#10b981;">■ G</span> ≡ <span style="color:#f59e0b;">■ C</span> (3 H-Bonds)
+                    </div>
+                  </div>
+                  <div class="stem-metric-grid" style="margin-top:10px;">
+                    <div class="stem-metric-box"><div class="stem-metric-label">Helical Pitch</div><div class="stem-metric-val">3.4 nm (10.5 bp/turn)</div></div>
+                    <div class="stem-metric-box"><div class="stem-metric-label">Diameter</div><div class="stem-metric-val">2.0 nm (B-Form)</div></div>
+                    <div class="stem-metric-box"><div class="stem-metric-label">Orientation</div><div class="stem-metric-val">Antiparallel 5'→3'</div></div>
+                    <div class="stem-metric-box"><div class="stem-metric-label">Grooves</div><div class="stem-metric-val">Major (2.2nm) / Minor (1.2nm)</div></div>
+                  </div>
+                </div>
+
+                <div id="${uid}-pane-membrane" style="display:none;">
+                  <div style="background:#07080c; border:1px solid #1a1d27; border-radius:6px; padding:12px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                      <span style="font-size:11.5px; color:#e4e4e7; font-weight:600;">Voltage-Gated K+ Channel &amp; Phospholipid Bilayer</span>
+                      <button class="btn-stem-mini active" id="${uid}-channel-btn" onclick="window.toggleBioChannel('${uid}')">Channel: Open</button>
+                    </div>
+                    <svg id="${uid}-membrane-svg" viewBox="0 0 500 180" style="width:100%; height:180px;"></svg>
+                  </div>
+                </div>
+
+                <div id="${uid}-pane-protein" style="display:none;">
+                  <div style="background:#07080c; border:1px solid #1a1d27; border-radius:6px; padding:12px;">
+                    <svg viewBox="0 0 500 180" style="width:100%; height:180px;">
+                      <rect width="500" height="180" fill="#07080c"/>
+                      <path d="M 50 140 Q 80 40 110 140 T 170 140 T 230 140" stroke="#38bdf8" stroke-width="5" fill="none"/>
+                      <text x="70" y="30" fill="#38bdf8" font-size="12" font-family="sans-serif" font-weight="600">α-Helix (i → i+4 H-Bonding)</text>
+                      <path d="M 280 60 L 330 60 L 320 80 L 440 80 L 460 70 L 440 60 L 320 60" fill="rgba(245,158,11,0.2)" stroke="#f59e0b" stroke-width="2"/>
+                      <path d="M 440 120 L 390 120 L 400 100 L 280 100 L 260 110 L 280 120 L 400 120" fill="rgba(16,185,129,0.2)" stroke="#10b981" stroke-width="2"/>
+                      <text x="300" y="30" fill="#f59e0b" font-size="12" font-family="sans-serif" font-weight="600">Antiparallel β-Pleated Sheets</text>
+                    </svg>
+                  </div>
+                </div>
+
+                <div id="${uid}-pane-pathway" style="display:none;">
+                  <div style="background:#07080c; border:1px solid #1a1d27; border-radius:6px; padding:12px;">
+                    <svg viewBox="0 0 500 160" style="width:100%; height:160px;">
+                      <rect width="500" height="160" fill="#07080c"/>
+                      <rect x="20" y="55" width="85" height="40" rx="6" fill="#181a24" stroke="#38bdf8" stroke-width="1.5"/>
+                      <text x="35" y="79" fill="#ffffff" font-size="11" font-weight="600" font-family="sans-serif">Glucose</text>
+                      <line x1="105" y1="75" x2="140" y2="75" stroke="#71717a" stroke-width="2"/>
+                      <rect x="140" y="55" width="95" height="40" rx="6" fill="#181a24" stroke="#10b981" stroke-width="1.5"/>
+                      <text x="150" y="79" fill="#ffffff" font-size="11" font-weight="600" font-family="sans-serif">Glycolysis</text>
+                      <line x1="235" y1="75" x2="270" y2="75" stroke="#71717a" stroke-width="2"/>
+                      <rect x="270" y="55" width="95" height="40" rx="6" fill="#181a24" stroke="#f59e0b" stroke-width="1.5"/>
+                      <text x="280" y="79" fill="#ffffff" font-size="11" font-weight="600" font-family="sans-serif">Krebs (TCA)</text>
+                      <line x1="365" y1="75" x2="400" y2="75" stroke="#71717a" stroke-width="2"/>
+                      <rect x="400" y="50" width="85" height="50" rx="6" fill="#10b981" stroke="#ffffff" stroke-width="1.5"/>
+                      <text x="415" y="73" fill="#000000" font-size="11" font-weight="700" font-family="sans-serif">30-32 ATP</text>
+                      <text x="418" y="88" fill="#000000" font-size="9" font-family="sans-serif">Net Yield</text>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+          `;
+
+          window.initDnaCanvas(uid);
+          window.renderMembraneSvg(uid, true);
+          card.setAttribute('data-initialized', 'true');
+        } catch (e) {
+          console.warn('initInChatBiology error:', e);
+        }
+      });
+    }
+
+    function initInChatMathVisual(root) {
+      const container = root || document.getElementById('chat-box') || document.body;
+      const cards = container.querySelectorAll('.stem-math-visual-card:not([data-initialized])');
+      cards.forEach(card => {
+        try {
+          const raw = card.getAttribute('data-math-spec');
+          const spec = raw ? JSON.parse(decodeURIComponent(raw)) : {};
+          const uid = 'math_' + Math.random().toString(36).substring(2, 9);
+
+          card.innerHTML = `
+            <div class="agent-stem-card" style="margin:12px 0;">
+              <div class="agent-stem-header">
+                <div style="display:flex; align-items:center; gap:8px;">
+                  <svg style="width:14px; height:14px; stroke:#38bdf8; fill:none;" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+                  <span style="font-weight:600; font-size:12px; color:#ffffff;">Higher Mathematics: ${escapeHtml(spec.title || '3D Surfaces, Vector Fields &amp; Convergence')}</span>
+                </div>
+                <div style="display:flex; gap:6px;">
+                  <button class="btn-stem-mini active" id="${uid}-tab-saddle" onclick="window.switchMathTab('${uid}', 'saddle')">3D Saddle</button>
+                  <button class="btn-stem-mini" id="${uid}-tab-vector" onclick="window.switchMathTab('${uid}', 'vector')">Vector Curl/Div</button>
+                  <button class="btn-stem-mini" id="${uid}-tab-taylor" onclick="window.switchMathTab('${uid}', 'taylor')">Taylor Series</button>
+                </div>
+              </div>
+              <div class="agent-stem-body" style="padding:12px;">
+                <div id="${uid}-pane-saddle" style="display:block;">
+                  <div style="display:flex; gap:16px; margin-bottom:8px;">
+                    <div style="flex:1;">
+                      <span style="font-size:11px; color:#a1a1aa;">Semi-axis a: </span><span id="${uid}-a-val" style="font-size:11px; color:#ffffff;">2.0</span>
+                      <input type="range" min="1.0" max="4.0" step="0.2" value="2.0" style="width:100%;" oninput="window.updateSaddleParams('${uid}')" id="${uid}-a-slider">
+                    </div>
+                    <div style="flex:1;">
+                      <span style="font-size:11px; color:#a1a1aa;">Semi-axis b: </span><span id="${uid}-b-val" style="font-size:11px; color:#ffffff;">2.0</span>
+                      <input type="range" min="1.0" max="4.0" step="0.2" value="2.0" style="width:100%;" oninput="window.updateSaddleParams('${uid}')" id="${uid}-b-slider">
+                    </div>
+                  </div>
+                  <div id="${uid}-saddle-plot" style="height:250px; background:#07080c; border:1px solid #1a1d27; border-radius:6px;"></div>
+                  <div class="stem-formula-box" style="margin-top:8px; font-size:11px;">
+                    Hyperbolic Paraboloid: $z = \\frac{x^2}{a^2} - \\frac{y^2}{b^2}$ &bull; Gaussian Curvature: $K(0,0) = -\\frac{4}{a^2 b^2} < 0$ (Saddle Point)
+                  </div>
+                </div>
+
+                <div id="${uid}-pane-vector" style="display:none;">
+                  <div id="${uid}-vector-plot" style="height:250px; background:#07080c; border:1px solid #1a1d27; border-radius:6px;"></div>
+                  <div class="stem-metric-grid" style="margin-top:8px;">
+                    <div class="stem-metric-box"><div class="stem-metric-label">Field Expression</div><div class="stem-metric-val">F = ⟨-y, x⟩</div></div>
+                    <div class="stem-metric-box"><div class="stem-metric-label">Divergence (∇·F)</div><div class="stem-metric-val">0.0 (Solenoidal)</div></div>
+                    <div class="stem-metric-box"><div class="stem-metric-label">Curl (∇×F)</div><div class="stem-metric-val">2.0 k̂ (Vortical)</div></div>
+                  </div>
+                </div>
+
+                <div id="${uid}-pane-taylor" style="display:none;">
+                  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                    <span style="font-size:11.5px; color:#a1a1aa;">Taylor Polynomial Degree (N): <strong id="${uid}-deg-val" style="color:#ffffff;">5</strong></span>
+                    <input type="range" min="1" max="9" step="2" value="5" style="width:200px;" oninput="window.updateTaylorDegree('${uid}', this.value)" id="${uid}-deg-slider">
+                  </div>
+                  <div id="${uid}-taylor-plot" style="height:240px; background:#07080c; border:1px solid #1a1d27; border-radius:6px;"></div>
+                </div>
+              </div>
+            </div>
+          `;
+
+          window.renderSaddlePlot(uid, 2.0, 2.0);
+          card.setAttribute('data-initialized', 'true');
+        } catch (e) {
+          console.warn('initInChatMathVisual error:', e);
+        }
+      });
+    }
+
+    function initInChatMedical(root) {
+      const container = root || document.getElementById('chat-box') || document.body;
+      const cards = container.querySelectorAll('.stem-medical-card:not([data-initialized])');
+      cards.forEach(card => {
+        try {
+          const raw = card.getAttribute('data-medical-spec');
+          const spec = raw ? JSON.parse(decodeURIComponent(raw)) : {};
+          const uid = 'med_' + Math.random().toString(36).substring(2, 9);
+          const cond = spec.condition || 'stemi';
+
+          const condData = {
+            'stemi': {
+              name: 'Acute Inferior STEMI (ST-Elevation Myocardial Infarction)',
+              vitals: [
+                { l: 'Heart Rate', v: '112 bpm', s: 'warning' },
+                { l: 'Blood Pressure', v: '92/58 mmHg', s: 'critical' },
+                { l: 'SpO2', v: '93% Room Air', s: 'warning' },
+                { l: 'Cardiac Troponin-I', v: '4.82 ng/mL', s: 'critical' }
+              ],
+              ecg: 'Hyperacute T-waves and 3mm ST-elevation in leads II, III, aVF with reciprocal ST-depression in leads I, aVL.',
+              diff: [
+                { name: 'Inferior STEMI (Right Coronary Artery occlusion)', pct: 92 },
+                { name: 'Acute Myopericarditis', pct: 4 },
+                { name: 'Aortic Dissection (Type A involving coronary ostium)', pct: 3 },
+                { name: 'Gastroesophageal Reflux Spasm', pct: 1 }
+              ],
+              protocol: '1. Immediate Dual Antiplatelet (Aspirin 325mg + Ticagrelor 180mg)<br>2. Unfractionated Heparin bolus<br>3. Emergent Cardiac Catheterization / PCI Activation (<90 min door-to-balloon)'
+            },
+            'septic_shock': {
+              name: 'Septic Shock & Severe Lactic Acidosis',
+              vitals: [
+                { l: 'Heart Rate', v: '128 bpm', s: 'critical' },
+                { l: 'Blood Pressure', v: '78/42 mmHg', s: 'critical' },
+                { l: 'Lactate', v: '5.2 mmol/L', s: 'critical' },
+                { l: 'Temperature', v: '39.4 °C', s: 'warning' }
+              ],
+              ecg: 'Sinus Tachycardia with non-specific ST-T wave abnormalities; normal QTc interval (420ms).',
+              diff: [
+                { name: 'Septic Shock (Source: Pulmonary / Urosepsis)', pct: 88 },
+                { name: 'Hypovolemic Shock', pct: 6 },
+                { name: 'Acute Adrenal Insufficiency', pct: 4 },
+                { name: 'Cardiogenic Shock', pct: 2 }
+              ],
+              protocol: '1. Crystalloid fluid resuscitation (30 mL/kg within 3h)<br>2. Empiric broad-spectrum IV antibiotics within 1 hour<br>3. Norepinephrine vasopressor titration to MAP ≥ 65 mmHg'
+            },
+            'pulmonary_embolism': {
+              name: 'Massive Acute Pulmonary Embolism (PE)',
+              vitals: [
+                { l: 'Heart Rate', v: '124 bpm', s: 'critical' },
+                { l: 'Blood Pressure', v: '88/54 mmHg', s: 'critical' },
+                { l: 'SpO2', v: '84% Room Air', s: 'critical' },
+                { l: 'D-Dimer', v: '> 5000 ng/mL', s: 'critical' }
+              ],
+              ecg: 'McGinn-White S1Q3T3 pattern with Right Bundle Branch Block (RBBB) and right ventricular strain.',
+              diff: [
+                { name: 'Massive Pulmonary Embolism', pct: 91 },
+                { name: 'Tension Pneumothorax', pct: 4 },
+                { name: 'Acute Coronary Syndrome', pct: 3 },
+                { name: 'Aortic Dissection', pct: 2 }
+              ],
+              protocol: '1. High-flow oxygen / NIPPV support<br>2. Systemic thrombolysis (Alteplase 100mg IV) or catheter-directed thrombectomy<br>3. Therapeutic anticoagulation (Heparin infusion)'
+            }
+          };
+
+          const activeCond = condData[cond] || condData['stemi'];
+
+          let vitalsHtml = activeCond.vitals.map(v => {
+            const bg = v.s === 'critical' ? 'rgba(239,68,68,0.15)' : 'rgba(245,158,11,0.15)';
+            const border = v.s === 'critical' ? 'rgba(239,68,68,0.3)' : 'rgba(245,158,11,0.3)';
+            const color = v.s === 'critical' ? '#f87171' : '#fbbf24';
+            return `<div class="stem-metric-box" style="background:${bg}; border-color:${border};">
+              <div class="stem-metric-label" style="color:#d4d4d8;">${escapeHtml(v.l)}</div>
+              <div class="stem-metric-val" style="color:${color}; font-weight:700;">${escapeHtml(v.v)}</div>
+            </div>`;
+          }).join('');
+
+          let diffHtml = activeCond.diff.map(d => `
+            <div style="margin-bottom:8px;">
+              <div style="display:flex; justify-content:space-between; font-size:11px; margin-bottom:3px;">
+                <span style="color:#ffffff; font-weight:500;">${escapeHtml(d.name)}</span>
+                <span style="color:#38bdf8; font-weight:700;">${d.pct}%</span>
+              </div>
+              <div style="background:#141722; height:6px; border-radius:3px; overflow:hidden;">
+                <div style="width:${d.pct}%; height:100%; background:${d.pct>50?'#ef4444':'#38bdf8'}; border-radius:3px;"></div>
+              </div>
+            </div>
+          `).join('');
+
+          card.innerHTML = `
+            <div class="agent-stem-card" style="margin:12px 0;">
+              <div class="agent-stem-header">
+                <div style="display:flex; align-items:center; gap:8px;">
+                  <svg style="width:14px; height:14px; stroke:#ef4444; fill:none;" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                  <span style="font-weight:600; font-size:12px; color:#ffffff;">Clinical Decision Support: ${escapeHtml(activeCond.name)}</span>
+                </div>
+                <span style="font-size:10px; color:#ef4444; background:rgba(239,68,68,0.15); border:1px solid rgba(239,68,68,0.3); padding:2px 6px; border-radius:4px; font-weight:600;">Clinical Protocol</span>
+              </div>
+              <div class="agent-stem-body" style="padding:12px;">
+                <div class="stem-metric-grid" style="margin-bottom:12px;">${vitalsHtml}</div>
+                <div style="background:#07080c; border:1px solid #1a1d27; border-radius:6px; padding:10px; margin-bottom:12px;">
+                  <div style="font-size:11px; color:#71717a; text-transform:uppercase; font-weight:600; margin-bottom:4px;">12-Lead ECG Findings &amp; Rhythm Strip:</div>
+                  <div style="font-size:12px; color:#e4e4e7; line-height:1.4; margin-bottom:8px;">${escapeHtml(activeCond.ecg)}</div>
+                  <svg viewBox="0 0 500 50" style="width:100%; height:45px; background:#040508; border-radius:4px;">
+                    <path d="M 0 25 L 50 25 L 55 22 L 60 25 L 68 25 L 72 35 L 77 5 L 83 45 L 88 25 L 95 25 L 110 15 L 125 25 L 200 25 L 205 22 L 210 25 L 218 25 L 222 35 L 227 5 L 233 45 L 238 25 L 245 25 L 260 15 L 275 25 L 350 25 L 355 22 L 360 25 L 368 25 L 372 35 L 377 5 L 383 45 L 388 25 L 395 25 L 410 15 L 425 25 L 500 25" stroke="#ef4444" stroke-width="1.8" fill="none"/>
+                  </svg>
+                </div>
+                <div style="background:#090b10; border:1px solid #1a1d27; border-radius:6px; padding:10px; margin-bottom:12px;">
+                  <div style="font-size:11px; color:#71717a; text-transform:uppercase; font-weight:600; margin-bottom:8px;">Ranked Differential Diagnoses:</div>
+                  ${diffHtml}
+                </div>
+                <div style="background:rgba(16,185,129,0.06); border:1px solid rgba(16,185,129,0.25); border-radius:6px; padding:10px;">
+                  <div style="font-size:11px; color:#10b981; text-transform:uppercase; font-weight:700; margin-bottom:6px;">Emergency Clinical Management Protocol:</div>
+                  <div style="font-size:12px; color:#e4e4e7; line-height:1.5;">${activeCond.protocol}</div>
+                </div>
+              </div>
+            </div>
+          `;
+          card.setAttribute('data-initialized', 'true');
+        } catch (e) {
+          console.warn('initInChatMedical error:', e);
+        }
+      });
+    }
+
 
     function initPendingCadModels(root) {
       if (!window.THREE) return;
@@ -4412,6 +4950,34 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
             ${data.numeric ? `<div style="font-size:11px; color:#a1a1aa; text-align:center;">Numerical Approximation: <code>${escapeHtml(data.numeric)}</code></div>` : ''}
           </div>
         </div><!--VIGYAN_CARD_END-->\n\n`;
+      }
+
+      // 4.1 MATERIAL SCIENCE
+      if (tool === 'material_science' || data.render_type === 'material_science') {
+        const id = 'mat-' + Math.random().toString(36).substring(2, 9);
+        const encoded = encodeURIComponent(JSON.stringify(data));
+        return `\n\n<!--VIGYAN_CARD_START--><div class="stem-material-card" id="${id}" data-material-spec="${encoded}"></div><!--VIGYAN_CARD_END-->\n\n`;
+      }
+
+      // 4.2 BIOLOGY VIEWER
+      if (tool === 'biology_viewer' || data.render_type === 'biology_viewer') {
+        const id = 'bio-' + Math.random().toString(36).substring(2, 9);
+        const encoded = encodeURIComponent(JSON.stringify(data));
+        return `\n\n<!--VIGYAN_CARD_START--><div class="stem-biology-card" id="${id}" data-biology-spec="${encoded}"></div><!--VIGYAN_CARD_END-->\n\n`;
+      }
+
+      // 4.3 ADVANCED 3D MATH
+      if (tool === 'math_visualizer' || data.render_type === 'math_visualizer') {
+        const id = 'math-' + Math.random().toString(36).substring(2, 9);
+        const encoded = encodeURIComponent(JSON.stringify(data));
+        return `\n\n<!--VIGYAN_CARD_START--><div class="stem-math-visual-card" id="${id}" data-math-spec="${encoded}"></div><!--VIGYAN_CARD_END-->\n\n`;
+      }
+
+      // 4.4 MEDICAL CLINICAL VIEWER
+      if (tool === 'medical_viewer' || data.render_type === 'medical_viewer') {
+        const id = 'med-' + Math.random().toString(36).substring(2, 9);
+        const encoded = encodeURIComponent(JSON.stringify(data));
+        return `\n\n<!--VIGYAN_CARD_START--><div class="stem-medical-card" id="${id}" data-medical-spec="${encoded}"></div><!--VIGYAN_CARD_END-->\n\n`;
       }
 
       // 5. WORKSPACE READ FILE
@@ -5016,7 +5582,8 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
         }
       }
 
-      if (e.key === 'Enter') {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
         sendPrompt();
       } else if (e.key === 'Escape') {
         if (menu) menu.classList.remove('show');
@@ -5024,7 +5591,10 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
     }
 
     function handlePromptInput(e) {
-      const val = e.target.value;
+      const el = e.target;
+      el.style.height = 'auto';
+      el.style.height = Math.min(160, Math.max(38, el.scrollHeight)) + 'px';
+      const val = el.value;
       const menu = document.getElementById('slash-menu');
       if (!menu) return;
       if (val.startsWith('/')) {
@@ -5304,6 +5874,578 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
       showToast('Preferences saved');
       haptics.success();
     }
+
+    /* =========================================================================
+       STEM VIEWER & PRODUCTIVITY HELPER FUNCTIONS
+       ========================================================================= */
+    window.switchMatTab = function(uid, tab) {
+      ['unit', 'phase', 'xrd'].forEach(t => {
+        const p = document.getElementById(`${uid}-pane-${t}`);
+        const b = document.getElementById(`${uid}-tab-${t}`);
+        if (p) p.style.display = (t === tab ? 'block' : 'none');
+        if (b) b.classList.toggle('active', t === tab);
+      });
+      if (tab === 'xrd') {
+        const plotEl = document.getElementById(`${uid}-xrd-plot`);
+        if (plotEl && window.Plotly && !plotEl.getAttribute('data-plotted')) {
+          const theta = [28.4, 47.3, 56.1, 69.1, 76.4, 88.0];
+          const intensity = [100, 55, 30, 8, 12, 16];
+          Plotly.newPlot(plotEl, [{
+            x: theta, y: intensity, type: 'bar',
+            marker: { color: '#f59e0b', width: 0.8 },
+            name: 'Bragg Peaks'
+          }], {
+            title: { text: 'XRD Powder Diffraction Intensity (2θ)', font: { color: '#f4f4f6', size: 11 } },
+            paper_bgcolor: 'transparent', plot_bgcolor: '#07080c',
+            margin: { l: 40, r: 20, t: 30, b: 30 },
+            xaxis: { title: { text: '2θ (degrees)', font: { color: '#a1a1aa', size: 10 } }, gridcolor: '#1a1d27' },
+            yaxis: { title: { text: 'Relative Intensity (%)', font: { color: '#a1a1aa', size: 10 } }, gridcolor: '#1a1d27' }
+          }, { responsive: true, displayModeBar: false });
+          plotEl.setAttribute('data-plotted', 'true');
+        }
+      }
+    };
+
+    window.updateMatLattice = function(uid, lat) {
+      const latticeInfo = {
+        'FCC': { name: 'Face-Centered Cubic (FCC)', apf: '0.74', cn: '12', atoms: '4', a: '3.61 Å' },
+        'BCC': { name: 'Body-Centered Cubic (BCC)', apf: '0.68', cn: '8', atoms: '2', a: '2.87 Å' },
+        'HCP': { name: 'Hexagonal Close-Packed (HCP)', apf: '0.74', cn: '12', atoms: '6', a: '2.95 Å' },
+        'Diamond': { name: 'Diamond Cubic (sp³)', apf: '0.34', cn: '4', atoms: '8', a: '5.43 Å' },
+        'Perovskite': { name: 'Perovskite ABX3', apf: '0.69', cn: '12', atoms: '5', a: '3.90 Å' }
+      };
+      const info = latticeInfo[lat] || latticeInfo['FCC'];
+      const titleEl = document.getElementById(`${uid}-title`);
+      if (titleEl) titleEl.innerText = info.name;
+      const apfEl = document.getElementById(`${uid}-stat-apf`);
+      if (apfEl) apfEl.innerText = info.apf;
+      const cnEl = document.getElementById(`${uid}-stat-cn`);
+      if (cnEl) cnEl.innerText = info.cn;
+      const atomsEl = document.getElementById(`${uid}-stat-atoms`);
+      if (atomsEl) atomsEl.innerText = info.atoms;
+      const aEl = document.getElementById(`${uid}-stat-a`);
+      if (aEl) aEl.innerText = info.a;
+      window.renderMatUnitSvg(uid, lat, '111');
+    };
+
+    window.setMatPlane = function(uid, plane) {
+      ['100', '110', '111'].forEach(p => {
+        const b = document.getElementById(`${uid}-plane-${p}`);
+        if (b) b.classList.toggle('active', p === plane);
+      });
+      const sel = document.querySelector(`#${uid}-pane-unit select`);
+      const lat = sel ? sel.value : 'FCC';
+      window.renderMatUnitSvg(uid, lat, plane);
+    };
+
+    window.renderMatUnitSvg = function(uid, lat, plane) {
+      const wrap = document.getElementById(`${uid}-unit-svg-wrap`);
+      if (!wrap) return;
+      const color = '#f59e0b';
+      let planePath = '';
+      if (plane === '111') {
+        planePath = '<polygon points="120,60 280,180 80,180" fill="rgba(245,158,11,0.25)" stroke="#f59e0b" stroke-width="1.5"/>';
+      } else if (plane === '110') {
+        planePath = '<polygon points="80,100 240,60 280,180 120,220" fill="rgba(56,189,248,0.25)" stroke="#38bdf8" stroke-width="1.5"/>';
+      } else {
+        planePath = '<polygon points="80,100 240,100 240,220 80,220" fill="rgba(16,185,129,0.25)" stroke="#10b981" stroke-width="1.5"/>';
+      }
+
+      wrap.innerHTML = `
+        <svg viewBox="0 0 360 240" style="width:100%; height:100%;">
+          <defs>
+            <radialGradient id="sphereGrad" cx="35%" cy="35%" r="65%">
+              <stop offset="0%" stop-color="#fde68a"/>
+              <stop offset="60%" stop-color="#f59e0b"/>
+              <stop offset="100%" stop-color="#78350f"/>
+            </radialGradient>
+          </defs>
+          <path d="M 80 100 L 240 100 L 280 60 L 120 60 Z" stroke="#333a4d" stroke-width="1.5" fill="none"/>
+          <path d="M 80 220 L 240 220 L 280 180 L 120 180 Z" stroke="#333a4d" stroke-width="1.5" fill="none"/>
+          <line x1="80" y1="100" x2="80" y2="220" stroke="#333a4d" stroke-width="1.5"/>
+          <line x1="240" y1="100" x2="240" y2="220" stroke="#333a4d" stroke-width="1.5"/>
+          <line x1="280" y1="60" x2="280" y2="180" stroke="#333a4d" stroke-width="1.5"/>
+          <line x1="120" y1="60" x2="120" y2="180" stroke="#333a4d" stroke-width="1.5"/>
+          ${planePath}
+          <circle cx="80" cy="100" r="10" fill="url(#sphereGrad)"/>
+          <circle cx="240" cy="100" r="10" fill="url(#sphereGrad)"/>
+          <circle cx="280" cy="60" r="10" fill="url(#sphereGrad)"/>
+          <circle cx="120" cy="60" r="10" fill="url(#sphereGrad)"/>
+          <circle cx="80" cy="220" r="10" fill="url(#sphereGrad)"/>
+          <circle cx="240" cy="220" r="10" fill="url(#sphereGrad)"/>
+          <circle cx="280" cy="180" r="10" fill="url(#sphereGrad)"/>
+          <circle cx="120" cy="180" r="10" fill="url(#sphereGrad)"/>
+          ${lat==='FCC' ? '<circle cx="160" cy="160" r="10" fill="url(#sphereGrad)" opacity="0.9"/>' : ''}
+          ${lat==='BCC' ? '<circle cx="180" cy="140" r="11" fill="url(#sphereGrad)" opacity="0.95"/>' : ''}
+        </svg>
+      `;
+    };
+
+    window.renderPhaseDiagram = function(uid) {
+      const svg = document.getElementById(`${uid}-phase-svg`);
+      if (!svg) return;
+      svg.innerHTML = `
+        <rect width="500" height="220" fill="#07080c"/>
+        <line x1="60" y1="20" x2="60" y2="180" stroke="#71717a" stroke-width="1.5"/>
+        <line x1="60" y1="180" x2="460" y2="180" stroke="#71717a" stroke-width="1.5"/>
+        <line x1="460" y1="20" x2="460" y2="180" stroke="#71717a" stroke-width="1.5"/>
+        <path d="M 60 50 Q 180 110 307 110 Q 380 90 460 70" stroke="#38bdf8" stroke-width="2" fill="none"/>
+        <line x1="60" y1="110" x2="460" y2="110" stroke="#ef4444" stroke-width="2" stroke-dasharray="4"/>
+        <text x="307" y="105" fill="#ef4444" font-size="10" font-weight="700">183°C Eutectic (61.9% Sn)</text>
+        <circle id="${uid}-phase-point" cx="307" cy="110" r="5" fill="#f59e0b"/>
+        <text x="100" y="50" fill="#a1a1aa" font-size="11">Liquid (L)</text>
+        <text x="80" y="150" fill="#a1a1aa" font-size="10">Solid α</text>
+        <text x="400" y="150" fill="#a1a1aa" font-size="10">Solid β</text>
+        <text x="220" y="150" fill="#f59e0b" font-size="11" font-weight="600">α + β Lamellar</text>
+        <text x="60" y="195" fill="#71717a" font-size="10">0% Sn</text>
+        <text x="290" y="195" fill="#71717a" font-size="10">61.9%</text>
+        <text x="440" y="195" fill="#71717a" font-size="10">100% Sn</text>
+      `;
+    };
+
+    window.updatePhaseState = function(uid) {
+      const tSlider = document.getElementById(`${uid}-temp-slider`);
+      const cSlider = document.getElementById(`${uid}-comp-slider`);
+      if (!tSlider || !cSlider) return;
+      const T = parseFloat(tSlider.value);
+      const C = parseFloat(cSlider.value);
+      const tVal = document.getElementById(`${uid}-temp-val`);
+      const cVal = document.getElementById(`${uid}-comp-val`);
+      if (tVal) tVal.innerText = `${T.toFixed(0)} °C`;
+      if (cVal) cVal.innerText = `${C.toFixed(1)}% Sn`;
+
+      const pt = document.getElementById(`${uid}-phase-point`);
+      if (pt) {
+        const cx = 60 + (C / 100) * 400;
+        const cy = 180 - ((T - 50) / 300) * 160;
+        pt.setAttribute('cx', String(cx));
+        pt.setAttribute('cy', String(cy));
+      }
+
+      const hud = document.getElementById(`${uid}-lever-hud`);
+      if (hud) {
+        if (T < 183) {
+          const wBeta = ((C - 19.2) / (97.5 - 19.2)) * 100;
+          const wAlpha = 100 - wBeta;
+          hud.innerHTML = `Lever Rule ($T = ${T.toFixed(0)}^\\circ\\text{C}$): $\\text{Solid }\\alpha = ${Math.max(0, Math.min(100, wAlpha)).toFixed(1)}\\%$, $\\text{Solid }\\beta = ${Math.max(0, Math.min(100, wBeta)).toFixed(1)}\\%$ (Lamellar Microstructure)`;
+        } else {
+          hud.innerHTML = `Single/Two-Phase Equilibrium ($T = ${T.toFixed(0)}^\\circ\\text{C}$): Liquid solution present above 183°C eutectic line.`;
+        }
+      }
+    };
+
+    /* BIOLOGY HELPERS */
+    window.switchBioTab = function(uid, tab) {
+      ['dna', 'membrane', 'protein', 'pathway'].forEach(t => {
+        const p = document.getElementById(`${uid}-pane-${t}`);
+        const b = document.getElementById(`${uid}-tab-${t}`);
+        if (p) p.style.display = (t === tab ? 'block' : 'none');
+        if (b) b.classList.toggle('active', t === tab);
+      });
+    };
+
+    const _DNA_LOOPS = {};
+    window.initDnaCanvas = function(uid) {
+      const canvas = document.getElementById(`${uid}-dna-canvas`);
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      let angle = 0;
+      let running = true;
+      _DNA_LOOPS[uid] = { running: true };
+
+      function draw() {
+        if (!_DNA_LOOPS[uid] || !_DNA_LOOPS[uid].running) return;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        const pairs = 20;
+        const radius = 55;
+        const spacing = 28;
+        const startX = 30;
+
+        for (let i = 0; i < pairs; i++) {
+          const x = startX + i * spacing;
+          const theta = angle + i * 0.45;
+          const y1 = 120 + radius * Math.sin(theta);
+          const y2 = 120 - radius * Math.sin(theta);
+          const z = Math.cos(theta);
+
+          const r1 = 5 + 2 * z;
+          const r2 = 5 - 2 * z;
+          const isGC = (i % 2 === 0);
+
+          ctx.beginPath();
+          ctx.strokeStyle = z > 0 ? 'rgba(255,255,255,0.4)' : 'rgba(255,255,255,0.15)';
+          ctx.lineWidth = 2;
+          ctx.moveTo(x, y1);
+          ctx.lineTo(x, y2);
+          ctx.stroke();
+
+          ctx.beginPath();
+          ctx.arc(x, y1, Math.max(2, r1), 0, Math.PI * 2);
+          ctx.fillStyle = isGC ? '#10b981' : '#38bdf8';
+          ctx.fill();
+
+          ctx.beginPath();
+          ctx.arc(x, y2, Math.max(2, r2), 0, Math.PI * 2);
+          ctx.fillStyle = isGC ? '#f59e0b' : '#ef4444';
+          ctx.fill();
+        }
+        angle += 0.035;
+        requestAnimationFrame(draw);
+      }
+      requestAnimationFrame(draw);
+    };
+
+    window.toggleBioRotation = function(uid) {
+      if (_DNA_LOOPS[uid]) {
+        _DNA_LOOPS[uid].running = !_DNA_LOOPS[uid].running;
+        if (_DNA_LOOPS[uid].running) window.initDnaCanvas(uid);
+      }
+    };
+
+    window.renderMembraneSvg = function(uid, open) {
+      const svg = document.getElementById(`${uid}-membrane-svg`);
+      if (!svg) return;
+      let headsTop = '';
+      let headsBot = '';
+      for (let i = 20; i < 480; i += 22) {
+        if (i >= 210 && i <= 280) continue;
+        headsTop += `<circle cx="${i}" cy="35" r="7" fill="#38bdf8"/><line x1="${i-2}" y1="42" x2="${i-2}" y2="65" stroke="#71717a" stroke-width="1.5"/><line x1="${i+2}" y1="42" x2="${i+2}" y2="65" stroke="#71717a" stroke-width="1.5"/>`;
+        headsBot += `<circle cx="${i}" cy="145" r="7" fill="#38bdf8"/><line x1="${i-2}" y1="138" x2="${i-2}" y2="115" stroke="#71717a" stroke-width="1.5"/><line x1="${i+2}" y1="138" x2="${i+2}" y2="115" stroke="#71717a" stroke-width="1.5"/>`;
+      }
+      const gatePath = open 
+        ? '<rect x="220" y="25" width="22" height="130" fill="#a855f7" rx="4"/><rect x="258" y="25" width="22" height="130" fill="#a855f7" rx="4"/><circle cx="250" cy="50" r="4" fill="#fde047"/><circle cx="250" cy="90" r="4" fill="#fde047"/><circle cx="250" cy="130" r="4" fill="#fde047"/>' 
+        : '<rect x="225" y="25" width="50" height="130" fill="#a855f7" rx="4"/><text x="238" y="95" fill="#ffffff" font-size="10" font-weight="700">CLOSED</text>';
+
+      svg.innerHTML = `
+        <rect width="500" height="180" fill="#07080c"/>
+        ${headsTop}
+        ${headsBot}
+        ${gatePath}
+        <text x="20" y="20" fill="#a1a1aa" font-size="10">Extracellular Fluid (High Na+)</text>
+        <text x="20" y="172" fill="#a1a1aa" font-size="10">Intracellular Cytosol (High K+)</text>
+      `;
+    };
+
+    window.toggleBioChannel = function(uid) {
+      const btn = document.getElementById(`${uid}-channel-btn`);
+      if (!btn) return;
+      const isOpen = btn.innerText.includes('Open');
+      btn.innerText = isOpen ? 'Channel: Closed' : 'Channel: Open';
+      btn.classList.toggle('active', !isOpen);
+      window.renderMembraneSvg(uid, !isOpen);
+    };
+
+    /* MATH 3D HELPERS */
+    window.switchMathTab = function(uid, tab) {
+      ['saddle', 'vector', 'taylor'].forEach(t => {
+        const p = document.getElementById(`${uid}-pane-${t}`);
+        const b = document.getElementById(`${uid}-tab-${t}`);
+        if (p) p.style.display = (t === tab ? 'block' : 'none');
+        if (b) b.classList.toggle('active', t === tab);
+      });
+      if (tab === 'vector') {
+        const plotEl = document.getElementById(`${uid}-vector-plot`);
+        if (plotEl && window.Plotly && !plotEl.getAttribute('data-plotted')) {
+          const x = [], y = [];
+          for (let i = -4; i <= 4; i += 0.8) {
+            for (let j = -4; j <= 4; j += 0.8) {
+              x.push(i); y.push(j);
+            }
+          }
+          Plotly.newPlot(plotEl, [{
+            x, y, mode: 'markers',
+            marker: { color: '#38bdf8', size: 4 }
+          }], {
+            title: { text: '2D Quiver Vector Field F = ⟨-y, x⟩', font: { color: '#ffffff', size: 11 } },
+            paper_bgcolor: 'transparent', plot_bgcolor: '#07080c',
+            margin: { l: 30, r: 20, t: 30, b: 30 }
+          }, { responsive: true, displayModeBar: false });
+          plotEl.setAttribute('data-plotted', 'true');
+        }
+      } else if (tab === 'taylor') {
+        window.updateTaylorDegree(uid, 5);
+      }
+    };
+
+    window.renderSaddlePlot = function(uid, a, b) {
+      const el = document.getElementById(`${uid}-saddle-plot`);
+      if (!el || !window.Plotly) return;
+      const x = [], y = [], z = [];
+      for (let i = -3; i <= 3; i += 0.3) {
+        const row = [];
+        for (let j = -3; j <= 3; j += 0.3) {
+          row.push((i * i) / (a * a) - (j * j) / (b * b));
+        }
+        z.push(row);
+      }
+      for (let i = -3; i <= 3; i += 0.3) { x.push(i); y.push(i); }
+
+      Plotly.newPlot(el, [{
+        z, x, y, type: 'surface',
+        colorscale: 'Viridis', showscale: false
+      }], {
+        title: { text: `z = x²/${(a*a).toFixed(1)} - y²/${(b*b).toFixed(1)}`, font: { color: '#ffffff', size: 11 } },
+        paper_bgcolor: 'transparent',
+        margin: { l: 10, r: 10, t: 30, b: 10 }
+      }, { responsive: true, displayModeBar: false });
+    };
+
+    window.updateSaddleParams = function(uid) {
+      const a = parseFloat(document.getElementById(`${uid}-a-slider`)?.value || 2.0);
+      const b = parseFloat(document.getElementById(`${uid}-b-slider`)?.value || 2.0);
+      const aVal = document.getElementById(`${uid}-a-val`);
+      const bVal = document.getElementById(`${uid}-b-val`);
+      if (aVal) aVal.innerText = a.toFixed(1);
+      if (bVal) bVal.innerText = b.toFixed(1);
+      window.renderSaddlePlot(uid, a, b);
+    };
+
+    window.updateTaylorDegree = function(uid, deg) {
+      const el = document.getElementById(`${uid}-taylor-plot`);
+      if (!el || !window.Plotly) return;
+      const N = parseInt(deg) || 5;
+      const degVal = document.getElementById(`${uid}-deg-val`);
+      if (degVal) degVal.innerText = String(N);
+
+      const x = [], f_true = [], f_poly = [];
+      for (let v = -6.28; v <= 6.28; v += 0.1) {
+        x.push(v);
+        f_true.push(Math.sin(v));
+        let p = 0;
+        let fact = 1;
+        for (let k = 0; k <= Math.floor((N - 1) / 2); k++) {
+          let termFact = 1;
+          for (let m = 1; m <= (2 * k + 1); m++) termFact *= m;
+          p += (Math.pow(-1, k) * Math.pow(v, 2 * k + 1)) / termFact;
+        }
+        f_poly.push(p);
+      }
+
+      Plotly.newPlot(el, [
+        { x, y: f_true, mode: 'lines', name: 'sin(x)', line: { color: '#38bdf8', width: 2 } },
+        { x, y: f_poly, mode: 'lines', name: `P_${N}(x)`, line: { color: '#ef4444', width: 2, dash: 'dash' } }
+      ], {
+        title: { text: `Taylor Polynomial of sin(x) (Degree ${N})`, font: { color: '#ffffff', size: 11 } },
+        paper_bgcolor: 'transparent', plot_bgcolor: '#07080c',
+        margin: { l: 40, r: 20, t: 30, b: 30 },
+        yaxis: { range: [-2.5, 2.5], gridcolor: '#1a1d27' },
+        xaxis: { gridcolor: '#1a1d27' },
+        legend: { font: { color: '#ffffff', size: 10 } }
+      }, { responsive: true, displayModeBar: false });
+    };
+
+    /* =========================================================================
+       PRODUCTIVITY MODALS: STEM TASK HUB, LATEX SHEET & ACADEMIC PDF EXPORT
+       ========================================================================= */
+    const STEM_TASK_TEMPLATES = [
+      { domain: 'Electronics', title: 'Butterworth Active Filter', prompt: 'Design an active 4th-order Sallen-Key lowpass filter with fc = 10 kHz and Q = 0.707. Calculate component values for R and C and provide the transfer function.' },
+      { domain: 'Electronics', title: '555 Precision Astable Timer', prompt: 'Calculate an astable NE555 timer circuit with 60% duty cycle at 1 kHz frequency with C = 0.1 uF. Show R1, R2, and output waveforms.' },
+      { domain: 'Semiconductors', title: 'MOSFET Subthreshold Slope', prompt: 'Derive the subthreshold swing S of an n-channel MOSFET at T = 300 K with depletion capacitance Cd and oxide capacitance Cox. Show why 60 mV/dec is the thermal limit.' },
+      { domain: 'Semiconductors', title: 'PN Junction Depletion Width', prompt: 'Calculate the depletion width W and built-in potential Vbi for an abrupt silicon PN junction with Na = 1e16 cm^-3 and Nd = 1e17 cm^-3 at 300 K.' },
+      { domain: 'Materials', title: 'Eutectic Pb-Sn Phase Diagram', prompt: 'Use the Lever Rule on a Pb-60% Sn alloy at 150 °C to find the weight fractions of solid alpha and solid beta phases in the eutectic microstructure.' },
+      { domain: 'Materials', title: 'Bragg XRD Peak Indexing', prompt: 'Calculate the first 3 Bragg diffraction angles (2θ) for Copper (FCC, a = 3.61 Å) using Cu K-alpha radiation (lambda = 1.5406 Å) for planes (111), (200), (220).' },
+      { domain: 'Biology', title: 'DNA Melting Temp (Tm)', prompt: 'Calculate the melting temperature Tm of the oligonucleotide sequence 5\'-ATGCGATCGATAGCTAGCT-3\' using the nearest-neighbor thermodynamic method with [Na+] = 50 mM.' },
+      { domain: 'Biology', title: 'Michaelis-Menten Kinetics', prompt: 'Analyze enzyme kinetics with Vmax = 120 umol/min and Km = 2.5 mM. Plot reaction velocity v vs substrate concentration [S] from 0 to 25 mM.' },
+      { domain: 'Math', title: 'Taylor Series & Remainder', prompt: 'Calculate the 5th-order Taylor polynomial for f(x) = sin(x) centered at a = 0 and prove the Lagrange error bound for |x| <= 1.' },
+      { domain: 'Math', title: 'Curl & Divergence of Vector Field', prompt: 'Compute the curl and divergence of the 3D vector field F(x, y, z) = <2*x*y, x^2 + z, y*z^2>. Verify if F is conservative.' },
+      { domain: 'Physics', title: 'Keplerian Satellite Orbit', prompt: 'Simulate a Keplerian orbit for a satellite around Earth with semi-major axis a = 7000 km and eccentricity e = 0.05. Show velocities and 2D trajectory.' },
+      { domain: 'Physics', title: 'Quantum Tunneling Transmission', prompt: 'Calculate the quantum transmission coefficient T for an electron with energy E = 2.0 eV incident on a rectangular barrier of height V0 = 5.0 eV and width a = 0.5 nm.' },
+      { domain: 'CAD', title: 'Planetary Gear Transmission', prompt: 'Generate a 3D parametric CAD assembly for a planetary gear set with sun gear, 3 planet gears, and ring gear with module m = 2 mm and gear ratio 4:1.' },
+      { domain: 'CAD', title: 'Drone Propeller Blade Mesh', prompt: 'Model a high-efficiency drone propeller blade with aerofoil cross-section and pitch twist angle theta(r) = 25 * (1 - r/R) degrees.' }
+    ];
+
+    window.toggleTaskCatalog = function() {
+      const modal = document.getElementById('task-catalog-modal');
+      if (!modal) return;
+      const isOpen = modal.style.display === 'flex';
+      modal.style.display = isOpen ? 'none' : 'flex';
+      if (!isOpen) {
+        window.filterTaskCatalog('all');
+        haptics.click();
+      }
+    };
+
+    window.filterTaskCatalog = function(dom, btn) {
+      if (btn) {
+        btn.parentElement.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+      }
+      const grid = document.getElementById('task-catalog-grid');
+      if (!grid) return;
+      const filtered = (dom === 'all') ? STEM_TASK_TEMPLATES : STEM_TASK_TEMPLATES.filter(t => t.domain === dom);
+      grid.innerHTML = filtered.map(t => `
+        <div class="task-card-item" onclick="window.selectTaskTemplate('${escapeHtml(t.prompt)}')">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+            <span class="task-domain-pill" style="background:rgba(56,189,248,0.15); color:#38bdf8;">${t.domain}</span>
+            <span style="font-size:11px; color:#10b981; font-weight:600;">Execute &rarr;</span>
+          </div>
+          <div style="font-size:12.5px; font-weight:600; color:#ffffff; margin-bottom:4px;">${t.title}</div>
+          <div style="font-size:11px; color:#a1a1aa; line-height:1.4;">${t.prompt}</div>
+        </div>
+      `).join('');
+    };
+
+    window.selectTaskTemplate = function(promptText) {
+      window.toggleTaskCatalog();
+      const input = document.getElementById('chat-prompt') || document.getElementById('chat-input');
+      if (input) {
+        input.value = promptText;
+        sendPrompt();
+      }
+    };
+
+    const LATEX_SYMBOLS = {
+      'greek': [
+        { code: '\\alpha', sym: 'α' }, { code: '\\beta', sym: 'β' }, { code: '\\gamma', sym: 'γ' },
+        { code: '\\delta', sym: 'δ' }, { code: '\\epsilon', sym: 'ε' }, { code: '\\theta', sym: 'θ' },
+        { code: '\\lambda', sym: 'λ' }, { code: '\\mu', sym: 'μ' }, { code: '\\pi', sym: 'π' },
+        { code: '\\sigma', sym: 'σ' }, { code: '\\omega', sym: 'ω' }, { code: '\\Delta', sym: 'Δ' },
+        { code: '\\Omega', sym: 'Ω' }, { code: '\\nabla', sym: '∇' }, { code: '\\partial', sym: '∂' }
+      ],
+      'calculus': [
+        { code: '\\int_{a}^{b} f(x)\\,dx', sym: '∫' }, { code: '\\iint_{D} f(x,y)\\,dA', sym: '∬' },
+        { code: '\\oint_{C} \\mathbf{F}\\cdot d\\mathbf{r}', sym: '∮' }, { code: '\\frac{df}{dx}', sym: 'df/dx' },
+        { code: '\\frac{\\partial^2 f}{\\partial x^2}', sym: '∂²f/∂x²' }, { code: '\\lim_{x \\to 0}', sym: 'lim' },
+        { code: '\\sum_{n=1}^{\\infty}', sym: '∑' }, { code: '\\prod_{i=1}^{n}', sym: '∏' }
+      ],
+      'linear_algebra': [
+        { code: '\\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}', sym: '[M]' },
+        { code: '\\det(A)', sym: '|A|' }, { code: '\\mathbf{v} \\cdot \\mathbf{w}', sym: 'v·w' },
+        { code: '\\mathbf{v} \\times \\mathbf{w}', sym: 'v×w' }, { code: '\\|\\mathbf{v}\\|', sym: '||v||' },
+        { code: '\\lambda \\mathbf{v} = A\\mathbf{v}', sym: 'Av=λv' }
+      ],
+      'physics': [
+        { code: '\\hbar', sym: 'ħ' }, { code: '\\psi(x,t)', sym: 'ψ' }, { code: '\\langle \\psi | \\phi \\rangle', sym: '⟨ψ|φ⟩' },
+        { code: '\\hat{H}\\psi = E\\psi', sym: 'Ĥψ=Eψ' }, { code: 'e^{i\\mathbf{k}\\cdot\\mathbf{r}}', sym: 'e^(ik·r)' },
+        { code: '\\nabla \\times \\mathbf{B} = \\mu_0\\mathbf{J}', sym: 'Maxwell' }
+      ],
+      'relations': [
+        { code: '\\le', sym: '≤' }, { code: '\\ge', sym: '≥' }, { code: '\\approx', sym: '≈' },
+        { code: '\\equiv', sym: '≡' }, { code: '\\pm', sym: '±' }, { code: '\\infty', sym: '∞' },
+        { code: '\\in', sym: '∈' }, { code: '\\subset', sym: '⊂' }
+      ]
+    };
+
+    window.toggleLatexSheet = function() {
+      const modal = document.getElementById('latex-sheet-modal');
+      if (!modal) return;
+      const isOpen = modal.style.display === 'flex';
+      modal.style.display = isOpen ? 'none' : 'flex';
+      if (!isOpen) {
+        window.filterLatexCategory('greek');
+        haptics.click();
+      }
+    };
+
+    window.filterLatexCategory = function(cat, btn) {
+      if (btn) {
+        btn.parentElement.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+      }
+      const grid = document.getElementById('latex-sheet-grid');
+      if (!grid) return;
+      const items = LATEX_SYMBOLS[cat] || LATEX_SYMBOLS['greek'];
+      grid.innerHTML = items.map(it => `
+        <button class="latex-sym-btn" onclick="window.insertLatexSymbol('${it.code.replace(/\\/g, '\\\\')}')">
+          <span style="font-size:16px; color:#ffffff;">${it.sym}</span>
+          <code style="font-size:9.5px; color:#a1a1aa;">${it.code}</code>
+        </button>
+      `).join('');
+    };
+
+    window.insertLatexSymbol = function(sym) {
+      const input = document.getElementById('chat-prompt') || document.getElementById('chat-input');
+      if (input) {
+        const start = input.selectionStart || input.value.length;
+        const end = input.selectionEnd || input.value.length;
+        input.value = input.value.substring(0, start) + sym + input.value.substring(end);
+        input.focus();
+        input.selectionStart = input.selectionEnd = start + sym.length;
+        showToast('Inserted ' + sym);
+        haptics.click();
+      }
+    };
+
+    /* ACADEMIC RESEARCH PDF EXPORT */
+    window.exportAcademicPdf = function() {
+      const modal = document.getElementById('pdf-export-modal');
+      const preview = document.getElementById('pdf-preview-container');
+      if (!modal || !preview) return;
+      const sess = sessions[activeSessionId];
+      if (!sess || sess.messages.length === 0) {
+        showToast('No messages in active chat to export');
+        return;
+      }
+      const title = sess.name || 'Vigyan Pro STEM Investigation';
+      const docTitle = document.getElementById('pdf-doc-title');
+      if (docTitle) docTitle.value = title;
+
+      let bodyHtml = sess.messages.map(m => `
+        <div style="margin-bottom:18px; border-bottom:1px solid #1a1d27; padding-bottom:12px;">
+          <div style="font-size:11px; text-transform:uppercase; font-weight:700; color:${m.role==='user'?'#38bdf8':'#10b981'}; margin-bottom:4px;">
+            ${m.role==='user'?'Author Query':'Vigyan AI 3B Sovereign Analysis'}
+          </div>
+          <div style="font-size:12.5px; color:#f4f4f6; line-height:1.5;">${formatMessageContent(m.content)}</div>
+        </div>
+      `).join('');
+
+      preview.innerHTML = `
+        <div style="max-width:680px; margin:0 auto; background:#07080c; border:1px solid #1a1d27; border-radius:8px; padding:28px;">
+          <h2 style="font-size:18px; color:#ffffff; margin:0 0 4px 0; text-align:center;">${escapeHtml(title)}</h2>
+          <div style="font-size:11px; color:#a1a1aa; text-align:center; margin-bottom:20px;">Vigyan Pro &bull; Air-Gapped Sovereign STEM Computational Intelligence</div>
+          <hr style="border:none; border-top:1px solid #272a38; margin-bottom:20px;">
+          ${bodyHtml}
+        </div>
+      `;
+      modal.style.display = 'flex';
+      renderLatex(preview);
+      haptics.click();
+    };
+
+    window.togglePdfModal = function() {
+      const modal = document.getElementById('pdf-export-modal');
+      if (modal) modal.style.display = 'none';
+    };
+
+    window.printFormattedPdfReport = function() {
+      const preview = document.getElementById('pdf-preview-container');
+      if (!preview) return;
+      const printWin = window.open('', '_blank');
+      printWin.document.write(`
+        <html>
+          <head>
+            <title>${document.getElementById('pdf-doc-title')?.value || 'Vigyan Report'}</title>
+            <style>
+              body { font-family: 'Inter', sans-serif; background: #ffffff; color: #000000; padding: 30px; }
+              code, pre { font-family: monospace; background: #f4f4f5; padding: 2px 4px; }
+              hr { border: none; border-top: 1px solid #e4e4e7; }
+            </style>
+          </head>
+          <body>
+            ${preview.innerHTML}
+          </body>
+        </html>
+      `);
+      printWin.document.close();
+      printWin.focus();
+      setTimeout(() => { printWin.print(); printWin.close(); }, 500);
+    };
+
+    /* INFERENCE BACKEND ROUTER */
+    window.cycleBackendMode = function() {
+      const order = ['agent_server', 'ollama', 'cloud_api'];
+      const next = order[(order.indexOf(BACKEND_TYPE) + 1) % order.length];
+      BACKEND_TYPE = next;
+      localStorage.setItem('vigyan_backend_type', BACKEND_TYPE);
+      const bText = document.getElementById('hud-backend-text');
+      if (bText) {
+        const names = { agent_server: 'Agent :8085', ollama: 'Ollama :11434', cloud_api: 'Cloud API' };
+        bText.innerText = names[BACKEND_TYPE] || 'Agent :8085';
+      }
+      showToast(`Inference Backend: ${BACKEND_TYPE.toUpperCase()}`);
+      haptics.click();
+    };
+
 
     // Enterprise auto-init on load with settings migration & Hybrid GPU+CPU Telemetry Polling
     window.addEventListener('DOMContentLoaded', () => {
