@@ -982,13 +982,12 @@ def execute_shell_command(command: str, confirmed: bool = False, cwd: Optional[s
 
 
 def select_cascade_model(requested_model: str, query: str) -> Dict[str, Any]:
-    """Sovereign Vigyan AI execution router."""
-    target = requested_model if requested_model in ("vigyan:1.5b", "vigyan:3b", "vigyan:7b-quad-master") else "vigyan:1.5b"
+    """Sovereign Vigyan AI execution router locked to Vigyan AI 1.5B Quad Master."""
     return {
-        "tier": 1 if target == "vigyan:1.5b" else (2 if target == "vigyan:3b" else 3),
-        "model": target,
+        "tier": 1,
+        "model": "vigyan:1.5b",
         "downgraded": False,
-        "reason": f"Vigyan AI {'1.5B Quad Master' if target == 'vigyan:1.5b' else ('3B Quad Master' if target == 'vigyan:3b' else '7B Quad Master')} (Sovereign ChatML architecture)"
+        "reason": "Vigyan AI 1.5B Quad Master (Sovereign ChatML architecture)"
     }
 
 
@@ -1008,27 +1007,6 @@ MODELS_CATALOG = {
         "local_candidates": [
             os.path.expanduser("~/.vigyan/models/vigyan-1.5b-quad-master-q4_k_m.gguf"),
             os.path.expanduser("~/models/vigyan-1.5b-quad-master-q4_k_m.gguf")
-        ],
-        "template": """{{- if .System }}<|im_start|>system
-{{ .System }}<|im_end|>
-{{ end }}{{- range .Messages }}<|im_start|>{{ .Role }}
-{{ .Content }}<|im_end|>
-{{ end }}<|im_start|>assistant
-""",
-        "stop": ["<|im_start|>", "<|im_end|>", "<|endoftext|>"]
-    },
-    "vigyan:3b": {
-        "name": "Vigyan AI 3B Quad Master",
-        "tag": "vigyan:3b",
-        "size_bytes": 1929902592,
-        "size_formatted": "1.9 GB",
-        "recommended_ram": "4 GB+ RAM (Frontier Quad-Master benchmark: 69.0%)",
-        "description": "Proprietary frontier STEM & math quad-master model outperforming 7B models, with 85% Silicon RTL and PhD mathematics accuracy.",
-        "dest_filename": "vigyan-3b-quad-master-q4_k_m.gguf",
-        "hf_url": "https://huggingface.co/shreyansh12183/vigyan-3b-quad-master/resolve/main/vigyan-3b-quad-master-q4_k_m.gguf",
-        "local_candidates": [
-            os.path.expanduser("~/.vigyan/models/vigyan-3b-quad-master-q4_k_m.gguf"),
-            os.path.expanduser("~/models/vigyan-3b-quad-master-q4_k_m.gguf")
         ],
         "template": """{{- if .System }}<|im_start|>system
 {{ .System }}<|im_end|>
@@ -2273,7 +2251,7 @@ class _NeuroSymbolicHTTPHandler(BaseHTTPRequestHandler):
             _emit("cascade_tier", cascade)
             if cascade.get("downgraded"):
                 _emit("tier_downgrade", cascade)
-                _emit("think", f"[RAM Guard]: System has {cascade.get('ram_avail_gb')} GB free (< 3.2 GB required for 7B). Safely routed to {active_model} MoE.\n")
+                _emit("think", f"[RAM Guard]: System routed to {active_model} Sovereign Engine.\n")
 
             try:
                 hybrid = enrichment["hybrid"]
@@ -2309,8 +2287,8 @@ class _NeuroSymbolicHTTPHandler(BaseHTTPRequestHandler):
                     "options": {
                         "num_gpu": hybrid["num_gpu"],
                         "num_thread": hybrid["num_thread"],
-                        "num_ctx": user_ctx or 2048,
-                        "num_batch": 128,
+                        "num_ctx": user_ctx or 1024,
+                        "num_batch": 64,
                         "num_predict": 1024,
                         "temperature": user_temp,
                         "stop": ["<|im_start|>", "<|im_end|>", "<|endoftext|>", "User:", "\n\nUser", "Human:"]
@@ -2318,17 +2296,17 @@ class _NeuroSymbolicHTTPHandler(BaseHTTPRequestHandler):
                     "stream": True,
                 }
 
-                gov_thresh = 92.0
+                gov_thresh = 96.0
                 try:
                     if body.get("governor_threshold_pct"):
                         gov_thresh = float(body.get("governor_threshold_pct"))
                     elif body.get("options", {}).get("governor_threshold_pct"):
                         gov_thresh = float(body.get("options", {}).get("governor_threshold_pct"))
                 except Exception:
-                    gov_thresh = 92.0
+                    gov_thresh = 96.0
 
                 if active_model == "vigyan:1.5b":
-                    gov_thresh = max(90.0, min(95.0, gov_thresh))
+                    gov_thresh = max(94.0, min(97.5, gov_thresh))
                 else:
                     gov_thresh = max(60.0, min(95.0, gov_thresh))
 

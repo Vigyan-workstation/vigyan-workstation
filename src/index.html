@@ -570,59 +570,7 @@
       flex-shrink: 0;
       background: rgba(0, 0, 0, 0.4);
     }
-    .model-selector-btn {
-      background: #10121a;
-      border: 1px solid var(--border);
-      color: #ffffff;
-      font-size: 13.5px;
-      font-weight: 500;
-      padding: 5px 12px;
-      border-radius: 6px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      transition: all 0.15s;
-    }
-    .model-selector-btn:hover {
-      background: #171a26;
-      border-color: var(--border-active);
-    }
-    .model-dropdown-menu {
-      position: absolute;
-      top: 44px;
-      left: 16px;
-      background: #10121a;
-      border: 1px solid var(--border-active);
-      border-radius: 8px;
-      box-shadow: 0 12px 32px rgba(0,0,0,0.8);
-      padding: 4px;
-      display: none;
-      flex-direction: column;
-      gap: 2px;
-      z-index: 60;
-      min-width: 210px;
-    }
-    .model-dropdown-menu.show { display: flex; }
-    .model-opt {
-      padding: 8px 12px;
-      font-size: 13.5px;
-      color: #e4e4e7;
-      border-radius: 5px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .model-opt:hover {
-      background: rgba(255, 255, 255, 0.08);
-      color: #ffffff;
-    }
-    .model-opt.active {
-      background: #ffffff;
-      color: #000000;
-      font-weight: 600;
-    }
+
 
     .chat-scroll-wrapper {
       flex: 1;
@@ -2722,18 +2670,18 @@
           <div class="section-card-header">
             <span class="section-card-title">
               <svg class="icon" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-              Vigyan AI 3B Quad Master Engine
+              Sovereign Model Intelligence
             </span>
             <span class="section-card-badge" id="settings-installed-count">Offline Ready</span>
           </div>
 
           <div class="settings-row-item">
             <div class="settings-row-left">
-              <div class="settings-row-title">Vigyan AI 3B Quad Master</div>
-              <div class="settings-row-sub">1.9 GB GGUF Q4_K_M &bull; ChatML &bull; Frontier 69.0% Benchmark (Outperforming 7B)</div>
+              <div class="settings-row-title">Vigyan AI 1.5B Quad Master</div>
+              <div class="settings-row-sub">1.1 GB GGUF Q4_K_M &bull; ChatML &bull; Air-Gapped Sovereign Inference</div>
             </div>
             <div class="settings-row-right">
-              <span class="section-card-badge" style="background:rgba(16,185,129,0.15); color:#10b981; border:1px solid rgba(16,185,129,0.3); font-weight:600;">Dedicated Engine</span>
+              <span class="section-card-badge" style="background:rgba(16,185,129,0.15); color:#10b981; border:1px solid rgba(16,185,129,0.3); font-weight:600;">● Active</span>
             </div>
           </div>
 
@@ -2807,21 +2755,6 @@
     </div>
   </main>
 
-  <!-- SOVEREIGN MODEL VAULT & DOWNLOADER MODAL -->
-  <div id="model-manager-modal" class="modal-backdrop" onclick="handleModelModalBackdrop(event)">
-    <div class="modal-card">
-      <div class="modal-header">
-        <div class="modal-header-left">
-          <svg class="icon" viewBox="0 0 24 24" style="stroke:var(--accent); width:18px; height:18px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-          <span class="modal-title">Sovereign Model Vault &amp; Downloader</span>
-        </div>
-        <button class="modal-close-btn" onclick="closeModelManagerModal()">&times;</button>
-      </div>
-      <div class="modal-body" id="model-catalog-container">
-        <div style="padding:24px; text-align:center; color:#71717a; font-size:12.5px;">Loading catalog &amp; local models...</div>
-      </div>
-    </div>
-  </div>
 
   <!-- STEM TASK HUB MODAL -->
   <div id="task-catalog-modal" class="modal-backdrop" onclick="if(event.target.id==='task-catalog-modal') toggleTaskCatalog()" style="display:none;">
@@ -2908,11 +2841,8 @@
     /* =========================================================================
        GLOBAL APPLICATION STATE
        ========================================================================= */
-    let currentModel = localStorage.getItem('vigyan_active_model') || 'vigyan:1.5b';
-    if (!currentModel || currentModel === 'olmoe:1b-7b' || currentModel === 'vigyan:7b-quad-master') {
-      currentModel = 'vigyan:1.5b';
-      try { localStorage.setItem('vigyan_active_model', 'vigyan:1.5b'); } catch (e) {}
-    }
+    let currentModel = 'vigyan:1.5b';
+    try { localStorage.setItem('vigyan_active_model', 'vigyan:1.5b'); } catch (e) {}
     let OLLAMA_HOST = localStorage.getItem('vigyan_ollama_host') || 'http://127.0.0.1:11434';
     let API_KEY = localStorage.getItem('vigyan_api_key') || '';
     let BACKEND_TYPE = localStorage.getItem('vigyan_backend_type') || 'agent_server';
@@ -2950,7 +2880,7 @@
       ollama_options: { num_gpu: -1, num_thread: 4, num_ctx: 8192, num_batch: 512 },
       strategy_label: 'HYBRID AUTO'
     };
-    let availableModels = ['vigyan:3b'];
+    let availableModels = ['vigyan:1.5b'];
     let activeDomain = 'lab';
     let activeSessionId = localStorage.getItem('vigyan_active_session') || 'default';
     let sessions = {};
@@ -2994,8 +2924,7 @@
       { id: 'cmd-exec', title: 'Run Shell Command (/cmd)', tag: 'Terminal', run: () => quickFirePrompt('/cmd ls -la') },
       { id: 'cmd-derive', title: 'Calculus & Proof Engine (/derive)', tag: 'Math', run: () => quickFirePrompt('/derive integrate x**3 * exp(-x**2) dx') },
       { id: 'cmd-workspace', title: 'Inspect Workspace Files', tag: 'Agent', run: () => quickFirePrompt('Inspect the files in current directory and summarize repository structure.') },
-      { id: 'cmd-model-vigyan3b', title: 'Switch Model: Vigyan AI 3B Quad Master', tag: 'Model', run: () => changeModel('vigyan:3b') },
-      { id: 'cmd-manage-models', title: 'Open Model Manager & Downloader', tag: 'Model', run: () => openModelManagerModal() },
+      { id: 'cmd-purge-cache', title: 'Purge VRAM & RAM Cache', tag: 'Memory', run: () => purgeModelCache() },
       { id: 'compute-auto', title: 'Performance: Smart Automatic (GPU + CPU)', tag: 'Performance', run: () => setHybridComputeMode('auto') },
       { id: 'compute-gpu', title: 'Performance: Maximum Speed', tag: 'Performance', run: () => setHybridComputeMode('max_gpu') },
       { id: 'compute-eco', title: 'Performance: Battery Saver', tag: 'Performance', run: () => setHybridComputeMode('cpu_eco') },
@@ -3040,34 +2969,19 @@
       haptics.tab();
     }
 
-    /* MODEL DROPDOWN WITH AUTO-DISMISS OUTSIDE CLICK */
-    function toggleModelDropdown() {
-      const menu = document.getElementById('model-dropdown');
-      menu.classList.toggle('show');
-      haptics.click();
-    }
-
-    window.addEventListener('click', (e) => {
-      const dd = document.getElementById('model-dropdown');
-      if (dd && dd.classList.contains('show')) {
-        if (!e.target.closest('#active-model-btn') && !e.target.closest('#model-dropdown')) {
-          dd.classList.remove('show');
-        }
-      }
-    });
+    /* SOVEREIGN MODEL IDENTITY */
+    function toggleModelDropdown() {}
+    function updateModelDropdownUI() {}
     function changeModel(m) {
-      currentModel = m;
-      localStorage.setItem('vigyan_active_model', m);
+      currentModel = 'vigyan:1.5b';
+      localStorage.setItem('vigyan_active_model', 'vigyan:1.5b');
       const curNameEl = document.getElementById('current-model-name');
-      if (curNameEl) curNameEl.textContent = m;
+      if (curNameEl) curNameEl.textContent = 'Vigyan AI 1.5B Quad Master';
       const sideTel = document.getElementById('sidebar-model-telemetry');
-      if (sideTel) sideTel.textContent = m.toUpperCase();
+      if (sideTel) sideTel.textContent = 'VIGYAN 1.5B';
       const wc = document.getElementById('welcome-companion-label');
-      if (wc) wc.innerText = m;
-      const dd = document.getElementById('model-dropdown');
-      if (dd) dd.classList.remove('show');
-      updateModelDropdownUI();
-      showToast(`Active model: ${m}`);
+      if (wc) wc.innerText = 'Vigyan AI 1.5B Quad Master';
+      showToast('Sovereign model: Vigyan AI 1.5B Quad Master');
     }
 
     /* CHAT RENDERING & PERSISTENCE */
@@ -3884,7 +3798,7 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
                   const freeGb = data.ram_avail_gb || '2.4';
                   const downgradeHtml = `<div class="ram-guard-pill" style="display:inline-flex; align-items:center; gap:8px; margin-bottom:10px; padding:4px 10px; background:rgba(245,158,11,0.1); border:1px solid rgba(245,158,11,0.25); border-radius:6px; font-size:11px; color:#fbbf24;">
                     <span>⚡ RAM Guard: ${freeGb} GB free &bull; Auto-routed to Sovereign MoE</span>
-                    <button onclick="evictAndRetryModel('${data.target_model || 'vigyan:3b'}')" style="background:rgba(245,158,11,0.2); border:1px solid rgba(245,158,11,0.4); color:#fff; border-radius:4px; padding:2px 7px; font-size:10px; cursor:pointer; font-weight:600;">Purge &amp; Retry</button>
+                    <button onclick="evictAndRetryModel('${data.target_model || 'vigyan:1.5b'}')" style="background:rgba(245,158,11,0.2); border:1px solid rgba(245,158,11,0.4); color:#fff; border-radius:4px; padding:2px 7px; font-size:10px; cursor:pointer; font-weight:600;">Purge &amp; Retry</button>
                   </div><br>`;
                   assistantMsg.content = downgradeHtml + assistantMsg.content;
                   if (contentEl) contentEl.innerHTML = formatMessageContent(assistantMsg.content);
@@ -5104,9 +5018,8 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
         if (sess && sess.messages.length > 0) {
           const lastUser = [...sess.messages].reverse().find(m => m.role === 'user');
           if (lastUser) {
-            currentModel = (targetModel && targetModel === 'vigyan:3b') ? targetModel : 'vigyan:3b';
+            currentModel = 'vigyan:1.5b';
             localStorage.setItem('vigyan_active_model', currentModel);
-            updateModelDropdownUI();
             const input = document.getElementById('chat-prompt') || document.getElementById('chat-input');
             if (input) input.value = lastUser.content;
             handleSendOrStop();
@@ -5205,221 +5118,15 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
     }
 
     /* =========================================================================
-       SOVEREIGN MODEL VAULT & HUGGINGFACE RESUMABLE DOWNLOADER
+       SOVEREIGN MEMORY CACHE PURGE
        ========================================================================= */
-    let modelDownloadPollers = {};
-
-    function openModelManagerModal() {
-      const modal = document.getElementById('model-manager-modal');
-      if (modal) {
-        modal.classList.add('show');
-        haptics.click();
-        refreshModelCatalogUI();
-      }
-    }
-
-    function closeModelManagerModal() {
-      const modal = document.getElementById('model-manager-modal');
-      if (modal) {
-        modal.classList.remove('show');
-        haptics.click();
-      }
-    }
-
-    function handleModelModalBackdrop(e) {
-      if (e.target.id === 'model-manager-modal') {
-        closeModelManagerModal();
-      }
-    }
-
-    async function refreshModelCatalogUI() {
-      const container = document.getElementById('model-catalog-container');
-      if (!container) return;
-
-      try {
-        const [catResp, tagsResp] = await Promise.all([
-          fetch(`${AGENT_HOST}/api/models/catalog`).catch(() => null),
-          fetch(`${OLLAMA_HOST}/api/tags`).catch(() => null)
-        ]);
-
-        let catalog = {};
-        let downloads = {};
-        if (catResp && catResp.ok) {
-          const catData = await catResp.json();
-          catalog = catData.catalog || {};
-          downloads = catData.downloads || {};
-        }
-
-        let installedTags = new Set();
-        if (tagsResp && tagsResp.ok) {
-          const tagsData = await tagsResp.json();
-          (tagsData.models || []).forEach(m => installedTags.add(m.name));
-        }
-
-        const keys = Object.keys(catalog);
-        if (keys.length === 0) {
-          container.innerHTML = `
-            <div style="padding:24px; text-align:center; color:#71717a; font-size:13px;">
-              No models available in catalog. Ensure Sovereign Bridge (:8085) is active.
-            </div>
-          `;
-          return;
-        }
-
-        let html = '';
-        keys.forEach(tag => {
-          const item = catalog[tag];
-          const isInstalled = installedTags.has(tag);
-          const dl = downloads[tag] || {};
-          const isDownloading = dl.status === 'downloading' || dl.status === 'starting' || dl.status === 'registering';
-          const isActive = tag === currentModel && isInstalled;
-
-          html += `
-            <div class="model-card-item ${isInstalled ? 'installed' : ''}" id="card-model-${tag.replace(/[^a-zA-Z0-9]/g, '_')}">
-              <div class="model-header-row">
-                <div class="model-name">
-                  <span>${item.name}</span>
-                  <span style="font-size:11px; font-weight:normal; color:#71717a;">(${tag})</span>
-                </div>
-                <div>
-                  ${isActive ? '<span class="model-badge active">Active Model</span>' : 
-                    (isInstalled ? '<span class="model-badge installed">Installed &bull; Offline</span>' : 
-                     (isDownloading ? `<span class="model-badge" style="background:rgba(245,158,11,0.15); color:#fbbf24; border:1px solid rgba(245,158,11,0.3);">${dl.status}...</span>` : 
-                      '<span class="model-badge available">Not Installed</span>'))}
-                </div>
-              </div>
-              <div class="model-desc">${item.description}</div>
-              <div class="model-meta">
-                <span><strong>Size:</strong> ${item.size_formatted}</span>
-                <span><strong>RAM:</strong> ${item.recommended_ram}</span>
-              </div>
-          `;
-
-          if (isDownloading) {
-            const pct = Math.round(dl.progress_pct || 0);
-            const speed = dl.speed_mbps ? `${dl.speed_mbps.toFixed(1)} MB/s` : '';
-            const mbDownloaded = dl.downloaded_bytes ? (dl.downloaded_bytes / (1024 * 1024)).toFixed(0) : 0;
-            const mbTotal = dl.total_bytes ? (dl.total_bytes / (1024 * 1024)).toFixed(0) : 0;
-            html += `
-              <div style="margin-top:4px;">
-                <div style="display:flex; justify-content:space-between; font-size:11px; color:#a1a1aa; margin-bottom:4px;">
-                  <span>Downloading weights (${mbDownloaded} / ${mbTotal} MB)</span>
-                  <span>${pct}% ${speed ? '&bull; ' + speed : ''}</span>
-                </div>
-                <div class="model-progress-bar-bg">
-                  <div class="model-progress-bar-fill" style="width:${pct}%"></div>
-                </div>
-              </div>
-              <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:4px;">
-                <button class="btn-action" style="background:rgba(239,68,68,0.15); border:1px solid rgba(239,68,68,0.3); color:#f87171; font-size:11.5px; padding:4px 12px;" onclick="cancelModelDownload('${tag}')">Cancel</button>
-              </div>
-            `;
-            startPollingDownload(tag);
-          } else if (isInstalled) {
-            html += `
-              <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:4px;">
-                ${isActive ? 
-                  `<button class="btn-action" style="background:rgba(255,255,255,0.08); color:#a1a1aa; cursor:default; font-size:11.5px; padding:5px 14px;" disabled>Currently Active</button>` : 
-                  `<button class="btn-action" style="background:#ffffff; color:#000000; font-weight:600; font-size:11.5px; padding:5px 14px;" onclick="changeModel('${tag}'); closeModelManagerModal();">Set as Active Model</button>`}
-              </div>
-            `;
-          } else {
-            html += `
-              <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:4px;">
-                <button class="btn-action" style="background:var(--accent); color:#ffffff; font-weight:600; font-size:11.5px; padding:6px 16px; border:none; border-radius:6px; cursor:pointer;" onclick="startModelDownload('${tag}')">
-                  <svg class="icon" viewBox="0 0 24 24" style="width:12px; height:12px; stroke:#ffffff; margin-right:4px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                  Download (${item.size_formatted})
-                </button>
-              </div>
-            `;
-          }
-
-          html += `</div>`;
-        });
-
-        container.innerHTML = html;
-      } catch (err) {
-        container.innerHTML = `<div style="padding:20px; text-align:center; color:#ef4444; font-size:12px;">Failed to load catalog: ${err.message}</div>`;
-      }
-    }
-
-    async function startModelDownload(tag) {
-      const targetTag = tag || 'vigyan:3b';
-      showToast(`Initiating sovereign download of ${targetTag}...`);
-      haptics.click();
-      try {
-        const resp = await fetch(`${AGENT_HOST}/api/models/download`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ model_id: targetTag })
-        });
-        const res = await resp.json();
-        if (res.success) {
-          showToast(`Download started for ${targetTag}`);
-          startPollingDownload(targetTag);
-          refreshModelCatalogUI();
-        } else {
-          showToast(`Download notice: ${res.error || res.message}`);
-        }
-      } catch (err) {
-        showToast(`Could not start download: ${err.message}`);
-      }
-    }
-
-    async function cancelModelDownload(tag) {
-      const targetTag = tag || 'vigyan:3b';
-      haptics.click();
-      try {
-        await fetch(`${AGENT_HOST}/api/models/download/cancel`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ tag: targetTag })
-        });
-        if (modelDownloadPollers[targetTag]) {
-          clearInterval(modelDownloadPollers[targetTag]);
-          delete modelDownloadPollers[targetTag];
-        }
-        showToast(`Download cancelled for ${targetTag}`);
-        refreshModelCatalogUI();
-      } catch (err) {
-        showToast(`Cancel notice: ${err.message}`);
-      }
-    }
-
-    function startPollingDownload(tag) {
-      const targetTag = tag || 'vigyan:3b';
-      if (modelDownloadPollers[targetTag]) return;
-      modelDownloadPollers[targetTag] = setInterval(async () => {
-        try {
-          const resp = await fetch(`${AGENT_HOST}/api/models/download/status?tag=${encodeURIComponent(targetTag)}`);
-          if (!resp.ok) return;
-          const st = await resp.json();
-          if (st.status === 'ready') {
-            clearInterval(modelDownloadPollers[targetTag]);
-            delete modelDownloadPollers[targetTag];
-            showToast(`Model ${targetTag} installed and ready!`);
-            haptics.success();
-            await checkOllamaConnection();
-            refreshModelCatalogUI();
-          } else if (st.status === 'cancelled' || st.status === 'error') {
-            clearInterval(modelDownloadPollers[targetTag]);
-            delete modelDownloadPollers[targetTag];
-            if (st.status === 'error') showToast(`Error: ${st.error}`);
-            refreshModelCatalogUI();
-          } else {
-            const card = document.getElementById(`card-model-${targetTag.replace(/[^a-zA-Z0-9]/g, '_')}`);
-            if (card) {
-              const fill = card.querySelector('.model-progress-bar-fill');
-              if (fill) fill.style.width = `${Math.round(st.progress_pct || 0)}%`;
-            }
-          }
-        } catch (e) {}
-      }, 1200);
-    }
+    function openModelManagerModal() { switchTab('settings'); }
+    function closeModelManagerModal() {}
+    function handleModelModalBackdrop() {}
 
     async function purgeModelCache() {
       try {
-        const m = currentModel || 'vigyan:3b';
+        const m = currentModel || 'vigyan:1.5b';
         showToast(`Purging memory cache for ${m}...`);
         const resp = await fetch(`${AGENT_HOST}/api/models/evict`, {
           method: 'POST',
@@ -5434,11 +5141,6 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
       } catch (err) {
         showToast('Purge notice: ' + err.message);
       }
-    }
-
-    async function downloadSovereignModel(name) {
-      await startModelDownload(name || 'vigyan:3b');
-      openModelManagerModal();
     }
 
     /* =========================================================================
@@ -5826,85 +5528,7 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
       }
     }
 
-    async function pullOllamaModel() {
-      const inp = document.getElementById('vault-pull-input') || document.getElementById('custom-ollama-tag-input');
-      const tag = (inp ? inp.value : '').trim();
-      if (!tag) {
-        showToast('Enter a model name to download');
-        return;
-      }
-      await downloadSovereignModel(tag);
-    }
 
-    function updateModelDropdownUI() {
-      const menu = document.getElementById('model-dropdown');
-      if (!menu) return;
-      menu.innerHTML = '';
-
-      const h1 = document.createElement('div');
-      h1.style.cssText = 'font-size: 10px; font-weight: 700; color: #a1a1aa; padding: 6px 10px 4px 10px; letter-spacing: 0.08em; text-transform: uppercase;';
-      h1.innerText = 'Vigyan Sovereign Suite';
-      menu.appendChild(h1);
-
-      // 1. Vigyan AI 1.5B Quad Master (Default)
-      const is15Installed = availableModels.includes('vigyan:1.5b');
-      const opt15 = document.createElement('div');
-      opt15.className = `model-opt ${currentModel === 'vigyan:1.5b' ? 'active' : ''}`;
-      opt15.innerHTML = `
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-          <div style="font-weight:600; color:#ffffff;">vigyan:1.5b</div>
-          <span style="font-size:10px; padding:1px 6px; border-radius:3px; background:${is15Installed ? 'rgba(16,185,129,0.15)' : 'rgba(245,158,11,0.15)'}; color:${is15Installed ? '#10b981' : '#fbbf24'}; font-weight:600;">
-            ${is15Installed ? 'Active' : 'Download Needed'}
-          </span>
-        </div>
-        <div style="font-size:10.5px; color:#71717a; margin-top:2px;">Vigyan AI 1.5B Quad Master (1.1 GB Sovereign STEM)</div>
-      `;
-      opt15.onclick = () => {
-        if (is15Installed) {
-          changeModel('vigyan:1.5b');
-        } else {
-          openModelManagerModal();
-        }
-      };
-      menu.appendChild(opt15);
-
-      // 2. Vigyan AI 3B Quad Master
-      const is3Installed = availableModels.includes('vigyan:3b');
-      const opt3 = document.createElement('div');
-      opt3.className = `model-opt ${currentModel === 'vigyan:3b' ? 'active' : ''}`;
-      opt3.innerHTML = `
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-          <div style="font-weight:600; color:#ffffff;">vigyan:3b</div>
-          <span style="font-size:10px; padding:1px 6px; border-radius:3px; background:${is3Installed ? 'rgba(16,185,129,0.15)' : 'rgba(245,158,11,0.15)'}; color:${is3Installed ? '#10b981' : '#fbbf24'}; font-weight:600;">
-            ${is3Installed ? 'Installed' : 'Optional'}
-          </span>
-        </div>
-        <div style="font-size:10.5px; color:#71717a; margin-top:2px;">Vigyan AI 3B Quad Master (1.9 GB Sovereign STEM)</div>
-      `;
-      opt3.onclick = () => {
-        if (is3Installed) {
-          changeModel('vigyan:3b');
-        } else {
-          openModelManagerModal();
-        }
-      };
-      menu.appendChild(opt3);
-
-      // Manage & Download Model Action Button
-      const manageBtn = document.createElement('div');
-      manageBtn.className = 'model-opt';
-      manageBtn.style.cssText = 'border-top: 1px solid rgba(255,255,255,0.08); color: var(--accent); font-weight: 600; display: flex; align-items: center; gap: 8px; margin-top: 6px; padding-top: 8px; cursor: pointer;';
-      manageBtn.innerHTML = `
-        <svg class="icon" viewBox="0 0 24 24" style="width:13px; height:13px; stroke:var(--accent);"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-        <span>Model Vault &amp; Downloader...</span>
-      `;
-      manageBtn.onclick = () => {
-        const dd = document.getElementById('model-dropdown');
-        if (dd) dd.classList.remove('show');
-        openModelManagerModal();
-      };
-      menu.appendChild(manageBtn);
-    }
 
     function saveSettings() {
       const temp = document.getElementById('setting-temp')?.value || '0.05';
