@@ -18,6 +18,8 @@ import shutil
 import signal
 import threading
 import subprocess
+import urllib.request
+import urllib.parse
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from typing import Dict, Any, List, Optional
 
@@ -846,16 +848,21 @@ class RAMGovernor:
         self.peak_ram_pct = 0.0
 
         def _watchdog():
+            consecutive_over = 0
             while self.running:
                 try:
                     pct = psutil.virtual_memory().percent if psutil else 0.0
                     if pct > self.peak_ram_pct:
                         self.peak_ram_pct = pct
-                    if pct >= self.threshold_pct and not self.tripped:
+                    if pct >= self.threshold_pct:
+                        consecutive_over += 1
+                    else:
+                        consecutive_over = 0
+
+                    if consecutive_over >= 3 and not self.tripped:
                         self.tripped = True
-                        print(f"⚠️ [RAM GOVERNOR] CRITICAL TRIPWIRE: RAM reached {pct:.1f}% >= {self.threshold_pct}%. Aborting & evicting model {active_model}!")
+                        print(f"⚠️ [RAM GOVERNOR] CRITICAL TRIPWIRE: RAM reached {pct:.1f}% >= {self.threshold_pct}% sustained. Aborting & evicting model {active_model}!")
                         try:
-                            import urllib.request
                             evict_req = urllib.request.Request(
                                 "http://127.0.0.1:11434/api/generate",
                                 headers={"Content-Type": "application/json"},
@@ -2297,15 +2304,19 @@ class _NeuroSymbolicHTTPHandler(BaseHTTPRequestHandler):
                     "stream": True,
                 }
 
-                gov_thresh = 88.0
+                gov_thresh = 92.0
                 try:
                     if body.get("governor_threshold_pct"):
                         gov_thresh = float(body.get("governor_threshold_pct"))
                     elif body.get("options", {}).get("governor_threshold_pct"):
                         gov_thresh = float(body.get("options", {}).get("governor_threshold_pct"))
                 except Exception:
-                    gov_thresh = 88.0
-                gov_thresh = max(60.0, min(95.0, gov_thresh))
+                    gov_thresh = 92.0
+
+                if active_model == "vigyan:3b":
+                    gov_thresh = max(93.0, min(96.0, gov_thresh))
+                else:
+                    gov_thresh = max(60.0, min(95.0, gov_thresh))
 
                 governor_tripped = [False]
                 def _on_ram_trip(pct):
@@ -2350,7 +2361,7 @@ class _NeuroSymbolicHTTPHandler(BaseHTTPRequestHandler):
 
                 accumulated_text = ""
                 try:
-                    with urllib.request.urlopen(req, timeout=60) as resp:
+                    with urllib.request.urlopen(req, timeout=180) as resp:
                         hb_stop.set()
                         _emit("status", {"type": "ready", "message": "Inference stream active"})
                         for line in resp:

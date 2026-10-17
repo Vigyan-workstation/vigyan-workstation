@@ -3752,7 +3752,7 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
         let resp;
         try {
           if (BACKEND_TYPE === 'agent_server') {
-            const govThresh = parseFloat(localStorage.getItem('vigyan_governor_threshold') || '85');
+            const govThresh = parseFloat(localStorage.getItem('vigyan_governor_threshold') || '92');
             resp = await fetch(`${AGENT_HOST}/api/chat`, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
