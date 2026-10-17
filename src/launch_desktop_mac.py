@@ -57,6 +57,13 @@ def launch_mac():
     except Exception as exc:
         print(f"[Vigyan Pro] Notice: Ollama supervisor started or running externally: {exc}", file=sys.stderr)
 
+    # 2.5 Ensure Vigyan AI 1.5B Quad Master is registered into Ollama
+    try:
+        from launch_desktop import ensure_vigyan_1_5b_registered
+        ensure_vigyan_1_5b_registered()
+    except Exception as exc:
+        print(f"[Vigyan Pro] Sovereign model registration notice: {exc}", file=sys.stderr)
+
     target_url = f"http://127.0.0.1:{port}/" if bridge_started else f"file://{os.path.abspath(index_path)}"
 
     # 3. Launch Native Cocoa WKWebView via pywebview

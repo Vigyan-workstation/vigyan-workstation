@@ -33,10 +33,9 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            dist/vigyan-pro_*_amd64.deb
-            dist/vigyan-pro_*_linux_x86_64.tar.gz
-            dist/vigyan-pro_*_windows_x86_64.zip
-            dist/vigyan-pro_*_macos_universal.tar.gz
+            dist/vigyan-pro_*.deb
+            dist/vigyan-pro_*.tar.gz
+            dist/vigyan-pro_*.zip
             dist/SHA256SUMS
           name: "Vigyan Pro Desktop ${{ github.ref_name }}"
           draft: false

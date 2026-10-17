@@ -2,23 +2,42 @@
 # ==============================================================================
 # Vigyan Pro Desktop - Multi-OS Release Packaging Script
 # Builds packages for Linux (.deb, .tar.gz), Windows (.zip), and macOS (.tar.gz)
+# Supports:
+#   - Lightweight archives (~3.8 MB)
+#   - Full Standalone Bundles with 1.1 GB Quad Master weights (--bundle-weights)
 # ==============================================================================
 
 set -e
 
-RAW_VERSION="${1:-2.7.0}"
+RAW_VERSION="2.7.0"
+BUNDLE_WEIGHTS=false
+
+for arg in "$@"; do
+    if [ "$arg" = "--bundle-weights" ] || [ "$arg" = "--bundled" ]; then
+        BUNDLE_WEIGHTS=true
+    elif [[ "$arg" =~ ^v?[0-9]+\.[0-9]+\.[0-9]+ ]]; then
+        RAW_VERSION="$arg"
+    fi
+done
+
 VERSION="${RAW_VERSION#v}"
 
 echo "========================================================"
 echo "  Building Vigyan Pro Multi-OS Desktop Release v${VERSION}"
+if [ "$BUNDLE_WEIGHTS" = true ]; then
+    echo "  Mode: Full Standalone Bundles (with 1.1GB Sovereign Model)"
+else
+    echo "  Mode: Standard Lightweight Packages"
+fi
 echo "========================================================"
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$SCRIPT_DIR"
 
 DIST_DIR="$SCRIPT_DIR/dist"
-rm -rf "$DIST_DIR"
 mkdir -p "$DIST_DIR"
+
+MODEL_SOURCE="$HOME/.vigyan/models/vigyan-1.5b-quad-master-q4_k_m.gguf"
 
 # ------------------------------------------------------------------------------
 # 1. BUILD DEBIAN (.deb) PACKAGE FOR LINUX
@@ -123,7 +142,7 @@ rm -rf "$DEB_STAGE"
 echo "✓ Debian Package Built: $DEB_OUTPUT"
 
 # ------------------------------------------------------------------------------
-# 2. BUILD PORTABLE LINUX ARCHIVE (.tar.gz)
+# 2. BUILD LINUX PORTABLE ARCHIVE (.tar.gz)
 # ------------------------------------------------------------------------------
 echo "==> Staging Portable Linux Archive..."
 TAR_STAGE="$SCRIPT_DIR/.build_tar/vigyan-pro"
@@ -144,11 +163,20 @@ chmod +x "$TAR_STAGE/launch.sh"
 
 TAR_OUTPUT="$DIST_DIR/vigyan-pro_${VERSION}_linux_x86_64.tar.gz"
 tar -czf "$TAR_OUTPUT" -C "$SCRIPT_DIR/.build_tar" vigyan-pro
+echo "✓ Linux Lightweight Built: $TAR_OUTPUT"
+
+if [ "$BUNDLE_WEIGHTS" = true ] && [ -f "$MODEL_SOURCE" ]; then
+    echo "==> Bundling sovereign model into Linux Standalone package..."
+    mkdir -p "$TAR_STAGE/models"
+    cp "$MODEL_SOURCE" "$TAR_STAGE/models/"
+    TAR_BUNDLED_OUTPUT="$DIST_DIR/vigyan-pro_${VERSION}_linux_x86_64_bundled.tar.gz"
+    tar -czf "$TAR_BUNDLED_OUTPUT" -C "$SCRIPT_DIR/.build_tar" vigyan-pro
+    echo "✓ Linux Standalone (with model) Built: $TAR_BUNDLED_OUTPUT"
+fi
 rm -rf "$SCRIPT_DIR/.build_tar"
-echo "✓ Linux Portable Built: $TAR_OUTPUT"
 
 # ------------------------------------------------------------------------------
-# 3. BUILD PORTABLE WINDOWS ARCHIVE (.zip)
+# 3. BUILD WINDOWS PORTABLE ARCHIVE (.zip)
 # ------------------------------------------------------------------------------
 echo "==> Staging Portable Windows Archive..."
 WIN_STAGE="$SCRIPT_DIR/.build_win/vigyan-pro"
@@ -170,17 +198,26 @@ WIN_OUTPUT="$DIST_DIR/vigyan-pro_${VERSION}_windows_x86_64.zip"
 if which zip >/dev/null 2>&1; then
     (cd "$SCRIPT_DIR/.build_win" && zip -r -q "$WIN_OUTPUT" vigyan-pro)
 else
-    # Fallback to python zipfile
-    python3 -c "
-import shutil
-shutil.make_archive('$DIST_DIR/vigyan-pro_${VERSION}_windows_x86_64', 'zip', '$SCRIPT_DIR/.build_win', 'vigyan-pro')
-"
+    python3 -c "import shutil; shutil.make_archive('$DIST_DIR/vigyan-pro_${VERSION}_windows_x86_64', 'zip', '$SCRIPT_DIR/.build_win', 'vigyan-pro')"
+fi
+echo "✓ Windows Lightweight Built: $WIN_OUTPUT"
+
+if [ "$BUNDLE_WEIGHTS" = true ] && [ -f "$MODEL_SOURCE" ]; then
+    echo "==> Bundling sovereign model into Windows Standalone package..."
+    mkdir -p "$WIN_STAGE/models"
+    cp "$MODEL_SOURCE" "$WIN_STAGE/models/"
+    WIN_BUNDLED_OUTPUT="$DIST_DIR/vigyan-pro_${VERSION}_windows_x86_64_bundled.zip"
+    if which zip >/dev/null 2>&1; then
+        (cd "$SCRIPT_DIR/.build_win" && zip -r -q "$WIN_BUNDLED_OUTPUT" vigyan-pro)
+    else
+        python3 -c "import shutil; shutil.make_archive('$DIST_DIR/vigyan-pro_${VERSION}_windows_x86_64_bundled', 'zip', '$SCRIPT_DIR/.build_win', 'vigyan-pro')"
+    fi
+    echo "✓ Windows Standalone (with model) Built: $WIN_BUNDLED_OUTPUT"
 fi
 rm -rf "$SCRIPT_DIR/.build_win"
-echo "✓ Windows Portable Built: $WIN_OUTPUT"
 
 # ------------------------------------------------------------------------------
-# 4. BUILD PORTABLE MACOS ARCHIVE (.tar.gz)
+# 4. BUILD MACOS PORTABLE ARCHIVE (.tar.gz)
 # ------------------------------------------------------------------------------
 echo "==> Staging Portable macOS Archive..."
 MAC_STAGE="$SCRIPT_DIR/.build_mac/vigyan-pro"
@@ -197,13 +234,29 @@ exec "$DIR/src/launch_mac.sh" "$@"
 EOF
 chmod +x "$MAC_STAGE/launch.sh"
 
+cat <<'EOF' > "$MAC_STAGE/Vigyan-Pro.command"
+#!/usr/bin/env bash
+DIR="$(cd "$(dirname "$0")" && pwd)"
+exec "$DIR/src/launch_mac.sh" "$@"
+EOF
+chmod +x "$MAC_STAGE/Vigyan-Pro.command"
+
 MAC_OUTPUT="$DIST_DIR/vigyan-pro_${VERSION}_macos_universal.tar.gz"
 tar -czf "$MAC_OUTPUT" -C "$SCRIPT_DIR/.build_mac" vigyan-pro
+echo "✓ macOS Lightweight Built: $MAC_OUTPUT"
+
+if [ "$BUNDLE_WEIGHTS" = true ] && [ -f "$MODEL_SOURCE" ]; then
+    echo "==> Bundling sovereign model into macOS Standalone package..."
+    mkdir -p "$MAC_STAGE/models"
+    cp "$MODEL_SOURCE" "$MAC_STAGE/models/"
+    MAC_BUNDLED_OUTPUT="$DIST_DIR/vigyan-pro_${VERSION}_macos_universal_bundled.tar.gz"
+    tar -czf "$MAC_BUNDLED_OUTPUT" -C "$SCRIPT_DIR/.build_mac" vigyan-pro
+    echo "✓ macOS Standalone (with model) Built: $MAC_BUNDLED_OUTPUT"
+fi
 rm -rf "$SCRIPT_DIR/.build_mac"
-echo "✓ macOS Portable Built: $MAC_OUTPUT"
 
 # ------------------------------------------------------------------------------
-# 5. GENERATE CRYPTOGRAPHIC SHA-256 CHECKSUMS FOR ENTERPRISE AUDIT
+# 5. GENERATE CRYPTOGRAPHIC SHA-256 CHECKSUMS
 # ------------------------------------------------------------------------------
 echo "==> Generating Cryptographic SHA-256 Checksums for Enterprise Security Audit..."
 (cd "$DIST_DIR" && sha256sum vigyan-pro_* > SHA256SUMS)

@@ -1005,8 +1005,11 @@ MODELS_CATALOG = {
         "dest_filename": "vigyan-1.5b-quad-master-q4_k_m.gguf",
         "hf_url": "https://huggingface.co/shreyansh12183/vigyan-1.5b-quad-master/resolve/main/vigyan-1.5b-quad-master-q4_k_m.gguf",
         "local_candidates": [
+            os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "models", "vigyan-1.5b-quad-master-q4_k_m.gguf"),
+            os.path.join(os.path.dirname(os.path.abspath(__file__)), "models", "vigyan-1.5b-quad-master-q4_k_m.gguf"),
             os.path.expanduser("~/.vigyan/models/vigyan-1.5b-quad-master-q4_k_m.gguf"),
-            os.path.expanduser("~/models/vigyan-1.5b-quad-master-q4_k_m.gguf")
+            os.path.expanduser("~/models/vigyan-1.5b-quad-master-q4_k_m.gguf"),
+            os.path.expanduser("~/Downloads/vigyan-1.5b-quad-master-q4_k_m.gguf")
         ],
         "template": """{{- if .System }}<|im_start|>system
 {{ .System }}<|im_end|>
@@ -1033,26 +1036,44 @@ def ensure_vigyan_1_5b_registered() -> bool:
     gguf_path = os.path.join(target_dir, "vigyan-1.5b-quad-master-q4_k_m.gguf")
 
     if not os.path.isfile(gguf_path) or os.path.getsize(gguf_path) < 500_000_000:
-        token_path = os.path.expanduser("~/.cache/huggingface/token")
-        hf_token = ""
-        if os.path.isfile(token_path):
+        # Check bundled / local candidate paths first
+        candidates = MODELS_CATALOG.get("vigyan:1.5b", {}).get("local_candidates", [])
+        found_local = None
+        for cand in candidates:
+            if cand and os.path.isfile(cand) and os.path.getsize(cand) >= 500_000_000:
+                found_local = cand
+                break
+
+        if found_local:
+            print(f"[INFO] Discovered bundled sovereign model weights at: {found_local}", file=sys.stderr)
+            if os.path.abspath(found_local) != os.path.abspath(gguf_path):
+                try:
+                    import shutil
+                    print("[INFO] Importing sovereign model into ~/.vigyan/models/...", file=sys.stderr)
+                    shutil.copy2(found_local, gguf_path)
+                except Exception:
+                    gguf_path = found_local
+        else:
+            token_path = os.path.expanduser("~/.cache/huggingface/token")
+            hf_token = ""
+            if os.path.isfile(token_path):
+                try:
+                    with open(token_path, "r", encoding="utf-8") as f:
+                        hf_token = f.read().strip()
+                except Exception:
+                    pass
             try:
-                with open(token_path, "r", encoding="utf-8") as f:
-                    hf_token = f.read().strip()
-            except Exception:
-                pass
-        try:
-            from huggingface_hub import hf_hub_download
-            print("[INFO] Auto-repair: Downloading vigyan-1.5b-quad-master from Hugging Face...", file=sys.stderr)
-            hf_hub_download(
-                repo_id="shreyansh12183/vigyan-1.5b-quad-master",
-                filename="vigyan-1.5b-quad-master-q4_k_m.gguf",
-                token=hf_token or None,
-                local_dir=target_dir
-            )
-        except Exception as e:
-            print(f"[WARN] HF auto-repair download error: {e}", file=sys.stderr)
-            return False
+                from huggingface_hub import hf_hub_download
+                print("[INFO] Auto-repair: Downloading vigyan-1.5b-quad-master from Hugging Face...", file=sys.stderr)
+                hf_hub_download(
+                    repo_id="shreyansh12183/vigyan-1.5b-quad-master",
+                    filename="vigyan-1.5b-quad-master-q4_k_m.gguf",
+                    token=hf_token or None,
+                    local_dir=target_dir
+                )
+            except Exception as e:
+                print(f"[WARN] HF auto-repair download error: {e}", file=sys.stderr)
+                return False
 
     modelfile_path = os.path.join(target_dir, "Modelfile.vigyan-1.5b")
     modelfile_content = (
