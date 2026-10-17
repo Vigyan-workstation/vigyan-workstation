@@ -983,12 +983,12 @@ def execute_shell_command(command: str, confirmed: bool = False, cwd: Optional[s
 
 def select_cascade_model(requested_model: str, query: str) -> Dict[str, Any]:
     """Sovereign Vigyan AI execution router."""
-    target = requested_model if requested_model in ("vigyan:3b", "vigyan:7b-quad-master") else "vigyan:3b"
+    target = requested_model if requested_model in ("vigyan:1.5b", "vigyan:3b", "vigyan:7b-quad-master") else "vigyan:1.5b"
     return {
-        "tier": 1 if target == "vigyan:3b" else 2,
+        "tier": 1 if target == "vigyan:1.5b" else (2 if target == "vigyan:3b" else 3),
         "model": target,
         "downgraded": False,
-        "reason": f"Vigyan AI {'3B Quad Master' if target == 'vigyan:3b' else '7B Quad Master'} (Sovereign ChatML architecture)"
+        "reason": f"Vigyan AI {'1.5B Quad Master' if target == 'vigyan:1.5b' else ('3B Quad Master' if target == 'vigyan:3b' else '7B Quad Master')} (Sovereign ChatML architecture)"
     }
 
 
@@ -996,6 +996,27 @@ def select_cascade_model(requested_model: str, query: str) -> Dict[str, Any]:
 # 3.1 VIGYAN AI SOVEREIGN MODEL REGISTRY & DOWNLOAD MANAGER
 # ==============================================================================
 MODELS_CATALOG = {
+    "vigyan:1.5b": {
+        "name": "Vigyan AI 1.5B Quad Master",
+        "tag": "vigyan:1.5b",
+        "size_bytes": 1181116006,
+        "size_formatted": "1.1 GB",
+        "recommended_ram": "2 GB+ RAM (Ultra-fast edge inference, zero latency)",
+        "description": "Proprietary high-velocity STEM & math quad-master model with instant responses, ChatML formatting, and zero-hallucination calculus.",
+        "dest_filename": "vigyan-1.5b-quad-master-q4_k_m.gguf",
+        "hf_url": "https://huggingface.co/shreyansh12183/vigyan-1.5b-quad-master/resolve/main/vigyan-1.5b-quad-master-q4_k_m.gguf",
+        "local_candidates": [
+            os.path.expanduser("~/.vigyan/models/vigyan-1.5b-quad-master-q4_k_m.gguf"),
+            os.path.expanduser("~/models/vigyan-1.5b-quad-master-q4_k_m.gguf")
+        ],
+        "template": """{{- if .System }}<|im_start|>system
+{{ .System }}<|im_end|>
+{{ end }}{{- range .Messages }}<|im_start|>{{ .Role }}
+{{ .Content }}<|im_end|>
+{{ end }}<|im_start|>assistant
+""",
+        "stop": ["<|im_start|>", "<|im_end|>", "<|endoftext|>"]
+    },
     "vigyan:3b": {
         "name": "Vigyan AI 3B Quad Master",
         "tag": "vigyan:3b",
@@ -1020,10 +1041,10 @@ MODELS_CATALOG = {
 }
 
 
-def ensure_vigyan_3b_registered() -> bool:
-    """Autonomous verifier and auto-repair for Vigyan AI 3B Quad Master in Ollama."""
+def ensure_vigyan_1_5b_registered() -> bool:
+    """Autonomous verifier and auto-repair for Vigyan AI 1.5B Quad Master in Ollama."""
     try:
-        check = subprocess.run(["ollama", "show", "vigyan:3b"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=2.0)
+        check = subprocess.run(["ollama", "show", "vigyan:1.5b"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=2.0)
         if check.returncode == 0:
             return True
     except Exception:
@@ -1031,9 +1052,9 @@ def ensure_vigyan_3b_registered() -> bool:
 
     target_dir = os.path.expanduser("~/.vigyan/models")
     os.makedirs(target_dir, exist_ok=True)
-    gguf_path = os.path.join(target_dir, "vigyan-3b-quad-master-q4_k_m.gguf")
+    gguf_path = os.path.join(target_dir, "vigyan-1.5b-quad-master-q4_k_m.gguf")
 
-    if not os.path.isfile(gguf_path) or os.path.getsize(gguf_path) < 1_000_000_000:
+    if not os.path.isfile(gguf_path) or os.path.getsize(gguf_path) < 500_000_000:
         token_path = os.path.expanduser("~/.cache/huggingface/token")
         hf_token = ""
         if os.path.isfile(token_path):
@@ -1044,10 +1065,10 @@ def ensure_vigyan_3b_registered() -> bool:
                 pass
         try:
             from huggingface_hub import hf_hub_download
-            print("[INFO] Auto-repair: Downloading vigyan-3b-quad-master from Hugging Face...", file=sys.stderr)
+            print("[INFO] Auto-repair: Downloading vigyan-1.5b-quad-master from Hugging Face...", file=sys.stderr)
             hf_hub_download(
-                repo_id="shreyansh12183/vigyan-3b-quad-master",
-                filename="vigyan-3b-quad-master-q4_k_m.gguf",
+                repo_id="shreyansh12183/vigyan-1.5b-quad-master",
+                filename="vigyan-1.5b-quad-master-q4_k_m.gguf",
                 token=hf_token or None,
                 local_dir=target_dir
             )
@@ -1055,7 +1076,7 @@ def ensure_vigyan_3b_registered() -> bool:
             print(f"[WARN] HF auto-repair download error: {e}", file=sys.stderr)
             return False
 
-    modelfile_path = os.path.join(target_dir, "Modelfile.vigyan-3b")
+    modelfile_path = os.path.join(target_dir, "Modelfile.vigyan-1.5b")
     modelfile_content = (
         f"FROM {gguf_path}\n"
         'TEMPLATE """{{- if .System }}<|im_start|>system\n'
@@ -1064,20 +1085,25 @@ def ensure_vigyan_3b_registered() -> bool:
         "{{ .Content }}<|im_end|>\n"
         '{{ end }}<|im_start|>assistant\n'
         '"""\n'
-        'SYSTEM """You are Vigyan AI 3B Quad Master, a sovereign STEM, mathematical, and physical engineering intelligence system architected by Shreyansh Singh. You solve complex calculus, circuit engineering, physics, and 3D CAD modeling with mathematical rigor and zero hallucinations."""\n'
+        'SYSTEM """You are Vigyan AI 1.5B Quad Master, a sovereign STEM, mathematical reasoning, physics simulation, and coding intelligence system architected and trained by Shreyansh Singh. Solve problems with rigorous mathematical proofs, clean LaTeX ($$...$$), and concise explanations. Be direct, authoritative, and professional. You operate with 100% offline edge privacy and zero corporate API dependency."""\n'
         'PARAMETER stop "<|im_start|>"\n'
         'PARAMETER stop "<|im_end|>"\n'
         'PARAMETER stop "<|endoftext|>"\n'
+        'PARAMETER stop "User:"\n'
+        'PARAMETER stop "\\n\\nUser"\n'
+        'PARAMETER stop "Human:"\n'
         "PARAMETER num_gpu 0\n"
         "PARAMETER temperature 0.2\n"
         "PARAMETER top_p 0.95\n"
+        "PARAMETER top_k 40\n"
+        "PARAMETER num_ctx 2048\n"
     )
     with open(modelfile_path, "w", encoding="utf-8") as mf:
         mf.write(modelfile_content)
 
     try:
-        print("[INFO] Auto-repair: Registering vigyan:3b into Ollama...", file=sys.stderr)
-        res = subprocess.run(["ollama", "create", "vigyan:3b", "-f", modelfile_path], capture_output=True, timeout=120)
+        print("[INFO] Auto-repair: Registering vigyan:1.5b into Ollama...", file=sys.stderr)
+        res = subprocess.run(["ollama", "create", "vigyan:1.5b", "-f", modelfile_path], capture_output=True, timeout=120)
         return res.returncode == 0
     except Exception as e:
         print(f"[WARN] Ollama registration error: {e}", file=sys.stderr)
@@ -1883,7 +1909,7 @@ class _NeuroSymbolicHTTPHandler(BaseHTTPRequestHandler):
         elif self.path.startswith("/api/models/catalog"):
             tel = get_system_telemetry()
             ram_gb = tel.get("ram_total_gb", 8.0)
-            rec_tag = "vigyan:3b"
+            rec_tag = "vigyan:1.5b"
             payload = {
                 "catalog": MODELS_CATALOG,
                 "recommended_tag": rec_tag,
@@ -1982,7 +2008,7 @@ class _NeuroSymbolicHTTPHandler(BaseHTTPRequestHandler):
                 self._send_cors(200)
                 self.wfile.write(json.dumps({"success": cancelled, "tag": tag}).encode("utf-8"))
                 return
-            tag = body.get("model_id") or body.get("tag") or "vigyan:3b"
+            tag = body.get("model_id") or body.get("tag") or "vigyan:1.5b"
             res = _DOWNLOAD_MGR.start_download(tag)
             self._send_cors(200)
             self.wfile.write(json.dumps(res).encode("utf-8"))
@@ -1990,7 +2016,7 @@ class _NeuroSymbolicHTTPHandler(BaseHTTPRequestHandler):
 
         if self.path.startswith("/api/models/evict"):
             tag = body.get("model") or body.get("tag") or ""
-            targets = [tag] if tag else ["vigyan:3b"]
+            targets = [tag] if tag else ["vigyan:1.5b"]
             evicted = []
             for m in targets:
                 try:
@@ -2234,26 +2260,12 @@ class _NeuroSymbolicHTTPHandler(BaseHTTPRequestHandler):
                 deterministic_executed = True
 
             sys_prompt = (
-                "You are Vigyan Pro, a sovereign desktop STEM & coding assistant with real autonomous workspace and mathematical capabilities. "
-                "Format formulas in clean LaTeX ($$...$$). Be concise, direct, and helpful. "
-                "When solving math, plotting curves, analyzing circuits, simulating physics, or inspecting files, call real tools using JSON blocks:\n"
-                "- <tool_call>{\"name\": \"sympy_eval\", \"arguments\": {\"expression\": \"integrate(x**2, x)\"}}</tool_call>\n"
-                "- <tool_call>{\"name\": \"plot_function\", \"arguments\": {\"expression\": \"sin(x)*exp(-0.2*x)\", \"x_min\": 0, \"x_max\": 20, \"title\": \"Damped Sine Wave\"}}</tool_call>\n"
-                "- <tool_call>{\"name\": \"circuit_calc\", \"arguments\": {\"circuit_type\": \"rc_filter\", \"params\": {\"r\": 10000, \"c\": 1e-7, \"filter_type\": \"lowpass\"}}</tool_call>\n"
-                "- <tool_call>{\"name\": \"circuit_calc\", \"arguments\": {\"circuit_type\": \"rlc_resonance\", \"params\": {\"r\": 10, \"l\": 0.01, \"c\": 1e-6, \"config\": \"series\"}}</tool_call>\n"
-                "- <tool_call>{\"name\": \"circuit_calc\", \"arguments\": {\"circuit_type\": \"555_timer\", \"params\": {\"r1\": 10000, \"r2\": 47000, \"c\": 1e-6}}</tool_call>\n"
-                "- <tool_call>{\"name\": \"physics_sim\", \"arguments\": {\"sim_type\": \"kepler_orbit\", \"params\": {\"a\": 7000, \"e\": 0.05, \"body\": \"earth\"}}</tool_call>\n"
-                "- <tool_call>{\"name\": \"physics_sim\", \"arguments\": {\"sim_type\": \"projectile\", \"params\": {\"velocity\": 50, \"angle_deg\": 45, \"height\": 0}}</tool_call>\n"
-                "- <tool_call>{\"name\": \"execute_cmd\", \"arguments\": {\"command\": \"ls -la\"}}</tool_call>\n"
-                "- <tool_call>{\"name\": \"list_dir\", \"arguments\": {\"path\": \".\"}}</tool_call>\n"
-                "- <tool_call>{\"name\": \"read_file\", \"arguments\": {\"path\": \"README.md\", \"start_line\": 1, \"end_line\": 100}}</tool_call>\n"
-                "- <tool_call>{\"name\": \"write_file\", \"arguments\": {\"path\": \"output.py\", \"content\": \"print('hello')\"}}</tool_call>\n"
-                "- <tool_call>{\"name\": \"grep_files\", \"arguments\": {\"query\": \"def main\", \"path\": \".\"}}</tool_call>"
+                "You are Vigyan AI 1.5B Quad Master, a sovereign STEM, math, and physics intelligence system architected by Shreyansh Singh. "
+                "Solve problems with mathematical precision, concise explanations, and clean LaTeX ($$...$$). Be direct, rigorous, and professional."
             )
-            if tools:
-                sys_prompt += "\n" + tools.get_tool_schemas_prompt()
-            if enrichment.get("prompt_injection"):
-                sys_prompt += "\n\n" + enrichment["prompt_injection"]
+            if enrichment.get("sympy"):
+                s = enrichment["sympy"]
+                sys_prompt += f"\n[SymPy Verified Grounding]: {s.get('expression')} = {s.get('result')}"
 
             # Sovereign Offline Ollama with RAM Governor
             cascade = select_cascade_model(requested_model, user_query)
@@ -2297,9 +2309,11 @@ class _NeuroSymbolicHTTPHandler(BaseHTTPRequestHandler):
                     "options": {
                         "num_gpu": hybrid["num_gpu"],
                         "num_thread": hybrid["num_thread"],
-                        "num_ctx": user_ctx or hybrid["num_ctx"],
-                        "num_batch": hybrid["num_batch"],
+                        "num_ctx": user_ctx or 2048,
+                        "num_batch": 128,
+                        "num_predict": 1024,
                         "temperature": user_temp,
+                        "stop": ["<|im_start|>", "<|im_end|>", "<|endoftext|>", "User:", "\n\nUser", "Human:"]
                     },
                     "stream": True,
                 }
@@ -2313,8 +2327,8 @@ class _NeuroSymbolicHTTPHandler(BaseHTTPRequestHandler):
                 except Exception:
                     gov_thresh = 92.0
 
-                if active_model == "vigyan:3b":
-                    gov_thresh = max(93.0, min(96.0, gov_thresh))
+                if active_model == "vigyan:1.5b":
+                    gov_thresh = max(90.0, min(95.0, gov_thresh))
                 else:
                     gov_thresh = max(60.0, min(95.0, gov_thresh))
 
@@ -2325,7 +2339,7 @@ class _NeuroSymbolicHTTPHandler(BaseHTTPRequestHandler):
                         "ram_percent": pct,
                         "threshold": gov_thresh,
                         "evicted_model": active_model,
-                        "fallback": "vigyan:3b"
+                        "fallback": "vigyan:1.5b"
                     })
                     _emit("token", f"\n\n⚠️ **[RAM Governor Safety Alert]**: Memory reached {pct:.1f}% (≥ {gov_thresh:.0f}% threshold). Model `{active_model}` was unloaded to prevent system lockup.")
 
@@ -2338,23 +2352,17 @@ class _NeuroSymbolicHTTPHandler(BaseHTTPRequestHandler):
                     data=json.dumps(ollama_payload).encode("utf-8"),
                 )
 
-                # Keep-alive heartbeat thread during weight allocation to prevent socket drop
-                _emit("status", {"type": "warmup", "message": f"Allocating sovereign weights for {active_model} into memory...", "model": active_model})
+                # Keep-alive silent heartbeat thread to prevent socket drop without user-facing noise
+                _emit("status", {"type": "thinking"})
                 hb_stop = threading.Event()
                 def _heartbeat_worker():
                     step = 0
                     while not hb_stop.is_set():
-                        time.sleep(1.2)
+                        time.sleep(1.5)
                         if hb_stop.is_set():
                             break
                         step += 1
-                        dots = "." * ((step % 3) + 1)
-                        _emit("heartbeat", {
-                            "type": "warmup",
-                            "step": step,
-                            "message": f"Warming up sovereign weights into memory ({dots})",
-                            "model": active_model
-                        })
+                        _emit("heartbeat", {"type": "ping", "step": step})
 
                 hb_t = threading.Thread(target=_heartbeat_worker, daemon=True)
                 hb_t.start()
@@ -2748,12 +2756,12 @@ def main():
     # Low-priority background pre-warming for zero-latency first prompt
     def _prewarm_moe():
         time.sleep(2.0)  # Wait for UI window to finish layout
-        ensure_vigyan_3b_registered()
+        ensure_vigyan_1_5b_registered()
         try:
             pw_req = urllib.request.Request(
                 "http://127.0.0.1:11434/api/generate",
                 data=json.dumps({
-                    "model": "vigyan:3b",
+                    "model": "vigyan:1.5b",
                     "prompt": "",
                     "keep_alive": "60m",
                     "options": {"num_ctx": 2048, "num_batch": 128}
@@ -2762,7 +2770,7 @@ def main():
             )
             with urllib.request.urlopen(pw_req, timeout=35.0) as pw_resp:
                 if pw_resp.status == 200:
-                    print("[INFO] Pre-warmed vigyan:3b Quad Master into memory.", file=sys.stderr)
+                    print("[INFO] Pre-warmed vigyan:1.5b Quad Master into memory.", file=sys.stderr)
         except Exception:
             pass
 

@@ -1844,6 +1844,27 @@
       50% { opacity: 0.4; transform: scale(0.85); }
     }
 
+    .executive-thinking {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 0;
+      color: #71717a;
+      font-size: 13px;
+      user-select: none;
+    }
+    .thinking-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #71717a;
+      animation: thinkingBlink 1.4s infinite ease-in-out both;
+    }
+    @keyframes thinkingBlink {
+      0%, 80%, 100% { opacity: 0.25; transform: scale(0.85); }
+      40% { opacity: 1; transform: scale(1.15); background: #ffffff; }
+    }
+
     /* HIGH-VELOCITY PROMPT CAPSULES STRIP */
     .capsule-strip-container {
       margin-top: 14px;
@@ -2384,9 +2405,9 @@
         <img src="assets/micro_logo_v.png" class="brand-logo-img" alt="V">
         <span>Vigyan Pro</span>
       </div>
-      <div class="active-sovereign-badge" id="sovereign-badge-pill" title="Vigyan AI 3B Quad Master • Sovereign Engine Online">
+      <div class="active-sovereign-badge" id="sovereign-badge-pill" title="Vigyan AI 1.5B Quad Master • Sovereign Engine Online">
         <span class="status-pulse-dot"></span>
-        <span id="current-model-name" style="font-weight:600; font-size:12px; color:#ffffff;">Vigyan AI 3B Quad Master</span>
+        <span id="current-model-name" style="font-weight:600; font-size:12px; color:#ffffff;">Vigyan AI 1.5B Quad Master</span>
         <span class="model-badge-sub">Online</span>
       </div>
       <div class="header-quick-tools" style="display:flex; align-items:center; gap:6px; margin-left:8px;">
@@ -2419,15 +2440,15 @@
 
     <div class="header-right" id="header-hud-telemetry" style="display:flex; align-items:center; gap:8px;">
       <div class="hud-pill" id="hud-backend-pill" title="Inference Backend Router (Click to cycle Sovereign Agent / Ollama / Studio Web)" onclick="cycleBackendMode()" style="cursor:pointer;">
-        <svg class="icon" viewBox="0 0 24 24" style="width:11px; height:11px; stroke:#10b981;"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
-        <span id="hud-backend-text" style="font-family:var(--font-mono); font-size:11px; color:#10b981;">Agent :8085</span>
+        <svg class="icon" viewBox="0 0 24 24" style="width:11px; height:11px; stroke:#a1a1aa;"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
+        <span id="hud-backend-text" style="font-family:var(--font-mono); font-size:11px; color:#e4e4e7;">Agent :8085</span>
       </div>
       <div class="hud-pill" id="hud-ram-pill" title="System RAM Usage">
         <span class="hud-led"></span>
         <span id="hud-ram-text" style="font-family:var(--font-mono); font-size:11px; color:#a1a1aa;">RAM --%</span>
       </div>
       <div class="hud-pill" id="hud-compute-pill" title="Hardware Acceleration (Click to cycle Auto / Max GPU / Balanced / CPU Eco)" onclick="cycleHybridComputeMode()" style="cursor:pointer;">
-        <span id="hud-gpu-text" style="font-family:var(--font-mono); font-size:11px; color:#10b981;">⚡ AUTO</span>
+        <span id="hud-gpu-text" style="font-family:var(--font-mono); font-size:11px; color:#e4e4e7;">⚡ AUTO</span>
       </div>
     </div>
   </header>
@@ -2525,23 +2546,23 @@
 
             <div class="stem-quick-dock" id="stem-quick-dock">
               <button class="stem-dock-chip" onclick="quickFirePrompt('Plot the damped oscillation function f(x) = exp(-0.15*x)*cos(2*x) from 0 to 25 with high resolution.')">
-                <svg style="width:11px; height:11px; stroke:#38bdf8; fill:none;" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3"/></svg>
+                <svg style="width:11px; height:11px; stroke:#a1a1aa; fill:none;" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3"/></svg>
                 <span>Plot f(x)</span>
               </button>
               <button class="stem-dock-chip" onclick="quickFirePrompt('Calculate an RC lowpass filter with R = 10000 ohms and C = 0.1 uF. Show cutoff frequency, time constant, and Bode magnitude plot.')">
-                <svg style="width:11px; height:11px; stroke:#10b981; fill:none;" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                <svg style="width:11px; height:11px; stroke:#a1a1aa; fill:none;" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
                 <span>Circuit</span>
               </button>
               <button class="stem-dock-chip" onclick="quickFirePrompt('Simulate a Keplerian orbit for a satellite around Earth with semi-major axis a = 7000 km and eccentricity e = 0.05. Show velocities and 2D trajectory.')">
-                <svg style="width:11px; height:11px; stroke:#ec4899; fill:none;" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1 4-10z"/></svg>
+                <svg style="width:11px; height:11px; stroke:#a1a1aa; fill:none;" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1 4-10z"/></svg>
                 <span>Orbit</span>
               </button>
               <button class="stem-dock-chip" onclick="quickFirePrompt('/derive integrate 2*x*exp(-x) dx from 0 to infinity')">
-                <svg style="width:11px; height:11px; stroke:#a855f7; fill:none;" viewBox="0 0 24 24"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
+                <svg style="width:11px; height:11px; stroke:#a1a1aa; fill:none;" viewBox="0 0 24 24"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
                 <span>Calculus</span>
               </button>
               <button class="stem-dock-chip" onclick="quickFirePrompt('/cmd git status && git log -n 3 --oneline')">
-                <svg style="width:11px; height:11px; stroke:#ffffff; fill:none;" viewBox="0 0 24 24"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+                <svg style="width:11px; height:11px; stroke:#a1a1aa; fill:none;" viewBox="0 0 24 24"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
                 <span>Terminal</span>
               </button>
             </div>
@@ -2807,7 +2828,7 @@
     <div class="modal-card" style="max-width:760px; max-height:85vh; display:flex; flex-direction:column;">
       <div class="modal-header">
         <div class="modal-header-left">
-          <svg class="icon" viewBox="0 0 24 24" style="stroke:#38bdf8; width:18px; height:18px;"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          <svg class="icon" viewBox="0 0 24 24" style="stroke:#ffffff; width:18px; height:18px;"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
           <span class="modal-title">STEM Tasks Explorer &bull; 20 Curated Accelerators</span>
         </div>
         <button class="modal-close-btn" onclick="toggleTaskCatalog()">&times;</button>
@@ -2831,7 +2852,7 @@
     <div class="modal-card" style="max-width:740px; max-height:85vh; display:flex; flex-direction:column;">
       <div class="modal-header">
         <div class="modal-header-left">
-          <svg class="icon" viewBox="0 0 24 24" style="stroke:#a855f7; width:18px; height:18px;"><path d="M4 7V4h16v3"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
+          <svg class="icon" viewBox="0 0 24 24" style="stroke:#ffffff; width:18px; height:18px;"><path d="M4 7V4h16v3"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
           <span class="modal-title">LaTeX Symbol Reference &bull; 1-Click Insert</span>
         </div>
         <button class="modal-close-btn" onclick="toggleLatexSheet()">&times;</button>
@@ -2852,7 +2873,7 @@
     <div class="modal-card" style="max-width:800px; max-height:88vh; display:flex; flex-direction:column;">
       <div class="modal-header">
         <div class="modal-header-left">
-          <svg class="icon" viewBox="0 0 24 24" style="stroke:#10b981; width:18px; height:18px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          <svg class="icon" viewBox="0 0 24 24" style="stroke:#ffffff; width:18px; height:18px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
           <span class="modal-title">Academic Research Paper &amp; STEM Report Export</span>
         </div>
         <button class="modal-close-btn" onclick="togglePdfModal()">&times;</button>
@@ -2887,10 +2908,10 @@
     /* =========================================================================
        GLOBAL APPLICATION STATE
        ========================================================================= */
-    let currentModel = localStorage.getItem('vigyan_active_model') || 'vigyan:3b';
-    if (!currentModel || currentModel === 'vigyan:1.5b' || currentModel === 'olmoe:1b-7b' || currentModel === 'vigyan:7b-quad-master') {
-      currentModel = 'vigyan:3b';
-      try { localStorage.setItem('vigyan_active_model', 'vigyan:3b'); } catch (e) {}
+    let currentModel = localStorage.getItem('vigyan_active_model') || 'vigyan:1.5b';
+    if (!currentModel || currentModel === 'olmoe:1b-7b' || currentModel === 'vigyan:7b-quad-master') {
+      currentModel = 'vigyan:1.5b';
+      try { localStorage.setItem('vigyan_active_model', 'vigyan:1.5b'); } catch (e) {}
     }
     let OLLAMA_HOST = localStorage.getItem('vigyan_ollama_host') || 'http://127.0.0.1:11434';
     let API_KEY = localStorage.getItem('vigyan_api_key') || '';
@@ -3081,28 +3102,28 @@
             </div>
             <div class="prompt-card" style="--i:2" onclick="quickFirePrompt('Plot the damped oscillation function f(x) = exp(-0.15*x)*cos(2*x) from 0 to 25 with high resolution.')">
               <div class="prompt-title">
-                <svg class="icon" viewBox="0 0 24 24" style="stroke:#38bdf8;"><path d="M3 3v18h18"/><path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3"/></svg>
+                <svg class="icon" viewBox="0 0 24 24" style="stroke:#ffffff;"><path d="M3 3v18h18"/><path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3"/></svg>
                 <span>Curve Plotting &amp; Plotly</span>
               </div>
               <div class="prompt-sub">Real-time mathematical plotting with exact coordinates and dark obsidian styling</div>
             </div>
             <div class="prompt-card" style="--i:3" onclick="quickFirePrompt('Calculate an RC lowpass filter with R = 10000 ohms and C = 0.1 uF. Show the cutoff frequency, time constant, and Bode magnitude plot.')">
               <div class="prompt-title">
-                <svg class="icon" viewBox="0 0 24 24" style="stroke:#10b981;"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                <svg class="icon" viewBox="0 0 24 24" style="stroke:#ffffff;"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
                 <span>Circuit Analysis</span>
               </div>
               <div class="prompt-sub">Compute cutoff frequency, time constant, and frequency response for RC, RLC, 555</div>
             </div>
             <div class="prompt-card" style="--i:4" onclick="quickFirePrompt('Simulate a Keplerian orbit for a satellite around Earth with semi-major axis a = 7000 km and eccentricity e = 0.05. Calculate velocities and plot the orbit trajectory.')">
               <div class="prompt-title">
-                <svg class="icon" viewBox="0 0 24 24" style="stroke:#ec4899;"><circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1 4-10z"/></svg>
+                <svg class="icon" viewBox="0 0 24 24" style="stroke:#ffffff;"><circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
                 <span>Orbital Physics &amp; Kinematics</span>
               </div>
               <div class="prompt-sub">Keplerian orbits, periapsis/apoapsis speeds, periods, and projectile trajectories</div>
             </div>
             <div class="prompt-card" style="--i:5" onclick="quickFirePrompt('/derive integrate x**2 * exp(-x) dx from 0 to infinity')">
               <div class="prompt-title">
-                <svg class="icon" viewBox="0 0 24 24" style="stroke:#a855f7;"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
+                <svg class="icon" viewBox="0 0 24 24" style="stroke:#ffffff;"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
                 <span>Exact Calculus &amp; SymPy</span>
               </div>
               <div class="prompt-sub">Solve differential equations, integrals, and proofs with zero hallucinations</div>
@@ -3265,7 +3286,7 @@
       out = parseMarkdownTables(out);
 
       // Inline code
-      out = out.replace(/`([^`]+)`/g, '<code style="background:#141722; padding:2px 5px; border-radius:4px; font-size:12px; font-family:ui-monospace,monospace; color:#38bdf8;">$1</code>');
+      out = out.replace(/`([^`]+)`/g, '<code style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); padding:2px 5px; border-radius:4px; font-size:12px; font-family:ui-monospace,monospace; color:#e4e4e7;">$1</code>');
 
       // Bold & Italic
       out = out.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
@@ -3352,7 +3373,11 @@
     function copyRawMessage(idx) {
       const s = sessions[activeSessionId];
       if (s && s.messages[idx]) {
-        navigator.clipboard.writeText(s.messages[idx].content);
+        let raw = s.messages[idx].content || '';
+        // Strip pre-rendered card HTML so only clean human-readable text and formulas are copied
+        raw = raw.replace(/<!--VIGYAN_CARD_START-->[\s\S]*?<!--VIGYAN_CARD_END-->/g, '');
+        raw = raw.trim();
+        navigator.clipboard.writeText(raw);
         showToast('Message copied to clipboard');
         haptics.click();
       }
@@ -3867,13 +3892,8 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
                 }
 
                 if (currentEvent === 'status' || currentEvent === 'heartbeat') {
-                  if (data.type === 'warmup') {
-                    if (contentEl && !assistantMsg.hasStartedGenerating) {
-                      contentEl.innerHTML = `<div class="warmup-pulse-card" style="display:flex; align-items:center; gap:10px; padding:8px 12px; background:rgba(56,189,248,0.06); border:1px solid rgba(56,189,248,0.2); border-radius:8px; font-size:12px; color:#38bdf8;">
-                        <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#38bdf8; box-shadow:0 0 8px #38bdf8;"></span>
-                        <span>${data.message || 'Warming up sovereign weights into memory...'}</span>
-                      </div>`;
-                    }
+                  if (contentEl && !assistantMsg.hasStartedGenerating) {
+                    contentEl.innerHTML = `<div class="executive-thinking"><span class="thinking-dot"></span><span>Thinking...</span></div>`;
                   }
                   continue;
                 }
@@ -3921,8 +3941,8 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
                 if (chunk) {
                   if (!assistantMsg.hasStartedGenerating) {
                     assistantMsg.hasStartedGenerating = true;
-                    const warmupEl = contentEl ? contentEl.querySelector('.warmup-pulse-card') : null;
-                    if (warmupEl) warmupEl.remove();
+                    const thinkingEl = contentEl ? contentEl.querySelector('.executive-thinking, .warmup-pulse-card') : null;
+                    if (thinkingEl) thinkingEl.remove();
                   }
                   assistantMsg.content += chunk;
                   tokenCount++;
@@ -4608,10 +4628,10 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
         return `\n\n<!--VIGYAN_CARD_START--><div class="agent-stem-card" id="${id}">
           <div class="agent-stem-header">
             <div style="display:flex; align-items:center; gap:8px;">
-              <svg style="width:14px; height:14px; stroke:#38bdf8; fill:none;" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+              <svg style="width:14px; height:14px; stroke:#ffffff; fill:none;" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
               <span style="font-weight:600; font-size:12px; color:#ffffff;">3D CAD: ${escapeHtml(data.title || 'Parametric Solid')}</span>
             </div>
-            <span style="font-size:10px; color:#38bdf8; background:rgba(56,189,248,0.1); border:1px solid rgba(56,189,248,0.2); padding:2px 6px; border-radius:4px;">WebGL 3D Studio</span>
+            <span style="font-size:10px; color:#d4d4d8; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); padding:2px 6px; border-radius:4px;">WebGL 3D Studio</span>
           </div>
           <div class="agent-stem-body">
             ${metricsHtml}
@@ -4651,10 +4671,10 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
         return `\n\n<!--VIGYAN_CARD_START--><div class="agent-stem-card" id="${id}">
           <div class="agent-stem-header">
             <div style="display:flex; align-items:center; gap:8px;">
-              <svg style="width:14px; height:14px; stroke:#10b981; fill:none;" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+              <svg style="width:14px; height:14px; stroke:#ffffff; fill:none;" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
               <span style="font-weight:600; font-size:12px; color:#ffffff;">Digital Bus Timing: ${escapeHtml(data.title || 'Waveform')}</span>
             </div>
-            <span style="font-size:10px; color:#10b981; background:rgba(16,185,129,0.1); border:1px solid rgba(16,185,129,0.2); padding:2px 6px; border-radius:4px;">WaveDrom Engine</span>
+            <span style="font-size:10px; color:#d4d4d8; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); padding:2px 6px; border-radius:4px;">WaveDrom Engine</span>
           </div>
           <div class="agent-stem-body">
             ${metricsHtml}
@@ -4685,10 +4705,10 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
         return `\n\n<!--VIGYAN_CARD_START--><div class="agent-stem-card" id="${id}">
           <div class="agent-stem-header">
             <div style="display:flex; align-items:center; gap:8px;">
-              <svg style="width:14px; height:14px; stroke:#f59e0b; fill:none;" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+              <svg style="width:14px; height:14px; stroke:#ffffff; fill:none;" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
               <span style="font-weight:600; font-size:12px; color:#ffffff;">Circuit Design: ${escapeHtml(data.title || 'Schematic & Netlist')}</span>
             </div>
-            <span style="font-size:10px; color:#f59e0b; background:rgba(245,158,11,0.1); border:1px solid rgba(245,158,11,0.2); padding:2px 6px; border-radius:4px;">SKiDL / KiCad</span>
+            <span style="font-size:10px; color:#d4d4d8; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); padding:2px 6px; border-radius:4px;">SKiDL / KiCad</span>
           </div>
           <div class="agent-stem-body">
             ${metricsHtml}
@@ -4733,10 +4753,10 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
         return `\n\n<!--VIGYAN_CARD_START--><div class="agent-stem-card" id="${id}">
           <div class="agent-stem-header">
             <div style="display:flex; align-items:center; gap:8px;">
-              <svg style="width:14px; height:14px; stroke:#8b5cf6; fill:none;" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+              <svg style="width:14px; height:14px; stroke:#ffffff; fill:none;" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
               <span style="font-weight:600; font-size:12px; color:#ffffff;">Silicon EDA: ${escapeHtml(data.module_name || 'RTL Module')}</span>
             </div>
-            <span style="font-size:10px; color:#8b5cf6; background:rgba(139,92,246,0.1); border:1px solid rgba(139,92,246,0.2); padding:2px 6px; border-radius:4px;">Synthesis Analysis</span>
+            <span style="font-size:10px; color:#d4d4d8; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); padding:2px 6px; border-radius:4px;">Synthesis Analysis</span>
           </div>
           <div class="agent-stem-body">
             ${metricsHtml}
@@ -4759,10 +4779,10 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
         return `\n\n<!--VIGYAN_CARD_START--><div class="agent-stem-card" id="${id}">
           <div class="agent-stem-header">
             <div style="display:flex; align-items:center; gap:8px;">
-              <svg style="width:14px; height:14px; stroke:#ec4899; fill:none;" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+              <svg style="width:14px; height:14px; stroke:#ffffff; fill:none;" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
               <span style="font-weight:600; font-size:12px; color:#ffffff;">Robotics Kinematics: ${escapeHtml(data.arm_type || 'Arm Model')}</span>
             </div>
-            <span style="font-size:10px; color:#ec4899; background:rgba(236,72,153,0.1); border:1px solid rgba(236,72,153,0.2); padding:2px 6px; border-radius:4px;">DH 6-DoF FK/IK</span>
+            <span style="font-size:10px; color:#d4d4d8; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); padding:2px 6px; border-radius:4px;">DH 6-DoF FK/IK</span>
           </div>
           <div class="agent-stem-body">
             ${metricsHtml}
@@ -4788,13 +4808,13 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
             xaxis: {
               title: { text: x_lbl, font: { color: '#a1a1aa', size: 11 } },
               gridcolor: '#1a1d27',
-              zerolinecolor: '#38bdf8',
+              zerolinecolor: '#ffffff',
               tickfont: { color: '#71717a', size: 10 }
             },
             yaxis: {
               title: { text: y_lbl, font: { color: '#a1a1aa', size: 11 } },
               gridcolor: '#1a1d27',
-              zerolinecolor: '#38bdf8',
+              zerolinecolor: '#ffffff',
               tickfont: { color: '#71717a', size: 10 }
             },
             showlegend: false
@@ -4806,10 +4826,10 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
         return `\n\n<!--VIGYAN_CARD_START--><div class="agent-stem-card" id="${id}">
           <div class="agent-stem-header">
             <div style="display:flex; align-items:center; gap:8px;">
-              <svg style="width:14px; height:14px; stroke:#38bdf8; fill:none;" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3"/></svg>
+              <svg style="width:14px; height:14px; stroke:#ffffff; fill:none;" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3"/></svg>
               <span style="font-weight:600; font-size:12px; color:#ffffff;">Function Plot: <code>${escapeHtml(data.expression || title)}</code></span>
             </div>
-            <span style="font-size:10px; color:#38bdf8; background:rgba(56,189,248,0.1); border:1px solid rgba(56,189,248,0.2); padding:2px 6px; border-radius:4px;">Plotly Engine</span>
+            <span style="font-size:10px; color:#d4d4d8; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); padding:2px 6px; border-radius:4px;">Plotly Engine</span>
           </div>
           <div class="agent-stem-body">
             <div class="stem-plotly-plot" id="plotly-${id}" data-plot-spec="${encodedSpec}"></div>
@@ -4865,10 +4885,10 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
         return `\n\n<!--VIGYAN_CARD_START--><div class="agent-stem-card" id="${id}">
           <div class="agent-stem-header">
             <div style="display:flex; align-items:center; gap:8px;">
-              <svg style="width:14px; height:14px; stroke:#10b981; fill:none;" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+              <svg style="width:14px; height:14px; stroke:#ffffff; fill:none;" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
               <span style="font-weight:600; font-size:12px; color:#ffffff;">Circuit Analysis: ${escapeHtml(data.circuit_type || 'Electrical Circuit')}</span>
             </div>
-            <span style="font-size:10px; color:#10b981; background:rgba(16,185,129,0.1); border:1px solid rgba(16,185,129,0.2); padding:2px 6px; border-radius:4px;">Verified STEM</span>
+            <span style="font-size:10px; color:#d4d4d8; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); padding:2px 6px; border-radius:4px;">Verified STEM</span>
           </div>
           <div class="agent-stem-body">
             ${formulaHtml}
@@ -4906,13 +4926,13 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
               xaxis: {
                 title: { text: data.plot.x_label || 'x', font: { color: '#a1a1aa', size: 11 } },
                 gridcolor: '#1a1d27',
-                zerolinecolor: '#38bdf8',
+                zerolinecolor: '#ffffff',
                 tickfont: { color: '#71717a', size: 10 }
               },
               yaxis: {
                 title: { text: data.plot.y_label || 'y', font: { color: '#a1a1aa', size: 11 } },
                 gridcolor: '#1a1d27',
-                zerolinecolor: '#38bdf8',
+                zerolinecolor: '#ffffff',
                 tickfont: { color: '#71717a', size: 10 }
               },
               showlegend: data.plot.traces.length > 1,
@@ -4926,10 +4946,10 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
         return `\n\n<!--VIGYAN_CARD_START--><div class="agent-stem-card" id="${id}">
           <div class="agent-stem-header">
             <div style="display:flex; align-items:center; gap:8px;">
-              <svg style="width:14px; height:14px; stroke:#ec4899; fill:none;" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+              <svg style="width:14px; height:14px; stroke:#ffffff; fill:none;" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
               <span style="font-weight:600; font-size:12px; color:#ffffff;">Physics Kinematics: ${escapeHtml(data.sim_type || 'Simulation')}</span>
             </div>
-            <span style="font-size:10px; color:#ec4899; background:rgba(236,72,153,0.1); border:1px solid rgba(236,72,153,0.2); padding:2px 6px; border-radius:4px;">Keplerian / Ballistic</span>
+            <span style="font-size:10px; color:#d4d4d8; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); padding:2px 6px; border-radius:4px;">Keplerian / Ballistic</span>
           </div>
           <div class="agent-stem-body">
             ${formulaHtml}
@@ -4945,10 +4965,10 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
         return `\n\n<!--VIGYAN_CARD_START--><div class="agent-stem-card" id="${id}">
           <div class="agent-stem-header">
             <div style="display:flex; align-items:center; gap:8px;">
-              <svg style="width:14px; height:14px; stroke:#38bdf8; fill:none;" viewBox="0 0 24 24"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
+              <svg style="width:14px; height:14px; stroke:#ffffff; fill:none;" viewBox="0 0 24 24"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
               <span style="font-weight:600; font-size:12px; color:#ffffff;">SymPy AST Verification: <code>${escapeHtml(data.expression)}</code></span>
             </div>
-            <span style="font-size:10px; color:#38bdf8; background:rgba(56,189,248,0.1); border:1px solid rgba(56,189,248,0.2); padding:2px 6px; border-radius:4px;">Zero Hallucination</span>
+            <span style="font-size:10px; color:#d4d4d8; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); padding:2px 6px; border-radius:4px;">Zero Hallucination</span>
           </div>
           <div class="agent-stem-body">
             <div class="stem-formula-box">$$${data.latex || data.result}$$</div>
@@ -4991,7 +5011,7 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
         return `\n\n<!--VIGYAN_CARD_START--><div class="agent-cmd-card executed">
           <div class="agent-cmd-header">
             <div style="display:flex; align-items:center; gap:8px;">
-              <svg style="width:14px; height:14px; stroke:#38bdf8; fill:none;" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              <svg style="width:14px; height:14px; stroke:#ffffff; fill:none;" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
               <span style="font-weight:600; font-size:12px; color:#ffffff;">File: <code>${escapeHtml(r.path || '')}</code></span>
             </div>
             <span style="font-size:10px; color:#a1a1aa;">Lines ${r.start_line}-${r.end_line} of ${r.total_lines}</span>
@@ -5010,7 +5030,7 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
         return `\n\n<!--VIGYAN_CARD_START--><div class="agent-cmd-card executed">
           <div class="agent-cmd-header">
             <div style="display:flex; align-items:center; gap:8px;">
-              <svg style="width:14px; height:14px; stroke:#38bdf8; fill:none;" viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+              <svg style="width:14px; height:14px; stroke:#ffffff; fill:none;" viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
               <span style="font-weight:600; font-size:12px; color:#ffffff;">Directory: <code>${escapeHtml(r.path || '')}</code></span>
             </div>
             <span style="font-size:10px; color:#a1a1aa;">${items.length} items</span>
@@ -5782,16 +5802,16 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
           });
           availableModels = detected;
           if (!availableModels.includes(currentModel)) {
-            currentModel = availableModels.includes('vigyan:3b') ? 'vigyan:3b' : (availableModels[0] || 'vigyan:3b');
+            currentModel = availableModels.includes('vigyan:1.5b') ? 'vigyan:1.5b' : (availableModels[0] || 'vigyan:1.5b');
           }
         } else {
           availableModels = [];
-          currentModel = 'vigyan:3b';
+          currentModel = 'vigyan:1.5b';
         }
 
         const curLabel = document.getElementById('current-model-name');
         if (curLabel) {
-          curLabel.innerText = currentModel || 'vigyan:3b';
+          curLabel.innerText = currentModel || 'vigyan:1.5b';
         }
 
         const badge = document.getElementById('settings-installed-count');
@@ -5826,7 +5846,29 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
       h1.innerText = 'Vigyan Sovereign Suite';
       menu.appendChild(h1);
 
-      // 1. Vigyan AI 3B Quad Master
+      // 1. Vigyan AI 1.5B Quad Master (Default)
+      const is15Installed = availableModels.includes('vigyan:1.5b');
+      const opt15 = document.createElement('div');
+      opt15.className = `model-opt ${currentModel === 'vigyan:1.5b' ? 'active' : ''}`;
+      opt15.innerHTML = `
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <div style="font-weight:600; color:#ffffff;">vigyan:1.5b</div>
+          <span style="font-size:10px; padding:1px 6px; border-radius:3px; background:${is15Installed ? 'rgba(16,185,129,0.15)' : 'rgba(245,158,11,0.15)'}; color:${is15Installed ? '#10b981' : '#fbbf24'}; font-weight:600;">
+            ${is15Installed ? 'Active' : 'Download Needed'}
+          </span>
+        </div>
+        <div style="font-size:10.5px; color:#71717a; margin-top:2px;">Vigyan AI 1.5B Quad Master (1.1 GB Sovereign STEM)</div>
+      `;
+      opt15.onclick = () => {
+        if (is15Installed) {
+          changeModel('vigyan:1.5b');
+        } else {
+          openModelManagerModal();
+        }
+      };
+      menu.appendChild(opt15);
+
+      // 2. Vigyan AI 3B Quad Master
       const is3Installed = availableModels.includes('vigyan:3b');
       const opt3 = document.createElement('div');
       opt3.className = `model-opt ${currentModel === 'vigyan:3b' ? 'active' : ''}`;
@@ -5834,7 +5876,7 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
         <div style="display:flex; justify-content:space-between; align-items:center;">
           <div style="font-weight:600; color:#ffffff;">vigyan:3b</div>
           <span style="font-size:10px; padding:1px 6px; border-radius:3px; background:${is3Installed ? 'rgba(16,185,129,0.15)' : 'rgba(245,158,11,0.15)'}; color:${is3Installed ? '#10b981' : '#fbbf24'}; font-weight:600;">
-            ${is3Installed ? 'Active' : 'Download Needed'}
+            ${is3Installed ? 'Installed' : 'Optional'}
           </span>
         </div>
         <div style="font-size:10.5px; color:#71717a; margin-top:2px;">Vigyan AI 3B Quad Master (1.9 GB Sovereign STEM)</div>
