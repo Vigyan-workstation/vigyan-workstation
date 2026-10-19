@@ -9,7 +9,7 @@
 
 set -e
 
-RAW_VERSION="2.7.0"
+RAW_VERSION="2.9.0"
 BUNDLE_WEIGHTS=false
 
 for arg in "$@"; do

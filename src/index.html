@@ -1901,16 +1901,16 @@
       width: 6px;
       height: 6px;
       border-radius: 50%;
-      background: #10b981;
-      box-shadow: 0 0 8px rgba(16, 185, 129, 0.6);
+      background: #e4e4e7;
+      box-shadow: 0 0 4px rgba(255, 255, 255, 0.3);
       flex-shrink: 0;
     }
     .model-badge-sub {
       font-size: 10px;
       font-weight: 600;
-      color: #10b981;
-      background: rgba(16, 185, 129, 0.12);
-      border: 1px solid rgba(16, 185, 129, 0.25);
+      color: #d4d4d8;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
       border-radius: 4px;
       padding: 1px 5px;
       text-transform: uppercase;
@@ -2343,9 +2343,9 @@
   <!-- FINE GRID OVERLAY -->
   <div class="bg-grid-overlay"></div>
 
-  <!-- SINGLE UNIFIED 48PX CLEAN HEADER -->
+  <!-- SINGLE UNIFIED 48PX CLEAN MINIMAL HEADER -->
   <header class="top-header">
-    <div class="header-left" style="gap:10px;">
+    <div class="header-left" style="gap:12px;">
       <button class="btn-icon" id="sidebar-toggle-btn" onclick="toggleSidebar()" title="Toggle Sidebar">
         <svg class="icon" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18"/></svg>
       </button>
@@ -2358,20 +2358,6 @@
         <span id="current-model-name" style="font-weight:600; font-size:12px; color:#ffffff;">Vigyan AI 1.5B Quad Master</span>
         <span class="model-badge-sub">Online</span>
       </div>
-      <div class="header-quick-tools" style="display:flex; align-items:center; gap:6px; margin-left:8px;">
-        <button class="btn-stem-mini" onclick="toggleTaskCatalog()" title="STEM Tasks Explorer (Ctrl+T / Alt+S)">
-          <svg class="icon" viewBox="0 0 24 24" style="width:11px; height:11px;"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-          <span>Tasks</span>
-        </button>
-        <button class="btn-stem-mini" onclick="toggleLatexSheet()" title="LaTeX Symbol Reference (Alt+L)">
-          <svg class="icon" viewBox="0 0 24 24" style="width:11px; height:11px;"><path d="M4 7V4h16v3"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
-          <span>LaTeX</span>
-        </button>
-        <button class="btn-stem-mini" onclick="exportAcademicPdf()" title="Export Research PDF Report">
-          <svg class="icon" viewBox="0 0 24 24" style="width:11px; height:11px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-          <span>PDF</span>
-        </button>
-      </div>
     </div>
 
     <!-- CLEAN SEGMENTED NAVIGATION -->
@@ -2381,23 +2367,15 @@
         <span>Chat</span>
       </button>
       <button class="dock-tab" data-tab="settings" onclick="switchTab('settings')">
-        <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
         <span>Settings</span>
       </button>
     </nav>
 
-    <div class="header-right" id="header-hud-telemetry" style="display:flex; align-items:center; gap:8px;">
-      <div class="hud-pill" id="hud-backend-pill" title="Inference Backend Router (Click to cycle Sovereign Agent / Ollama / Studio Web)" onclick="cycleBackendMode()" style="cursor:pointer;">
-        <svg class="icon" viewBox="0 0 24 24" style="width:11px; height:11px; stroke:#a1a1aa;"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
-        <span id="hud-backend-text" style="font-family:var(--font-mono); font-size:11px; color:#e4e4e7;">Agent :8085</span>
-      </div>
-      <div class="hud-pill" id="hud-ram-pill" title="System RAM Usage">
-        <span class="hud-led"></span>
-        <span id="hud-ram-text" style="font-family:var(--font-mono); font-size:11px; color:#a1a1aa;">RAM --%</span>
-      </div>
-      <div class="hud-pill" id="hud-compute-pill" title="Hardware Acceleration (Click to cycle Auto / Max GPU / Balanced / CPU Eco)" onclick="cycleHybridComputeMode()" style="cursor:pointer;">
-        <span id="hud-gpu-text" style="font-family:var(--font-mono); font-size:11px; color:#e4e4e7;">⚡ AUTO</span>
-      </div>
+    <!-- Hidden telemetry container to maintain DOM contract without UI clutter -->
+    <div class="header-right" id="header-hud-telemetry" style="display:none;">
+      <span id="hud-ram-text"></span>
+      <span id="hud-gpu-text"></span>
     </div>
   </header>
 
@@ -5545,8 +5523,8 @@ ${content.replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g, '\\begin{verbatim}\n$1\n\\end
           if (helperCard) helperCard.style.display = 'none';
           if (subLabel) subLabel.innerText = 'Online';
           if (pulseDot) {
-            pulseDot.style.background = '#10b981';
-            pulseDot.style.boxShadow = '0 0 8px rgba(16,185,129,0.6)';
+            pulseDot.style.background = '#e4e4e7';
+            pulseDot.style.boxShadow = '0 0 4px rgba(255,255,255,0.3)';
           }
         } else {
           if (helperCard) helperCard.style.display = 'flex';
