@@ -542,13 +542,33 @@ except Exception:
                     self._parse_expr = None
                     self._transformations = None
 
+            def _is_safe_ast(self, expr_str: str) -> bool:
+                try:
+                    tree = ast.parse(expr_str, mode="eval")
+                    allowed_nodes = (
+                        ast.Expression, ast.BinOp, ast.UnaryOp, ast.Constant,
+                        ast.Add, ast.Sub, ast.Mult, ast.Div, ast.Pow,
+                        ast.FloorDiv, ast.Mod, ast.UAdd, ast.USub, ast.Name,
+                        ast.Call, ast.Load, ast.Tuple, ast.List
+                    )
+                    for node in ast.walk(tree):
+                        if not isinstance(node, allowed_nodes):
+                            return False
+                        if isinstance(node, ast.Name) and node.id not in self.safe_dict:
+                            return False
+                    return True
+                except Exception:
+                    return False
+
             def evaluate_expression(self, expr_str: str) -> Dict[str, Any]:
                 s = expr_str.strip()
                 try:
                     if self._parse_expr:
                         res = self._parse_expr(s, local_dict=self.safe_dict, transformations=self._transformations)
-                    else:
+                    elif self._is_safe_ast(s):
                         res = eval(s, {"__builtins__": {}}, dict(self.safe_dict))
+                    else:
+                        return {"success": False, "error": "Mathematical expression contains disallowed syntax"}
                     latex_res = sp.latex(res) if isinstance(res, (sp.Basic, sp.Matrix)) else str(res)
                     num = None
                     if hasattr(res, "evalf") and not getattr(res, "free_symbols", None):
@@ -561,10 +581,12 @@ except Exception:
                     return {"success": True, "result": str(res), "latex": latex_res, "numeric_approx": num}
                 except Exception as exc:
                     try:
-                        res = eval(s, {"__builtins__": {}}, dict(self.safe_dict))
-                        latex_res = sp.latex(res) if isinstance(res, (sp.Basic, sp.Matrix)) else str(res)
-                        num = float(res.evalf(6)) if hasattr(res, "evalf") and not getattr(res, "free_symbols", None) else None
-                        return {"success": True, "result": str(res), "latex": latex_res, "numeric_approx": num}
+                        if self._is_safe_ast(s):
+                            res = eval(s, {"__builtins__": {}}, dict(self.safe_dict))
+                            latex_res = sp.latex(res) if isinstance(res, (sp.Basic, sp.Matrix)) else str(res)
+                            num = float(res.evalf(6)) if hasattr(res, "evalf") and not getattr(res, "free_symbols", None) else None
+                            return {"success": True, "result": str(res), "latex": latex_res, "numeric_approx": num}
+                        return {"success": False, "error": str(exc)}
                     except Exception:
                         return {"success": False, "error": str(exc)}
 
@@ -1003,7 +1025,7 @@ MODELS_CATALOG = {
         "recommended_ram": "2 GB+ RAM (Ultra-fast edge inference, zero latency)",
         "description": "Proprietary high-velocity STEM & math quad-master model with instant responses, ChatML formatting, and zero-hallucination calculus.",
         "dest_filename": "vigyan-1.5b-quad-master-q4_k_m.gguf",
-        "hf_url": "https://huggingface.co/shreyansh12183/vigyan-1.5b-quad-master/resolve/main/vigyan-1.5b-quad-master-q4_k_m.gguf",
+        "hf_url": "https://github.com/shreyansh001boy-tech/vigyan-desktop-releases/releases/download/v2.9.0-beta/vigyan-1.5b-quad-master-q4_k_m.gguf",
         "local_candidates": [
             os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "models", "vigyan-1.5b-quad-master-q4_k_m.gguf"),
             os.path.join(os.path.dirname(os.path.abspath(__file__)), "models", "vigyan-1.5b-quad-master-q4_k_m.gguf"),
