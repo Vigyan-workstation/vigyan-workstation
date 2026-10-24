@@ -141,7 +141,15 @@ class TestHybridComputeAndNeuroSymbolicStudio(unittest.TestCase):
         srv = launch_desktop.start_neuro_symbolic_bridge_server(port=port)
         self.assertIsNotNone(srv)
 
-        with urllib.request.urlopen(f"http://127.0.0.1:{port}/api/telemetry", timeout=3) as resp:
+        # Unauthenticated request must return 403 Forbidden
+        with self.assertRaises(urllib.error.HTTPError) as cm:
+            urllib.request.urlopen(f"http://127.0.0.1:{port}/api/telemetry", timeout=3)
+        self.assertEqual(cm.exception.code, 403)
+
+        # Authenticated request with session token succeeds
+        headers = {"X-Vigyan-Token": launch_desktop._SESSION_TOKEN}
+        req_tel = urllib.request.Request(f"http://127.0.0.1:{port}/api/telemetry", headers=headers)
+        with urllib.request.urlopen(req_tel, timeout=3) as resp:
             self.assertEqual(resp.status, 200)
             data = json.loads(resp.read().decode("utf-8"))
             self.assertIn("ollama_options", data)
@@ -149,7 +157,7 @@ class TestHybridComputeAndNeuroSymbolicStudio(unittest.TestCase):
         req = urllib.request.Request(
             f"http://127.0.0.1:{port}/api/compute_mode",
             data=json.dumps({"mode": "balanced"}).encode("utf-8"),
-            headers={"Content-Type": "application/json"},
+            headers={"Content-Type": "application/json", "X-Vigyan-Token": launch_desktop._SESSION_TOKEN},
             method="POST",
         )
         with urllib.request.urlopen(req, timeout=3) as resp:
@@ -160,7 +168,7 @@ class TestHybridComputeAndNeuroSymbolicStudio(unittest.TestCase):
         req_enrich = urllib.request.Request(
             f"http://127.0.0.1:{port}/api/enrich",
             data=json.dumps({"query": "/material fcc bragg diffraction"}).encode("utf-8"),
-            headers={"Content-Type": "application/json"},
+            headers={"Content-Type": "application/json", "X-Vigyan-Token": launch_desktop._SESSION_TOKEN},
             method="POST",
         )
         with urllib.request.urlopen(req_enrich, timeout=3) as resp:

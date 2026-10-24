@@ -1,0 +1,51 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── Global Reset ─────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  background: #000000;
+  color: #ffffff;
+  overflow: hidden;
+}
+
+/* ─── Hide all scrollbars visually (keep functionality) */
+* {
+  scrollbar-width: none;
+}
+*::-webkit-scrollbar {
+  display: none;
+}
+
+/* ─── Text selection ───────────────────────────────── */
+::selection {
+  background: rgba(16, 185, 129, 0.25);
+  color: #ffffff;
+}
+
+/* ─── KaTeX Fonts (loaded from local vendor if bundled) */
+/* KaTeX is loaded via CDN in index.html for dev; bundled for production */
+
+/* ─── Textarea auto-resize via field-sizing ─────────── */
+textarea {
+  field-sizing: content;
+}
+
+/* ─── Smooth window drag region (Tauri) ─────────────── */
+[data-tauri-drag-region] {
+  -webkit-app-region: drag;
+  cursor: default;
+}
+[data-tauri-drag-region] * {
+  -webkit-app-region: no-drag;
+}

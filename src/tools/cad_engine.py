@@ -327,6 +327,7 @@ class CADEngineTool(BaseTool):
             "render_type": self.render_type,
             "title": title,
             "shape": shape,
+            "parameters": params,
             "engine": engine_used,
             "metrics": [
                 {"label": "Bounding Box", "value": f"{bb_w} × {bb_l} × {bb_h} mm"},

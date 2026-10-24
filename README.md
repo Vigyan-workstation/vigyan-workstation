@@ -1,4 +1,4 @@
-# Vigyan Pro — Sovereign Desktop Workstation (v2.7.0)
+# Vigyan Pro — Sovereign Desktop Workstation (v3.0.0)
 
 [![CI - Multi-OS Verification](https://github.com/shreyansh001boy-tech/vigyan-pro-desktop/actions/workflows/ci.yml/badge.svg)](https://github.com/shreyansh001boy-tech/vigyan-pro-desktop/actions/workflows/ci.yml)
 [![Security - Air Gapped Zero Egress](https://img.shields.io/badge/Security-Air--Gapped%20Zero--Egress-10b981.svg)](SECURITY.md)
@@ -6,9 +6,9 @@
 [![Platforms - Linux | Windows | macOS](https://img.shields.io/badge/Platforms-Linux%20%7C%20Windows%20%7C%20macOS-lightgrey.svg)](#multi-platform-matrix)
 [![Inference - Air-Gapped Local Daemon](https://img.shields.io/badge/Inference-127.0.0.1%3A11434-38bdf8.svg)](#local-sovereign-runtime)
 
-> **Enterprise Obsidian-Grade Sovereign STEM & Semiconductor AI Desktop Workstation**  
-> *Zero browser chrome. 100% Native cross-platform desktop runtime for Linux, Windows, and macOS.*  
-> *Zero cloud egress. 100% Offline KaTeX derivations, Plotly WebGL 3D visualizations, and 60 FPS physics simulations.*
+> **Enterprise Obsidian-Grade Sovereign STEM, Physical Engineering & Semiconductor AI Workstation**  
+> *Zero browser chrome. Zero Node.js runtime requirement. 100% Native cross-platform desktop runtime.*  
+> *Zero cloud egress. 100% Offline KaTeX derivations, Svelte 5 Multi-Mode Studio (CAD, Robotics, WaveDrom, PCB), and Embedded KùzuDB GraphRAG.*
 
 ---
 
@@ -18,20 +18,24 @@
 ┌────────────────────────────────────────────────────────────────────────┐
 │  Vigyan Pro Desktop Shell (WebKitGTK Linux / WebView2 Win / Mac WKWeb) │
 │  • Obsidian Pitch-Black Monochrome Design (#000000)                    │
-│  • Strict Content Security Policy (connect-src 127.0.0.1:11434 only)   │
-│  • Hardware-Accelerated WebGL & 2D Canvas Engines                      │
+│  • Zero-Node Client Runtime: Pre-compiled Svelte 5 bundle (src/dist/)  │
+│  • Ephemeral Session Security Token & Localhost Strict CORS Boundary   │
 ├────────────────────────────────────────────────────────────────────────┤
-│  Triple Sovereign Workspace                                            │
-│  • Studio: Multi-turn streaming calculus & symbolic STEM dialogue      │
-│  • STEM Workbench: 2D Plotter, 3D CAD/Molecules & 60 FPS Simulations   │
-│  • Sovereign Vault: Curated @shreyansh12183 & @allenai model hub       │
+│  Multi-Mode Studio Canvas & Engineering Stream                         │
+│  • 3D Parametric CAD: Three.js turntable, real-time sliders & STL exp  │
+│  • 6-DoF Robotics: Kinematics skeleton, reach envelope & DH matrix     │
+│  • WaveDrom Timing: Bus protocols (SPI, I2C, UART, AXI4) & SVG export  │
+│  • KiCad PCB: Schematic netlist visualizer & Bill of Materials (BOM)   │
+│  • Terminal Security Gate: Monospace preview & interactive auth        │
 ├────────────────────────────────────────────────────────────────────────┤
-│  Domain-Specialized Scientific Workspaces                              │
-│  • Lab Studio · Semiconductor · Astronomy · Biomed · Chemistry        │
+│  Neuro-Symbolic Sovereign Engine (src/launch_desktop.py)               │
+│  • Exact SymPy AST Sandbox: Zero-hallucination calculus & ODEs         │
+│  • Embedded KùzuDB Graph: Vendored C++ graph database (db_store.db)    │
+│  • CPU OCR Ingestion Engine: Offline Tesseract & dimension parser      │
 ├────────────────────────────────────────────────────────────────────────┤
 │  Local Sovereign Runtime & Security Boundary                           │
 │  • Air-Gapped Local Daemon (http://127.0.0.1:11434)                    │
-│  • Offline Vendor Assets (Bundled KaTeX, Plotly WebGL, MathJax-free)   │
+│  • Offline Vendor Assets (Bundled KaTeX, Plotly WebGL, WaveDrom)       │
 │  • Cryptographic Release Verification (SHA256SUMS)                     │
 └────────────────────────────────────────────────────────────────────────┘
 ```
@@ -111,20 +115,31 @@ cd vigyan-pro-2.7.0
 
 ---
 
-## 5. STEM Scientific Workbench Capabilities
+## 5. STEM Scientific & Physical Engineering Capabilities
 
-1. **2D Dynamic Function Plotter:**
+1. **Multi-Mode Studio Canvas (Svelte 5):**
+   * **Parametric 3D CAD**: Interactive Three.js turntable viewport with Width, Length, Height, and Wall sliders + 1-click `.STL` manufacturing export.
+   * **6-DoF Robotics Kinematics**: Dynamic SVG kinematic skeleton with reach envelope, DH matrix calculations, 4 tactile pose presets (*Home 0°*, *Pick & Place*, *Full Reach*, *High Lift*), continuous joint sliders ($\theta_1 \dots \theta_6$), and `.json` kinematics model export.
+   * **WaveDrom Hardware Timing**: High-resolution vector waveforms with instant protocol switching chips (*SPI Master*, *I2C 7-Bit*, *UART 8N1*, *AXI4-Stream*) and `.svg` export.
+   * **KiCad PCB Netlists**: Electronics netlist viewer with full Bill of Materials (BOM) breakdown and `.net` export.
+
+2. **CPU OCR & Document Ingestion Engine:**
+   * Drag-and-drop hardware schematics, spec sheets, and circuit diagrams.
+   * Offline Tesseract OCR with automatic dimension extraction (`140x90x35mm`, voltages, frequencies).
+   * Context-aware 1-click action chips (e.g. *⚡ Synthesize 3D CAD Enclosure*, *⚡ Generate KiCad PCB Netlist*).
+
+3. **Sovereign Neuro-Symbolic & Knowledge Graph Engine:**
+   * **SymPy AST Core**: Zero-hallucination exact calculus, ODEs, Taylor expansions, and linear algebra in a secured sandbox.
+   * **Vendored KùzuDB Graph Engine**: 100% offline, C++ embedded graph database (`db_store.db`) containing 51 verified physical laws with multi-hop GraphRAG traversal.
+
+4. **Terminal Security Gate:**
+   * Human-in-the-Loop obsidian security card for state-altering terminal operations.
+   * Displays risk assessment, plain-English rationale, and monospace command preview with tactile `[⚡ Authorize & Run Command]` confirmation.
+
+5. **2D Dynamic Function Plotter & 60 FPS Physics Engine:**
    * Dual-trace comparative plotting ($f_1(x)$ primary white trace, $f_2(x)$ secondary cyan trace).
    * Real-time numerical calculus: live derivative curve ($f'(x)$ in amber) and cumulative numerical integral curve ($\int f(x)dx$ in emerald).
-   * Real-time cursor coordinates HUD readout `(x, y)`.
-   * Presets: MOSFET Saturation, Shockley Diode $I\text{-}V$, Damped Oscillator, Soliton Wave ($sech^2$), Gaussian Normal, Sigmoid, Fourier Square, and Bessel $J_0(x)$.
-2. **3D CAD & Molecular Structure Suite:**
-   * Interactive WebGL crystal and molecular rendering: Graphene Monolayer ($sp^2$ hexagonal carbon sheet), Caffeine ($C_8H_{10}N_4O_2$), Silicon Diamond Cubic Lattice ($Fd\bar{3}m$), Benzene ($C_6H_6$), Water ($H_2O$), Methane ($CH_4$), Torus, Spring, and Paraboloid.
-   * Isometric, Top, and Front projections with Wireframe toggle.
-3. **60 FPS Dynamic Simulation Engine:**
-   * Quantum Tunneling & Wavepacket Dispersion with barrier height slider $V_0$, live transmission ($T$) and reflection ($R$) coefficients.
-   * PN Junction Band Bending ($E_c, E_v, E_F, W_{dep}$) with real-time bias control.
-   * Coupled Double Pendulum, Keplerian Orbits, Michaelis-Menten Enzyme Kinetics, and Reversible Chemical Equilibrium.
+   * Dynamic physics simulations: Quantum Tunneling, PN Junction Band Bending, and Keplerian Orbits.
 
 ---
 

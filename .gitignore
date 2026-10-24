@@ -1,4 +1,7 @@
-dist/
+/dist/
+frontend/dist/
+frontend/node_modules/
+!src/dist/
 .build_deb/
 .build_tar/
 .deb_tmp/

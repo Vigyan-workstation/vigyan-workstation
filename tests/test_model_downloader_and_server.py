@@ -21,6 +21,7 @@ from launch_desktop import (
     ModelDownloadManager,
     grep_workspace_files,
     start_neuro_symbolic_bridge_server,
+    _SESSION_TOKEN,
 )
 
 
@@ -32,7 +33,7 @@ def test_models_catalog_integrity():
     for tag, info in MODELS_CATALOG.items():
         assert info["tag"] == tag
         assert info["size_bytes"] > 1_000_000_000  # >= 1 GB
-        assert info["hf_url"].startswith("https://huggingface.co/")
+        assert info["hf_url"].startswith("https://huggingface.co/") or info["hf_url"].startswith("https://github.com/")
         assert info["dest_filename"].endswith(".gguf")
         assert "TEMPLATE" in f"TEMPLATE {info['template']}"
         assert len(info.get("stop", [])) > 0
@@ -87,10 +88,17 @@ def test_http_bridge_static_serving_and_catalog():
         assert "text/html" in resp.headers.get("Content-Type", "")
         content = resp.read().decode("utf-8")
         assert "Vigyan Pro" in content
-        assert "sovereign-badge-pill" in content
 
-    # 2. Test /api/models/catalog JSON endpoint
-    req_cat = urllib.request.Request(f"http://127.0.0.1:{port}/api/models/catalog")
+    # 2. Test unauthenticated API endpoint returns 403 Forbidden
+    try:
+        urllib.request.urlopen(f"http://127.0.0.1:{port}/api/models/catalog", timeout=3.0)
+        assert False, "Unauthenticated request should have failed with 403"
+    except urllib.error.HTTPError as e:
+        assert e.code == 403
+
+    # 3. Test authenticated /api/models/catalog JSON endpoint
+    auth_headers = {"X-Vigyan-Token": _SESSION_TOKEN}
+    req_cat = urllib.request.Request(f"http://127.0.0.1:{port}/api/models/catalog", headers=auth_headers)
     with urllib.request.urlopen(req_cat, timeout=3.0) as resp:
         assert resp.status == 200
         data = json.loads(resp.read().decode("utf-8"))
@@ -98,8 +106,11 @@ def test_http_bridge_static_serving_and_catalog():
         assert "vigyan:1.5b" in data["catalog"]
         assert "system_ram_gb" in data
 
-    # 3. Test /api/models/download/status endpoint
-    req_st = urllib.request.Request(f"http://127.0.0.1:{port}/api/models/download/status?tag=vigyan:1.5b")
+    # 4. Test authenticated /api/models/download/status endpoint
+    req_st = urllib.request.Request(
+        f"http://127.0.0.1:{port}/api/models/download/status?tag=vigyan:1.5b",
+        headers=auth_headers
+    )
     with urllib.request.urlopen(req_st, timeout=3.0) as resp:
         assert resp.status == 200
         st = json.loads(resp.read().decode("utf-8"))

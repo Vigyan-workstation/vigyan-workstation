@@ -8,6 +8,7 @@ import base64
 import json
 import math
 import pathlib
+import re
 import sys
 import unittest
 
@@ -163,6 +164,67 @@ class TestSTEMToolkits(unittest.TestCase):
         self.assertAlmostEqual(res_rot["end_effector"]["x"], -res_home["end_effector"]["y"], delta=0.5)
         self.assertAlmostEqual(res_rot["end_effector"]["y"], res_home["end_effector"]["x"], delta=0.5)
 
+    def test_cad_recompute_dispatch(self):
+        # Test real-time slider recompute via tool dispatcher
+        recompute_args = {
+            "shape": "enclosure",
+            "title": "Tactile Slider Test",
+            "params": {"width": 140.0, "length": 90.0, "height": 40.0, "wall": 3.0}
+        }
+        res = tools.dispatch_tool("cad_model_generate", recompute_args)
+        self.assertTrue(res["success"])
+        self.assertEqual(res["parameters"]["width"], 140.0)
+        self.assertEqual(res["parameters"]["length"], 90.0)
+        self.assertEqual(res["parameters"]["height"], 40.0)
+        self.assertEqual(res["parameters"]["wall"], 3.0)
+        self.assertIn("stl_base64", res)
+        self.assertGreater(len(res["mesh"]["positions"]), 0)
+
+    def test_ingest_file_dimension_extraction(self):
+        sample_doc = (
+            "Sensor Module Spec Sheet\n"
+            "Dimensions: 120mm x 80mm x 25mm\n"
+            "Operating Voltage: 5V DC at 200mA\n"
+            "Requires custom snap-fit enclosure and mounting holes."
+        )
+        lines = sample_doc.splitlines()
+        dim_matches = re.findall(r"(\d+(?:\.\d+)?)\s*(?:mm|cm|m|in|\"|V|mA|A|Hz|kHz|MHz|Ω|kΩ)", sample_doc)
+        self.assertIn("120", dim_matches)
+        self.assertIn("80", dim_matches)
+        self.assertIn("25", dim_matches)
+        self.assertIn("5", dim_matches)
+        self.assertIn("200", dim_matches)
+
+
+    def test_kuzu_stem_graph_vendored_traversal(self):
+        from knowledge_graph.kuzu_stem_graph import VigyanSTEMGraph
+        kg = VigyanSTEMGraph()
+        self.assertTrue(pathlib.Path(kg.db_path).exists())
+        ctx = kg.query_multihop_context(["semiconductor", "mosfet"])
+        self.assertGreater(len(ctx), 50)
+        self.assertIn("Law", ctx)
+
+    def test_robotics_and_wavedrom_recompute_dispatch(self):
+        # 1. Robotics Recompute Dispatch
+        rob_args = {
+            "arm_type": "6dof_industrial",
+            "joint_angles_deg": [0, 30, -45, 0, 15, 0]
+        }
+        res_rob = tools.dispatch_tool("robotics_kinematics", rob_args)
+        self.assertTrue(res_rob["success"])
+        self.assertIn("end_effector", res_rob)
+        self.assertIn("reach_mm", res_rob)
+
+        # 2. WaveDrom Recompute Dispatch
+        wave_args = {
+            "protocol": "axi4_stream",
+            "title": "AXI4 Burst"
+        }
+        res_wave = tools.dispatch_tool("wavedrom_generate", wave_args)
+        self.assertTrue(res_wave["success"])
+        self.assertIn("wavedrom_spec", res_wave)
+
 
 if __name__ == "__main__":
     unittest.main()
+

@@ -13,12 +13,29 @@ if ! curl -s http://127.0.0.1:11434/api/tags >/dev/null 2>&1; then
     sleep 1
 fi
 
-# 2. Dynamic discovery of desktop runtime
+# 2. Dynamic discovery of Python runtime (prefer virtualenv with kuzu/sympy/WebKit2)
+PYTHON_BIN="/usr/bin/python3"
+if [ -x "$HOME/.venv-rag/bin/python" ]; then
+    PYTHON_BIN="$HOME/.venv-rag/bin/python"
+elif [ -x "$HOME/.vigyan/venv/bin/python" ]; then
+    PYTHON_BIN="$HOME/.vigyan/venv/bin/python"
+elif [ -x "$(command -v python3)" ]; then
+    PYTHON_BIN="$(command -v python3)"
+fi
+
+# Export system and venv paths to PYTHONPATH so Gtk/WebKit2 and STEM modules coexist
+for _sp in /usr/lib*/python3*/site-packages /usr/lib*/python3/dist-packages "$HOME/.venv-rag/lib/python"*/site-packages; do
+    if [ -d "$_sp" ]; then
+        export PYTHONPATH="${PYTHONPATH:+$PYTHONPATH:}$_sp"
+    fi
+done
+
+# 3. Dynamic discovery of desktop runtime
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 if [ -f "$SCRIPT_DIR/../src/launch_desktop.py" ]; then
-    exec /usr/bin/python3 "$SCRIPT_DIR/../src/launch_desktop.py" "$@"
+    exec "$PYTHON_BIN" "$SCRIPT_DIR/../src/launch_desktop.py" "$@"
 elif [ -f "/opt/vigyan-pro/src/launch_desktop.py" ]; then
-    exec /usr/bin/python3 "/opt/vigyan-pro/src/launch_desktop.py" "$@"
+    exec "$PYTHON_BIN" "/opt/vigyan-pro/src/launch_desktop.py" "$@"
 else
-    exec /usr/bin/python3 "$HOME/.vigyan/desktop/launch_desktop.py" "$@"
+    exec "$PYTHON_BIN" "$HOME/.vigyan/desktop/launch_desktop.py" "$@"
 fi

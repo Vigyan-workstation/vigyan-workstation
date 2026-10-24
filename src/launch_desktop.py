@@ -20,13 +20,39 @@ import threading
 import subprocess
 import urllib.request
 import urllib.parse
+import secrets
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from typing import Dict, Any, List, Optional
 
-# Auto-inject virtualenv site-packages so SymPy, KùzuDB, LanceDB are always available
+# Sovereign session security token (ephemeral, single-session only)
+_SESSION_TOKEN = secrets.token_hex(32)
+
+# Auto-inject virtualenv site-packages and knowledge_graph paths so SymPy, KùzuDB are always available
+_BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+if _BASE_DIR not in sys.path:
+    sys.path.insert(0, _BASE_DIR)
+for _cand in [
+    os.path.join(_BASE_DIR, "knowledge_graph"),
+    _BASE_DIR,
+    os.path.expanduser("~/.vigyan/knowledge_graph"),
+    "/home/hello/vigyan_masterpiece",
+]:
+    if os.path.isdir(_cand) and _cand not in sys.path:
+        sys.path.insert(0, _cand)
+
 for _p in glob.glob(os.path.expanduser("~/.venv-rag/lib/python*/site-packages")):
     if _p not in sys.path:
         sys.path.insert(0, _p)
+
+# Auto-inject system site-packages and dist-packages so gi (Gtk, WebKit2) is always available even in a venv
+for _sys_p in (
+    glob.glob("/usr/lib*/python3*/site-packages")
+    + glob.glob("/usr/lib*/python3/dist-packages")
+    + glob.glob("/usr/local/lib*/python3*/site-packages")
+    + glob.glob("/usr/local/lib*/python3/dist-packages")
+):
+    if os.path.isdir(_sys_p) and _sys_p not in sys.path:
+        sys.path.append(_sys_p)
 
 # Set Ollama hybrid compute acceleration flags before spawning daemon
 os.environ.setdefault("OLLAMA_FLASH_ATTENTION", "1")
@@ -508,91 +534,107 @@ _SYMPY_ENGINE = None
 _STEM_GRAPH = None
 
 try:
-    from tools.sympy_math_engine import SymPyMathEngine as _ExtSymPyEngine
-    _SYMPY_ENGINE = _ExtSymPyEngine()
-except Exception:
-    try:
-        import sympy as sp
+    import sympy as sp
 
-        class _FallbackSymPyEngine:
-            def __init__(self):
-                self.safe_dict = {
-                    "x": sp.Symbol("x"), "y": sp.Symbol("y"), "z": sp.Symbol("z"),
-                    "t": sp.Symbol("t"), "s": sp.Symbol("s"), "n": sp.Symbol("n", integer=True),
-                    "k": sp.Symbol("k"), "R": sp.Symbol("R", positive=True),
-                    "C": sp.Symbol("C", positive=True), "L": sp.Symbol("L", positive=True),
-                    "pi": sp.pi, "e": sp.E, "E": sp.E, "oo": sp.oo, "inf": sp.oo,
-                    "sin": sp.sin, "cos": sp.cos, "tan": sp.tan, "exp": sp.exp,
-                    "log": sp.log, "ln": sp.log, "sqrt": sp.sqrt, "diff": sp.diff,
-                    "integrate": sp.integrate, "solve": sp.solve, "simplify": sp.simplify,
-                    "expand": sp.expand, "factor": sp.factor, "limit": sp.limit,
-                    "series": sp.series, "dsolve": sp.dsolve, "Matrix": sp.Matrix,
-                    "Eq": sp.Eq, "symbols": sp.symbols, "Symbol": sp.Symbol, "sp": sp,
-                }
-                try:
-                    from sympy.parsing.sympy_parser import (
-                        parse_expr,
-                        standard_transformations,
-                        implicit_multiplication_application,
-                        convert_xor
-                    )
-                    self._parse_expr = parse_expr
-                    self._transformations = standard_transformations + (implicit_multiplication_application, convert_xor)
-                except Exception:
-                    self._parse_expr = None
-                    self._transformations = None
+    class _FallbackSymPyEngine:
+        def __init__(self):
+            self.safe_dict = {
+                "x": sp.Symbol("x"), "y": sp.Symbol("y"), "z": sp.Symbol("z"),
+                "t": sp.Symbol("t"), "s": sp.Symbol("s"), "n": sp.Symbol("n", integer=True),
+                "k": sp.Symbol("k"), "R": sp.Symbol("R", positive=True),
+                "C": sp.Symbol("C", positive=True), "L": sp.Symbol("L", positive=True),
+                "pi": sp.pi, "e": sp.E, "E": sp.E, "oo": sp.oo, "inf": sp.oo,
+                "sin": sp.sin, "cos": sp.cos, "tan": sp.tan, "asin": sp.asin, "acos": sp.acos, "atan": sp.atan,
+                "sinh": sp.sinh, "cosh": sp.cosh, "tanh": sp.tanh, "exp": sp.exp,
+                "log": sp.log, "ln": sp.log, "sqrt": sp.sqrt, "diff": sp.diff,
+                "integrate": sp.integrate, "solve": sp.solve, "simplify": sp.simplify,
+                "expand": sp.expand, "factor": sp.factor, "limit": sp.limit,
+                "series": sp.series, "dsolve": sp.dsolve, "Matrix": sp.Matrix,
+                "Eq": sp.Eq, "symbols": sp.symbols, "Symbol": sp.Symbol,
+                "Integer": sp.Integer, "Float": sp.Float, "Rational": sp.Rational, "Number": sp.Number
+            }
+            try:
+                from sympy.parsing.sympy_parser import (
+                    parse_expr,
+                    standard_transformations,
+                    implicit_multiplication_application,
+                    convert_xor
+                )
+                self._parse_expr = parse_expr
+                self._transformations = standard_transformations + (implicit_multiplication_application, convert_xor)
+            except Exception:
+                self._parse_expr = None
+                self._transformations = None
 
-            def _is_safe_ast(self, expr_str: str) -> bool:
-                try:
-                    tree = ast.parse(expr_str, mode="eval")
-                    allowed_nodes = (
-                        ast.Expression, ast.BinOp, ast.UnaryOp, ast.Constant,
-                        ast.Add, ast.Sub, ast.Mult, ast.Div, ast.Pow,
-                        ast.FloorDiv, ast.Mod, ast.UAdd, ast.USub, ast.Name,
-                        ast.Call, ast.Load, ast.Tuple, ast.List
-                    )
-                    for node in ast.walk(tree):
-                        if not isinstance(node, allowed_nodes):
+        def _clean_math_str(self, s: str) -> str:
+            s = s.strip()
+            s = s.replace("²", "**2").replace("³", "**3").replace("⁴", "**4")
+            s = s.replace("−", "-").replace("×", "*").replace("÷", "/").replace("π", "pi")
+            for bad in ("__", "import", "eval", "exec", "open", "os", "sys", "subprocess", "lambda", "globals", "locals", "getattr", "setattr", "delattr", "system", "pty", "shutil"):
+                if bad in s.lower():
+                    return ""
+            return s
+
+        def _is_safe_ast(self, expr_str: str) -> bool:
+            try:
+                tree = ast.parse(expr_str, mode="eval")
+                allowed_nodes = (
+                    ast.Expression, ast.BinOp, ast.UnaryOp, ast.Constant,
+                    ast.Add, ast.Sub, ast.Mult, ast.Div, ast.Pow,
+                    ast.FloorDiv, ast.Mod, ast.UAdd, ast.USub, ast.Name,
+                    ast.Call, ast.Load, ast.Tuple, ast.List
+                )
+                for node in ast.walk(tree):
+                    if not isinstance(node, allowed_nodes):
+                        return False
+                    if isinstance(node, ast.Attribute):
+                        return False
+                    if isinstance(node, ast.Name):
+                        if node.id.startswith("__") or node.id not in self.safe_dict:
                             return False
-                        if isinstance(node, ast.Name) and node.id not in self.safe_dict:
-                            return False
-                    return True
-                except Exception:
-                    return False
+                return True
+            except Exception:
+                return False
 
-            def evaluate_expression(self, expr_str: str) -> Dict[str, Any]:
-                s = expr_str.strip()
-                try:
-                    if self._parse_expr:
-                        res = self._parse_expr(s, local_dict=self.safe_dict, transformations=self._transformations)
-                    elif self._is_safe_ast(s):
-                        res = eval(s, {"__builtins__": {}}, dict(self.safe_dict))
-                    else:
-                        return {"success": False, "error": "Mathematical expression contains disallowed syntax"}
-                    latex_res = sp.latex(res) if isinstance(res, (sp.Basic, sp.Matrix)) else str(res)
-                    num = None
-                    if hasattr(res, "evalf") and not getattr(res, "free_symbols", None):
-                        try:
-                            num = float(res.evalf(6))
-                        except Exception:
-                            num = None
-                    elif isinstance(res, (int, float)):
-                        num = float(res)
-                    return {"success": True, "result": str(res), "latex": latex_res, "numeric_approx": num}
-                except Exception as exc:
+        def evaluate_expression(self, expr_str: str) -> Dict[str, Any]:
+            s = self._clean_math_str(expr_str)
+            if not s:
+                return {"success": False, "error": "Mathematical expression contains disallowed syntax or keywords"}
+
+            if "=" in s and not ("==" in s or "Eq" in s or "<=" in s or ">=" in s):
+                parts = s.split("=", 1)
+                s = f"solve(Eq({parts[0].strip()}, {parts[1].strip()}))"
+
+            if not self._is_safe_ast(s):
+                return {"success": False, "error": "Mathematical expression contains disallowed syntax"}
+
+            try:
+                if self._parse_expr:
+                    res = self._parse_expr(
+                        s,
+                        local_dict=self.safe_dict,
+                        global_dict={"__builtins__": {}},
+                        transformations=self._transformations
+                    )
+                else:
+                    res = eval(s, {"__builtins__": {}}, dict(self.safe_dict))
+
+                latex_res = sp.latex(res) if isinstance(res, (sp.Basic, sp.Matrix, list, tuple)) else str(res)
+                num = None
+                if hasattr(res, "evalf") and not getattr(res, "free_symbols", None):
                     try:
-                        if self._is_safe_ast(s):
-                            res = eval(s, {"__builtins__": {}}, dict(self.safe_dict))
-                            latex_res = sp.latex(res) if isinstance(res, (sp.Basic, sp.Matrix)) else str(res)
-                            num = float(res.evalf(6)) if hasattr(res, "evalf") and not getattr(res, "free_symbols", None) else None
-                            return {"success": True, "result": str(res), "latex": latex_res, "numeric_approx": num}
-                        return {"success": False, "error": str(exc)}
+                        num = float(res.evalf(6))
                     except Exception:
-                        return {"success": False, "error": str(exc)}
+                        num = None
+                elif isinstance(res, (int, float)):
+                    num = float(res)
+                return {"success": True, "result": str(res), "latex": latex_res, "numeric_approx": num}
+            except Exception as exc:
+                return {"success": False, "error": f"Evaluation error: {str(exc)}"}
 
-        _SYMPY_ENGINE = _FallbackSymPyEngine()
-    except Exception:
-        _SYMPY_ENGINE = None
+    _SYMPY_ENGINE = _FallbackSymPyEngine()
+except Exception:
+    _SYMPY_ENGINE = None
 
 # Curated deterministic GraphRAG knowledge base (always available even if KùzuDB is locked)
 CURATED_GRAPH_AXIOMS = [
@@ -795,9 +837,7 @@ def enrich_stem_query(query: str) -> Dict[str, Any]:
         try:
             if _STEM_GRAPH is None:
                 from knowledge_graph.kuzu_stem_graph import VigyanSTEMGraph
-                kuzu_path = "/home/hello/vigyan_masterpiece/knowledge_graph/db_store.db"
-                if os.path.exists(os.path.dirname(kuzu_path)):
-                    _STEM_GRAPH = VigyanSTEMGraph(db_path=kuzu_path)
+                _STEM_GRAPH = VigyanSTEMGraph()
             if _STEM_GRAPH is not None:
                 words = [w for w in re.findall(r"\b[A-Za-z0-9_-]{3,}\b", q) if w.lower() not in {"what", "the", "and", "for", "with", "how", "derive", "explain", "plot", "simulate"}]
                 ctx_str = _STEM_GRAPH.query_multihop_context(words[:6])
@@ -1902,19 +1942,58 @@ class _NeuroSymbolicHTTPHandler(BaseHTTPRequestHandler):
     def log_message(self, format, *args):
         pass  # Keep console clean
 
+    def _check_auth(self) -> bool:
+        token = self.headers.get("X-Vigyan-Token", "")
+        if not token:
+            auth = self.headers.get("Authorization", "")
+            if auth.startswith("Bearer "):
+                token = auth[7:].strip()
+        if not token and "?" in self.path:
+            from urllib.parse import parse_qs, urlparse
+            qs = parse_qs(urlparse(self.path).query)
+            token = qs.get("token", [""])[0]
+        return token == _SESSION_TOKEN
+
     def _send_cors(self, status=200, content_type="application/json"):
         self.send_response(status)
         self.send_header("Content-Type", content_type)
-        self.send_header("Access-Control-Allow-Origin", "*")
+        origin = self.headers.get("Origin", "")
+        if origin.startswith("http://127.0.0.1:") or origin.startswith("http://localhost:") or origin == "null" or not origin:
+            self.send_header("Access-Control-Allow-Origin", origin if origin else "http://127.0.0.1")
+            self.send_header("Access-Control-Allow-Credentials", "true")
+        else:
+            self.send_header("Access-Control-Allow-Origin", "http://127.0.0.1")
         self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
-        self.send_header("Access-Control-Allow-Headers", "Content-Type, Authorization")
+        self.send_header("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Vigyan-Token")
         self.end_headers()
 
     def do_OPTIONS(self):
         self._send_cors(200)
 
     def do_GET(self):
-        if self.path.startswith("/health") or self.path.startswith("/api/telemetry"):
+        if self.path.startswith("/health"):
+            tel = get_system_telemetry()
+            payload = dict(tel)
+            payload.update({
+                "status": "online",
+                "agent": "Vigyan-Sovereign-Neuro-Symbolic-Bridge",
+                "sympy": _SYMPY_ENGINE is not None,
+                "kuzudb": True,
+                "ram_governor": {"active": True, "threshold_pct": 88.0},
+                "telemetry": tel,
+            })
+            self._send_cors(200)
+            self.wfile.write(json.dumps(payload).encode("utf-8"))
+            return
+
+        # Enforce session token on all internal API endpoints
+        if self.path.startswith("/api/"):
+            if not self._check_auth():
+                self._send_cors(403)
+                self.wfile.write(b'{"error":"Forbidden: Invalid or missing X-Vigyan-Token"}')
+                return
+
+        if self.path.startswith("/api/telemetry"):
             tel = get_system_telemetry()
             payload = dict(tel)
             payload.update({
@@ -1960,10 +2039,13 @@ class _NeuroSymbolicHTTPHandler(BaseHTTPRequestHandler):
             self._send_cors(200)
             self.wfile.write(json.dumps(res).encode("utf-8"))
         else:
-            # Universal cross-platform static file serving (served from local src directory)
+            # Universal cross-platform static file serving (dist/ priority then src/)
             clean_path = self.path.split("?")[0]
+            base_dir = os.path.dirname(os.path.abspath(__file__))
+            dist_dir = os.path.join(base_dir, "dist")
             if clean_path in ("/", "/index.html", "/chat"):
-                target_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), "index.html")
+                target_dist = os.path.join(dist_dir, "index.html")
+                target_file = target_dist if os.path.isfile(target_dist) else os.path.join(base_dir, "index.html")
                 if os.path.isfile(target_file):
                     self._send_cors(200, content_type="text/html; charset=utf-8")
                     with open(target_file, "rb") as f:
@@ -1971,7 +2053,8 @@ class _NeuroSymbolicHTTPHandler(BaseHTTPRequestHandler):
                     return
             elif clean_path.startswith(("/vendor/", "/assets/")):
                 rel = clean_path.lstrip("/")
-                target_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), rel)
+                target_dist = os.path.join(dist_dir, rel)
+                target_file = target_dist if os.path.isfile(target_dist) else os.path.join(base_dir, rel)
                 if os.path.isfile(target_file):
                     ctype = "application/octet-stream"
                     if clean_path.endswith(".js"):
@@ -1994,6 +2077,13 @@ class _NeuroSymbolicHTTPHandler(BaseHTTPRequestHandler):
             self.wfile.write(b'{"error":"not found"}')
 
     def do_POST(self):
+        # Enforce session token on all internal API endpoints
+        if self.path.startswith("/api/"):
+            if not self._check_auth():
+                self._send_cors(403)
+                self.wfile.write(b'{"error":"Forbidden: Invalid or missing X-Vigyan-Token"}')
+                return
+
         length = int(self.headers.get("Content-Length", "0"))
         raw = self.rfile.read(length).decode("utf-8") if length > 0 else "{}"
         try:
@@ -2098,6 +2188,70 @@ class _NeuroSymbolicHTTPHandler(BaseHTTPRequestHandler):
             self.wfile.write(json.dumps(res).encode("utf-8"))
             return
 
+        if self.path.startswith("/api/tools/cad/recompute"):
+            import tools
+            shape = body.get("shape", "enclosure")
+            params = body.get("params", {})
+            title = body.get("title", f"Parametric {shape.title()}")
+            res = tools.dispatch_tool("cad_model_generate", {
+                "shape": shape,
+                "title": title,
+                "params": params
+            })
+            self._send_cors(200)
+            self.wfile.write(json.dumps(res).encode("utf-8"))
+            return
+
+        if self.path.startswith("/api/tools/robotics/recompute"):
+            import tools
+            arm_type = body.get("arm_type", "6dof_industrial")
+            joint_angles_deg = body.get("joint_angles_deg", [0, 0, 0, 0, 0, 0])
+            res = tools.dispatch_tool("robotics_kinematics", {
+                "arm_type": arm_type,
+                "joint_angles_deg": joint_angles_deg
+            })
+            self._send_cors(200)
+            self.wfile.write(json.dumps(res).encode("utf-8"))
+            return
+
+        if self.path.startswith("/api/tools/wavedrom/recompute"):
+            import tools
+            protocol = body.get("protocol", "spi_master")
+            title = body.get("title")
+            res = tools.dispatch_tool("wavedrom_generate", {
+                "protocol": protocol,
+                "title": title
+            })
+            self._send_cors(200)
+            self.wfile.write(json.dumps(res).encode("utf-8"))
+            return
+
+        if self.path.startswith("/api/ingest/file"):
+            import ingest_engine
+            filename = body.get("filename", "document.txt")
+            image_b64 = body.get("image_base64", "")
+            pdf_b64 = body.get("pdf_base64", "")
+            content = body.get("content", "")
+
+            raw_text = content
+            if image_b64:
+                try:
+                    img_bytes = base64.b64decode(image_b64)
+                    raw_text = ingest_engine.extract_text_from_image_bytes(img_bytes)
+                except Exception:
+                    raw_text = ""
+            elif pdf_b64:
+                try:
+                    pdf_bytes = base64.b64decode(pdf_b64)
+                    raw_text = ingest_engine.extract_text_from_pdf_bytes(pdf_bytes)
+                except Exception:
+                    raw_text = ""
+
+            res = ingest_engine.analyze_ingested_content(filename, raw_text)
+            self._send_cors(200)
+            self.wfile.write(json.dumps(res).encode("utf-8"))
+            return
+
         if self.path.startswith("/api/chat") or self.path.startswith("/api/agent/stream"):
             user_query = (body.get("query") or body.get("message") or "").strip()
             requested_model = body.get("model") or "auto"
@@ -2107,7 +2261,13 @@ class _NeuroSymbolicHTTPHandler(BaseHTTPRequestHandler):
             self.send_response(200)
             self.send_header("Content-Type", "text/event-stream")
             self.send_header("Cache-Control", "no-cache")
-            self.send_header("Access-Control-Allow-Origin", "*")
+            origin = self.headers.get("Origin", "")
+            if origin.startswith("http://127.0.0.1:") or origin.startswith("http://localhost:") or origin == "null" or not origin:
+                self.send_header("Access-Control-Allow-Origin", origin if origin else "http://127.0.0.1")
+                self.send_header("Access-Control-Allow-Credentials", "true")
+            else:
+                self.send_header("Access-Control-Allow-Origin", "http://127.0.0.1")
+            self.send_header("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Vigyan-Token")
             self.end_headers()
 
             def _emit(event: str, data_obj: Any):
@@ -2280,9 +2440,74 @@ class _NeuroSymbolicHTTPHandler(BaseHTTPRequestHandler):
                 _emit("tool_result", med_res)
                 deterministic_executed = True
 
+            # 8. CAD & 3D Solid Geometry Intent (Parametric CSG & STL)
+            if not deterministic_executed and any(w in q_lower for w in ("cad", "enclosure", "3d box", "mounting bracket", "3d print", "gear", "cylinder", "solid geometry")):
+                import tools
+                cad_shape = "enclosure"
+                cad_params = {"width": 120.0, "length": 80.0, "height": 35.0, "wall": 2.5}
+                if "gear" in q_lower:
+                    cad_shape = "gear"
+                    cad_params = {"num_teeth": 18, "module": 2.0, "thickness": 8.0, "bore": 5.0}
+                elif "cylinder" in q_lower or "rod" in q_lower or "shaft" in q_lower:
+                    cad_shape = "cylinder"
+                    cad_params = {"radius": 25.0, "height": 60.0}
+                elif "box" in q_lower and "enclosure" not in q_lower:
+                    cad_shape = "box"
+                    cad_params = {"width": 80.0, "length": 80.0, "height": 40.0}
+                
+                m_dim = re.search(r"(\d+(?:\.\d+)?)\s*(?:x|\*)\s*(\d+(?:\.\d+)?)\s*(?:x|\*)\s*(\d+(?:\.\d+)?)", q_lower)
+                if m_dim and cad_shape in ("enclosure", "box"):
+                    try:
+                        cad_params["width"] = float(m_dim.group(1))
+                        cad_params["length"] = float(m_dim.group(2))
+                        cad_params["height"] = float(m_dim.group(3))
+                    except Exception:
+                        pass
+
+                cad_res = tools.dispatch_tool("cad_model_generate", {
+                    "shape": cad_shape,
+                    "title": f"Parametric {cad_shape.title()} ({cad_params.get('width', 120):.0f}x{cad_params.get('length', 80):.0f}x{cad_params.get('height', 35):.0f}mm)" if "width" in cad_params else f"Parametric {cad_shape.title()}",
+                    "params": cad_params
+                })
+                if cad_res.get("success"):
+                    _emit("tool_result", cad_res)
+                    deterministic_executed = True
+
+            # 9. Electronics PCB & KiCad Netlist Intent
+            if not deterministic_executed and any(w in q_lower for w in ("pcb", "netlist", "kicad", "555 timer", "astable", "circuit board")):
+                import tools
+                pcb_res = tools.dispatch_tool("pcb_netlist_generate", {
+                    "circuit_type": "555_astable",
+                    "title": "KiCad PCB Netlist (555 Timer Astable)",
+                    "params": {"r1": 10000.0, "r2": 47000.0, "c1": 1e-6}
+                })
+                if pcb_res.get("success"):
+                    _emit("tool_result", pcb_res)
+                    deterministic_executed = True
+
+            # 10. Robotics Kinematics Intent
+            if not deterministic_executed and any(w in q_lower for w in ("robotics", "kinematics", "dh matrix", "robot arm", "denavit")):
+                import tools
+                rob_res = tools.dispatch_tool("robotics_kinematics", {
+                    "manipulator_type": "2dof_planar",
+                    "joint_angles_deg": [30.0, 45.0],
+                    "link_lengths": [10.0, 8.0]
+                })
+                if rob_res.get("success"):
+                    _emit("tool_result", rob_res)
+                    deterministic_executed = True
+
+            tool_spec = ""
+            try:
+                import tools
+                tool_spec = "\n" + tools.get_tool_schemas_prompt()
+            except Exception:
+                pass
+
             sys_prompt = (
                 "You are Vigyan AI 1.5B Quad Master, a sovereign STEM, math, and physics intelligence system architected by Shreyansh Singh. "
                 "Solve problems with mathematical precision, concise explanations, and clean LaTeX ($$...$$). Be direct, rigorous, and professional."
+                f"{tool_spec}"
             )
             if enrichment.get("sympy"):
                 s = enrichment["sympy"]
@@ -2692,19 +2917,29 @@ def main():
 
     webview.connect("decide-policy", on_decide_policy)
 
-    # Dynamic index.html discovery
+    # Dynamic index.html discovery (prioritize compiled production assets in dist/)
     index_candidates = [
+        os.path.join(base_dir, "dist", "index.html"),
         os.path.join(base_dir, "index.html"),
+        "/opt/vigyan-pro/src/dist/index.html",
         "/opt/vigyan-pro/src/index.html",
+        os.path.expanduser("~/.vigyan/desktop/dist/index.html"),
         os.path.expanduser("~/.vigyan/desktop/index.html")
     ]
     index_path = next((p for p in index_candidates if os.path.exists(p)), index_candidates[0])
     webview.load_uri(f"file://{os.path.abspath(index_path)}")
 
-    # Push initial telemetry and sync bridge port as soon as page finishes loading
+    # Push initial telemetry and sync bridge port + security token as soon as page finishes loading
     def on_load_finished(view, event):
         if event == WebKit2.LoadEvent.FINISHED:
-            _eval_js(f"window.AGENT_HOST = 'http://127.0.0.1:{bridge_port}'; try {{ localStorage.setItem('vigyan_agent_host', 'http://127.0.0.1:{bridge_port}'); }} catch(e){{}}")
+            _eval_js(
+                f"window.VIGYAN_TOKEN = '{_SESSION_TOKEN}'; "
+                f"window.AGENT_HOST = 'http://127.0.0.1:{bridge_port}'; "
+                f"try {{ "
+                f"  localStorage.setItem('vigyan_token', '{_SESSION_TOKEN}'); "
+                f"  localStorage.setItem('vigyan_agent_host', 'http://127.0.0.1:{bridge_port}'); "
+                f"}} catch(e){{}}"
+            )
             GLib.timeout_add(300, lambda: (_push_telemetry() and False))
 
     webview.connect("load-changed", on_load_finished)
