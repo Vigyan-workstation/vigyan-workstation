@@ -1,41 +1,57 @@
-PROPRIETARY AND CONFIDENTIAL SOFTWARE LICENSE AGREEMENT
-VIGYAN PRO ENTERPRISE DESKTOP WORKSTATION
+EXPERIMENTLAB SOVEREIGN COMMUNITY & DEMILITARIZED LICENSE (Version 1.0)
+Software: Vigyan Workstation (Vigyan Pro Desktop)
+Copyright (c) 2026 ExperimentLab AI (https://experimentlab.in). All Rights Reserved.
 
-Copyright (c) 2026 Shreyansh Lab. All Rights Reserved.
+NOTICE TO ALL USERS AND CONTRIBUTORS:
+Vigyan Workstation is sovereign, air-gapped engineering software developed by 
+ExperimentLab AI. By cloning, downloading, installing, compiling, or contributing 
+to this software, you agree to be bound by the terms of this License Agreement.
 
-NOTICE TO USER:
-THIS IS A PROPRIETARY SOFTWARE LICENSE AGREEMENT BETWEEN YOU (THE "LICENSEE") 
-AND SHREYANSH LAB (THE "LICENSOR"). BY DOWNLOADING, INSTALLING, COPYING, OR 
-USING THIS SOFTWARE ("VIGYAN PRO DESKTOP"), YOU AGREE TO BE BOUND BY THE 
-TERMS OF THIS AGREEMENT.
+1. PERMITTED CIVIC & EDUCATIONAL USE
+Subject to the restrictions set forth below, ExperimentLab AI grants you a perpetual, 
+worldwide, non-exclusive, royalty-free license to inspect, clone, modify, compile, 
+and execute this software solely for personal study, educational courses, academic 
+scientific research, non-profit open inquiry, and civilian engineering experimentation.
 
-1. GRANT OF LICENSE
-Subject to the terms and conditions of this Agreement, Licensor grants Licensee
-a non-exclusive, non-transferable, revocable license to install and use 
-Vigyan Pro Desktop solely for authorized research, computational modeling, 
-hardware engineering, and private internal evaluation.
+2. DEMILITARIZED RESTRICTION (STRICTLY NON-MILITARY & PEACEFUL STEM USE ONLY)
+You shall not use this software, its source code, models, derivative works, or any 
+outputs thereof for any military, defense, warfare, or armed combat applications. 
+This prohibition explicitly and without limitation applies to:
+  (a) The research, development, simulation, manufacturing, testing, or operation 
+      of weapons, munitions, explosives, missiles, or delivery systems;
+  (b) Autonomous targeting, drone combat, kinetic warfare, or military robotics;
+  (c) Mass surveillance, interception of private communications, or offensive cyber operations;
+  (d) Any deployment by, on behalf of, or in support of any armed forces, defense 
+      ministry, military intelligence agency, or defense intelligence contractor.
 
-2. RESTRICTIONS
-Licensee shall not:
-(a) Reverse engineer, decompile, or disassemble the sovereign model pipelines 
-    or proprietary binary wrappers;
-(b) Sublicense, lease, rent, or distribute Vigyan Pro Desktop binaries or source 
-    code without prior written authorization from Licensor;
-(c) Remove, alter, or obscure any proprietary notices, labels, or micro-glyphs;
-(d) Utilize the software to generate, distribute, or optimize malicious payloads 
-    or violate applicable international export control regulations.
+3. NON-COMMERCIAL RESTRICTION
+You shall not use this software, its derivative works, or its internal models for 
+any commercial advantage, monetary compensation, or for-profit operational use. 
+Prohibited commercial use includes, but is not limited to:
+  (a) Distributing or selling this software or derivative builds for a fee;
+  (b) Hosting this software as a remote paid service, API, or cloud SaaS wrapper;
+  (c) Bundling this software with commercial hardware without written authorization;
+  (d) Deploying this software for internal engineering operations within a for-profit entity.
 
-3. AIR-GAPPED OPERATION & DATA SOVEREIGNTY
-Vigyan Pro Desktop does not transmit telemetry, prompts, inference logs, or 
-weights to external networks. Licensee retains 100% ownership and confidentiality 
-over all mathematical formulas, CAD geometry, and weights processed locally.
+4. COMMERCIAL & ENTERPRISE LICENSING
+Any commercial enterprise, corporate foundry, or for-profit laboratory seeking to 
+deploy Vigyan Workstation for commercial engineering, proprietary chip design, or 
+corporate CAD/EDA operations must execute a separate Commercial Enterprise Agreement 
+with ExperimentLab AI. For enterprise inquiries, contact: contact@experimentlab.in.
 
-4. DISCLAIMER OF WARRANTY
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
-FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT.
+5. INTELLECTUAL PROPERTY & CONTRIBUTIONS
+All trademarks, patents, proprietary architectures, and copyrights in Vigyan Workstation 
+are owned exclusively by ExperimentLab AI and its founder. All community contributions 
+are governed by the Contributor License Agreement (CLA) in CONTRIBUTING.md.
 
-5. LIMITATION OF LIABILITY
-IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, 
-DAMAGES, OR OTHER LIABILITY ARISING FROM, OUT OF, OR IN CONNECTION WITH THE 
-SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+6. DATA SOVEREIGNTY & AIR-GAP GUARANTEE
+This software executes 100% locally on your machine with zero external network telemetry. 
+Users retain full, unencumbered ownership and confidentiality over all mathematical 
+proofs, CAD geometry, robotics kinematics, and circuit netlists created locally.
+
+7. DISCLAIMER OF WARRANTY & LIMITATION OF LIABILITY
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, 
+INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A 
+PARTICULAR PURPOSE, AND NONINFRINGEMENT. IN NO EVENT SHALL EXPERIMENTLAB AI OR ITS 
+CONTRIBUTORS BE LIABLE FOR ANY CLAIM, DAMAGES, OR LIABILITY ARISING FROM THE USE OF 
+THIS SOFTWARE.

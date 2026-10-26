@@ -1,14 +1,14 @@
-# Vigyan Pro — Sovereign Desktop Workstation (v3.0.0)
+# Vigyan Workstation — Sovereign STEM Desktop (v3.0.0)
 
-[![CI - Multi-OS Verification](https://github.com/shreyansh001boy-tech/vigyan-pro-desktop/actions/workflows/ci.yml/badge.svg)](https://github.com/shreyansh001boy-tech/vigyan-pro-desktop/actions/workflows/ci.yml)
+[![ExperimentLab](https://img.shields.io/badge/Developed%20By-ExperimentLab.in-38bdf8.svg)](https://experimentlab.in)
+[![License - Community & Demilitarized](https://img.shields.io/badge/License-Community%20%26%20Demilitarized-10b981.svg)](LICENSE)
+[![Ethics - Civilian STEM Only](https://img.shields.io/badge/Ethics-Peaceful%20Civilian%20STEM-8b5cf6.svg)](LICENSE)
 [![Security - Air Gapped Zero Egress](https://img.shields.io/badge/Security-Air--Gapped%20Zero--Egress-10b981.svg)](SECURITY.md)
-[![License - Proprietary Commercial](https://img.shields.io/badge/License-Proprietary%20Enterprise-blue.svg)](LICENSE)
-[![Platforms - Linux | Windows | macOS](https://img.shields.io/badge/Platforms-Linux%20%7C%20Windows%20%7C%20macOS-lightgrey.svg)](#multi-platform-matrix)
 [![Inference - Air-Gapped Local Daemon](https://img.shields.io/badge/Inference-127.0.0.1%3A11434-38bdf8.svg)](#local-sovereign-runtime)
 
-> **Enterprise Obsidian-Grade Sovereign STEM, Physical Engineering & Semiconductor AI Workstation**  
-> *Zero browser chrome. Zero Node.js runtime requirement. 100% Native cross-platform desktop runtime.*  
-> *Zero cloud egress. 100% Offline KaTeX derivations, Svelte 5 Multi-Mode Studio (CAD, Robotics, WaveDrom, PCB), and Embedded KùzuDB GraphRAG.*
+> **Sovereign, Air-Gapped Physical Engineering & Semiconductor AI Workstation**  
+> *Developed by [ExperimentLab AI](https://experimentlab.in). Zero cloud egress. Zero Node.js runtime requirement.*  
+> *"Your AI Never Leaves the Room." 100% Offline KaTeX derivations, Svelte 5 Multi-Mode Studio (CAD, Robotics, WaveDrom, PCB), and Embedded KùzuDB GraphRAG.*
 
 ---
 
