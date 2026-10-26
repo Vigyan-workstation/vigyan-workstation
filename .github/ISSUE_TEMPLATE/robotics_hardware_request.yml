@@ -1,0 +1,42 @@
+name: Robotics & Hardware Tool Request
+description: Request support for a new robotic arm, CAD format, PCB netlist parser, or sensor bus
+title: "[HARDWARE]: "
+labels: ["hardware", "robotics", "enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for requesting hardware support for Vigyan Workstation!
+  - type: dropdown
+    id: category
+    attributes:
+      label: Domain Category
+      options:
+        - Robotic Kinematics (URDF / 6-DoF Arm / Delta / SCARA)
+        - PCB & EDA (KiCad Netlist / Gerber / SPICE)
+        - Digital Timing & Waveforms (WaveDrom / I2C / SPI / CAN / UART)
+        - Symbolic Math & Physics (SymPy AST / Mechanics / Dynamics)
+    validations:
+      required: true
+  - type: input
+    id: tool_name
+    attributes:
+      label: Hardware / Format Name
+      placeholder: "e.g., KUKA iiwa 7-axis URDF, KiCad 8 netlist syntax, CAN-FD timing"
+    validations:
+      required: true
+  - type: textarea
+    id: specifications
+    attributes:
+      label: Technical Specifications & Equations
+      placeholder: |
+        Describe the kinematics parameters (DH parameters), netlist format, or bus specifications.
+    validations:
+      required: true
+  - type: textarea
+    id: offline_verification
+    attributes:
+      label: Air-Gapped Verification Criteria
+      placeholder: "How should this tool verify correctness locally without internet access?"
+    validations:
+      required: false
